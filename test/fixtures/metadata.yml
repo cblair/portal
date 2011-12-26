@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  param1: MyString
+  param2: MyString
+  param3: MyString
+  param4: MyString
+  param5: MyString
+  param6: MyString
+  param7: MyString
+  param8: MyString
+  param9: MyString
+  param10: MyString
+
+two:
+  param1: MyString
+  param2: MyString
+  param3: MyString
+  param4: MyString
+  param5: MyString
+  param6: MyString
+  param7: MyString
+  param8: MyString
+  param9: MyString
+  param10: MyString

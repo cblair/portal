@@ -1,0 +1,57 @@
+<%= form_for(@metadatum) do |f| %>
+  <% if @metadatum.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@metadatum.errors.count, "error") %> prohibited this metadatum from being saved:</h2>
+
+      <ul>
+      <% @metadatum.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :param1 %><br />
+    <%= f.text_field :param1 %>
+  </div>
+  <div class="field">
+    <%= f.label :param2 %><br />
+    <%= f.text_field :param2 %>
+  </div>
+  <div class="field">
+    <%= f.label :param3 %><br />
+    <%= f.text_field :param3 %>
+  </div>
+  <div class="field">
+    <%= f.label :param4 %><br />
+    <%= f.text_field :param4 %>
+  </div>
+  <div class="field">
+    <%= f.label :param5 %><br />
+    <%= f.text_field :param5 %>
+  </div>
+  <div class="field">
+    <%= f.label :param6 %><br />
+    <%= f.text_field :param6 %>
+  </div>
+  <div class="field">
+    <%= f.label :param7 %><br />
+    <%= f.text_field :param7 %>
+  </div>
+  <div class="field">
+    <%= f.label :param8 %><br />
+    <%= f.text_field :param8 %>
+  </div>
+  <div class="field">
+    <%= f.label :param9 %><br />
+    <%= f.text_field :param9 %>
+  </div>
+  <div class="field">
+    <%= f.label :param10 %><br />
+    <%= f.text_field :param10 %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

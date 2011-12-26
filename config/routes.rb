@@ -1,9 +1,18 @@
 Portal::Application.routes.draw do
-  resources :pages
+  resources :data
+
+  resources :metadata
 
   get "home/index"
   root :to => 'Home#index'
-
+  match '/home'     =>  "Home#index"
+  
+  #I did something wrong to have to imply all of these
+  match '/DataIO'  =>  "DataIO#index"
+  match '/DataIO/csv_import'  =>  "DataIO#csv_import"
+  
+  match '/Metadata' => "Metadata#index"
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
