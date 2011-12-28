@@ -1,14 +1,6 @@
-<p>Data IO</p>
+<div id="notice"><%= flash.now[:message] %></div>
 
-<!--
-<ul>
-	<li><%= link_to "Import CSV", "DataIO#csv_import" %></li>		
-</ul>
--->
-<ul>
-	<li><%= link_to "Metadata inspection", "/Metadata#index" %></li>		
-</ul>
-
+<h3>Input</h3>
  <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
  <table">
    <tr>
@@ -28,3 +20,13 @@
    </tr>
  </table>
 <% end -%>
+
+<h3>Saved</h3>
+<ul>
+	<li><%= link_to "Uploads", "/Metadata#index" %></li>		
+</ul>
+
+<h3>Output</h3>
+<ul>
+	<li><%= link_to "Export", "#"%></li>
+</ul>

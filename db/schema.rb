@@ -10,7 +10,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111225153905) do
+ActiveRecord::Schema.define(:version => 20111226042838) do
+
+  create_table "data", :force => true do |t|
+    t.string   "param1"
+    t.string   "param2"
+    t.string   "param3"
+    t.string   "param4"
+    t.string   "param5"
+    t.string   "param6"
+    t.string   "param7"
+    t.string   "param8"
+    t.string   "param9"
+    t.string   "param10"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "metadata", :force => true do |t|
     t.string   "param1"

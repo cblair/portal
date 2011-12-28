@@ -13,6 +13,8 @@ Portal::Application.routes.draw do
   
   match '/Metadata' => "Metadata#index"
   
+  match '/Data' => "Data#index"
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

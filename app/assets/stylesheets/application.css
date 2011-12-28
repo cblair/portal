@@ -7,42 +7,39 @@
 */
 
 body {
-	width: 800px;
-	float: center;
-	text-align: center;
+	padding: 50px;
 }
 
-body p {
+/* The CSS Code for the menu starts here */
+#menu {
+	font-family: Arial, sans-serif;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin: 50px 0;
+	padding: 0;
+	list-style-type: none;
+	background-color: #eee;
+	font-size: 13px;
+	height: 40px;
+	border-top: 2px solid #eee;
+	border-bottom: 2px solid #ccc;
+}
+#menu li {
 	float: left;
+	margin: 0;				
 }
-
-body ul {
-	float: left;
+#menu li a {
+	text-decoration: none;
+	display: block;
+	padding: 0 20px;
+	line-height: 40px;
+	color: #666;
 }
-
-ul#nav {
-	list-style:none;
-	margin:20px;
-	padding:0;
-	width:800px;
+#menu li a:hover, #menu li.active a {
+	background-color: #f5f5f5;
+	border-bottom: 2px solid #DDD;
+	color: #999;
 }
-
-ul#nav li {
-	display:inline
-}
-
-ul#nav li a {
-	text-decoration:none;
-	padding:5px 0;
-	width:190px;
-	background:#485e49;
-	color:#eee;
-	float:left;
-	text-align:center;
-	border-left:1px solid #fff;
-}
-
-ul#nav li a:hover {
-	background:#a2b3a1;
-	color:#000
-}
+#menu_wrapper ul {margin-left: 12px;}
+#menu_wrapper {padding: 0 16px 0 0; background: url(/assets/grey.png) no-repeat right;}
+#menu_wrapper div {float: left; height: 44px; width: 12px; background: url(/assets/grey.png) no-repeat left;}

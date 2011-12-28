@@ -14,12 +14,17 @@ class MetadataController < ApplicationController
   # GET /metadata/1
   # GET /metadata/1.json
   def show
-    @metadatum = Metadatum.find(params[:id])
+    #get the first Datum with the same param1 value
+    @data = Datum.where(:param1 => Metadatum.find(params[:id])[:param1])
+    render :template => "data/index"
+=begin
+    #@metadatum = Metadatum.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @metadatum }
     end
+=end
   end
 
   # GET /metadata/new
@@ -75,7 +80,13 @@ class MetadataController < ApplicationController
   # DELETE /metadata/1
   # DELETE /metadata/1.json
   def destroy
+    #destroy metadata container
     @metadatum = Metadatum.find(params[:id])
+    # destroy child data first
+    data = Datum.where(:param1 => @metadatum[:param1]) 
+    data.each do |d|
+      d.destroy
+    end
     @metadatum.destroy
 
     respond_to do |format|

@@ -9,12 +9,20 @@
 <body>
 	
 <h1>Portal</h1>
-<ul id="nav">
-<li><a href="/">Home</a></li>
-<li><a href="/DataIO#index">Data I/O</a></li>
-<li><a href="/Hosts#index">Hosts</a></li>
-<li><a href="/Viz#index">Visualization</a></li>
-</ul>
+
+<div id="menu_wrapper" class="grey">
+	<div class="left"></div>
+		<ul id="menu">
+		<!-- this is how you make it active
+		<li class="active"><a href="#">About</a></li>
+		-->
+		<li><a href="/">Home</a></li>
+		<li><a href="/DataIO#index">Data I/O</a></li>
+		<li><a href="/Hosts#index">Hosts</a></li>
+		<li><a href="/Viz#index">Visualization</a></li>
+		</ul>
+	</div>
+</div>
 
 <%= yield %>
 
