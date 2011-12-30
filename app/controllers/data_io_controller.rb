@@ -4,13 +4,20 @@ class DataIOController < ApplicationController
   def index
   end
   
-  def csv_import
+  def csv_import    
     fname=params[:dump][:file].original_filename
+    
+    #if file name already exists, delete it
+    #TODO: handle instead with rename / merge / etc
+    Datum.where(:param1 => fname).each do |d|
+      d.destroy
+    end
+    
     @parsed_file=CSV::Reader.parse(params[:dump][:file])
     n=0
-    md=Metadatum.new(:param1 => fname)
+    md=Metadatum.find_or_initialize_by_param1(fname)
     @parsed_file.each  do |row|
-      d=Datum.new
+      d=Datum.new     
       d.param1=fname
       d.param2=row[1]
       d.param3=row[2]
