@@ -5,6 +5,7 @@
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+
 </head>
 <body>
 	
@@ -19,7 +20,7 @@
 		<li><%= link_to "Home", :controller => "Home", :action => "index"%></li>
 		<li><%= link_to "Data I/O", :controller => "DataIO", :action => "index"%></li>
 		<li><%= link_to "Hosts", "#" %><li>
-		<li><%= link_to "Visualization", "#"%></li>
+		<li><%= link_to "Visualization", :controller => "Viz", :action => "index"%></li>
 		</ul>
 	</div>
 </div>

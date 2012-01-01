@@ -15,6 +15,8 @@ Portal::Application.routes.draw do
   
   match '/Data' => "Data#index"
   
+  match '/Viz' => "Viz#index"
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
