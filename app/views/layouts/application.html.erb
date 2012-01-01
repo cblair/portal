@@ -16,10 +16,10 @@
 		<!-- this is how you make it active
 		<li class="active"><a href="#">About</a></li>
 		-->
-		<li><a href="/">Home</a></li>
-		<li><a href="/DataIO#index">Data I/O</a></li>
-		<li><a href="/Hosts#index">Hosts</a></li>
-		<li><a href="/Viz#index">Visualization</a></li>
+		<li><%= link_to "Home", :controller => "Home", :action => "index"%></li>
+		<li><%= link_to "Data I/O", :controller => "DataIO", :action => "index"%></li>
+		<li><%= link_to "Hosts", "#" %><li>
+		<li><%= link_to "Visualization", "#"%></li>
 		</ul>
 	</div>
 </div>

@@ -36606,3 +36606,412 @@ Served asset /application.js - 304 Not Modified (3ms)
 
 Started GET "/assets/grey.png" for 127.0.0.1 at Thu Dec 29 19:54:59 -0800 2011
 Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/Viz" for 127.0.0.1 at Thu Dec 29 20:34:47 -0800 2011
+
+ActionController::RoutingError (No route matches [GET] "/Viz"):
+  
+
+Rendered /Library/Ruby/Gems/1.8/gems/actionpack-3.1.3/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (2.0ms)
+
+
+Started GET "/" for 127.0.0.1 at Sat Dec 31 20:30:21 -0800 2011
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (5.4ms)
+Completed 200 OK in 200ms (Views: 199.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /application.css - 304 Not Modified (11ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /metadata.css - 304 Not Modified (5ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /home.css - 304 Not Modified (4ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /data.css - 304 Not Modified (5ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (12ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /jquery.js - 304 Not Modified (11ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (5ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /data.js - 304 Not Modified (5ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /home.js - 304 Not Modified (4ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /metadata.js - 304 Not Modified (4ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /application.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:30:22 -0800 2011
+Served asset /grey.png - 304 Not Modified (2ms)
+
+
+Started GET "/Home" for 127.0.0.1 at Sat Dec 31 20:30:23 -0800 2011
+
+ActionController::RoutingError (No route matches [GET] "/Home"):
+  
+
+Rendered /Library/Ruby/Gems/1.8/gems/actionpack-3.1.3/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (1.3ms)
+
+
+Started GET "/" for 127.0.0.1 at Sat Dec 31 20:32:51 -0800 2011
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (0.1ms)
+Completed 500 Internal Server Error in 113ms
+
+ActionView::Template::Error (No route matches {:controller=>"Home", :action=>"action"}):
+    16: 		<!-- this is how you make it active
+    17: 		<li class="active"><a href="#">About</a></li>
+    18: 		-->
+    19: 		<li><%= link_to "Home", :controller => "Home", :action => "action"%></li>
+    20: 		<li><a href="/DataIO#index">Data I/O</a></li>
+    21: 		<li><a href="/Hosts#index">Hosts</a></li>
+    22: 		<li><a href="/Viz#index">Visualization</a></li>
+  app/views/layouts/application.html.erb:19:in `_app_views_layouts_application_html_erb___519594701_2168277120'
+
+Rendered /Library/Ruby/Gems/1.8/gems/actionpack-3.1.3/lib/action_dispatch/middleware/templates/rescues/routing_error.erb within rescues/layout (0.6ms)
+
+
+Started GET "/" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (0.1ms)
+Completed 200 OK in 24ms (Views: 24.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /application.css - 304 Not Modified (10ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /home.css - 304 Not Modified (2ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (2ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /jquery.js - 200 OK (25ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /home.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /application.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:33:32 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/" for 127.0.0.1 at Sat Dec 31 20:33:33 -0800 2011
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (0.1ms)
+Completed 200 OK in 149ms (Views: 147.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /home.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /application.css - 304 Not Modified (8ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /home.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /application.js - 304 Not Modified (2ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:33:34 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+  Processing by HomeController#index as HTML
+Rendered home/index.html.erb within layouts/application (0.1ms)
+Completed 200 OK in 25ms (Views: 24.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /application.css - 304 Not Modified (14ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /home.css - 304 Not Modified (1ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /home.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /application.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:37:05 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/DataIO" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+  Processing by DataIOController#index as HTML
+Rendered data_io/index.html.erb within layouts/application (1.9ms)
+Completed 200 OK in 22ms (Views: 21.8ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /application.css - 304 Not Modified (1ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /home.css - 304 Not Modified (3ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /home.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /application.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:37:07 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/DataIO" for 127.0.0.1 at Sat Dec 31 20:37:10 -0800 2011
+  Processing by DataIOController#index as HTML
+Rendered data_io/index.html.erb within layouts/application (1.4ms)
+Completed 200 OK in 38ms (Views: 37.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /home.css - 304 Not Modified (1ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /application.css - 304 Not Modified (8ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (4ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /home.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /application.js - 304 Not Modified (2ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:37:11 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
+
+
+Started GET "/Metadata" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+  Processing by MetadataController#index as HTML
+  [1m[36mMetadatum Load (0.7ms)[0m  [1mSELECT "metadata".* FROM "metadata" [0m
+Rendered metadata/index.html.erb within layouts/application (17.3ms)
+Completed 200 OK in 42ms (Views: 39.3ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /home.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /application.css - 304 Not Modified (1ms)
+
+
+Started GET "/assets/scaffolds.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /scaffolds.css - 304 Not Modified (3ms)
+
+
+Started GET "/assets/metadata.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /metadata.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.css?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /data.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/data.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /data.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/home.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /home.js - 304 Not Modified (4ms)
+
+
+Started GET "/assets/metadata.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /metadata.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /application.js - 304 Not Modified (1ms)
+
+
+Started GET "/assets/grey.png" for 127.0.0.1 at Sat Dec 31 20:37:14 -0800 2011
+Served asset /grey.png - 304 Not Modified (0ms)
