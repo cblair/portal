@@ -1,5 +1,4 @@
 class MetadataController < ApplicationController
-  
   # GET /metadata
   # GET /metadata.json
   def index
@@ -15,16 +14,19 @@ class MetadataController < ApplicationController
   # GET /metadata/1.json
   def show
     #get the first Datum with the same param1 value
-    @data = Datum.where(:param1 => Metadatum.find(params[:id])[:param1])
+    #@data = Datum.where(:param1 => Metadatum.find(params[:id])[:param1])
+    @data = Datum.where(:metadata_id => Metadatum.find(params[:id])[:id])
+
+    debugger
     render :template => "data/index"
-=begin
-    #@metadatum = Metadatum.find(params[:id])
+#=begin
+    @metadatum = Metadatum.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @metadatum }
     end
-=end
+#=end
   end
 
   # GET /metadata/new

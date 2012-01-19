@@ -34,6 +34,7 @@
     <td><%= link_to 'Show', metadatum %></td>
     <td><%= link_to 'Edit', edit_metadatum_path(metadatum) %></td>
     <td><%= link_to 'Destroy', metadatum, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Visualize', :controller => "Viz", :action => "index", :id => metadatum.id %></td>
   </tr>
 <% end %>
 </table>
