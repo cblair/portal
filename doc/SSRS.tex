@@ -1,0 +1,83 @@
+\documentclass[12pt, oneside, letterpaper]{report}
+\usepackage{ifpdf}
+\usepackage[colorlinks,bookmarksopen]{hyperref}
+\usepackage{layout}
+\usepackage{lscape}
+\usepackage{verbatim}
+\textwidth=475pt
+\hoffset=-.5in
+\begin{document}
+% ----------------------------------------------- front matter of the document
+%\maketitle
+\part{System and Software Design Description (SSDD): Incorporating
+     Architectural Views and Detailed Design Criteria \\ for \\ Portal}
+\tableofcontents                                % chapter with the table of contents
+\listoffigures
+\listoftables
+%------------------------------------------------ body of the document
+\chapter{Introduction}
+
+%------------------------------------------------
+%\begin{comment}
+
+	\section{Identification}
+		\input{"SSRS/Identification.tex"}
+	\section{Purpose}
+		\input{"SSRS/Purpose.tex"}
+	\section{Scope}
+		\input{"SSRS/Scope.tex"}
+	\section{Definitions, Acronyms, and Abbreviations}
+		\input{"SSRS/Definitions.tex"}
+	\section{References}
+		\input{"SSRS/References.tex"}
+	\section{Overview and Restrictions}
+		\input{"SSRS/Overview.tex"}
+
+\nopagebreak
+\chapter{Constraints and Stakeholder Concerns}
+	\section{Constraints}
+		\input{"SSRS/Constraints.tex"}
+	%\section{Stakeholder Concerns}
+	%	\input{"SSRS/StakeholderConcerns.tex"}
+
+%\chapter{System and Software Architechture}
+%		\input{"SSRS/SystemsSoftwareArchitecture.tex"}
+
+\chapter{Requirements Traceability}
+		\input{"SSRS/RequirementsTraceability.tex"}
+
+%\end{comment}
+
+\part{Systems and Software Requirements Specification (SSRS) \\ for \\ Portal}
+
+\chapter{Overall Description}
+
+%------------------------------------------------
+%\begin{comment}
+
+	\section{Product Perspective}
+		\input{"SSRS/ProductPerspective.tex"}
+	\section{Product Functions}
+		\input{"SSRS/ProductFunctions.tex"}
+	\section{User Characteristics}
+		\input{"SSRS/UserCharacteristics.tex"}
+	\section{Constraints}
+		\input{"SSRS/Constraints_Overall.tex"}
+	\section{Assumptions and Dependencies}
+		\input{"SSRS/AssumptionsDependencies.tex"}
+	\section{System Level (Non-Functional) Requirements}
+		\input{"SSRS/SystemLevelReq.tex"}
+\chapter{Specific Requirements}
+	\section{External Interface Requirements}
+		\input{"SSRS/ExternalInterfaceReq.tex"}
+
+%------------------------------------------------
+%\end{comment}
+
+	\section{System Features}
+		\subsection{Use Case Diagrams}
+		%\input{"SSRS/UC/example.tex"}
+
+%----------------------------------------------- back matter of the document
+%\appendix                                      % following chapters are appendixes
+\end{document}
