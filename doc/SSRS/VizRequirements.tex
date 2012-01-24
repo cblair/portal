@@ -1,0 +1,78 @@
+\subsection{Visualization}
+\label{sec:viz_spec}
+The Visualization controller is referred to throughout documentation simply as
+\textbf{Viz}. It will be Rails 3 \textbf{views} and \textbf{controllers},
+without models, since it mainly inteprets data from the Metadata
+\ref{sec:metadata_spec} and Data I/O \ref{sec:data_io_spec} scaffolds. There 
+will be one view per controller, unless stated otherwise.
+
+\subsubsection{Graphs - Types}
+
+\subsubsection{Columns - Data Types}
+
+\subsubsection{Views - Show}
+	\begin{enumerate}
+		\item Viz will contain one show view. 
+		\begin{enumerate}
+			\item \textit{Verify that there is a Show view.}
+		\end{enumerate}
+
+		\item Some other controller will pass a Data model id and 
+			two column names to graph data by.
+		\begin{enumerate}
+			\item \textit{Verify that this view graphs the 
+				correct data for the Data id and two 
+				columns listed.}
+		\end{enumerate}
+
+		\item The first passed column will be \textbf{x\_data} 
+			in POST, the second will by \textbf{y\_data} in 
+			POST, for the respective axis.
+		\begin{enumerate}
+			\item \textit{Verify that the respective columns 
+				graph on the correct axis.}
+		\end{enumerate}
+
+		\item Controllers may pass a graph type, but the default 
+			will be a line graph type.
+		\begin{enumerate}
+			\item \textit{Verify that the 
+				data is graphed in the correct graph types.}
+		\end{enumerate}
+
+
+		\item 
+		\begin{enumerate}
+			\item 
+		\end{enumerate}
+
+	\end{enumerate}
+
+\subsubsection{Views - Summary}
+	\begin{enumerate}
+		\item Viz will contain one Summary view. This view will take in a Data model data\_id POST value, and graph every unique permutation of two columns. 
+		\begin{enumerate}
+			\item Verify that the Summary view graphs the correct data for data\_id.
+		\end{enumerate}
+
+		\item There will be two Summary graphs per display row.
+		\begin{enumerate}
+			\item Verify that there are two Summary graphs per display row.
+		\end{enumerate}
+
+		\item Summary graphs will graph 10\% or 100 points of the data, whichever is bigger.
+		\begin{enumerate}
+			\item Verify that Summary graphs graph 10\% or 100 points of the data.
+		\end{enumerate}
+
+		\item Summary graphs will graph any type of data as defined in Data Types (Section \ref{sec:data_types}).
+		\begin{enumerate}
+			\item Verify Summary graphs graph any Data Type.
+		\end{enumerate}
+
+		\item 
+		\begin{enumerate}
+			\item 
+		\end{enumerate}
+
+	\end{enumerate}
