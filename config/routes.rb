@@ -1,4 +1,8 @@
 Portal::Application.routes.draw do
+  resources :movies
+
+  resources :actors
+
   resources :data
 
   resources :metadata
@@ -16,6 +20,9 @@ Portal::Application.routes.draw do
   match '/Data' => "Data#index"
   
   match '/Viz' => "Viz#index"
+  
+  #Demo stuff
+  match '/Movies' => "Movies#index"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

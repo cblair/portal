@@ -10,7 +10,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111226042838) do
+ActiveRecord::Schema.define(:version => 20120127035105) do
+
+  create_table "actors", :force => true do |t|
+    t.text     "name"
+    t.integer  "movie_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "data", :force => true do |t|
     t.string   "param1"
@@ -38,6 +45,12 @@ ActiveRecord::Schema.define(:version => 20111226042838) do
     t.string   "param8"
     t.string   "param9"
     t.string   "param10"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "movies", :force => true do |t|
+    t.text     "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

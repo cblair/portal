@@ -17,7 +17,7 @@ class MetadataController < ApplicationController
     #@data = Datum.where(:param1 => Metadatum.find(params[:id])[:param1])
     @data = Datum.where(:metadata_id => Metadatum.find(params[:id])[:id])
 
-    debugger
+    #debugger
     render :template => "data/index"
 #=begin
     @metadatum = Metadatum.find(params[:id])
