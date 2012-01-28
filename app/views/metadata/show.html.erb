@@ -1,11 +1,30 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Name:</b>
+  <h1>Name:</h1>
   <%= @metadatum.name %>
   
-  <b>Data Name:</b>
-  <%= @metadatum.data.first().param1 %>
+  <h2>Data:</h2>
+  <table>
+  	<tr>
+  	<% @metadatum.data.first().attribute_names.sort().each do |name| %>
+  		<td>
+  		<%= name %>
+  		</td>
+  	<% end%>
+  	</tr>
+
+  	<% @metadatum.data.each do |datum| %>
+	<tr>
+  		<% datum.attribute_names.sort().each do |name| %>
+		<td>
+  	 		<%= datum[name] %>
+		</td>
+  		<% end %>
+  	</tr>
+  <% end %>
+  </table>
+
 </p>
 
 

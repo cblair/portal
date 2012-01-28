@@ -15,7 +15,7 @@ class DataIOController < ApplicationController
     
     @parsed_file=CSV::Reader.parse(params[:dump][:file])
     n=0
-    md=Metadatum.find_or_initialize_by_param1(fname)
+    md=Metadatum.find_or_initialize_by_name(fname)
     @parsed_file.each  do |row|
       d=Datum.create( :param1 => fname,
                       :param2 => row[1],
@@ -30,7 +30,6 @@ class DataIOController < ApplicationController
       #flash.now[:message]="CSV Import Successful,  #{n} new records added to data base"
     end
     
-    debugger
     flash.now[:message]="CSV Import successful,  #{n} new rows added to data base"
     #params[:id] = md[:id]
     #redirect_to :controller => "Data", :action => "show"
