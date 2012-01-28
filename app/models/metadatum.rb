@@ -1,3 +1,3 @@
 class Metadatum < ActiveRecord::Base
-  has_many :datum
+  has_many :data
 end

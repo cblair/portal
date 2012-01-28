@@ -1,15 +1,13 @@
 Portal::Application.routes.draw do
-  resources :movies
-
-  resources :actors
+  resources :metadata
 
   resources :data
-
-  resources :metadata
 
   get "home/index"
   root :to => 'Home#index'
   match '/home'     =>  "Home#index"
+
+  resource :metadatum
   
   #I did something wrong to have to imply all of these
   match '/DataIO'  =>  "DataIO#index"

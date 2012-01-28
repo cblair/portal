@@ -11,6 +11,7 @@ one:
   param8: MyString
   param9: MyString
   param10: MyString
+  metadatum_id: 1
 
 two:
   param1: MyString
@@ -23,3 +24,4 @@ two:
   param8: MyString
   param9: MyString
   param10: MyString
+  metadatum_id: 1
