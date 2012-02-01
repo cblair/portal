@@ -29,6 +29,7 @@ gem 'jquery-rails'
 # gem 'capistrano'
 
 # To use debugger
-gem 'ruby-debug'
+gem 'ruby-debug', :platforms => :ruby_18
+gem 'ruby-debug19', :platforms => :ruby_19
 
 gem "gchartrb"
