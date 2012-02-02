@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  2 FEB 2012 13:12
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  2 FEB 2012 13:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -33,6 +33,40 @@ File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \abovecaptionskip=\skip41
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/tools/layout.sty
+Package: layout 2000/09/25 v1.2c Show layout parameters
+\oneinch=\count88
+\cnt@paperwidth=\count89
+\cnt@paperheight=\count90
+\cnt@hoffset=\count91
+\cnt@voffset=\count92
+\cnt@textheight=\count93
+\cnt@textwidth=\count94
+\cnt@topmargin=\count95
+\cnt@oddsidemargin=\count96
+\cnt@evensidemargin=\count97
+\cnt@headheight=\count98
+\cnt@headsep=\count99
+\cnt@marginparsep=\count100
+\cnt@marginparwidth=\count101
+\cnt@marginparpush=\count102
+\cnt@footskip=\count103
+\fheight=\count104
+\ref@top=\count105
+\ref@hoffset=\count106
+\ref@voffset=\count107
+\ref@head=\count108
+\ref@body=\count109
+\ref@foot=\count110
+\ref@margin=\count111
+\ref@marginwidth=\count112
+\ref@marginpar=\count113
+\Interval=\count114
+\ExtraYPos=\count115
+\PositionX=\count116
+\PositionY=\count117
+\ArrowLength=\count118
 )
 (/usr/local/texlive/2011/texmf-dist/tex/latex/tools/verbatim.sty
 Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
@@ -114,13 +148,13 @@ No file SSRS/UC/example.tex.tex.
 (./SSRS.aux (./SSRS/RequirementsTraceability.tex.aux)
 (./SSRS/UC/example.tex.aux)) ) 
 Here is how much of TeX's memory you used:
- 306 strings out of 493633
- 3666 string characters out of 3143378
- 50245 words of memory out of 3000000
- 3657 multiletter control sequences out of 15000+200000
+ 380 strings out of 493633
+ 4570 string characters out of 3143378
+ 52982 words of memory out of 3000000
+ 3728 multiletter control sequences out of 15000+200000
  8500 words of font info for 30 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 23i,4n,19p,279b,113s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 23i,4n,20p,279b,113s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2011/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/pu
 blic/amsfonts/cm/cmr12.pfb>
