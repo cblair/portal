@@ -1,19 +1,50 @@
 \subsection{Data}
 \label{sec:data_spec}
+Data is the scaffold that input files map to. One Data instance is equivalent
+to one data file.
 
-\subsubsection{?}
+\subsubsection{Fields}
 	\begin{enumerate}
 
-		\item 
+		\item Data will have a name field. 
 		\begin{enumerate}
-			\item \textit{ Verify }
+			\item \textit{ Verify that Data has a name field and it
+					is editable. }
+		\end{enumerate}
+	\end{enumerate}
+
+
+\subsubsection{Columns}
+	\begin{enumerate}
+
+		\item Each Data instance will have a has\_many relationship
+			with the DataColumn scaffold.
+		\begin{enumerate}
+			\item \textit{ Verify that the Data model has a 
+					has\_many relationship with the 
+					DataColumn model.}
 		\end{enumerate}
 
-		\item
+		\item Column vectors in a file will be determined by the 
+			Filter scaffold.
 		\begin{enumerate}
-			\item \textit{ Verify }
+			\item \textit{ Verify that the Filter scaffold returns
+					correct DataColumns (see Section 
+					\ref{sec:filter_spec} for the specified
+					behavior. }
 		\end{enumerate}
 
+
+
+		\item Each DataColumn instance that Data aggragates will 
+			correspond to a column of data in a file that 
+			Data I/O imports.
+		\begin{enumerate}
+			\item \textit{ Verify that columns in files that come 
+					through Data I/O have their own 
+					DataColumn instance. }
+		\end{enumerate}
+	
 		%\item
 		%\begin{enumerate}
 		%	\item \textit{ Verify }
