@@ -4,11 +4,43 @@ The Visualization controller is referred to throughout documentation simply as
 \textbf{Viz}. It will be Rails 3 \textbf{views} and \textbf{controllers},
 without models, since it mainly inteprets data from the Metadata
 \ref{sec:metadata_spec} and Data I/O \ref{sec:data_io_spec} scaffolds. There 
-will be one view per controller, unless stated otherwise.
+will be one view per controller method, unless stated otherwise.
 
 \subsubsection{Graphs - Types}
+Viz graph types will be the following:
+\begin{enumerate}
+	\item line (default)
+	\item bar
+	\item scatterplot
+	\item pie
+	\item more (optional, future; i.e. statistical graphs)
+\end{enumerate}
 
-\subsubsection{Columns - Data Types}
+When a view/controller method gets data and no graph type argument, it will use
+the default type. Otherwise, it will use the specified type.
+
+\subsubsection{Data sets - Types}
+Viz will graph the following data types natively on either x or y axis:
+precedence:
+\begin{enumerate}
+	\item Date / time (may be combined):
+	\begin{enumerate}
+		\item time
+		\item date
+		\item timestamp
+		\item datetime
+	\end{enumerate}
+	\item Chunkified data (see Section \ref{sec:data_types}):
+	\begin{enumerate}
+		\item boolean
+		\item binary
+		\item string
+		\item text
+	\end{enumerate}
+	\item decimal
+	\item float
+	\item integer
+\end{enumerate}
 
 \subsubsection{Views - Show}
 	\begin{enumerate}
@@ -33,17 +65,11 @@ will be one view per controller, unless stated otherwise.
 				graph on the correct axis.}
 		\end{enumerate}
 
-		\item Controllers may pass a graph type, but the default 
-			will be a line graph type.
+		\item Controllers may pass a graph type, but if not,
+			the default type will be used.
 		\begin{enumerate}
 			\item \textit{Verify that the 
 				data is graphed in the correct graph types.}
-		\end{enumerate}
-
-
-		\item 
-		\begin{enumerate}
-			\item 
 		\end{enumerate}
 
 	\end{enumerate}
