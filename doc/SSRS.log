@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  24 JAN 2012 14:34
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  1 FEB 2012 18:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -326,18 +326,17 @@ Chapter 1.
 ]
 Chapter 2.
 (./SSRS/RequirementsTraceability.tex (./SSRS/MetadataRequirements.tex)
-(./SSRS/DataIORequirements.tex
+(./SSRS/DataRequirements.tex [6
+
+]) (./SSRS/DataIORequirements.tex
 Missing character: There is no â in font cmr12!
 Missing character: There is no € in font cmr12!
 Missing character: There is no ™ in font cmr12!
-) (./SSRS/VizRequirements.tex [6
-
-] [7]
-
-LaTeX Warning: Reference `sec:data_types' on page 8 undefined on input line 68.
 
 
-)) [8]
+LaTeX Warning: Reference `sec:filter' on page 7 undefined on input line 17.
+
+[7] [8]) (./SSRS/VizRequirements.tex [9] [10])) [11]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\\' on input line 53.
@@ -346,41 +345,50 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\\' on input line 53.
 
-[9
+[12
 
 ]
 Chapter 3.
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 85.
-[10
+[13
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 85.
  (./SSRS.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 85.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 85.
-Package rerunfilecheck Info: File `SSRS.out' has not changed.
-(rerunfilecheck)             Checksum: 95BCA32EE95B5588FE15A114D3F2BF50;839.
 
+
+Package rerunfilecheck Warning: File `SSRS.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `SSRS.out':
+(rerunfilecheck)             Before: 95BCA32EE95B5588FE15A114D3F2BF50;839
+(rerunfilecheck)             After:  BC3A8C88422E03F6E09F2A6E121BFD05;896.
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 85.
  ) 
 Here is how much of TeX's memory you used:
- 5138 strings out of 493633
- 76090 string characters out of 3143378
- 158841 words of memory out of 3000000
- 8340 multiletter control sequences out of 15000+200000
+ 5207 strings out of 493633
+ 76654 string characters out of 3143378
+ 157880 words of memory out of 3000000
+ 8342 multiletter control sequences out of 15000+200000
  8847 words of font info for 31 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 29i,5n,28p,287b,477s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,5n,28p,287b,488s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on SSRS.pdf (10 pages, 56670 bytes).
+Output written on SSRS.pdf (13 pages, 64629 bytes).
 PDF statistics:
- 176 PDF objects out of 1000 (max. 8388607)
- 159 compressed objects within 2 object streams
- 59 named destinations out of 1000 (max. 500000)
+ 267 PDF objects out of 1000 (max. 8388607)
+ 246 compressed objects within 3 object streams
+ 123 named destinations out of 1000 (max. 500000)
  89 words of extra memory for PDF output out of 10000 (max. 10000000)
 

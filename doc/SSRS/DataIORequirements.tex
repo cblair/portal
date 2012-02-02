@@ -3,10 +3,105 @@
 
 \subsubsection{Input}
 	\begin{enumerate}
-		\item The input module will allow users to import CSV native formats into the metadata server’s native format.
-
+		\item The input module will allow users to import CSV native 
+			formats into the metadata server’s native format.
 		\begin{enumerate}
-			\item \textit{Verify ...}
+			\item \textit{Verify that the CSV inputs correctly
+					into Metadata as a new Data instance.}
+		\end{enumerate}
+		
+		\item The input module will allow creation of new input filters
+			as regular expressions, to be applied to every line
+			of a file, for custom file format input/importing. This
+			will be implemented by the Filter scaffold (see 
+			Section \ref{sec:filter}).
+		\begin{enumerate}
+			\item \textit{Verify that a user can specify filters
+				and then apply them to correctly parse and 
+				import files, per the expected behavior
+				of regular expressions.}
 		\end{enumerate}
 
+		\item Once a file is inputed, the wall and system time will be
+			displayed, along with the number of rows created.
+		\begin{enumerate}
+			\item \textit{ Verify that the wall and system time, 
+					along with the number of rows, are
+					displayed on input.}
+		\end{enumerate}
+
+		\item When a file is inputed, a Metadata instance will be 
+			created or updated, with the 'name' field set during 
+			the import.
+		\begin{enumerate}
+			\item \textit{ Verify that the Metadata instance is
+					created with the 'name' set as the
+					file name. }
+		\end{enumerate}
+
+		\item When a file is inputed, it is represented as a Data 
+			instance with the 'name' field set as the name of the
+			imported file.
+		\begin{enumerate}
+			\item \textit{ Verify that the inputed file creates 
+					a new Data instance, and each row's
+					name column is set to the name of the
+					inputed file.}
+		\end{enumerate}
+
+		\item When a file is inputed, each column will be intepreted
+			as a Rails 3 data type (see Section
+			\ref{sec:data_types}). The column data type will be 
+			applied to all members of all rows for the respective
+			columns.
+		\begin{enumerate}
+			\item \textit{ Verify that a column is intepreted to
+					be a support Data Type, and is inputed.}
+		\end{enumerate}
+
+		\item When a column is being considered for which Data Type
+			it is, it will be attempted to be interpreted as a 
+			data type in the following order, until success:
+			\begin{enumerate}
+				\item time
+				\item date
+				\item timestamp
+				\item datetime
+				\item boolean
+				\item binary
+				\item decimal
+				\item float
+				\item integer
+				\item string
+				\item text
+			\end{enumerate}
+
+		\begin{enumerate}
+			\item \textit{ Verify each kind of data is intepreted
+					correctly.}
+		\end{enumerate}
+
+		%\item
+		%\begin{enumerate}
+		%	\item \textit{ Verify }
+		%\end{enumerate}
 	\end{enumerate}
+
+
+\subsubsection{Data Types}
+\label{sec:data_types}
+
+The supported data types are (in list of precedence):
+\begin{enumerate}
+	\item time
+	\item date
+	\item timestamp
+	\item datetime
+	\item boolean
+	\item binary
+	\item decimal
+	\item float
+	\item integer
+	\item string
+	\item text
+\end{enumerate}
