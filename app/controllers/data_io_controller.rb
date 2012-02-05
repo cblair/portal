@@ -16,7 +16,11 @@ class DataIOController < ApplicationController
     #start recording run time
     stime = Time.now() #start time
     
-    @parsed_file=CSV::Reader.parse(params[:dump][:file])
+    if CSV.const_defined? :Reader
+        @parsed_file=CSV::Reader.parse(params[:dump][:file])
+    else
+        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+    end
     n=0
     md=Metadatum.find_or_initialize_by_name(fname)
     @parsed_file.each  do |row|
