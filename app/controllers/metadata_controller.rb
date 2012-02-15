@@ -21,6 +21,14 @@ class MetadataController < ApplicationController
     end
   end
 
+  # GET /metadata/1/data.json
+  def showassociated
+    @data = Metadatum.find(params[:id]).data
+    respond_to do |format|
+      format.json { render :json => @data }
+    end
+  end
+
   # GET /metadata/new
   # GET /metadata/new.json
   def new

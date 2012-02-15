@@ -12,7 +12,7 @@ Portal::Application.routes.draw do
   #I did something wrong to have to imply all of these
   match '/DataIO'  =>  "DataIO#index"
   match '/DataIO/csv_import'  =>  "DataIO#csv_import"
-  
+  match '/metadata/:id/data' => 'Metadata#showassociated'
   match '/Metadata' => "Metadata#index"
   
   match '/Data' => "Data#index"
