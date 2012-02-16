@@ -6,22 +6,41 @@
   
   <h2>Data:</h2>
   <table>
-  	<tr>
-  	<% @metadatum.data.first().attribute_names.sort().each do |name| %>
-  		<td>
-  		<b><%= name %></b>
-  		</td>
-  	<% end%>
-  	</tr>
-
   	<% @metadatum.data.each do |datum| %>
-	<tr>
-  		<% datum.attribute_names.sort().each do |name| %>
-		<td>
-  	 		<%= datum[name] %>
-		</td>
-  		<% end %>
-  	</tr>
+  		<!--Data - name-->		
+		<tr>
+  			<td><%= @metadatum.data.first().param1 %></td>
+		</tr>
+		
+		<!--DataColumns-->
+		<%
+		#TODO: what if datum has no columns?
+		#base nrows off the first column
+		#nrows = datum.data_columns.count
+		nrows = datum.data_column_ints.count
+		#TODO: compute column names
+		#ncols = datum.data_column_ints.count
+		ncols = 1
+		%>
+	
+		<% for i in (0..nrows-1) %>
+		<tr>
+			<% 
+			#for j in (1..ncols) 
+			%>
+				<td>
+					<%= 
+						#TODO: user column array
+						#datum.data_columns[i][j].val
+						#debugger
+						datum.data_column_ints[i].val
+					%>
+				</td>
+			<% 
+			#end 
+			%>
+		</tr>
+		<% end %>
   <% end %>
   </table>
 
