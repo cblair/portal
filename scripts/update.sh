@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#This script checks the git server for updates, and if they exist,
+# pull them down, and dumps the updated time to an html file.
+
 ROOTDIR=/var/git/portal_continuous/scripts
 CONT_UP_FILE=/var/www/portal/continuous_update.html
 UPDATED=0
