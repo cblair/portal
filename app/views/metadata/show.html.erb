@@ -6,22 +6,38 @@
   
   <h2>Data:</h2>
   <table>
-  	<tr>
-  	<% @metadatum.data.first().attribute_names.sort().each do |name| %>
-  		<td>
-  		<b><%= name %></b>
-  		</td>
-  	<% end%>
-  	</tr>
-
   	<% @metadatum.data.each do |datum| %>
-	<tr>
-  		<% datum.attribute_names.sort().each do |name| %>
-		<td>
-  	 		<%= datum[name] %>
-		</td>
-  		<% end %>
-  	</tr>
+  		<!--Data - name-->		
+		<tr>
+  			<td><%= @metadatum.data.first().param1 %></td>
+		</tr>
+		
+		<!--DataColumns-->
+		<%
+		#TODO: what if datum has no columns?
+		#base nrows off the first column
+		#TODO: dynamic select of data_column_<type>
+		nrows = datum.data_columns[2].data_column_ints.count
+		#TODO: compute column names
+		#ncols = datum.data_column_ints.count
+		ncols = datum.data_columns.count
+		%>
+	
+		<% for i in (0..nrows-1) %>
+		<tr>
+			<% for j in (0..ncols-1) %>
+				<td>
+					<%
+						#TODO: get type method
+						if datum.data_columns[j].dtype == "integer"
+					%>
+							<%= get_data_column("name")%>
+							<%= datum.data_columns[j].data_column_ints[i].val %>
+						<% end %>
+				</td>
+			<% end %>
+		</tr>
+		<% end %>
   <% end %>
   </table>
 

@@ -1,4 +1,8 @@
 Portal::Application.routes.draw do
+  resources :data_columns
+
+  resources :data_column_ints
+
   resources :metadata
 
   resources :data
@@ -14,6 +18,9 @@ Portal::Application.routes.draw do
   match '/DataIO/csv_import'  =>  "DataIO#csv_import"
   match '/metadata/:id/data' => 'Metadata#showassociated'
   match '/Metadata' => "Metadata#index"
+  match '/Metadata/show' => "Metadata#show"
+  match 'Metadata/test_json' => 'Metadata#test_json'
+  match 'Metadata/:id' => 'Metadata#show'
   
   match '/Data' => "Data#index"
   

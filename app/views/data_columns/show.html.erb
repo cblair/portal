@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @data_column.name %>
+</p>
+
+<p>
+  <b>Dtype:</b>
+  <%= @data_column.dtype %>
+</p>
+
+<p>
+  <b>Order:</b>
+  <%= @data_column.order %>
+</p>
+
+<p>
+  <b>Datum:</b>
+  <%= @data_column.datum_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_data_column_path(@data_column) %> |
+<%= link_to 'Back', data_columns_path %>
