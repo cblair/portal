@@ -18,6 +18,7 @@ Portal::Application.routes.draw do
   match '/Data' => "Data#index"
   
   match '/Viz' => "Viz#index"
+  match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'
   
   #Demo stuff
   match '/Movies' => "Movies#index"
