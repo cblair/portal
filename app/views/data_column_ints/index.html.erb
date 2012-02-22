@@ -3,7 +3,7 @@
 <table>
   <tr>
     <th>Val</th>
-    <th>Datum</th>
+    <th>Data column</th>
     <th></th>
     <th></th>
     <th></th>
@@ -12,7 +12,7 @@
 <% @data_column_ints.each do |data_column_int| %>
   <tr>
     <td><%= data_column_int.val %></td>
-    <td><%= data_column_int.datum_id %></td>
+    <td><%= data_column_int.data_column_id %></td>
     <td><%= link_to 'Show', data_column_int %></td>
     <td><%= link_to 'Edit', edit_data_column_int_path(data_column_int) %></td>
     <td><%= link_to 'Destroy', data_column_int, :confirm => 'Are you sure?', :method => :delete %></td>

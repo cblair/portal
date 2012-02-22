@@ -1,3 +1,3 @@
 class DataColumnInt < ActiveRecord::Base
-  belongs_to :datum
+  belongs_to :data_column
 end

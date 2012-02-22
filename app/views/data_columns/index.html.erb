@@ -1,0 +1,29 @@
+<h1>Listing data_columns</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Dtype</th>
+    <th>Order</th>
+    <th>Datum</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @data_columns.each do |data_column| %>
+  <tr>
+    <td><%= data_column.name %></td>
+    <td><%= data_column.dtype %></td>
+    <td><%= data_column.order %></td>
+    <td><%= data_column.datum_id %></td>
+    <td><%= link_to 'Show', data_column %></td>
+    <td><%= link_to 'Edit', edit_data_column_path(data_column) %></td>
+    <td><%= link_to 'Destroy', data_column, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Data column', new_data_column_path %>

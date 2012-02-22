@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120210015643) do
+ActiveRecord::Schema.define(:version => 20120219003854) do
 
   create_table "data", :force => true do |t|
     t.string   "param1"
@@ -30,6 +30,15 @@ ActiveRecord::Schema.define(:version => 20120210015643) do
 
   create_table "data_column_ints", :force => true do |t|
     t.integer  "val"
+    t.integer  "data_column_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "data_columns", :force => true do |t|
+    t.string   "name"
+    t.string   "dtype"
+    t.integer  "order"
     t.integer  "datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -16,29 +16,26 @@
 		<%
 		#TODO: what if datum has no columns?
 		#base nrows off the first column
-		#nrows = datum.data_columns.count
-		nrows = datum.data_column_ints.count
+		#TODO: dynamic select of data_column_<type>
+		nrows = datum.data_columns[2].data_column_ints.count
 		#TODO: compute column names
 		#ncols = datum.data_column_ints.count
-		ncols = 1
+		ncols = datum.data_columns.count
 		%>
 	
 		<% for i in (0..nrows-1) %>
 		<tr>
-			<% 
-			#for j in (1..ncols) 
-			%>
+			<% for j in (0..ncols-1) %>
 				<td>
-					<%= 
-						#TODO: user column array
-						#datum.data_columns[i][j].val
-						#debugger
-						datum.data_column_ints[i].val
+					<%
+						#TODO: get type method
+						if datum.data_columns[j].dtype == "integer"
 					%>
+							<%= get_data_column("name")%>
+							<%= datum.data_columns[j].data_column_ints[i].val %>
+						<% end %>
 				</td>
-			<% 
-			#end 
-			%>
+			<% end %>
 		</tr>
 		<% end %>
   <% end %>

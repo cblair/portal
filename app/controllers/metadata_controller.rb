@@ -83,4 +83,8 @@ class MetadataController < ApplicationController
       format.json { head :ok }
     end
   end
+  
+  def test_json
+    render :controller => "DataColumn", :action => "test"
+  end
 end
