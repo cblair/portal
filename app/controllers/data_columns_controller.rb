@@ -97,8 +97,8 @@ class DataColumnsController < ApplicationController
       render :json => @dct
     else
       #No type found
-      flash[:message]="Warning: could not find type for this data column"
-      redirect_to "/Metadata"
+      flash[:error]="Warning: could not find type for this data column"
+      redirect_to :controller => "Metadata", :action => "index"
     end
 
   end
