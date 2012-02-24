@@ -87,9 +87,19 @@ class DataColumnsController < ApplicationController
   #Gets the DataColumn<type> of arg 'name' for the Data of arg 'id'
   def get_data_column_json
     d_id = params[:id]
-    dct_name = params[:name]
-    dct = Datum.find(d_id).DataColumnInt.where(:name => dct_name)
+    dc_name = params[:name]
+    d = Datum.find(d_id)
+    dc = d.data_columns.where("name='#{dc_name}' AND datum_id=#{d_id}").first()
     #TODO: different types
-    render :controller => "DataColumnInt", :action => "show/#{dct.id}"
+    if dc.dtype == "integer"
+      @dct = dc.data_column_ints.where(:data_column_id => dc.id)
+      #redirect_to "/DataColumnInts/#{dct.id}.json"
+      render :json => @dct
+    else
+      #No type found
+      flash[:message]="Warning: could not find type for this data column"
+      redirect_to "/Metadata"
+    end
+
   end
 end
