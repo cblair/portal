@@ -1,2 +1,3 @@
-module DataHelper
+module DataHelper < Migrate
+
 end
