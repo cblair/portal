@@ -1,4 +1,4 @@
-module DataHelper
+module DataHelper < Migrate
   
   def convert_data_to_native_types(d, colnames)
     colnames.each do |colname|
