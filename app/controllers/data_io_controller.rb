@@ -64,6 +64,6 @@ class DataIOController < ApplicationController
     flash[:notice]="CSV Import successful,  #{n} new rows added to data base in #{ttime}"
 
     #render :action => "index"   
-    redirect_to "/Metadata/#{md.id}"
+    redirect_to "Metadata/#{md.id}"
   end
 end

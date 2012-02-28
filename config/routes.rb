@@ -19,10 +19,15 @@ Portal::Application.routes.draw do
   match '/metadata/:id/data' => 'Metadata#showassociated'
   match '/Metadata' => "Metadata#index"
   match '/Metadata/show' => "Metadata#show"
-  match 'Metadata/test_json' => 'Metadata#test_json'
+  match 'Metadata/testjson' => 'Metadata#testjson'
   match 'Metadata/:id' => 'Metadata#show'
   
   match '/Data' => "Data#index"
+  
+  match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
+  match 'DataColumns/:id' => 'DataColumns#show'
+  
+  match 'DataColumnInts/:id' => 'DataColumnInts#show'
   
   match '/Viz' => "Viz#index"
   match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'

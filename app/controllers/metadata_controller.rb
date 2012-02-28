@@ -83,7 +83,7 @@ class MetadataController < ApplicationController
   # DELETE /metadata/1
   # DELETE /metadata/1.json
   def destroy
-    @metadatum = Metadatum.find(params[:id])
+    @metadatum = Metadatum.find(params[:id]) 
     @metadatum.destroy
 
     respond_to do |format|
@@ -92,7 +92,4 @@ class MetadataController < ApplicationController
     end
   end
   
-  def test_json
-    render :controller => "DataColumn", :action => "test"
-  end
 end

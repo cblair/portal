@@ -8,6 +8,8 @@
     <th></th>
   </tr>
 
+<div id="notice"><%= flash.now[:error] %></div>
+
 <% @metadata.each do |metadatum| %>
   <tr>
     <td><%= metadatum.name %></td>

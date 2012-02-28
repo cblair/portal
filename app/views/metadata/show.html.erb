@@ -22,6 +22,15 @@
 		#ncols = datum.data_column_ints.count
 		ncols = datum.data_columns.count
 		%>
+		
+		<!-- display columne name -->
+		<tr>
+			<% for j in (0..ncols-1) %>
+				<td>
+					<%= datum.data_columns[j].name %>
+				</td>
+			<% end %>
+		</tr>
 	
 		<% for i in (0..nrows-1) %>
 		<tr>
@@ -31,13 +40,25 @@
 						#TODO: get type method
 						if datum.data_columns[j].dtype == "integer"
 					%>
-							<%= get_data_column("name")%>
 							<%= datum.data_columns[j].data_column_ints[i].val %>
 						<% end %>
 				</td>
 			<% end %>
 		</tr>
 		<% end %>
+		
+		<!--json stubs-->
+		<tr>
+			<% for j in (0..ncols-1) %>
+				<td>
+					<%= link_to 'JSON', :controller => "DataColumns", 
+										:action => "get_data_column_json",
+										:id => datum.id, 
+										:name => datum.data_columns[j].name					
+					%>
+				</td>
+			<% end %>
+		</tr>
   <% end %>
   </table>
 
