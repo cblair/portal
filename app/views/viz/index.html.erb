@@ -10,7 +10,6 @@ $(document).ready(function() {
             text: 'Fruit Consumption'
          },
          xAxis: {
-            categories: ['Apples', 'Bananas', 'Oranges']
          },
          yAxis: {
             title: {
@@ -19,7 +18,7 @@ $(document).ready(function() {
          },
          series: [{
             name: 'Jane',
-            data: [1, 0, 4]
+            data: <%= @data %>
          }, {
             name: 'John',
             data: [5, 7, 3]
