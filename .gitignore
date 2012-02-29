@@ -1,8 +1,10 @@
-http/system/pyrocms/config/database.php
+*~
+*.cache
+*.log
+*.pid
+tmp/**/*
 .DS_Store
-
-tmp/
-
-log/*.log
 db/*.sqlite3
+*.tmproj
+*.sw?
 
