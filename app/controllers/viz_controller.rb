@@ -1,4 +1,5 @@
 class VizController < ApplicationController
+  require 'lazy_high_charts'
   include DataHelper
 
   def index
