@@ -14,7 +14,8 @@ git status -uno
 git status -uno | grep 'behind'
 if [[ $? == 0 ]] ; then
 	echo test
-	git pull
+	git fetch
+	git reset --hard origin/integration #reset to the integration branch
 	if [[ $? == 0 ]] ; then
 		UPDATED=1
 		CONT_DATE=`date`
