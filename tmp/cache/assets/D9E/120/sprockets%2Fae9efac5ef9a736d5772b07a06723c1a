@@ -1,4 +1,4 @@
-o: ActiveSupport::Cache::Entry	:@compressedF:@expires_in0:@created_atf1330758868.1790311:@value{	I"length:EFi;ÓI"digest;
+o: ActiveSupport::Cache::Entry	:@compressedF:@expires_in0:@created_atf1330806759.995771:@value{	I"length:EFi;ÓI"digest;
 F"%0a6365e4488064809e2164ef40fe7314I"source;
 FI";Ó/*
  Highstock JS v1.1.4 (2012-02-15)
@@ -245,4 +245,4 @@ p;p=b.hoverPoints;var r=d.closestPointRange,j=(j-a)/(d.translationSlope*(d.ordin
 a.xAxis=a.yAxis=G;X=H(X,a);zc();return X},Series:M,addEvent:W,removeEvent:ra,createElement:na,discardElement:Hb,css:J,each:n,extend:E,map:nb,merge:H,pick:r,splat:sb,extendClass:pa,product:"Highstock",version:"1.1.4"})})();
 ;
 FI"_version;
-F"%3e6ebadac96ca26ef8fa9fff4d90f6c5
+F"%b9f6bbe7c3ecdf33b1df7bc6823b3b85

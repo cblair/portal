@@ -1,7 +1,7 @@
-o: ActiveSupport::Cache::Entry	:@compressedF:@expires_in0:@created_atf1330758869.373896:@value{I"
+o: ActiveSupport::Cache::Entry	:@compressedF:@expires_in0:@created_atf1330806760.960549:@value{I"
 class:EFI"StaticAsset;
 FI"id;
-F"%24d55583960dd454b5d3a19606117550I"logical_path;
+F"%f364e1926115f70207de853ecfbad149I"logical_path;
 FI"grey.png;
 TI"pathname;
 FI"%$root/app/assets/images/grey.png;
@@ -9,7 +9,7 @@ FI"content_type;
 FI"image/png;
 FI"
 mtime;
-FI"2012-02-27T19:49:44-08:00;
+FI"2012-03-03T08:44:35-08:00;
 FI"length;
 FI"684;
 FI"digest;

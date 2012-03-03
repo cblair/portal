@@ -1,2 +1,16 @@
-http/system/pyrocms/config/database.php
+*~
+*.cache
+*.log
+*.pid
 .DS_Store
+<<<<<<< HEAD
+=======
+
+#Hey Mike, sorry, have to keep these in for now.
+#tmp/**/*
+#db/*.sqlite3
+
+*.tmproj
+*.sw?
+
+>>>>>>> master

@@ -1,6 +1,8 @@
 Portal::Application.routes.draw do
   resources :data_columns
 
+  resources :tests
+
   resources :data_column_ints
 
   resources :metadata

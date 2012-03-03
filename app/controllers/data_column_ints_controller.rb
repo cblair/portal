@@ -6,7 +6,7 @@ class DataColumnIntsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @data_column_ints }
+      format.json { render json: @data_column_ints }
     end
   end
 
@@ -17,7 +17,7 @@ class DataColumnIntsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @data_column_int }
+      format.json { render json: @data_column_int }
     end
   end
 
@@ -28,7 +28,7 @@ class DataColumnIntsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @data_column_int }
+      format.json { render json: @data_column_int }
     end
   end
 
@@ -44,11 +44,11 @@ class DataColumnIntsController < ApplicationController
 
     respond_to do |format|
       if @data_column_int.save
-        format.html { redirect_to @data_column_int, :notice => 'Data column int was successfully created.' }
-        format.json { render :json => @data_column_int, :status => :created, :location => @data_column_int }
+        format.html { redirect_to @data_column_int, notice: 'Data column int was successfully created.' }
+        format.json { render json: @data_column_int, status: :created, location: @data_column_int }
       else
-        format.html { render :action => "new" }
-        format.json { render :json => @data_column_int.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.json { render json: @data_column_int.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -60,11 +60,11 @@ class DataColumnIntsController < ApplicationController
 
     respond_to do |format|
       if @data_column_int.update_attributes(params[:data_column_int])
-        format.html { redirect_to @data_column_int, :notice => 'Data column int was successfully updated.' }
+        format.html { redirect_to @data_column_int, notice: 'Data column int was successfully updated.' }
         format.json { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.json { render :json => @data_column_int.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.json { render json: @data_column_int.errors, status: :unprocessable_entity }
       end
     end
   end
