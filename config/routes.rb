@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  devise_for :users
+
   resources :data_columns
 
   resources :tests
