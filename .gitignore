@@ -1,8 +1,2 @@
 http/system/pyrocms/config/database.php
 .DS_Store
-
-tmp/
-
-log/*.log
-db/*.sqlite3
-
