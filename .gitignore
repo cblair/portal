@@ -2,9 +2,12 @@
 *.cache
 *.log
 *.pid
-tmp/**/*
 .DS_Store
-db/*.sqlite3
+
+#Hey Mike, sorry, have to keep these in for now.
+#tmp/**/*
+#db/*.sqlite3
+
 *.tmproj
 *.sw?
 
