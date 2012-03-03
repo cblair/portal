@@ -6,7 +6,7 @@ class DataController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @data }
+      format.json { render json: @data }
     end
   end
 
@@ -17,7 +17,7 @@ class DataController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @datum }
+      format.json { render json: @datum }
     end
   end
 
@@ -28,7 +28,7 @@ class DataController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @datum }
+      format.json { render json: @datum }
     end
   end
 
@@ -44,11 +44,11 @@ class DataController < ApplicationController
 
     respond_to do |format|
       if @datum.save
-        format.html { redirect_to @datum, :notice => 'Datum was successfully created.' }
-        format.json { render :json => @datum, :status => :created, :location => @datum }
+        format.html { redirect_to @datum, notice: 'Datum was successfully created.' }
+        format.json { render json: @datum, status: :created, location: @datum }
       else
-        format.html { render :action => "new" }
-        format.json { render :json => @datum.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.json { render json: @datum.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -60,11 +60,11 @@ class DataController < ApplicationController
 
     respond_to do |format|
       if @datum.update_attributes(params[:datum])
-        format.html { redirect_to @datum, :notice => 'Datum was successfully updated.' }
+        format.html { redirect_to @datum, notice: 'Datum was successfully updated.' }
         format.json { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.json { render :json => @datum.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.json { render json: @datum.errors, status: :unprocessable_entity }
       end
     end
   end
