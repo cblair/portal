@@ -18,7 +18,7 @@ class DataIOController < ApplicationController
 
     #Save metadata
     #TODO: name metadata something else
-    md=Metadatum.find_or_initialize_by_name(fname)
+    md=Metadatum.find_or_create_by_name(fname)
 
   end
 

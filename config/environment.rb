@@ -6,4 +6,3 @@ Portal::Application.initialize!
 
 ENV['RAILS_ENV'] ||= 'development'
 
-require 'lazy_high_charts'

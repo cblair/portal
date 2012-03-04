@@ -1,5 +1,4 @@
 class VizController < ApplicationController
-  require 'lazy_high_charts'
 
   def index
     #get the first Datum with the same param1 value
