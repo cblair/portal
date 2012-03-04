@@ -38,3 +38,8 @@ gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.g
 gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
 
 gem 'lazy_high_charts', '~> 1.1.5'
+
+gem 'couchrest'
+#also, you will need to run this afterward... don't know if it is in a gem yet
+#TODO: make a script I guess
+#rails plugin install git://github.com/paulca/stuffing.git

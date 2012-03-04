@@ -1,0 +1,87 @@
+#!/usr/bin/env python
+"""
+Flush control for ep-engine.
+
+Copyright (c) 2010  Dustin Sallings <dustin@spy.net>
+"""
+import sys
+import time
+
+import clitool
+
+def auth(mc, username, password):
+    if username:
+        mc.sasl_auth_plain(username, password)
+
+def stop(mc, username=None, password=""):
+    auth(mc, username, password)
+    mc.stop_persistence()
+    stopped = False
+    while not stopped:
+        time.sleep(0.5)
+        try:
+            stats = mc.stats()
+            success = True
+        except:
+            if success:
+                import mc_bin_client
+                mc = mc_bin_client.MemcachedClient(mc.host, mc.port)
+                raise
+            else:
+                raise
+        success = False
+        if stats['ep_flusher_state'] == 'paused':
+            stopped = True
+
+def start(mc, username=None, password=""):
+    auth(mc, username, password)
+    mc.start_persistence()
+
+def set_param(mc, key, val, username=None, password=""):
+    auth(mc, username, password)
+    mc.set_flush_param(key, val)
+
+def evict(mc, key, username=None, password=""):
+    auth(mc, username, password)
+    mc.evict_key(key)
+
+def drain(mc, username=None, password=""):
+    auth(mc, username, password)
+    while True:
+        s = mc.stats()
+        if s['ep_queue_size'] == "0" and \
+           s['ep_flusher_todo'] == "0":
+           print("done")
+           return
+        time.sleep(2)
+        sys.stdout.write('.')
+        sys.stdout.flush()
+
+if __name__ == '__main__':
+
+    c = clitool.CliTool("""
+All commands allow an optional username and password as the last
+two parameters.
+
+Persistence:
+    stop           - stop persistence
+    start          - start persistence
+    drain          - wait until queues are drained
+
+Available params for "set":
+    min_data_age   - minimum data age before flushing data
+    queue_age_cap  - maximum queue age before flushing data
+    max_txn_size   - maximum number of items in a flusher transaction
+    bg_fetch_delay - delay before executing a bg fetch (test feature)
+    max_size       - max memory used by the server
+    mem_high_wat   - high water mark
+    mem_low_wat    - low water mark
+    exp_pager_stime- Expiry Pager Sleeptime""")
+
+    c.addCommand('stop', stop, 'stop')
+    c.addCommand('start', start, 'start')
+    c.addCommand('set', set_param, 'set param value')
+    c.addCommand('evict', evict, "evict key")
+    c.addCommand('drain', drain, "drain")
+
+    c.execute()

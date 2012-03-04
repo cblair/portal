@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120303204701) do
+ActiveRecord::Schema.define(:version => 20120303234622) do
 
   create_table "data", :force => true do |t|
     t.string   "param1"
@@ -40,6 +40,11 @@ ActiveRecord::Schema.define(:version => 20120303204701) do
 
   create_table "metadata", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "posts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

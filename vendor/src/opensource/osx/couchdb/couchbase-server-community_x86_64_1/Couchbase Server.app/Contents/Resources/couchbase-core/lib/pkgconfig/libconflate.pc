@@ -1,0 +1,12 @@
+prefix=/Users/buildbot/mini64/membasex-1.8_mini64/build/install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libconflate
+Description: A library for managing configuration of clustered applications -- Bringing it all together.
+Version: 1.8.0
+Requires.private: libstrophe
+Libs: -L${libdir} -lconflate
+Libs.private:  
+Cflags: -I${includedir}/libconflate

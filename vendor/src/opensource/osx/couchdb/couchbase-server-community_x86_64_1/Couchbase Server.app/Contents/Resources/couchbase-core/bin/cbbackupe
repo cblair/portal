@@ -1,0 +1,12 @@
+#! /bin/sh
+prefix=/Users/buildbot/mini64/membasex-1.8_mini64/build/install
+exec_prefix=${prefix}
+root=${exec_prefix}/lib/python
+
+if test -z "${PYTHONPATH}"; then
+   PYTHONPATH=$root
+else
+   PYTHONPATH=$root:${PYTHONPATH}
+fi
+export PYTHONPATH
+exec $root/`basename $0` "$@"

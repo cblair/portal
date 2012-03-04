@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  resources :posts
+
   resources :data_columns
 
   resources :tests

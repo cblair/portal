@@ -1,0 +1,10 @@
+prefix=/Users/buildbot/mini64/membasex-1.8_mini64/build/install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libmemcached
+Description: libmemcached C library.
+Version: 0.47
+Libs:  -lsasl2 -L${libdir} -lmemcached
+Cflags: -I${includedir}
