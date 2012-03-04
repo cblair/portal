@@ -17,12 +17,19 @@ git status -uno | grep 'different'
 STAT_DIFF=$?
 if [[ $STAT_BEHIND == 0 || $STAT_DIFF == 0 ]] ; then
 	echo test
-	git fetch
-	git reset --hard origin/integration #reset to the integration branch
+	git pull
 	if [[ $? == 0 ]] ; then
 		UPDATED=1
 		CONT_DATE=`date`
 	fi
+
+	#make sure we're on integration
+	git checkout integration
+
+	#do any new installs
+	bundle install
+	rake db:create
+	rake db:schema:load
 fi
 
 HTML_TEXT="
