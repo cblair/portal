@@ -2,9 +2,11 @@
 *.cache
 *.log
 *.pid
-tmp/**/*
 .DS_Store
+
+tmp/
 db/*.sqlite3
+
 *.tmproj
 *.sw?
 

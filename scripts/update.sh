@@ -17,7 +17,8 @@ git status -uno | grep 'different'
 STAT_DIFF=$?
 if [[ $STAT_BEHIND == 0 || $STAT_DIFF == 0 ]] ; then
 	echo test
-	git pull
+	git fetch
+	git reset --hard origin/integration #reset to the integration branch
 	if [[ $? == 0 ]] ; then
 		UPDATED=1
 		CONT_DATE=`date`

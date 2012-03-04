@@ -18,8 +18,25 @@ class DataIOController < ApplicationController
 
     #Save metadata
     #TODO: name metadata something else
-    md=Metadatum.find_or_initialize_by_name(fname)
+    md=Metadatum.find_or_create_by_name(fname)
 
+  end
+
+  def csv_import_old    
+    fname=params[:dump][:file].original_filename
+    
+    #start recording run time
+    stime = Time.now() #start time
+    
+    if CSV.const_defined? :Reader
+        @parsed_file=CSV::Reader.parse(params[:dump][:file])
+    else
+        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+    end
+
+    #Save metadata
+    #TODO: name metadata something else
+    md=Metadatum.find_or_initialize_by_name(fname)
     #Save Data
     d=Datum.create( :param1 => fname,
                     :metadatum => md
