@@ -12,7 +12,10 @@ cd $ROOTDIR
 git remote update
 git status -uno 
 git status -uno | grep 'behind'
-if [[ $? == 0 ]] ; then
+STAT_BEHIND=$?
+git status -uno | grep 'different'
+STAT_DIFF=$?
+if [[ $STAT_BEHIND == 0 || $STAT_DIFF == 0 ]] ; then
 	echo test
 	git pull
 	if [[ $? == 0 ]] ; then
