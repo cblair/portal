@@ -30,12 +30,22 @@ gem 'jquery-rails'
 # gem 'capistrano'
 
 # To use debugger
-gem 'ruby-debug', :platforms => :ruby_18
-gem 'ruby-debug19', :platforms => :ruby_19
+#  OSX Lion wants this fix for Ruby 1.9.3:
+#   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
+#  TODO: Probably want this for other versions of Mac/Linux too.
+if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
+  gem 'ruby-debug19', :require => false
+  gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.git', :require => false
+  gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
+else
+  #Ubuntu 11.10 likes this. ?
+  gem 'ruby-debug', :platforms => :ruby_18
+  gem 'ruby-debug19', :platforms => :ruby_19
+end
 
 gem 'lazy_high_charts', '~> 1.1.5'
 
 gem 'couchrest'
 #also, you will need to run this afterward... don't know if it is in a gem yet
 #TODO: make a script I guess
-#rails plugin install git://github.com/paulca/stuffing.git
+#rails plugin install git://github.com/cblair/stuffing.git
