@@ -1,5 +1,6 @@
 class DataIOController < ApplicationController
   require 'csv'
+  include DataHelper
 
   def index
   end
@@ -19,8 +20,38 @@ class DataIOController < ApplicationController
     #Save metadata
     #TODO: name metadata something else
     md=Metadatum.find_or_create_by_name(fname)
+    md.save
+    
+    data_columns=[]
+    i = 0
+    @parsed_file.each do |row|
+      data_col_hash = {}
+      for j in (0..row.count-1)
+        data_col_hash["test_colname_#{j}"] = row[j]
+      end
+      data_columns[i] = data_col_hash
+      i = i + 1  
+    end
+    
+    #Transform all values to native ruby types
+    get_col_type(data_columns)
+        
+    #Save Data
+    d=Datum.create( :param1 => fname,
+                    :metadatum => md,
+                    :stuffing_data => data_columns
+                    )
+    d.save
 
+    etime = Time.now() #end time
+    ttime = etime - stime #total time
+
+    flash[:notice]="CSV Import successful,  #{i} new rows added to data base in #{ttime}"
+
+    render :action => "index"   
+    #redirect_to "/Metadata/#{md.id}"
   end
+
 
   def csv_import_old    
     fname=params[:dump][:file].original_filename

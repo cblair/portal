@@ -1,4 +1,4 @@
-<div id="notice"><%= flash.now[:message] %></div>
+<div id="notice"><%= flash.now[:notice] %></div>
 
 <h3>Input</h3>
  <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
