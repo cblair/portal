@@ -34,3 +34,4 @@ gem 'ruby-debug', :platforms => :ruby_18
 gem 'ruby-debug19', :platforms => :ruby_19
 
 gem 'lazy_high_charts', '~> 1.1.5'
+gem 'devise', '~> 2'
