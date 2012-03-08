@@ -52,8 +52,6 @@ class DataIOController < ApplicationController
                     :stuffing_data => data_columns
                     )
     d.save
-    
-    debugger
 
     etime = Time.now() #end time
     ttime = etime - stime #total time
