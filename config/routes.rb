@@ -16,8 +16,11 @@ Portal::Application.routes.draw do
 
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
   match '/metadata/:id/data' => 'metadata#showassociated'
   match 'metadata/testjson' => 'metadata#testjson'
+  
+  match 'Data/index' => 'Data#index'
   
   match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
   match 'DataColumns/:id' => 'DataColumns#show'

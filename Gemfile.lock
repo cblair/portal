@@ -1,3 +1,21 @@
+GIT
+  remote: git@github.com:chuckg/linecache19.git
+  revision: 22c91d747e469f751b0df594183f8f124b1e1b53
+  branch: 0_5_13/dependencies
+  specs:
+    linecache19 (0.5.13)
+      ruby_core_source (>= 0.1.4)
+
+GIT
+  remote: https://github.com/tribune/ruby-debug-base19.git
+  revision: fb0c03823944d2165edfc5e4d37c441c003eac5c
+  specs:
+    ruby-debug-base19 (0.11.26)
+      columnize (>= 0.3.1)
+      linecache19 (>= 0.5.11)
+      rake (>= 0.8.1)
+      ruby_core_source (>= 0.1.4)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -41,18 +59,15 @@ GEM
       execjs
     coffee-script-source (1.2.0)
     columnize (0.3.6)
-<<<<<<< HEAD
     couchrest (1.0.1)
       json (>= 1.4.6)
       mime-types (>= 1.15)
       rest-client (>= 1.5.1)
-=======
     devise (2.0.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
       railties (~> 3.1)
       warden (~> 1.1.1)
->>>>>>> 44a9695447ec4cc6bf10800a0ad1ee8db60b7307
     erubis (2.7.0)
     execjs (1.3.0)
       multi_json (~> 1.0)
@@ -67,8 +82,6 @@ GEM
     libv8 (3.3.10.4)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
-    linecache19 (0.5.12)
-      ruby_core_source (>= 0.1.4)
     mail (2.3.0)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -105,20 +118,13 @@ GEM
     rbx-require-relative (0.0.9)
     rdoc (3.12)
       json (~> 1.4)
-<<<<<<< HEAD
     rest-client (1.6.7)
       mime-types (>= 1.16)
-=======
     ruby-debug (0.10.4)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
-    ruby-debug-base19 (0.11.25)
-      columnize (>= 0.3.1)
-      linecache19 (>= 0.5.11)
-      ruby_core_source (>= 0.1.4)
->>>>>>> 44a9695447ec4cc6bf10800a0ad1ee8db60b7307
     ruby-debug19 (0.11.6)
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
@@ -155,16 +161,15 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 3.1.1)
-<<<<<<< HEAD
   couchrest
-=======
   devise (~> 2)
->>>>>>> 44a9695447ec4cc6bf10800a0ad1ee8db60b7307
   jquery-rails
   json
   lazy_high_charts (~> 1.1.5)
+  linecache19!
   rails (= 3.1.3)
   ruby-debug
+  ruby-debug-base19!
   ruby-debug19
   sass-rails (~> 3.1.5)
   sqlite3
