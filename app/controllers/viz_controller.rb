@@ -1,24 +1,20 @@
 class VizController < ApplicationController
-  include DataHelper
 
   def index
     #get the first Datum with the same param1 value
-    d=Datum.find(params[:datum_id])
-    col1 = get_data_column(d, params[:x_axis])
-    col2 = get_data_column(d, params[:y_axis])
-    #col1 = [1, 3, 5, 6, 5, 7, 7, 7]
-    #col2 = [2, 3, 8, 8, 5, 4, 4, 1]
+    #@test = Metadatum.find(params[:id])[:param1]
+    #@data = Datum.where(:param1 => Metadatum.find(params[:id])[:param1])
+    # just draw a test/example chart
+    col1 = [1, 3, 5, 6, 5, 7, 7, 7]
+    col2 = [2, 3, 8, 8, 5, 4, 4, 1]
     @data = col1.zip(col2)
-    chart_name="#{d.param1} chart"
-    series_name="#{params[:x_axis]} vs. #{params[:y_axis]} series"
     @hc = LazyHighCharts::HighChart.new('visualization') do |f|
         f.options[:chart][:defaultSeriesType] = 'spline'
-        f.series(:name=>series_name, :data=>@data)
-        #f.series(:name=>'test series 2', :data=>col2.zip(col1))
-        #f.series(:name=>'test series 2', :data=>col1)
+        f.series(:name=>'test series', :data=>@data)
+        f.series(:name=>'test series 2', :data=>col2.zip(col1))
         f.options[:title] = {:text=>'test chart'}
-        f.options[:xAxis][:title] = {:text=>params[:x_axis]}
-        f.options[:yAxis][:title] = {:text=>params[:y_axis]}
+        f.options[:xAxis][:title] = {:text=>'x axis'}
+        f.options[:yAxis][:title] = {:text=>'y axis'}
     end
   end
   
