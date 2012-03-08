@@ -2,7 +2,7 @@
 
 <h3>Input</h3>
  <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
- <table">
+ <table>
    <tr>
      <td>
       <label for="dump_file">
@@ -12,14 +12,18 @@
      <td >
        <%= f.file_field :file -%>
      </td>
+     <td>
+     	<%= f.check_box :contains_header %> File has header
+     </td>
    </tr>
    <tr>
-     <td colspan='2'>
+   	 <td>
        <%= submit_tag 'Submit' -%>
      </td>
    </tr>
  </table>
 <% end -%>
+
 
 <h3>Saved</h3>
 <ul>

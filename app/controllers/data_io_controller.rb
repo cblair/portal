@@ -11,14 +11,21 @@ class DataIOController < ApplicationController
     #start recording run time
     stime = Time.now() #start time
     
+    #CSV import. Each call on @parsed_file.<method> incremenst the cursor
     if CSV.const_defined? :Reader
         @parsed_file=CSV::Reader.parse(params[:dump][:file])
     else
         @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
     end
+    
+    #Get the column name
+    if params[:dump][:contains_header] == "1"
+      colnames = @parsed_file.first()
+    else
+      colnames = ["1"]
+    end
 
     #Save metadata
-    #TODO: name metadata something else
     md=Metadatum.find_or_create_by_name(fname)
     md.save
     
@@ -27,14 +34,17 @@ class DataIOController < ApplicationController
     @parsed_file.each do |row|
       data_col_hash = {}
       for j in (0..row.count-1)
-        data_col_hash["test_colname_#{j}"] = row[j]
+        data_col_hash[ colnames[j] ] = row[j]
       end
       data_columns[i] = data_col_hash
       i = i + 1  
     end
     
+    #Remove empty elements
+    data_columns.reject! { |item| item.empty? }
+    
     #Transform all values to native ruby types
-    get_col_type(data_columns)
+    data_columns=convert_data_to_native_types(data_columns, colnames)
         
     #Save Data
     d=Datum.create( :param1 => fname,

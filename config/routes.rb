@@ -34,6 +34,7 @@ Portal::Application.routes.draw do
   match 'DataColumnInts/:id' => 'DataColumnInts#show'
   
   match '/Viz' => "Viz#index"
+  match '/Viz' => "Viz#show"
   match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'
   
   #Demo stuff
