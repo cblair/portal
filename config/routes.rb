@@ -17,8 +17,6 @@ Portal::Application.routes.draw do
 
   resources :data_column_ints
 
-  resources :metadata
-
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
    match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import

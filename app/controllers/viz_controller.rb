@@ -1,6 +1,6 @@
 class VizController < ApplicationController
   require 'lazy_high_charts'
-  include DataHelper
+  include DocumentsHelper
 
   def index
     #get the first Datum with the same param1 value
