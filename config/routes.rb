@@ -11,12 +11,6 @@ Portal::Application.routes.draw do
   resources :posts
   devise_for :users
 
-  resources :data_columns
-
-  resources :tests
-
-  resources :data_column_ints
-
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
    match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
