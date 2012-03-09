@@ -30,7 +30,7 @@
 		<li class="active"><a href="#">About</a></li>
 		-->
 		<li><%= link_to "Home", root_path %></li>
-		<li><%= link_to "Data I/O", csv_import_path %></li>
+		<li><%= link_to "Data I/O", :controller => "DataIO", :action => "index" %></li>
 		<li><%= link_to "Hosts", "#" %><li>
         <li><%= link_to "Visualization", '/viz'%></li>
 		</ul>
