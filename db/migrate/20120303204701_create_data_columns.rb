@@ -1,6 +1,5 @@
 class CreateDataColumns < ActiveRecord::Migration
   def change
-    drop_table :data_columns
     create_table :data_columns do |t|
       t.string :name
       t.string :dtype

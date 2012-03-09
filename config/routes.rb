@@ -1,5 +1,9 @@
 Portal::Application.routes.draw do
   root :to => 'home#index'
+
+  root :to => 'home#index'
+  devise_for :users
+
   resources :posts
   devise_for :users
 
@@ -11,12 +15,12 @@ Portal::Application.routes.draw do
 
   resources :metadata
 
-  resources :data
-
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
   match '/metadata/:id/data' => 'metadata#showassociated'
   match 'metadata/testjson' => 'metadata#testjson'
+  match 'Data/index' => 'Data#index'
   
   match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
   match 'DataColumns/:id' => 'DataColumns#show'
@@ -24,7 +28,6 @@ Portal::Application.routes.draw do
   match 'DataColumnInts/:id' => 'DataColumnInts#show'
   
   
-  match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'
   match '/viz' => 'viz#index'
 
   #Demo stuff
