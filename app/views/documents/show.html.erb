@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @document.name %>
+</p>
+
+<p>
+  <b>Collection:</b>
+  <%= @document.collection_id %>
+</p>
+
+<p>
+	<b>Data:</b>
+	<table>
+	<% row = @document.stuffing_data.first() %>
+	<% colnames = row.keys() %>
+		<!--Column names-->
+		<tr>
+			<td><!--place holder for axis labels--></td>
+			<% colnames.each do |colname|%>
+			<td>
+				<b><%= colname %></b>
+			</td>
+			<% end %>
+		</tr>
+		
+		<%= form_tag(:controller => "viz") do %>
+			<%= hidden_field_tag(:document_id, @document[:id]) %>
+		<tr>
+			<!--Links to Viz - x axis-->
+			<td>X axis</td>
+			<% colnames.each do |colname|%>
+			<td>
+				<%= radio_button_tag("x_axis", colname) %> 
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<!--Links to Viz - y axis-->
+			<td>Y axis</td>
+			<% colnames.each do |colname|%>
+			<td>
+				<%= radio_button_tag("y_axis", colname) %> 
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<td><%= submit_tag("Vizualize")%></td>
+			
+		<% end %><!--end axis form-->
+		</tr>
+	
+	<!--Display data-->
+	<% @document.stuffing_data.each do |row| %>
+		<tr>
+			<td><!--place holder for axis labels--></td>
+			<% row.values.each do |val|%>
+			<td>
+				<%= val %>
+			</td>
+			<% end %>
+		</tr>
+	<% end %>
+	</table>
+</p>
+
+
+<%= link_to 'Edit', edit_document_path(@document) %> |
+<%= link_to 'Back', documents_path %>

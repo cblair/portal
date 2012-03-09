@@ -1,16 +1,18 @@
 class VizController < ApplicationController
-  require 'lazy_high_charts'
+<<<<<<< HEAD
   include DataHelper
+=======
+>>>>>>> b12513e... Removed extraneous 'require's
 
   def index
     #get the first Datum with the same param1 value
-    d=Document.find(params[:document_id])
+    d=Datum.find(params[:datum_id])
     col1 = get_data_column(d, params[:x_axis])
     col2 = get_data_column(d, params[:y_axis])
     #col1 = [1, 3, 5, 6, 5, 7, 7, 7]
     #col2 = [2, 3, 8, 8, 5, 4, 4, 1]
     @data = col1.zip(col2)
-    chart_name="#{d.name} chart"
+    chart_name="#{d.param1} chart"
     series_name="#{params[:x_axis]} vs. #{params[:y_axis]} series"
     @hc = LazyHighCharts::HighChart.new('visualization') do |f|
         f.options[:chart][:defaultSeriesType] = 'spline'

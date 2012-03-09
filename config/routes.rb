@@ -1,4 +1,8 @@
 Portal::Application.routes.draw do
+  resources :documents
+
+  resources :collections
+
   root :to => 'home#index'
 
   root :to => 'home#index'
