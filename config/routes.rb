@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  resources :ifilters
+
   resources :documents
 
   resources :collections
