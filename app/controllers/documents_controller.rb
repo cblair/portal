@@ -1,4 +1,6 @@
 class DocumentsController < ApplicationController
+  include DocumentsHelper
+    
   # GET /documents
   # GET /documents.json
   def index
@@ -79,5 +81,17 @@ class DocumentsController < ApplicationController
       format.html { redirect_to documents_url }
       format.json { head :ok }
     end
+  end
+  
+  #Creates new doc data based on some predefined methods
+  def manip
+    d = Document.find(params[:id])
+    colname = params[:manip_colname]
+    @document = Document.create(
+                                :name => "#{d.name}_manip", 
+                                :collection => d.collection,
+                                :stuffing_data => get_data_map(d, colname))
+                                
+    render "show"
   end
 end

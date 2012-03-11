@@ -2,6 +2,7 @@ Portal::Application.routes.draw do
   resources :ifilters
 
   resources :documents
+  match '/documents/manip' => "documents#manip", :as => :document_manip
 
   resources :collections
 

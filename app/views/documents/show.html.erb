@@ -17,10 +17,19 @@
 	<% colnames = row.keys() %>
 		<!--Column names-->
 		<tr>
-			<td><!--place holder for axis labels--></td>
+			<td>Column name:</td>
 			<% colnames.each do |colname|%>
 			<td>
 				<b><%= colname %></b>
+			</td>
+			<% end %>
+		</tr>
+		<!--Column types-->
+		<tr>
+			<td>Data type:</td>
+			<% colnames.each do |colname|%>
+			<td>
+				<b><%= row[colname].class() %></b>
 			</td>
 			<% end %>
 		</tr>
@@ -32,16 +41,16 @@
 			<td>X axis</td>
 			<% colnames.each do |colname|%>
 			<td>
-				<%= radio_button_tag("x_axis", colname) %> 
+				<%= check_box_tag("x_axis", colname) %> 
 			</td>
 			<% end %>
 		</tr>
 		<tr>
-			<!--Links to Viz - y axis-->
-			<td>Y axis</td>
+			<!--Links to Viz - x axis label-->
+			<td>X axis label</td>
 			<% colnames.each do |colname|%>
 			<td>
-				<%= radio_button_tag("y_axis", colname) %> 
+				<%= check_box_tag("x_axis_labels", colname) %> 
 			</td>
 			<% end %>
 		</tr>
@@ -49,6 +58,28 @@
 			<td><%= submit_tag("Vizualize")%></td>
 			
 		<% end %><!--end axis form-->
+		</tr>
+		
+		<!--Document Manip Form-->
+			<%= form_tag(document_manip_path) do %>
+			<%= hidden_field_tag(:id, @document[:id]) %>
+		<tr>
+			<td>Data Manipulation:</td>
+			<td><%= select_tag(:manip_func, options_for_select([ ["map","map"] ]))%></td>
+		</tr>
+		<tr>
+			<!--Colnames for Data Manip-->
+			<td><!--place holder--></td>
+			<% colnames.each do |colname|%>
+			<td>
+				<%= radio_button_tag("manip_colname", colname) %> 
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<td><%= submit_tag("Manipulate")%></td>
+			
+		<% end %><!--end Data Manip form-->
 		</tr>
 	
 	<!--Display data-->

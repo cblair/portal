@@ -1,16 +1,24 @@
 class DataIOController < ApplicationController
   require 'csv'
   include DocumentsHelper
+  include IfiltersHelper
 
   def index
   end
   
   def csv_import    
     fname=params[:dump][:file].original_filename
+    filter_id=params[:post][:ifilter_id]
+    
+    f=nil
+    if filter_id != ""
+      f=Ifilter.find(filter_id)
+    end
     
     #start recording run time
     stime = Time.now() #start time
     
+    #TODO: if filter specified, don't try CSV
     #CSV import. Each call on @parsed_file.<method> incremenst the cursor
     if CSV.const_defined? :Reader
         @parsed_file=CSV::Reader.parse(params[:dump][:file])
@@ -19,10 +27,11 @@ class DataIOController < ApplicationController
     end
     
     #Get the column name
+    colnames=[]
     if params[:dump][:contains_header] == "1"
       colnames = @parsed_file.first()
     else
-      colnames = ["1"]
+      colnames = [1]
     end
 
     #Save metadata
@@ -33,9 +42,20 @@ class DataIOController < ApplicationController
     i = 0
     @parsed_file.each do |row|
       data_col_hash = {}
+      
+      #apply input filter
+      if f != nil
+       #overwrite row with filtered row
+       row = get_filtered_row(f, row)
+       #overwrite col names with numbered colnames
+       
+       colnames = get_filtered_colnames(row)
+      end
+      
       for j in (0..row.count-1)
         data_col_hash[ colnames[j] ] = row[j]
       end
+      
       data_columns[i] = data_col_hash
       i = i + 1  
     end
@@ -44,7 +64,7 @@ class DataIOController < ApplicationController
     data_columns.reject! { |item| item.empty? }
     
     #Transform all values to native ruby types
-    data_columns=convert_data_to_native_types(data_columns, colnames)
+    data_columns=convert_data_to_native_types(data_columns)
     
     #Save Document
     #TODO: bug, 'create' is not working now, makes all values nill. Going to 'new'. ?

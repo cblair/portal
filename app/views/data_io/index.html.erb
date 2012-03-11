@@ -9,9 +9,18 @@
         Select a CSV File :
       </label>
      </td>
+   </tr>
+   <tr>
      <td >
        <%= f.file_field :file -%>
      </td>
+   </tr>
+   <tr>
+     <td>
+     	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => 'Select Filter'})%>
+     </td>
+   </tr>
+   <tr>
      <td>
      	<%= f.check_box :contains_header %> File has header
      </td>
