@@ -3,4 +3,12 @@ class Document < ActiveRecord::Base
     
   belongs_to :collection
   stuffing
+  
+  def self.search(search)
+    if search
+      where('name LIKE ?', "%#{search}%")
+    else
+      scoped
+    end
+  end
 end
