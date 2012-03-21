@@ -10,11 +10,30 @@
   <%= @document.collection_id %>
 </p>
 
-<p>
-	<b>Data:</b>
+<hr/>
+
+<% row = @document.stuffing_data.first() %>
+<% colnames = row.keys %>
+
+<div>
+	<h2>Visualization</h2>
+		<%= form_tag(:controller => "viz") do %>
+			<%= hidden_field_tag(:document_id, @document[:id]) %>
+    <table>
+        <thead>
+            <tr>
+                <th>X axis</th>
+                <th>Y axis</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                <%= select_tag("x_axis", options_for_select(colnames))%>
+            </td>
+            <td>
+                <%= select_tag("y_axis", options_for_select(colnames))%>
+            </td>
 	<table>
-	<% row = @document.stuffing_data.first() %>
-	<% colnames = row.keys() %>
 		<!--Column names-->
 		<tr>
 			<td>Column name:</td>
@@ -34,14 +53,12 @@
 			<% end %>
 		</tr>
 		
-		<%= form_tag(:controller => "viz") do %>
-			<%= hidden_field_tag(:document_id, @document[:id]) %>
 		<tr>
 			<!--Links to Viz - x axis-->
 			<td>X axis</td>
 			<% colnames.each do |colname|%>
 			<td>
-				<%= check_box_tag("x_axis", colname) %> 
+                <%#	<%= check_box_tag("x_axis", colname) %> 
 			</td>
 			<% end %>
 		</tr>
@@ -60,28 +77,35 @@
 		<% end %><!--end axis form-->
 		</tr>
 		
-		<!--Document Manip Form-->
-			<%= form_tag(document_manip_path) do %>
-			<%= hidden_field_tag(:id, @document[:id]) %>
 		<tr>
-			<td>Data Manipulation:</td>
-			<td><%= select_tag(:manip_func, options_for_select([ ["map","map"] ]))%></td>
-		</tr>
-		<tr>
-			<!--Colnames for Data Manip-->
-			<td><!--place holder--></td>
-			<% colnames.each do |colname|%>
-			<td>
-				<%= radio_button_tag("manip_colname", colname) %> 
-			</td>
-			<% end %>
-		</tr>
-		<tr>
-			<td><%= submit_tag("Manipulate")%></td>
-			
-		<% end %><!--end Data Manip form-->
-		</tr>
-</table>
+    </table>
+
+</div>
+
+<hr/>
+
+<div>
+<!--Document Manip Form-->
+    <%= form_tag(document_manip_path) do %>
+    <%= hidden_field_tag(:id, @document[:id]) %>
+<h2>Data Manipulation</h2>
+<%= select_tag(:manip_func, options_for_select([ ["map","map"] ]))%>
+<ul>
+    <% colnames.each do |colname|%>
+        <li>
+        <%= radio_button_tag("manip_colname", colname) %> 
+        <%= colname %>
+        </li>
+    <% end %>
+<% end %><!--end Data Manip form-->
+</ul>
+<%= submit_tag("Manipulate")%>
+</div>
+
+<hr/>
+
+<div>
+    <h2>Data</h2>
 	<!--Display data-->
     <table>
         <thead><tr>
@@ -101,8 +125,7 @@
 		</tr>
 	<% end %>
 	</table>
-</p>
-
+</div>
 
 <%= link_to 'Edit', edit_document_path(@document) %> |
 <%= link_to 'Back', documents_path %>

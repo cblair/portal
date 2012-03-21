@@ -4,6 +4,7 @@ class VizController < ApplicationController
 
   def index
     #get the first Datum with the same param1 value
+    puts params
     d=Document.find(params[:document_id])
     col2 = get_data_column(d, params[:x_axis])
     col1 = (1..col2.count).to_a
