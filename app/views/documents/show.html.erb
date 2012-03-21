@@ -55,7 +55,7 @@
 			<% end %>
 		</tr>
 		<tr>
-			<td><%= submit_tag("Vizualize")%></td>
+			<td><%= submit_tag("Visualize")%></td>
 			
 		<% end %><!--end axis form-->
 		</tr>
@@ -81,8 +81,15 @@
 			
 		<% end %><!--end Data Manip form-->
 		</tr>
-	
+</table>
 	<!--Display data-->
+    <table>
+        <thead><tr>
+            <th><!--place holder for axis labels --></th>
+    <% row.keys.each do |name| %>
+            <th><%= name %></th>
+    <% end %>
+        </tr>></thhead>
 	<% @document.stuffing_data.each do |row| %>
 		<tr>
 			<td><!--place holder for axis labels--></td>
