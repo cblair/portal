@@ -1,0 +1,25 @@
+<%= form_for(@ifilter) do |f| %>
+  <% if @ifilter.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ifilter.errors.count, "error") %> prohibited this ifilter from being saved:</h2>
+
+      <ul>
+      <% @ifilter.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :regex %><br />
+    <%= f.text_field :regex %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

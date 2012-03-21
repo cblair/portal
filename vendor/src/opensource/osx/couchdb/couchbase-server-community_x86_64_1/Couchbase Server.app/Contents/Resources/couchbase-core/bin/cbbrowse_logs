@@ -1,0 +1,11 @@
+#!/bin/sh
+# Copyright (c) 2011, Couchbase, Inc.
+# All rights reserved.
+
+PATH="/Users/buildbot/mini64/membasex-1.8_mini64/build/install/bin":$PATH
+export PATH
+
+ERL_LIBS="/Users/buildbot/mini64/membasex-1.8_mini64/build/install/lib/couchdb/erlang/lib:/Users/buildbot/mini64/membasex-1.8_mini64/build/install/lib/ns_server/erlang/lib"
+export ERL_LIBS
+
+exec erl -pa ebin -boot start_sasl -sasl errlog_type error -noshell -run ns_log_browser -report_dir "/Users/buildbot/mini64/membasex-1.8_mini64/build/install/var/lib/couchbase/logs" -run init stop -- "$@"

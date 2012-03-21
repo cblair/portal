@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+couchbase-cli - command-line cluster administration tool
+"""
+
+import getopt
+import sys
+import listservers
+import buckets
+import node
+import info
+import util_cli as util
+
+from usage import usage, short_usage
+
+def main():
+    for x in sys.argv:
+       if x in ('-h', '--help', 'help'):
+           usage()
+
+    if len(sys.argv) <= 2:
+        short_usage()
+
+    debug = False
+
+    (cluster, user, password) = ('', '', '')
+
+    try:
+        (opts, _args) = getopt.getopt(sys.argv[2:],
+                                     'a:b:c:dse:gdlmo:OPp:r:Ssu:vV', [
+                'cluster=',
+                'debug',
+                'storage',
+                'password=',
+                'user=',
+                'mem',
+                'output=',
+                'os',
+                'ports',
+                'stats',
+                'license',
+                'server-add=',
+                'server-add-username=',
+                'server-add-password=',
+                'server-remove=',
+                'server-failover=',
+                'cluster-init=',
+                'cluster-init-username=',
+                'cluster-init-password=',
+                'cluster-init-port=',
+                'cluster-init-ramsize=',
+                'node-init=',
+                'node-init-data-path=',
+                'bucket=',
+                'bucket-type=',
+                'bucket-port=',
+                'bucket-password=',
+                'bucket-ramsize=',
+                'bucket-replica=',
+                'version'
+                ])
+    except getopt.GetoptError, err:
+        usage(err)
+
+    commands = {
+        'host-list'         : listservers.ListServers,
+        'server-list'       : listservers.ListServers,
+        'server-info'       : info.Info,
+        'server-eshell'     : info.Info,
+        'server-add'        : node.Node,
+        'server-readd'      : node.Node,
+        'rebalance'         : node.Node,
+        'rebalance-stop'    : node.Node,
+        'rebalance-status'  : node.Node,
+        'eject-server'      : node.Node,
+        'failover'          : node.Node,
+        'cluster-init'      : node.Node,
+        'node-init'         : node.Node,
+        'bucket-list'       : buckets.Buckets,
+        'bucket-create'     : buckets.Buckets,
+        'bucket-edit'       : buckets.Buckets,
+        'bucket-delete'     : buckets.Buckets,
+        'bucket-flush'      : buckets.Buckets
+        }
+
+    cmd = sys.argv[1]
+
+    if cmd not in commands:
+        err_message = ("'%s' is not a couchbase-cli command;" +
+                       " please see -h for more help.") % cmd
+        usage(err_message)
+
+    for (opt, arg) in opts:
+        if opt in ('-c', '--cluster'):
+            cluster = arg
+        if opt in ('-u', '--user'):
+            user = arg
+        if opt in ('-p', '--password'):
+            password = arg
+        if opt in ('-d', '--debug'):
+            debug = True
+
+    if not cluster:
+        usage("please provide a CLUSTER, or use -h for more help.")
+
+    server, port = util.hostport(cluster)
+
+    if debug:
+        print "INFO: running command: %s" % cmd
+
+    c = commands[cmd]()
+
+    try:
+        c.runCmd(cmd, server, port, user, password, opts)
+    except Exception, err:
+        print "ERROR: command: %s: %s:%d, %s" % (cmd, server, port, err)
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()

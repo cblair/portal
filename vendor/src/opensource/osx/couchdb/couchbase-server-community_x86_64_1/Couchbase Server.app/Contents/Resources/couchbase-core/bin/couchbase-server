@@ -1,0 +1,57 @@
+#! /bin/sh
+#
+# Copyright (c) 2010-2011, Couchbase, Inc.
+# All rights reserved
+#
+PATH="/Users/buildbot/mini64/membasex-1.8_mini64/build/install/bin":$PATH
+export PATH
+
+if [ `ulimit -n` -lt 10240 ]
+then
+    cat <<EOF
+The maximum number of open files for the couchbase user is set too low.
+It must be at least 10240. Normally this can be increased by adding
+the following lines to /etc/security/limits.conf:
+
+couchbase              soft    nofile                  <value>
+couchbase              hard    nofile                  <value>
+
+Where <value> is greater than 10240.
+EOF
+fi
+
+datadir="/Users/buildbot/mini64/membasex-1.8_mini64/build/install/var/lib/couchbase"
+
+test -d "$datadir" || mkdir -p "$datadir"
+cd "$datadir"
+
+# Initialize distributed erlang on the system (i.e. epmd)
+erl -noshell -setcookie nocookie -sname init -run init stop 2>&1 > /dev/null
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+ERL_LIBS="/Users/buildbot/mini64/membasex-1.8_mini64/build/install/lib/couchdb/erlang/lib:/Users/buildbot/mini64/membasex-1.8_mini64/build/install/lib/ns_server/erlang/lib"
+export ERL_LIBS
+
+DONT_START_COUCH=1
+export DONT_START_COUCH
+
+# Set an ENV variable to force C++ STL and string classes to not use its
+# default memory pooling allocator.
+# For GCC 3.2.2 and later
+GLIBCPP_FORCE_NEW=1
+export GLIBCPP_FORCE_NEW
+# For GCC 3.4 and later
+GLIBCXX_FORCE_NEW=1
+export GLIBCXX_FORCE_NEW
+
+exec erl \
+    +A 16 \
+    -setcookie nocookie \
+    -kernel inet_dist_listen_min 21100 inet_dist_listen_max 21299 \
+    $* \
+    -run ns_bootstrap -- \
+    -ns_server config_path "\"/Users/buildbot/mini64/membasex-1.8_mini64/build/install/etc/couchbase/static_config\"" \
+    -ns_server pidfile "\"/Users/buildbot/mini64/membasex-1.8_mini64/build/install/var/lib/couchbase/couchbase-server.pid\""

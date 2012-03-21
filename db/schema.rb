@@ -11,20 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120219003854) do
+ActiveRecord::Schema.define(:version => 20120310025956) do
 
-  create_table "data", :force => true do |t|
-    t.string   "param1"
-    t.string   "param2"
-    t.string   "param3"
-    t.string   "param4"
-    t.string   "param5"
-    t.string   "param6"
-    t.string   "param7"
-    t.string   "param8"
-    t.string   "param9"
-    t.string   "param10"
-    t.integer  "metadatum_id"
+  create_table "collections", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -45,10 +35,53 @@ ActiveRecord::Schema.define(:version => 20120219003854) do
     t.datetime "updated_at"
   end
 
+  create_table "documents", :force => true do |t|
+    t.string   "name"
+    t.integer  "collection_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ifilters", :force => true do |t|
+    t.string   "name"
+    t.string   "regex"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "metadata", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "posts", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tests", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

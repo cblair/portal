@@ -1,0 +1,11 @@
+prefix=/Users/buildbot/mini64/membasex-1.8_mini64/build/install
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libvbucket
+Description: A vbucket library for memcached
+Version: 1.8.0.1
+Requires.private: libmemcached
+Libs: -L${libdir} -lvbucket
+Cflags: -I${includedir}/libvbucket

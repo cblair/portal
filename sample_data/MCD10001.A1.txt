@@ -1,0 +1,426 @@
+:q
+    FILE TYPE                      : INTERROGATION
+    FILE TITLE                     : MCD10001.A1
+    FILE CREATED                   : 01 JANUARY 2010 AT 00:00
+    PROGRAM VERSION                : MINIMON V.1.4.16
+~01/01/10 00:10:10
+~01/01/10 00:20:10
+~01/01/10 00:30:10
+~01/01/10 00:40:10
+~01/01/10 00:50:10
+~01/01/10 01:00:10
+~01/01/10 01:10:10
+~01/01/10 01:20:10
+~01/01/10 01:30:10
+~01/01/10 01:40:10
+~01/01/10 01:50:10
+~01/01/10 02:00:10
+~01/01/10 02:10:10
+~00-5	01/01/10 02:10:15	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 02:10:15	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 02:10:15	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 02:10:15	ALARM	 Buffer active:       ON  Tag count:         2172
+~00-5	01/01/10 02:10:15	ALARM	 Memory used:        40%  Store Test Tag:      ON
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 02:10:15	ALARM	 Temperature:        12C  Exciter power:    22.0V
+~00-5	01/01/10 02:10:15	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 02:10:15	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 02:10:15	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 02:10:15	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 02:10:15	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 02:10:15	ALARM	 System date:   1/1/2010  System time:      00:53
+~00-5	01/01/10 02:10:15	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 02:10:15	ALARM	 Exciter current:   403A  Signal level:        5%
+~00-5	01/01/10 02:10:15	ALARM	 Exciter phase:        2  Relay counter:      50%
+~00-5	01/01/10 02:10:15	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 02:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 02:10:15	ALARM	 Exciter current:   422A  Signal level:        5%
+~00-5	01/01/10 02:10:15	ALARM	 Exciter phase:        1  Relay counter:      95%
+~00-5	01/01/10 02:10:15	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 02:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 02:10:15	ALARM	 Exciter current:   322A  Signal level:        1%
+~00-5	01/01/10 02:10:15	ALARM	 Exciter phase:        1  Relay counter:      95%
+~00-5	01/01/10 02:10:15	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 02:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 02:10:15	ALARM	 Exciter current:   152A  Signal level:        2%
+~00-5	01/01/10 02:10:15	ALARM	 Exciter phase:        0  Relay counter:      65%
+~00-5	01/01/10 02:10:15	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 02:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 02:10:15	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 02:10:15	ALARM	 Exciter current:   361A  Signal level:        2%
+~00-5	01/01/10 02:10:15	ALARM	 Exciter phase:        1  Relay counter:      42%
+~00-5	01/01/10 02:10:15	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 02:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 02:10:15	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 02:10:15	ALARM	 None                                            
+~01/01/10 02:20:10
+~01/01/10 02:30:10
+~01/01/10 02:40:10
+~01/01/10 02:50:11
+~01/01/10 03:00:11
+~01/01/10 03:10:11
+~01/01/10 03:20:11
+~01/01/10 03:30:11
+~01/01/10 03:40:11
+~01/01/10 03:50:11
+| 05 01/01/10 03:54:15 3E7.0000001D00 00 04
+| 05 01/01/10 03:54:15 3E7.0000001D00 00 05
+| 05 01/01/10 03:54:15 3E7.0000001D00 00 01
+| 05 01/01/10 03:54:15 3E7.0000001D00 00 02
+| 05 01/01/10 03:54:15 3E7.0000001D00 00 03
+~01/01/10 04:00:11
+~01/01/10 04:10:11
+~01/01/10 04:20:11
+~01/01/10 04:30:11
+~01/01/10 04:40:11
+~01/01/10 04:50:11
+~01/01/10 05:00:11
+~01/01/10 05:10:11
+~01/01/10 05:20:11
+~01/01/10 05:30:11
+~01/01/10 05:40:11
+~01/01/10 05:50:11
+~01/01/10 06:00:11
+~01/01/10 06:10:11
+~00-5	01/01/10 06:10:15	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 06:10:15	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 06:10:15	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 06:10:15	ALARM	 Buffer active:       ON  Tag count:         2177
+~00-5	01/01/10 06:10:15	ALARM	 Memory used:        40%  Store Test Tag:      ON
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 06:10:15	ALARM	 Temperature:        12C  Exciter power:    22.0V
+~00-5	01/01/10 06:10:15	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 06:10:15	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 06:10:15	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 06:10:15	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 06:10:15	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 06:10:15	ALARM	 System date:   1/1/2010  System time:      04:53
+~00-5	01/01/10 06:10:15	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 06:10:15	ALARM	 Exciter current:   403A  Signal level:        6%
+~00-5	01/01/10 06:10:15	ALARM	 Exciter phase:        1  Relay counter:      50%
+~00-5	01/01/10 06:10:15	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 06:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 06:10:15	ALARM	 Exciter current:   422A  Signal level:        4%
+~00-5	01/01/10 06:10:15	ALARM	 Exciter phase:        0  Relay counter:      95%
+~00-5	01/01/10 06:10:15	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 06:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 06:10:15	ALARM	 Exciter current:   322A  Signal level:        1%
+~00-5	01/01/10 06:10:15	ALARM	 Exciter phase:        0  Relay counter:      95%
+~00-5	01/01/10 06:10:15	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 06:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 06:10:15	ALARM	 Exciter current:   152A  Signal level:        2%
+~00-5	01/01/10 06:10:15	ALARM	 Exciter phase:       -3  Relay counter:      65%
+~00-5	01/01/10 06:10:15	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 06:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 06:10:15	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 06:10:15	ALARM	 Exciter current:   361A  Signal level:        1%
+~00-5	01/01/10 06:10:15	ALARM	 Exciter phase:        0  Relay counter:      42%
+~00-5	01/01/10 06:10:15	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 06:10:15	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 06:10:15	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 06:10:15	ALARM	 None                                            
+~01/01/10 06:20:11
+~01/01/10 06:30:11
+~01/01/10 06:40:11
+~01/01/10 06:50:11
+~01/01/10 07:00:11
+~01/01/10 07:10:11
+~01/01/10 07:20:11
+~01/01/10 07:30:11
+~01/01/10 07:40:11
+~01/01/10 07:50:11
+| 05 01/01/10 07:55:14 3E7.0000001D00 00 03
+| 05 01/01/10 07:55:14 3E7.0000001D00 00 04
+| 05 01/01/10 07:55:15 3E7.0000001D00 00 05
+| 05 01/01/10 07:55:15 3E7.0000001D00 00 01
+| 05 01/01/10 07:55:15 3E7.0000001D00 00 02
+~01/01/10 08:00:11
+~01/01/10 08:10:11
+~01/01/10 08:20:11
+~01/01/10 08:30:11
+~01/01/10 08:40:11
+~01/01/10 08:50:11
+~01/01/10 09:00:11
+~01/01/10 09:10:11
+~01/01/10 09:20:11
+~01/01/10 09:30:11
+~01/01/10 09:40:11
+~01/01/10 09:50:11
+~01/01/10 10:00:11
+~01/01/10 10:10:11
+~00-5	01/01/10 10:10:14	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 10:10:14	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 10:10:14	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 10:10:14	ALARM	 Buffer active:       ON  Tag count:         2182
+~00-5	01/01/10 10:10:14	ALARM	 Memory used:        40%  Store Test Tag:      ON
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 10:10:14	ALARM	 Temperature:        12C  Exciter power:    22.0V
+~00-5	01/01/10 10:10:14	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 10:10:14	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 10:10:14	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 10:10:14	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 10:10:14	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 10:10:14	ALARM	 System date:   1/1/2010  System time:      08:53
+~00-5	01/01/10 10:10:14	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 10:10:14	ALARM	 Exciter current:   403A  Signal level:        5%
+~00-5	01/01/10 10:10:14	ALARM	 Exciter phase:        2  Relay counter:      50%
+~00-5	01/01/10 10:10:14	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 10:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 10:10:14	ALARM	 Exciter current:   421A  Signal level:        5%
+~00-5	01/01/10 10:10:14	ALARM	 Exciter phase:        0  Relay counter:      95%
+~00-5	01/01/10 10:10:14	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 10:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 10:10:14	ALARM	 Exciter current:   321A  Signal level:        1%
+~00-5	01/01/10 10:10:14	ALARM	 Exciter phase:        0  Relay counter:      95%
+~00-5	01/01/10 10:10:14	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 10:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 10:10:14	ALARM	 Exciter current:   152A  Signal level:        3%
+~00-5	01/01/10 10:10:14	ALARM	 Exciter phase:        2  Relay counter:      65%
+~00-5	01/01/10 10:10:14	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 10:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 10:10:14	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 10:10:14	ALARM	 Exciter current:   360A  Signal level:        1%
+~00-5	01/01/10 10:10:14	ALARM	 Exciter phase:        1  Relay counter:      42%
+~00-5	01/01/10 10:10:14	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 10:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 10:10:14	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 10:10:14	ALARM	 None                                            
+~01/01/10 10:20:11
+~01/01/10 10:30:11
+~01/01/10 10:40:11
+~01/01/10 10:50:11
+~01/01/10 11:00:11
+~01/01/10 11:10:11
+~01/01/10 11:20:11
+~01/01/10 11:30:11
+~01/01/10 11:40:11
+~01/01/10 11:50:11
+| 05 01/01/10 11:56:14 3E7.0000001D00 00 01
+| 05 01/01/10 11:56:14 3E7.0000001D00 00 02
+| 05 01/01/10 11:56:14 3E7.0000001D00 00 03
+| 05 01/01/10 11:56:14 3E7.0000001D00 00 04
+| 05 01/01/10 11:56:14 3E7.0000001D00 00 05
+~01/01/10 12:00:11
+~01/01/10 12:10:11
+~01/01/10 12:20:11
+~01/01/10 12:30:11
+~01/01/10 12:40:11
+~01/01/10 12:50:11
+~01/01/10 13:00:11
+~01/01/10 13:10:11
+~01/01/10 13:20:11
+~01/01/10 13:30:11
+~01/01/10 13:40:11
+~01/01/10 13:50:11
+~01/01/10 14:00:11
+~01/01/10 14:10:11
+~00-5	01/01/10 14:10:13	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 14:10:13	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 14:10:13	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 14:10:13	ALARM	 Buffer active:       ON  Tag count:         2187
+~00-5	01/01/10 14:10:13	ALARM	 Memory used:        40%  Store Test Tag:      ON
+~00-5	01/01/10 14:10:13	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 14:10:13	ALARM	 Temperature:        22C  Exciter power:    22.0V
+~00-5	01/01/10 14:10:13	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 14:10:13	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 14:10:13	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 14:10:13	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 14:10:13	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 14:10:13	ALARM	 System date:   1/1/2010  System time:      12:53
+~00-5	01/01/10 14:10:13	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 14:10:13	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 14:10:13	ALARM	 Exciter current:   402A  Signal level:        6%
+~00-5	01/01/10 14:10:13	ALARM	 Exciter phase:       -3  Relay counter:      50%
+~00-5	01/01/10 14:10:13	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 14:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 14:10:14	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 14:10:14	ALARM	 Exciter current:   409A  Signal level:        8%
+~00-5	01/01/10 14:10:14	ALARM	 Exciter phase:        0  Relay counter:      95%
+~00-5	01/01/10 14:10:14	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 14:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 14:10:14	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 14:10:14	ALARM	 Exciter current:   317A  Signal level:        1%
+~00-5	01/01/10 14:10:14	ALARM	 Exciter phase:        2  Relay counter:      95%
+~00-5	01/01/10 14:10:14	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 14:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 14:10:14	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 14:10:14	ALARM	 Exciter current:   149A  Signal level:        2%
+~00-5	01/01/10 14:10:14	ALARM	 Exciter phase:        1  Relay counter:      65%
+~00-5	01/01/10 14:10:14	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 14:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 14:10:14	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 14:10:14	ALARM	 Exciter current:   357A  Signal level:        2%
+~00-5	01/01/10 14:10:14	ALARM	 Exciter phase:        2  Relay counter:      42%
+~00-5	01/01/10 14:10:14	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 14:10:14	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 14:10:14	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 14:10:14	ALARM	 None                                            
+~01/01/10 14:20:11
+~01/01/10 14:30:11
+~01/01/10 14:40:11
+~01/01/10 14:50:11
+~01/01/10 15:00:11
+~01/01/10 15:10:11
+~01/01/10 15:20:11
+~01/01/10 15:30:11
+~01/01/10 15:40:11
+~01/01/10 15:50:11
+| 05 01/01/10 15:57:13 3E7.0000001D00 00 05
+| 05 01/01/10 15:57:13 3E7.0000001D00 00 01
+| 05 01/01/10 15:57:13 3E7.0000001D00 00 02
+| 05 01/01/10 15:57:14 3E7.0000001D00 00 03
+| 05 01/01/10 15:57:14 3E7.0000001D00 00 04
+~01/01/10 16:00:11
+~01/01/10 16:10:11
+~01/01/10 16:20:11
+~01/01/10 16:30:11
+~01/01/10 16:40:11
+~01/01/10 16:50:11
+~01/01/10 17:00:11
+~01/01/10 17:10:11
+~01/01/10 17:20:11
+~01/01/10 17:30:11
+~01/01/10 17:40:11
+~01/01/10 17:50:11
+~01/01/10 18:00:11
+~01/01/10 18:10:11
+~00-5	01/01/10 18:10:13	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 18:10:13	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 18:10:13	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 18:10:13	ALARM	 Buffer active:       ON  Tag count:         2192
+~00-5	01/01/10 18:10:13	ALARM	 Memory used:        40%  Store Test Tag:      ON
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 18:10:13	ALARM	 Temperature:        18C  Exciter power:    22.0V
+~00-5	01/01/10 18:10:13	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 18:10:13	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 18:10:13	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 18:10:13	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 18:10:13	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 18:10:13	ALARM	 System date:   1/1/2010  System time:      16:53
+~00-5	01/01/10 18:10:13	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 18:10:13	ALARM	 Exciter current:   402A  Signal level:        5%
+~00-5	01/01/10 18:10:13	ALARM	 Exciter phase:       -2  Relay counter:      50%
+~00-5	01/01/10 18:10:13	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 18:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 18:10:13	ALARM	 Exciter current:   415A  Signal level:        7%
+~00-5	01/01/10 18:10:13	ALARM	 Exciter phase:        1  Relay counter:      95%
+~00-5	01/01/10 18:10:13	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 18:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 18:10:13	ALARM	 Exciter current:   319A  Signal level:        1%
+~00-5	01/01/10 18:10:13	ALARM	 Exciter phase:        1  Relay counter:      95%
+~00-5	01/01/10 18:10:13	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 18:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 18:10:13	ALARM	 Exciter current:   149A  Signal level:        2%
+~00-5	01/01/10 18:10:13	ALARM	 Exciter phase:        1  Relay counter:      65%
+~00-5	01/01/10 18:10:13	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 18:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 18:10:13	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 18:10:13	ALARM	 Exciter current:   358A  Signal level:        2%
+~00-5	01/01/10 18:10:13	ALARM	 Exciter phase:       -1  Relay counter:      42%
+~00-5	01/01/10 18:10:13	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 18:10:13	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 18:10:13	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 18:10:13	ALARM	 None                                            
+~01/01/10 18:20:11
+~01/01/10 18:30:11
+~01/01/10 18:40:11
+~01/01/10 18:50:11
+~01/01/10 19:00:11
+~01/01/10 19:10:11
+~01/01/10 19:20:11
+~01/01/10 19:30:11
+~01/01/10 19:40:11
+~01/01/10 19:50:11
+| 05 01/01/10 19:58:13 3E7.0000001D00 00 05
+| 05 01/01/10 19:58:13 3E7.0000001D00 00 01
+| 05 01/01/10 19:58:13 3E7.0000001D00 00 02
+| 05 01/01/10 19:58:13 3E7.0000001D00 00 03
+| 05 01/01/10 19:58:13 3E7.0000001D00 00 04
+~01/01/10 20:00:11
+~01/01/10 20:10:11
+~01/01/10 20:20:11
+~01/01/10 20:30:11
+~01/01/10 20:40:11
+~01/01/10 20:50:11
+~01/01/10 21:00:11
+~01/01/10 21:10:11
+~01/01/10 21:20:11
+~01/01/10 21:30:11
+~01/01/10 21:40:11
+~01/01/10 21:50:11
+~01/01/10 22:00:11
+~01/01/10 22:10:11
+~00-5	01/01/10 22:10:12	ALARM	Reader Info:              Version:    MUX1230.1.9
+~00-5	01/01/10 22:10:12	ALARM	 Reader ID#           00  Unique:              ON
+~00-5	01/01/10 22:10:12	ALARM	 Beep:                ON  Send To Comm:        ON
+~00-5	01/01/10 22:10:12	ALARM	 Buffer active:       ON  Tag count:         2197
+~00-5	01/01/10 22:10:12	ALARM	 Memory used:        41%  Store Test Tag:      ON
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for 00:                              
+~00-5	01/01/10 22:10:12	ALARM	 Temperature:        18C  Exciter power:    22.0V
+~00-5	01/01/10 22:10:12	ALARM	 Current gain:      103%  Current alarm:   1000mA
+~00-5	01/01/10 22:10:12	ALARM	 Noise scaling:      25%  Noise alarm:        50%
+~00-5	01/01/10 22:10:12	ALARM	 Sleep delay:        0ms  Noise delay:       0min
+~00-5	01/01/10 22:10:12	ALARM	 Test Tag delay:  241min  Message delay:   240min
+~00-5	01/01/10 22:10:12	ALARM	 Battery:             OK  Scan time:        100ms
+~00-5	01/01/10 22:10:12	ALARM	 System date:   1/1/2010  System time:      20:53
+~00-5	01/01/10 22:10:12	ALARM	 Antenna Seq: 1,2,3,4,5,1,0,0,0,0,0,0  
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for Ant 01:                          
+~00-5	01/01/10 22:10:12	ALARM	 Exciter current:   403A  Signal level:        5%
+~00-5	01/01/10 22:10:12	ALARM	 Exciter phase:        1  Relay counter:      50%
+~00-5	01/01/10 22:10:12	ALARM	 Tune phase:         716  Setup:              278
+~00-5	01/01/10 22:10:12	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for Ant 02:                          
+~00-5	01/01/10 22:10:12	ALARM	 Exciter current:   413A  Signal level:        5%
+~00-5	01/01/10 22:10:12	ALARM	 Exciter phase:       -1  Relay counter:      95%
+~00-5	01/01/10 22:10:12	ALARM	 Tune phase:         713  Setup:              274
+~00-5	01/01/10 22:10:12	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for Ant 03:                          
+~00-5	01/01/10 22:10:12	ALARM	 Exciter current:   318A  Signal level:        1%
+~00-5	01/01/10 22:10:12	ALARM	 Exciter phase:       -1  Relay counter:      95%
+~00-5	01/01/10 22:10:12	ALARM	 Tune phase:         713  Setup:              36F
+~00-5	01/01/10 22:10:12	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for Ant 04:                          
+~00-5	01/01/10 22:10:12	ALARM	 Exciter current:   149A  Signal level:        2%
+~00-5	01/01/10 22:10:12	ALARM	 Exciter phase:        1  Relay counter:      65%
+~00-5	01/01/10 22:10:12	ALARM	 Tune phase:         666  Setup:              17F
+~00-5	01/01/10 22:10:12	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 22:10:12	ALARM	Diagnostics for Ant 05:                          
+~00-5	01/01/10 22:10:12	ALARM	 Exciter current:   358A  Signal level:        2%
+~00-5	01/01/10 22:10:12	ALARM	 Exciter phase:       -1  Relay counter:      42%
+~00-5	01/01/10 22:10:12	ALARM	 Tune phase:         668  Setup:              3D5
+~00-5	01/01/10 22:10:12	ALARM	 Vtt level:           0%                         
+~00-5	01/01/10 22:10:12	ALARM	Alarms for 00:                                   
+~00-5	01/01/10 22:10:12	ALARM	 None                                            
+~01/01/10 22:20:11
+~01/01/10 22:30:11
+~01/01/10 22:40:11
+~01/01/10 22:50:11
+~01/01/10 23:00:11
+~01/01/10 23:10:11
+~01/01/10 23:20:11
+~01/01/10 23:30:11
+~01/01/10 23:40:11
+~01/01/10 23:50:11
+| 05 01/01/10 23:59:12 3E7.0000001D00 00 05
+| 05 01/01/10 23:59:12 3E7.0000001D00 00 01
+| 05 01/01/10 23:59:12 3E7.0000001D00 00 02
+| 05 01/01/10 23:59:12 3E7.0000001D00 00 03
+| 05 01/01/10 23:59:13 3E7.0000001D00 00 04
+
+    FILE CLOSED                    : 02 JANUARY 2010 AT 00:00

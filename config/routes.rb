@@ -1,37 +1,35 @@
 Portal::Application.routes.draw do
-  resources :data_columns
+  resources :ifilters
 
-  resources :data_column_ints
+  resources :documents
+  match '/documents/manip' => "documents#manip", :as => :document_manip
 
-  resources :metadata
+  resources :collections
 
-  resources :data
+  root :to => 'home#index'
 
-  get "home/index"
-  root :to => 'Home#index'
-  match '/home'     =>  "Home#index"
+  root :to => 'home#index'
+  devise_for :users
 
-  resource :metadatum
-  
+  resources :posts
+  devise_for :users
+
   #I did something wrong to have to imply all of these
-  match '/DataIO'  =>  "DataIO#index"
-  match '/DataIO/csv_import'  =>  "DataIO#csv_import"
-  match '/metadata/:id/data' => 'Metadata#showassociated'
-  match '/Metadata' => "Metadata#index"
-  match '/Metadata/show' => "Metadata#show"
-  match 'Metadata/testjson' => 'Metadata#testjson'
-  match 'Metadata/:id' => 'Metadata#show'
-  
-  match '/Data' => "Data#index"
+  match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+  #match 'DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+  match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/metadata/:id/data' => 'metadata#showassociated'
+  match 'metadata/testjson' => 'metadata#testjson'
+  match 'Data/index' => 'Data#index'
   
   match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
   match 'DataColumns/:id' => 'DataColumns#show'
   
   match 'DataColumnInts/:id' => 'DataColumnInts#show'
   
-  match '/Viz' => "Viz#index"
-  match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'
   
+  match '/viz' => 'viz#index'
+
   #Demo stuff
   match '/Movies' => "Movies#index"
   

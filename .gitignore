@@ -4,9 +4,8 @@
 *.pid
 .DS_Store
 
-#Hey Mike, sorry, have to keep these in for now.
-#tmp/**/*
-#db/*.sqlite3
+tmp/
+db/*.sqlite3
 
 *.tmproj
 *.sw?
