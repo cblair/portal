@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  root :to => 'home#index'
+  devise_for :users
   resources :ifilters
 
   resources :documents
@@ -6,17 +8,11 @@ Portal::Application.routes.draw do
 
   resources :collections
 
-  root :to => 'home#index'
-
-  root :to => 'home#index'
-  devise_for :users
 
   resources :posts
-  devise_for :users
 
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
-  #match 'DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
   match '/metadata/:id/data' => 'metadata#showassociated'
   match 'metadata/testjson' => 'metadata#testjson'
