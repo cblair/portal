@@ -12,76 +12,10 @@
 
 <hr/>
 
-<% row = @document.stuffing_data.first() %>
-<% colnames = row.keys %>
+<% @row = @document.stuffing_data.first() %>
+<% @colnames = @row.keys %>
 
-<div>
-	<h2>Visualization</h2>
-		<%= form_tag(:controller => "viz") do %>
-			<%= hidden_field_tag(:document_id, @document[:id]) %>
-    <table>
-        <thead>
-            <tr>
-                <th>X axis</th>
-                <th>Y axis</th>
-            </tr>
-        </thead>
-        <tr>
-            <td>
-                <%= select_tag("x_axis", options_for_select(colnames))%>
-            </td>
-            <td>
-                <%= select_tag("y_axis", options_for_select(colnames))%>
-            </td>
-	<table>
-		<!--Column names-->
-		<tr>
-			<td>Column name:</td>
-			<% colnames.each do |colname|%>
-			<td>
-				<b><%= colname %></b>
-			</td>
-			<% end %>
-		</tr>
-		<!--Column types-->
-		<tr>
-			<td>Data type:</td>
-			<% colnames.each do |colname|%>
-			<td>
-				<b><%= row[colname].class() %></b>
-			</td>
-			<% end %>
-		</tr>
-		
-		<tr>
-			<!--Links to Viz - x axis-->
-			<td>X axis</td>
-			<% colnames.each do |colname|%>
-			<td>
-                <%#	<%= check_box_tag("x_axis", colname) %> 
-			</td>
-			<% end %>
-		</tr>
-		<tr>
-			<!--Links to Viz - x axis label-->
-			<td>X axis label</td>
-			<% colnames.each do |colname|%>
-			<td>
-				<%= check_box_tag("x_axis_labels", colname) %> 
-			</td>
-			<% end %>
-		</tr>
-		<tr>
-			<td><%= submit_tag("Visualize")%></td>
-			
-		<% end %><!--end axis form-->
-		</tr>
-		
-		<tr>
-    </table>
-
-</div>
-
+<%= render 'viz/visualization', :layout => 'true' %>
 <hr/>
 
 <div>
@@ -91,7 +25,7 @@
 <h2>Data Manipulation</h2>
 <%= select_tag(:manip_func, options_for_select([ ["map","map"] ]))%>
 <ul>
-    <% colnames.each do |colname|%>
+    <% @colnames.each do |colname|%>
         <li>
         <%= radio_button_tag("manip_colname", colname) %> 
         <%= colname %>
@@ -110,7 +44,7 @@
     <table class="table table-striped table-bordered table-condensed" style="width:0;">
         <thead><tr>
             <th><!--place holder for axis labels --></th>
-    <% row.keys.each do |name| %>
+    <% @row.keys.each do |name| %>
             <th><%= name %></th>
     <% end %>
         </tr>></thhead>
