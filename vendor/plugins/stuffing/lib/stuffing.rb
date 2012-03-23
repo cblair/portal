@@ -10,7 +10,6 @@ module Stuffing
     def stuffing(*args)
       
       after_create :create_stuffing
-      after_save :create_stuffing
       after_update :update_stuffing
       after_destroy :destroy_stuffing
       
@@ -101,7 +100,11 @@ module Stuffing
         end
         
         def destroy_stuffing
-          couchdb.delete_doc(couchdb_content)
+          couchdb.delete(couchdb_content)
+        end
+        
+        def view #(name, params, payload, &block)
+          couchdb.temp_view({}, {data}, nil)
         end
         
         def respond_to?(*args)

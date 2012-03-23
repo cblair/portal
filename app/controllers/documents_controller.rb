@@ -1,5 +1,5 @@
 class DocumentsController < ApplicationController
-  include DocumentsHelper
+  helper_method :sort_column, :sort_direction
     
   # GET /documents
   # GET /documents.json
@@ -94,5 +94,20 @@ class DocumentsController < ApplicationController
                                 :stuffing_data => get_data_map(d, colname))
                                 
     render "show"
+  end
+  
+  def search_test
+    d = Document.search_test()
+    
+    @document = Document.new(:name => 'search_test', :stuffing_data => d.stuffing_data)
+    render show
+  end
+  
+  def sort_column
+    Document.column_names.include?(params[:sort]) ? params[:sort] : "name"
+  end
+  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 end

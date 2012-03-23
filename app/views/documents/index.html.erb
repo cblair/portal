@@ -1,3 +1,5 @@
+<h1>Listing documents</h1>
+
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
     <%= text_field_tag :search, params[:search] %>
@@ -6,28 +8,5 @@
   <div id="documents"><%= render 'documents' %></div>
 <% end %>
 
-<h1>Listing documents</h1>
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Collection</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @documents.each do |document| %>
-  <tr>
-    <td><%= document.name %></td>
-    <td><%= document.collection_id %></td>
-    <td><%= link_to 'Show', document %></td>
-    <td><%= link_to 'Edit', edit_document_path(document) %></td>
-    <td><%= link_to 'Destroy', document, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
 
 <%= link_to 'New Document', new_document_path %>
