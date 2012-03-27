@@ -1,6 +1,6 @@
 <div>
 	<h2>Visualization</h2>
-		<%= form_tag(:controller => "viz") do %>
+		<%= form_tag(visualize_path) do %>
 			<%= hidden_field_tag(:document_id, @document[:id]) %>
     <table>
         <thead>
@@ -16,7 +16,7 @@
             <td>
                 <%= select_tag("y_axis", options_for_select(@colnames))%>
             </td>
-	<table>
+	<table class="table">
 		<!--Column names-->
 		<tr>
 			<td>Column name:</td>

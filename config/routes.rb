@@ -25,6 +25,7 @@ Portal::Application.routes.draw do
   
   
   match '/viz' => 'viz#index'
+  match '/visualize' => 'viz#chart', :as => 'visualize'
 
   #Demo stuff
   match '/Movies' => "Movies#index"
