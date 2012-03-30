@@ -2,6 +2,9 @@ class VizController < ApplicationController
   require 'lazy_high_charts'
   include DocumentsHelper
 
+  before_filter :autologin_if_dev
+  before_filter :authenticate_user!
+
   def chart
     @document = Document.find(params[:document_id])
     col2 = get_data_column(@document, params[:x_axis])

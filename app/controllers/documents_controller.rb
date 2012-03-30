@@ -1,6 +1,8 @@
 class DocumentsController < ApplicationController
   include DocumentsHelper
     
+  before_filter :autologin_if_dev
+  before_filter :authenticate_user!
   # GET /documents
   # GET /documents.json
   def index

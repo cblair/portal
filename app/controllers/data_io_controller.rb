@@ -3,6 +3,9 @@ class DataIOController < ApplicationController
   include DocumentsHelper
   include IfiltersHelper
 
+  before_filter :autologin_if_dev
+  before_filter :authenticate_user!
+
   def index
   end
   

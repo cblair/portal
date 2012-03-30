@@ -1,4 +1,6 @@
 class IfiltersController < ApplicationController
+  before_filter :autologin_if_dev
+  before_filter :authenticate_user!
   # GET /ifilters
   # GET /ifilters.json
   def index

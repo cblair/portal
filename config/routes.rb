@@ -7,24 +7,12 @@ Portal::Application.routes.draw do
   match '/documents/manip' => "documents#manip", :as => :document_manip
 
   resources :collections
-
-
   resources :posts
-
+  
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
-  match '/metadata/:id/data' => 'metadata#showassociated'
-  match 'metadata/testjson' => 'metadata#testjson'
-  match 'Data/index' => 'Data#index'
   
-  match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
-  match 'DataColumns/:id' => 'DataColumns#show'
-  
-  match 'DataColumnInts/:id' => 'DataColumnInts#show'
-  
-  
-  match '/viz' => 'viz#index'
   match '/visualize' => 'viz#chart', :as => 'visualize'
 
   #Demo stuff
