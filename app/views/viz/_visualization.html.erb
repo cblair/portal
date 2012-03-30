@@ -1,0 +1,65 @@
+<div>
+	<h2>Visualization</h2>
+		<%= form_tag(visualize_path) do %>
+			<%= hidden_field_tag(:document_id, @document[:id]) %>
+    <table>
+        <thead>
+            <tr>
+                <th>X axis</th>
+                <th>Y axis</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                <%= select_tag("x_axis", options_for_select(@colnames))%>
+            </td>
+            <td>
+                <%= select_tag("y_axis", options_for_select(@colnames))%>
+            </td>
+	<table class="table">
+		<!--Column names-->
+		<tr>
+			<td>Column name:</td>
+			<% @colnames.each do |colname|%>
+			<td>
+				<b><%= colname %></b>
+			</td>
+			<% end %>
+		</tr>
+		<!--Column types-->
+		<tr>
+			<td>Data type:</td>
+			<% @colnames.each do |colname|%>
+			<td>
+				<b><%= @row[colname].class() %></b>
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<!--Links to Viz - x axis-->
+			<td>X axis</td>
+			<% @colnames.each do |colname|%>
+			<td>
+                <%#	<%= check_box_tag("x_axis", colname) %> 
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<!--Links to Viz - x axis label-->
+			<td>X axis label</td>
+			<% @colnames.each do |colname|%>
+			<td>
+				<%= check_box_tag("x_axis_labels", colname) %> 
+			</td>
+			<% end %>
+		</tr>
+		<tr>
+			<td><%= submit_tag("Visualize")%></td>
+			
+		<% end %><!--end axis form-->
+		</tr>
+		
+		<tr>
+    </table>
+
+</div>

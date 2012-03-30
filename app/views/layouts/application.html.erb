@@ -1,47 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Portal</title>
+  <title>Hatch</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
   <%= yield :head %>
 </head>
 <body>
-	
-<h1>Portal</h1>
-<!--
-<div class="right">
-    <ul id="menu">
-    	<% 
-    		#Sorry Mike, just taking these out for now. I mush have merged out the user_signed_in method.
-    	%>	
-        <%= 
-        	#render 'layouts/registration_items' 
-        %>
-        <%= 
-        	#render 'layouts/login_items'
-        %>
-    </ul>
+  <div class="page-header jumbotron">
+    <h1>Hatch</h1>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li><%= link_to "Home", root_path %></li>
+            <li><%= link_to "Data I/O", csv_import_path %></li>
+            <li><%= link_to "Documents", documents_path %></li>
+          </ul>
+          <ul class="nav pull-right">
+              <%= render 'layouts/registration_items' %>
+              <%= render 'layouts/login_items' %>
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
 </div>
--->
+<div class="container">
+<p id="notice"><%= notice %></p>
+<p id="alert"><%= alert %></p>
 
-<div id="menu_wrapper" class="grey">
-	<div class="left"></div>
-		<ul id="menu">
-		<!-- this is how you make it active
-		<li class="active"><a href="#">About</a></li>
-		-->
-		<li><%= link_to "Home", root_path %></li>
-		<li><%= link_to "Data I/O", :controller => "DataIO", :action => "index" %></li>
-		<li><%= link_to "Hosts", "#" %><li>
-        <li><%= link_to "Visualization", '/viz'%></li>
-		</ul>
-	</div>
-</div>
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
 <%= yield %>
-
+</div>
 </body>
 </html>
