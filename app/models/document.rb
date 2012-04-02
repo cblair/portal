@@ -12,8 +12,4 @@ class Document < ActiveRecord::Base
       scoped
     end
   end
-  
-  def self.search_test
-    view
-  end
 end

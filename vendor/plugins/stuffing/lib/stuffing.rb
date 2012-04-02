@@ -100,11 +100,12 @@ module Stuffing
         end
         
         def destroy_stuffing
-          couchdb.delete(couchdb_content)
+          couchdb.delete_doc(couchdb_content)
         end
         
-        def view #(name, params, payload, &block)
-          couchdb.temp_view({}, {data}, nil)
+        def view 
+          #(name, params, payload, &block)
+          #couchdb.temp_view({}, {:data => "data"}, nil)
         end
         
         def respond_to?(*args)

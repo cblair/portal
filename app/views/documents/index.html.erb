@@ -1,6 +1,3 @@
-<h1>Documents</h1>
-
-<<<<<<< HEAD
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
     <%= text_field_tag :search, params[:search] %>
@@ -8,7 +5,40 @@
   </p>
   <div id="documents"><%= render 'documents' %></div>
 <% end %>
-=======
+
+<% if @temp_search_document %>
+<h1>Data</h1>
+<p><%= link_to 'Show as document', @temp_search_document %></p>
+
+<div>
+	<% @row = @temp_search_document.stuffing_data.first() %>
+	<% if @row != nil %>
+		<% @colnames = @row.keys %>
+		
+		<!--TODO: make a partial-->
+	    <table class="table table-striped table-bordered table-condensed" style="width:0;">
+	        <thead><tr>
+	            <th><!--place holder for axis labels --></th>
+	    <% @row.keys.each do |name| %>
+	            <th><%= name %></th>
+	    <% end %>
+	        </tr></thhead>
+		<% @temp_search_document.stuffing_data.each do |row| %>
+			<tr>
+				<td><!--place holder for axis labels--></td>
+				<% row.values.each do |val|%>
+				<td>
+					<%= val %>
+				</td>
+				<% end %>
+			</tr>
+		<% end %>
+		</table>
+	<% end %>
+</div>
+<% end %>
+
+<h1>Documents</h1>
 <table class="table" style="width: 0;">
   <thead>
   <tr>
@@ -20,7 +50,11 @@
 <% @documents.each do |document| %>
   <tr>
     <td><%= document.name %></td>
-    <td><%= document.collection_id %></td>
+    <% cname = "(none)" %>
+    <% if document[:collection] != nil %>
+    	<% cname = document[:collection].name %>
+    <% end %>
+    <td><%= cname %></td>
     <td><%= link_to 'Show', document %></td>
     <td><%= link_to 'Edit', edit_document_path(document) %></td>
     <td><%= link_to 'Destroy', document, confirm: 'Are you sure?', method: :delete %></td>
@@ -28,7 +62,6 @@
 <% end %>
   </tbody>
 </table>
->>>>>>> integration
 
 
 <%= link_to 'New Document', new_document_path %>

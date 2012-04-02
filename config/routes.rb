@@ -3,6 +3,7 @@ Portal::Application.routes.draw do
   devise_for :users
   resources :ifilters
 
+  match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   resources :documents
   match '/documents/manip' => "documents#manip", :as => :document_manip
 

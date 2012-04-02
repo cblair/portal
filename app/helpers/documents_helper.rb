@@ -76,4 +76,33 @@ module DocumentsHelper
     return data_columns
   end
   
+  def document_search_data(search)
+    #view
+    retval = []
+    
+    Document.all().each do |doc|
+      #TODO: define search doc name globally
+      if doc.stuffing_data != [] and doc.name != "temp_search_doc"
+        matches = []
+        #matches = doc.stuffing_data.select {|row| row.values {|value| value =~ search } }
+        doc.stuffing_data.each do |row|
+            found = false 
+            row.values.each do |value|
+              if value =~ /#{search}/
+                found = true
+              end
+            end
+            if found == true
+              matches << row
+            end
+        end
+        
+        if matches != []
+          matches.each {|row| retval << row}
+        end
+      end
+    end
+    
+    return retval
+  end
 end
