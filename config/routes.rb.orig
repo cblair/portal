@@ -1,20 +1,49 @@
 Portal::Application.routes.draw do
+<<<<<<< HEAD
+  root :to => 'home#index'
+=======
+  resources :data
+
   root :to => 'home#index'
   devise_for :users
-  resources :ifilters
 
-  match '/documents/search_test' => "documents#search_test", :as => :document_search_test
-  resources :documents
-  match '/documents/manip' => "documents#manip", :as => :document_manip
-
-  resources :collections
+>>>>>>> b754aa26cf44474a2147f4b55db544b0b863dd1c
   resources :posts
-  
+  devise_for :users
+
+  resources :data_columns
+
+  resources :tests
+
+  resources :data_column_ints
+
+  resources :metadata
+
+<<<<<<< HEAD
+  resources :data
+
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
-  match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/metadata/:id/data' => 'metadata#showassociated'
+  match 'metadata/testjson' => 'metadata#testjson'
+=======
+  #I did something wrong to have to imply all of these
+  match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/metadata/:id/data' => 'metadata#showassociated'
+  match 'metadata/testjson' => 'metadata#testjson'
   
-  match '/visualize' => 'viz#chart', :as => 'visualize'
+  match 'Data/index' => 'Data#index'
+>>>>>>> b754aa26cf44474a2147f4b55db544b0b863dd1c
+  
+  match 'DataColumns/get_data_column_json' => 'DataColumns#get_data_column_json'
+  match 'DataColumns/:id' => 'DataColumns#show'
+  
+  match 'DataColumnInts/:id' => 'DataColumnInts#show'
+  
+  
+  match '/viz/:id/:chart_type/:y/:x' => 'viz#chart'
+  match '/viz' => 'viz#index'
 
   #Demo stuff
   match '/Movies' => "Movies#index"

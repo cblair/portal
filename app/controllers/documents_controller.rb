@@ -1,12 +1,35 @@
 class DocumentsController < ApplicationController
   include DocumentsHelper
+  helper_method :sort_column, :sort_direction
     
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
   # GET /documents
   # GET /documents.json
   def index
-    @documents = Document.all
+    #Search for data if search comes in
+    if params[:search] != nil
+      #start recording run time
+      stime = Time.now() #start time
+      
+      d = document_search_data(params[:search])
+      c=Collection.find_or_create_by_name("Recent Searches")
+      c.save
+      
+      #@temp_search_document = Document.create(:name => "temp_search_doc", :collection => c, :stuffing_data => d)
+      @temp_search_document = Document.find_or_create_by_name("temp_search_doc")
+      @temp_search_document.collection = c
+      @temp_search_document.stuffing_data = d
+      @temp_search_document.save
+      
+      etime = Time.now() #end time
+      ttime = etime - stime #total time
+
+      flash[:notice]="Searched data in #{ttime} seconds"
+    end
+    
+    #@documents = Document.all
+    @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -95,5 +118,20 @@ class DocumentsController < ApplicationController
                                 :stuffing_data => get_data_map(d, colname))
                                 
     render "show"
+  end
+  
+  def search_test
+    data = document_search_data()
+    
+    @document = Document.create(:name => 'temp_search_doc', :stuffing_data => data)
+    render "show"
+  end
+  
+  def sort_column
+    Document.column_names.include?(params[:sort]) ? params[:sort] : "name"
+  end
+  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 end
