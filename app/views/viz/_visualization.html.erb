@@ -11,6 +11,7 @@
                 <th>Chart type</th>
             </tr>
         </thead>
+        <tbody>
         <tr>
             <td>
                 <%= select_tag("x_axis", options_for_select(@colnames, @chart.x_column))%>
@@ -22,8 +23,18 @@
                 <%= select_tag("chart_type", 
                 options_for_select(['spline', 'line', 'bar', 'column', 'pie'], @chart.chart_type))
                 %>
-            </td>
-	<table class="table">
+        </td>
+        </tbody>
+</table>
+
+<%= label_tag(:title, 'Title') %>
+<%= text_field_tag(:title, @chart.title) %>
+<%= label_tag(:xlab, 'X-axis label') %>
+<%= text_field_tag(:xlab, @chart.xlab) %>
+<%= label_tag(:ylab, 'Y-axis label') %>
+<%= text_field_tag(:ylab, @chart.ylab) %>
+
+        <table class="table">
 		<!--Column names-->
 		<tr>
 			<td>Column name:</td>
@@ -42,26 +53,8 @@
 			</td>
 			<% end %>
 		</tr>
-		<tr>
-			<!--Links to Viz - x axis-->
-			<td>X axis</td>
-			<% @colnames.each do |colname|%>
-			<td>
-                <%#	<%= check_box_tag("x_axis", colname) %> 
-			</td>
-			<% end %>
-		</tr>
-		<tr>
-			<!--Links to Viz - x axis label-->
-			<td>X axis label</td>
-			<% @colnames.each do |colname|%>
-			<td>
-				<%= check_box_tag("x_axis_labels", colname) %> 
-			</td>
-			<% end %>
-		</tr>
 		
-		<tr>
+
     </table>
     <%= submit_tag("Visualize")%>
 			

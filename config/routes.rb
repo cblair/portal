@@ -16,8 +16,8 @@ Portal::Application.routes.draw do
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
   
-  match '/visualize' => 'viz#chart', :as => 'visualize'
-
+  match '/chart/:id' => 'viz#chart', :as => 'chart'
+  match '/chart' => 'viz#chart', :as => 'visualize'
   #Demo stuff
   match '/Movies' => "Movies#index"
   

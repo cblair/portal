@@ -1,13 +1,12 @@
 <p id="notice"><%= notice %></p>
+<p>
+  <b>Document_id:</b>
+  <%= @chart.document_id %>
+</p>
 
 <p>
   <b>Title:</b>
   <%= @chart.title %>
-</p>
-
-<p>
-  <b>Source doc:</b>
-  <%= @chart.source_doc %>
 </p>
 
 <p>
@@ -39,7 +38,8 @@
   <b>Options:</b>
   <%= @chart.options %>
 </p>
-
-
+<p>
+<%= link_to 'View chart', chart_path(:id => @chart.id) %>
+</p>
 <%= link_to 'Edit', edit_chart_path(@chart) %> |
 <%= link_to 'Back', charts_path %>
