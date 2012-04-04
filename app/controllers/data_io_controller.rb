@@ -39,6 +39,7 @@ class DataIOController < ApplicationController
 
     #Save metadata
     c=Collection.find_or_create_by_name(fname)
+    c.users_id = current_user.id
     c.save
     
     data_columns=[]
