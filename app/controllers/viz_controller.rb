@@ -10,14 +10,27 @@ class VizController < ApplicationController
     col2 = get_data_column(@document, params[:x_axis])
     col1 = (1..col2.count).to_a
     @data = col1.zip(col2)
+    puts @data
     chart_name="#{@document.name} chart"
-    series_name="#{params[:x_axis]} series"
+
+    @chart = Chart.new
+    @chart.title = chart_name
+    @chart.document_id = @document
+    @chart.x_column = params[:x_axis]
+    @chart.y_column = params[:y_axis]
+    @chart.xlab = params[:x_axis]
+    @chart.ylab = params[:y_axis]
+    @chart.chart_type = params[:chart_type]
+    @chart.options = ''
+    @chart.save
+
     @hc = LazyHighCharts::HighChart.new('visualization') do |f|
-        f.options[:chart][:defaultSeriesType] = 'spline'
-        f.series(:name=>series_name, :data=>@data)
-        f.options[:title] = {:text=>chart_name}
-        f.options[:xAxis][:title] = {:text=>params[:x_axis]}
-        f.options[:yAxis][:title] = {:text=>params[:y_axis]}
+        f.options[:chart][:defaultSeriesType] = @chart.chart_type
+        f.options[:legend][:enabled] = false
+        f.series(:data=>@data)
+        f.options[:title] = {:text=>@chart.title}
+        f.options[:xAxis][:title] = {:text=>@chart.xlab}
+        f.options[:yAxis][:title] = {:text=>@chart.ylab}
     end
   end
   

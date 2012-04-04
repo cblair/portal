@@ -1,3 +1,4 @@
+<% if not @chart then @chart = Chart.new end -%>
 <div>
 	<h2>Visualization</h2>
 		<%= form_tag(visualize_path) do %>
@@ -7,14 +8,20 @@
             <tr>
                 <th>X axis</th>
                 <th>Y axis</th>
+                <th>Chart type</th>
             </tr>
         </thead>
         <tr>
             <td>
-                <%= select_tag("x_axis", options_for_select(@colnames))%>
+                <%= select_tag("x_axis", options_for_select(@colnames, @chart.x_column))%>
             </td>
             <td>
-                <%= select_tag("y_axis", options_for_select(@colnames))%>
+                <%= select_tag("y_axis", options_for_select(@colnames, @chart.y_column))%>
+            </td>
+            <td>
+                <%= select_tag("chart_type", 
+                options_for_select(['spline', 'line', 'bar', 'column', 'pie'], @chart.chart_type))
+                %>
             </td>
 	<table class="table">
 		<!--Column names-->
@@ -53,13 +60,10 @@
 			</td>
 			<% end %>
 		</tr>
-		<tr>
-			<td><%= submit_tag("Visualize")%></td>
-			
-		<% end %><!--end axis form-->
-		</tr>
 		
 		<tr>
     </table>
-
+    <%= submit_tag("Visualize")%>
+			
+    <% end %><!--end axis form-->
 </div>

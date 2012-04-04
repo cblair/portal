@@ -11,28 +11,26 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120310025956) do
+ActiveRecord::Schema.define(:version => 20120404021149) do
+
+  create_table "charts", :force => true do |t|
+    t.string   "title"
+    t.string   "x_column"
+    t.string   "y_column"
+    t.string   "xlab"
+    t.string   "ylab"
+    t.string   "chart_type"
+    t.text     "options"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "document_id"
+  end
 
   create_table "collections", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "data_column_ints", :force => true do |t|
-    t.integer  "val"
-    t.integer  "data_column_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "data_columns", :force => true do |t|
-    t.string   "name"
-    t.string   "dtype"
-    t.integer  "order"
-    t.integer  "datum_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "users_id"
   end
 
   create_table "documents", :force => true do |t|
@@ -56,12 +54,6 @@ ActiveRecord::Schema.define(:version => 20120310025956) do
   end
 
   create_table "posts", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "tests", :force => true do |t|
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

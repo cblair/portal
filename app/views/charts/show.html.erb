@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @chart.title %>
+</p>
+
+<p>
+  <b>Source doc:</b>
+  <%= @chart.source_doc %>
+</p>
+
+<p>
+  <b>X column:</b>
+  <%= @chart.x_column %>
+</p>
+
+<p>
+  <b>Y column:</b>
+  <%= @chart.y_column %>
+</p>
+
+<p>
+  <b>Xlab:</b>
+  <%= @chart.xlab %>
+</p>
+
+<p>
+  <b>Ylab:</b>
+  <%= @chart.ylab %>
+</p>
+
+<p>
+  <b>Chart type:</b>
+  <%= @chart.chart_type %>
+</p>
+
+<p>
+  <b>Options:</b>
+  <%= @chart.options %>
+</p>
+
+
+<%= link_to 'Edit', edit_chart_path(@chart) %> |
+<%= link_to 'Back', charts_path %>

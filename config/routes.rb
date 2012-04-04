@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  resources :charts
+
   root :to => 'home#index'
   devise_for :users
   resources :ifilters

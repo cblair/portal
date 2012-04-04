@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  source_doc: 
+  x_column: MyString
+  y_column: MyString
+  xlab: MyString
+  ylab: MyString
+  chart_type: MyString
+  options: MyText
+
+two:
+  title: MyString
+  source_doc: 
+  x_column: MyString
+  y_column: MyString
+  xlab: MyString
+  ylab: MyString
+  chart_type: MyString
+  options: MyText
