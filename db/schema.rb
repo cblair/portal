@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120310025956) do
+ActiveRecord::Schema.define(:version => 20120403045110) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
@@ -64,6 +64,16 @@ ActiveRecord::Schema.define(:version => 20120310025956) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "uploads", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "ufile_file_name"
+    t.string   "ufile_content_type"
+    t.integer  "ufile_file_size"
+    t.datetime "ufile_updated_at"
   end
 
   create_table "users", :force => true do |t|

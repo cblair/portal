@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
     <%= text_field_tag :search, params[:search] %>
@@ -11,22 +10,6 @@
 <h1>Data</h1>
 <p><%= link_to 'Show as document', @temp_search_document %></p>
 
-=======
-<h1>Documents</h1>
-
-<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
-  </p>
-  <div id="documents"><%= render 'documents' %></div>
-<% end %>
-
-<% if @temp_search_document %>
-<h1>Data</h1>
-<p><%= link_to 'Show as document', @temp_search_document %></p>
-
->>>>>>> integration
 <div>
 	<% @row = @temp_search_document.stuffing_data.first() %>
 	<% if @row != nil %>

@@ -7,10 +7,13 @@ class DataIOController < ApplicationController
   before_filter :authenticate_user!
 
   def index
+    @upload = Upload.new
   end
   
-  def csv_import    
-    fname=params[:dump][:file].original_filename
+  def csv_import
+        
+    #fname=params[:dump][:file].original_filename
+    fname=params[:files].first()
     filter_id=params[:post][:ifilter_id]
     
     f=nil
@@ -24,9 +27,11 @@ class DataIOController < ApplicationController
     #TODO: if filter specified, don't try CSV
     #CSV import. Each call on @parsed_file.<method> incremenst the cursor
     if CSV.const_defined? :Reader
-        @parsed_file=CSV::Reader.parse(params[:dump][:file])
+        #@parsed_file=CSV::Reader.parse(params[:dump][:file])
+        @parsed_file=CSV::Reader.parse(fname)
     else
-        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        #@parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        @parsed_file=CSV::CSV.open(fname.tempfile)
     end
     
     #Get the column name

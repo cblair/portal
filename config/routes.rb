@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  resources :uploads
+
   root :to => 'home#index'
   devise_for :users
   resources :ifilters
@@ -12,7 +14,7 @@ Portal::Application.routes.draw do
   
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
-  match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/DataIO/index'  =>  "DataIO#index", :as => :data_io_index
   
   match '/visualize' => 'viz#chart', :as => 'visualize'
 
