@@ -44,22 +44,19 @@ class VizController < ApplicationController
 
   end
   
-    # GET /viz/:id/:chart_type/:y/:x
   def index
-    @x = params[:x]
-    @y = params[:y]
-    #data = Metadatum.includes(:data => :param1).find(params[:id]).data
-    #puts data.to_json
-    #@x_data = data.data[@x]
-    #@y_data = data.data[@y]
-    col1 = [1, 3, 5, 6, 5, 7, 7, 7]
-    col2 = [2, 3, 8, 8, 5, 4, 4, 1]
-    @data = col1.zip(col2)
-    @chart_type = params[:chart_type]
-    respond_to do |format|
-      format.json { render :json => @data }
-    end
+      @tree = []
+      Collection.find_all_by_users_id(current_user.id).each do |collection|
+          documents = []
+          Document.find_all_by_collection_id(collection.id).each do |document|
+              charts = []
+              Chart.find_all_by_document_id(document.id).each do |chart|
+                  charts << chart
+              end
+              documents << {:document => document, :charts => charts}
+          end
+          @tree << {:collection => collection, :documents => documents}
+      end
   end
-
 
 end
