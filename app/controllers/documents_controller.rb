@@ -119,6 +119,10 @@ class DocumentsController < ApplicationController
                                 
     render "show"
   end
+
+  def download
+      redirect_to csv_export_path(params[:id], :format => :csv)
+  end
   
   def search_test
     data = document_search_data()

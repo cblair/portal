@@ -14,6 +14,7 @@ Portal::Application.routes.draw do
   
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
+  match '/DataIO/csv_export/:id'  =>  "DataIO#csv_export", :as => :csv_export, :formats => 'csv'
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
   
   match '/visualizations' => 'viz#index', :as => 'visualizations'

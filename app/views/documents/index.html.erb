@@ -59,6 +59,7 @@
     <td><%= cname %></td>
     <td><%= link_to 'Show', document %></td>
     <td><%= link_to 'Edit', edit_document_path(document) %></td>
+    <td><%= link_to 'Download as CSV', csv_export_path(document, :format => 'csv') %></td>
     <td><%= link_to 'Destroy', document, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>

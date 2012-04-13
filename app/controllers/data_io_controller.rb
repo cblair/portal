@@ -91,4 +91,26 @@ class DataIOController < ApplicationController
     #redirect_to "/Metadata/#{md.id}"
   end
 
+  def csv_export
+
+      document = Document.find(params[:id])
+      @headings = document.stuffing_data.first.keys
+
+      csv_data = CSV.generate do |csv|
+          csv << @headings
+          document.stuffing_data.each do |row|
+              csv << row.values
+          end
+      end
+      puts csv_data
+
+      send_data csv_data, :filename => "#{document.name}",
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment" 
+
+      
+
+  end
+
+
 end
