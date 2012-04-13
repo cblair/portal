@@ -15,10 +15,10 @@
         <tbody>
         <tr>
             <td>
-                <%= select_tag("x_axis", options_for_select(@colnames, @chart.x_column))%>
+                <%= select_tag("x_axis", options_for_select(@colnames + ["auto-number"], @chart.x_column))%>
             </td>
             <td>
-                <%= select_tag("y_axis", options_for_select(@colnames, @chart.y_column))%>
+                <%= select_tag("y_axis", options_for_select(@colnames + ["auto-number"], @chart.y_column))%>
             </td>
             <td>
                 <%= select_tag("chart_type", 

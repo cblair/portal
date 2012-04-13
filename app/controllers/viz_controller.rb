@@ -30,6 +30,12 @@ class VizController < ApplicationController
 
         col2 = get_data_column(@document, @chart.x_column)
         col1 = get_data_column(@document, @chart.y_column)
+        if @chart.x_column == "auto-number" and @chart.y_column == "auto-number" then 
+            @chart.x_column = @document.stuffing_data.first.keys
+            flash.now[:alert] = "X and Y axes may not both be auto-numbered"
+        end
+        if @chart.x_column == "auto-number" then col2 = 1..col1.length end
+        if @chart.y_column == "auto-number" then col1 = 1..col2.length end
         @data = col1.zip(col2)
 
         @hc = LazyHighCharts::HighChart.new('visualization') do |f|
