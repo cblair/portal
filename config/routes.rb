@@ -18,6 +18,7 @@ Portal::Application.routes.draw do
   
   match '/visualizations' => 'viz#index', :as => 'visualizations'
   match '/chart/:id' => 'viz#chart', :as => 'chart'
+  match '/chart/:id/:share_token' => 'viznoauth#sharechart', :as => 'sharechart'
   match '/chart' => 'viz#chart', :as => 'visualize'
   #Demo stuff
   match '/Movies' => "Movies#index"

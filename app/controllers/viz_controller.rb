@@ -60,3 +60,16 @@ class VizController < ApplicationController
   end
 
 end
+
+class ViznoauthController < VizController
+    skip_filter :authenticate_user!, :autologin_if_dev
+
+   def sharechart
+      @chart = Chart.find params[:id]
+      if params[:share_token] == @chart.share_token then
+          redirect_to :controller => 'NoAuthViz', :action => 'chart'
+      end
+
+  end
+end
+

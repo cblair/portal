@@ -3,6 +3,7 @@
 	<h2>Visualization</h2>
 		<%= form_tag(visualize_path) do %>
 			<%= hidden_field_tag(:document_id, @document[:id]) %>
+            <h4>Share this chart at <%= link_to sharechart_url(@chart.id, @chart.share_token), sharechart_path(@chart.id, @chart.share_token) %> <p>
     <table>
         <thead>
             <tr>
