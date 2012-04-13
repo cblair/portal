@@ -1,7 +1,8 @@
 <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" %>
 <%= javascript_include_tag :high_charts %>
-
-<%= high_chart('chart', @hc) %>
+<%= javascript_include_tag :exporting %>
+<%= high_chart('chart', @hc) do |c| %>
+<% end %>
 <% @row = @document.stuffing_data.first() %>
 
 
