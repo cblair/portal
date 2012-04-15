@@ -4,6 +4,7 @@ class DocumentsController < ApplicationController
     
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
+
   # GET /documents
   # GET /documents.json
   def index
@@ -11,25 +12,28 @@ class DocumentsController < ApplicationController
     if params[:search] != nil
       #start recording run time
       stime = Time.now() #start time
-      
-      d = document_search_data(params[:search])
+ 
+      #Delete any temp search docs so we don't search them too 
+      Document.destroy_all(:name => ENV['temp_search_doc'])
+     
+      d = document_search_data_couch(params[:search])
       c=Collection.find_or_create_by_name("Recent Searches")
       c.save
       
-      #@temp_search_document = Document.create(:name => "temp_search_doc", :collection => c, :stuffing_data => d)
-      @temp_search_document = Document.find_or_create_by_name("temp_search_doc")
+      @temp_search_document = Document.new
+      @temp_search_document.name = ENV['temp_search_doc']
       @temp_search_document.collection = c
       @temp_search_document.stuffing_data = d
       @temp_search_document.save
       
       etime = Time.now() #end time
       ttime = etime - stime #total time
-
-      flash[:notice]="Searched data in #{ttime} seconds"
     end
     
     #@documents = Document.all
     @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
+
+    flash[:notice]="Searched data in #{ttime} seconds."
 
     respond_to do |format|
       format.html # index.html.erb
@@ -121,10 +125,17 @@ class DocumentsController < ApplicationController
   end
   
   def search_test
-    data = document_search_data()
+    d = document_search_data_couch("test")
+
+    @temp_search_document = Document.find_or_create_by_name(ENV['temp_search_doc'])
+    #TODO: set to internal (user?) collection
+    #@temp_search_document.collection = c
+    @temp_search_document.stuffing_data = d
+    @temp_search_document.save
     
-    @document = Document.create(:name => 'temp_search_doc', :stuffing_data => data)
-    render "show"
+    @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
+    
+    render "index"
   end
   
   def sort_column

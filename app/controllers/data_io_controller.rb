@@ -12,8 +12,8 @@ class DataIOController < ApplicationController
   
   def csv_import
         
-    #fname=params[:dump][:file].original_filename
-    fname=params[:files].first()
+    fname=params[:dump][:file].original_filename
+    #fname=params[:files].first()
     filter_id=params[:post][:ifilter_id]
     
     f=nil
@@ -30,8 +30,8 @@ class DataIOController < ApplicationController
         #@parsed_file=CSV::Reader.parse(params[:dump][:file])
         @parsed_file=CSV::Reader.parse(fname)
     else
-        #@parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
-        @parsed_file=CSV::CSV.open(fname.tempfile)
+        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        #@parsed_file=CSV::CSV.open(fname.tempfile)
     end
     
     #Get the column name
@@ -89,7 +89,7 @@ class DataIOController < ApplicationController
     etime = Time.now() #end time
     ttime = etime - stime #total time
 
-    flash[:notice]="CSV Import successful,  #{i} new rows added to data base in #{ttime}"
+    flash[:notice]="CSV Import successful,  #{d.stuffing_data.count} new rows added to data base in #{ttime}"
 
     render :action => "index"   
     #redirect_to "/Metadata/#{md.id}"

@@ -1,40 +1,7 @@
 
 <h3>Input</h3>
-<%= stylesheet_link_tag('jquery.fileupload-ui') %>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-<%= javascript_include_tag 'jquery.fileupload', 'jquery.fileupload-ui' %>
-
-<script type="text/javascript" charset="utf-8"> 
-   $(function () {
-  $('.upload').fileUploadUI({
-        uploadTable: $('.upload_files'),
-        downloadTable: $('.download_files'),
-        buildUploadRow: function (files, index) {
-            var file = files[index];
-            return $('<tr><td>' + file.name + '<\/td>' +
-                    '<td class="file_upload_progress"><div><\/div><\/td>' +
-                    '<td class="file_upload_cancel">' +
-                    '<button class="ui-state-default ui-corner-all" title="Cancel">' +
-                    '<span class="ui-icon ui-icon-cancel">Cancel<\/span>' +
-                    '<\/button><\/td><\/tr>');
-        },
-        buildDownloadRow: function (file) {
-            return $('<tr><td><img alt="Photo" width="40" height="40" src="' + file.pic_path + '">' + file.name + '<\/td><\/tr>');
-        },
-    });
-});
-</script>
-
-<div class="files"> 
-<%= form_for @upload, :html => { :class => "upload", :multipart => true } do |f| %>
-  <%= f.file_field :picture %>
-  <div>Upload files</div>
-<% end %>
 
 
-<!--
  <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
  <table>
    <tr>
@@ -53,6 +20,9 @@
      <td>
      	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => 'Select Filter'})%>
      </td>
+     <td>
+     	<%= link_to "Filters...", ifilters_path %>
+     </td>
    </tr>
    <tr>
      <td>
@@ -66,7 +36,7 @@
    </tr>
  </table>
 <% end -%>
--->
+
 
 <h3>Saved</h3>
 <ul>

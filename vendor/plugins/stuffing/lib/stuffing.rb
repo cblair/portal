@@ -103,9 +103,12 @@ module Stuffing
           couchdb.delete_doc(couchdb_content)
         end
         
-        def view 
+        def view
           #(name, params, payload, &block)
-          #couchdb.temp_view({}, {:data => "data"}, nil)
+          
+          #d = couchdb.documents :keys => []
+          d = couchdb.view "example/foo"
+          return d
         end
         
         def respond_to?(*args)

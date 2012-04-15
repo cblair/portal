@@ -23,7 +23,7 @@
 	            <th><%= name %></th>
 	    <% end %>
 	        </tr></thhead>
-		<% @temp_search_document.stuffing_data.each do |row| %>
+		<% @temp_search_document.stuffing_data[0..50].each do |row| %>
 			<tr>
 				<td><!--place holder for axis labels--></td>
 				<% row.values.each do |val|%>
@@ -33,6 +33,11 @@
 				<% end %>
 			</tr>
 		<% end %>
+			<tr>
+				<td>
+					<%= link_to '...', @temp_search_document %>
+				</td>
+			</tr>
 		</table>
 	<% end %>
 </div>

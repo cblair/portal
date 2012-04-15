@@ -55,3 +55,8 @@ gem 'devise', '~> 2'
 
 gem 'will_paginate', '3.0.pre2'
 gem 'jquery-rails'
+
+#Profiling -- only for development
+group :development do
+    gem "ruby-prof"
+end
