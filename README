@@ -6,9 +6,11 @@ Requirements:
 CouchDB
 Ruby >= 1.9.2
 Rails >= 3.1.2
+bundler gem
 
 To install and run:
     bundle install
-    rails db:create
-    rails db:schema:load
+    rake db:setup
     rails server
+
+Then visit at http://localhost:3000/ (by default).
