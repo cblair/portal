@@ -35,8 +35,8 @@
   </div><!-- /navbar -->
 </div>
 <div class="container">
-<p id="notice"><%= notice %></p>
-<p id="alert"><%= alert %></p>
+<p id="notice" class="<%= (notice && "alert alert-info" || "") %>"><%= notice %></p>
+<p id="alert" class="<%= (alert && "alert" || "") %>"><%= alert %></p>
 
 <%= yield %>
 </div>
