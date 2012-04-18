@@ -21,7 +21,7 @@
             </td>
             <td>
                 <%= select_tag("chart_type", 
-                options_for_select(['spline', 'line', 'bar', 'column', 'pie'], @chart.chart_type))
+                options_for_select(['spline', 'line', 'scatter'], @chart.chart_type))
                 %>
         </td>
         </tbody>
@@ -38,29 +38,23 @@
 <%= label_tag :numdraw, 'Maximum points on live chart' %>
 <%= number_field_tag :numdraw %>
 
+<table class="table" style"width: 0;">
+    <thead>
+        <tr>
+            <th>Column Name</th>
+            <th>Data Type</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% @colnames.each do |colname| %>
+        <tr>
+            <td><%= colname %></td>
+            <td><%= @row[colname].class %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
 
-        <table class="table">
-		<!--Column names-->
-		<tr>
-			<td>Column name:</td>
-			<% @colnames.each do |colname|%>
-			<td>
-				<b><%= colname %></b>
-			</td>
-			<% end %>
-		</tr>
-		<!--Column types-->
-		<tr>
-			<td>Data type:</td>
-			<% @colnames.each do |colname|%>
-			<td>
-				<b><%= @row[colname].class() %></b>
-			</td>
-			<% end %>
-		</tr>
-		
-
-    </table>
     <%= submit_tag("Visualize")%>
 			
     <% end %><!--end axis form-->
