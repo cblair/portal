@@ -1,5 +1,5 @@
 
-<h3>Input</h3>
+<h3>Document Upload and Import</h3>
  <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
  <table>
    <tr>
@@ -21,7 +21,7 @@
    </tr>
    <tr>
      <td>
-     	<%= f.check_box :contains_header %> File has header
+         <%= f.check_box :contains_header, :checked => true %> File has header
      </td>
    </tr>
    <tr>
@@ -32,13 +32,5 @@
  </table>
 <% end -%>
 
-
-<h3>Saved</h3>
-<ul>
-	<li><%= link_to "Uploads", :controller => "documents", :action => "index" %></li>		
-</ul>
-
-<h3>Output</h3>
-<ul>
-	<li><%= link_to "Export", "#"%></li>
-</ul>
+<h3>Existing Documents</h3>
+<p>Download, export, and visualize data from the <%= link_to 'Documents', documents_path %> page </p>
