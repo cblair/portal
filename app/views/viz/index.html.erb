@@ -1,25 +1,37 @@
-
-<h1><%= @current_user.email %>'s Documents</h>
+<%= stylesheet_link_tag 'tree' %>
+<h1><%= @current_user.email %>'s Data</h1>
 
 <hr/>
-
+<ol class="tree">
 <% @tree.each do |collection| %>
-    <div class="row span12">
-        <h2><%= collection[:collection].name %> (collection)</h2>
-        <% collection[:documents].each do |document| %>
-            <div class="row span12">
-                <h3><%= document[:document].name %> (document)</h3>
-                <% document[:charts].each do |chart| %>
-                    <div class="row span12">
-                        <p>
-                            <%= link_to chart.title, chart_path(:id => chart.id) %> (chart)
-                        </p>
-                    </div>
-                <% end %>
-            </div>
-        <% end %>
-        <hr/>
-    </div>
-<% end %>
+    <li>
+    <label for="<%= collection.object_id %>"/>
+        <%= collection[:collection].name %>
+    </label>
 
-    </div>
+            <input type="checkbox" id="<%= collection.object_id %>"/>
+        <ol>
+            <li><%= link_to "View collection", collection_path(collection[:collection])%></li>
+            <li>Documents</li>
+        <% collection[:documents].each do |document| %>
+                <li>
+                <label for="<%= document.object_id %>">
+                    <%= document[:document].name %>
+                </label>
+                <input type="checkbox" id="<%= document.object_id %>"/>
+                <ol>
+                    <li><%= link_to "View document", document_path(document[:document])%></li>
+                    <li>Charts</li>
+                    
+                <% document[:charts].each do |chart| %>
+                    <li class="file">
+                            <%= link_to chart.title, chart_path(:id => chart.id) %>
+                    </li>
+                <% end %>
+                </ol>
+                </li>
+        <% end %>
+        </ol>
+    </li>
+<% end %>
+</ol>

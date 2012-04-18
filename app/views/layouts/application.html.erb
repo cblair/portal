@@ -22,12 +22,16 @@
         <div class="nav-collapse">
           <ul class="nav">
             <li><%= link_to "Home", root_path %></li>
+            <li class="divider-vertical"></li>
             <li><%= link_to "Data I/O", csv_import_path %></li>
+            <li class="divider-vertical"></li>
             <li><%= link_to "Documents", documents_path %></li>
-            <li><%= link_to "Visualizations", visualizations_path %></li>
+            <li class="divider-vertical"></li>
+            <li><%= link_to "Data Explorer", visualizations_path %></li>
           </ul>
           <ul class="nav pull-right">
               <%= render 'layouts/registration_items' %>
+              <li class="divider-vertical"></li>
               <%= render 'layouts/login_items' %>
           </ul>
         </div><!-- /.nav-collapse -->
