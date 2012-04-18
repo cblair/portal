@@ -54,7 +54,7 @@
     <td><%= document.name %></td>
     <% cname = "(none)" %>
     <% if document[:collection] != nil %>
-    	<% cname = document[:collection].name %>
+    	<% cname = Document.find(document[:collection]).name %>
     <% end %>
     <td><%= cname %></td>
     <td><%= link_to 'Show', document %></td>
@@ -67,4 +67,4 @@
 </table>
 
 
-<%= link_to 'New Document', new_document_path %>
+<%= link_to 'Upload New Document', csv_import_path %>
