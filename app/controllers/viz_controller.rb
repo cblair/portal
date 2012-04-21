@@ -15,6 +15,13 @@ class VizController < ApplicationController
         @chart = Chart.find(params[:id])
         @document = Document.find(@chart.document_id)
 
+        @streaming = @chart.streaming
+        if @streaming then
+            # TODO: replace this with the actual URL
+            @liveurl = '/datapt.json'
+            @numdraw = @chart.numdraw
+        end
+
         col2 = get_data_column(@document, @chart.x_column)
         col1 = get_data_column(@document, @chart.y_column)
         if @chart.x_column == "auto-number" and @chart.y_column == "auto-number" then 

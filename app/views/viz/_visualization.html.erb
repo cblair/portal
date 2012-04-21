@@ -34,9 +34,9 @@
 <%= label_tag(:ylab, 'Y-axis label') %>
 <%= text_field_tag(:ylab, @chart.ylab) %>
 <%= label_tag :streaming, 'Live chart' %>
-<%= check_box_tag :streaming %>
+<%= check_box_tag :streaming, true, @chart.streaming %>
 <%= label_tag :numdraw, 'Maximum points on live chart' %>
-<%= number_field_tag :numdraw %>
+<%= number_field_tag :numdraw, @chart.numdraw%>
 
 <table class="table" style"width: 0;">
     <thead>

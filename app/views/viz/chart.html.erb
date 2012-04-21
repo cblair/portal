@@ -2,6 +2,25 @@
 <%= javascript_include_tag :high_charts %>
 <%= javascript_include_tag :exporting %>
 <%= high_chart('chart', @hc) do |c| %>
+    <%if @streaming %>
+    <%= "function requestData() {
+    $.ajax({
+        url: '#{@liveurl}',
+        success: function(point) {
+            var series = chart.series[0],
+                shift = series.data.length > #{@numdraw}; // shift if the series is longer than 20
+
+            // add the point
+            chart.series[0].addPoint(eval(point), true, shift);
+            
+            // call it again after one second
+            setTimeout(requestData, 1000);	
+        },
+        cache: false
+    });
+    }".html_safe %>
+    <%= "options.chart['events'] = {load: requestData};" %>
+    <% end %>
 <% end %>
 <% @row = @document.stuffing_data.first() %>
 

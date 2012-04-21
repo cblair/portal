@@ -13,6 +13,8 @@ module VizHelper
         @chart.title = params[:title]
         @chart.chart_type = params[:chart_type]
         @chart.options = ''
+        @chart.streaming = params[:streaming]
+        @chart.numdraw = params[:numdraw] || false
         @chart.save
         return @chart.id
   end
