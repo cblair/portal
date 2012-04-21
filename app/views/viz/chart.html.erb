@@ -6,13 +6,14 @@
     <%= "function requestData() {
     $.ajax({
         url: '#{@liveurl}',
-        success: function(point) {
+        success: function(points) {
             var series = chart.series[0],
-                shift = series.data.length > #{@numdraw}; // shift if the series is longer than 20
+                shift = (series.data.length + points.length) > #{@numdraw}; // shift if the series is longer than 20
 
-            // add the point
-            chart.series[0].addPoint(eval(point), true, shift);
-            
+            // add the points
+            for(point in points){
+                chart.series[0].addPoint(eval(point), true, shift);
+            }
             // call it again after one second
             setTimeout(requestData, 1000);	
         },
