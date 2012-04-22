@@ -4,9 +4,7 @@ class Document < ActiveRecord::Base
     
   belongs_to :collection
   stuffing
-  
-  #TODO: create default search design doc
-  
+    
   #Search for document names
   def self.search(search)
     if search

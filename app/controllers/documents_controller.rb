@@ -24,6 +24,7 @@ class DocumentsController < ApplicationController
       @temp_search_document.name = ENV['temp_search_doc']
       @temp_search_document.collection = c
       @temp_search_document.stuffing_data = d
+      @temp_search_document.stuffing_is_search_doc = TRUE
       @temp_search_document.save
       
       etime = Time.now() #end time

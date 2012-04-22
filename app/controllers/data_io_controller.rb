@@ -7,7 +7,6 @@ class DataIOController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @upload = Upload.new
   end
   
   def csv_import

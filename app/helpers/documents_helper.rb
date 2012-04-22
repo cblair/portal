@@ -80,16 +80,19 @@ module DocumentsHelper
     return data_columns
   end
   
-  def document_search_data_couch(search)
-    #Save the search string to each document so views can look it up
-    Document.all().each do |doc|
-      doc.stuffing_search = search
-      doc.save
+  def document_search_data_couch(start_search, end_search = "")
+    #TODO: untested
+    #Use any Document instance to access the Stuffing view method
+    #If exact value searched for, call key view
+    if end_search == ""
+      docs = Document.first().view("all_data_values/view1", {:startkey => start_search})["rows"]
+    #Otherwise, call startkey - endkey view
+    else
+      docs = Document.first().view("all_data_values/view1", {:startkey => start_search, :endkey => end_search})["rows"]
     end
     
-    #Use any Document instance to access the Stuffing view method
+    #Compile the resulting data back into a record-like array of hashes
     retval = []
-    docs = Document.first().view()["rows"]
     docs.each do |doc|
       retval << doc["value"]
     end

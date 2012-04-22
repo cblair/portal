@@ -11,26 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120403045110) do
+ActiveRecord::Schema.define(:version => 20120310025956) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "data_column_ints", :force => true do |t|
-    t.integer  "val"
-    t.integer  "data_column_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "data_columns", :force => true do |t|
-    t.string   "name"
-    t.string   "dtype"
-    t.integer  "order"
-    t.integer  "datum_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -58,22 +42,6 @@ ActiveRecord::Schema.define(:version => 20120403045110) do
   create_table "posts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "tests", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "uploads", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ufile_file_name"
-    t.string   "ufile_content_type"
-    t.integer  "ufile_file_size"
-    t.datetime "ufile_updated_at"
   end
 
   create_table "users", :force => true do |t|
