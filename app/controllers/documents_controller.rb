@@ -31,15 +31,16 @@ class DocumentsController < ApplicationController
       etime = Time.now() #end time
       ttime = etime - stime #total time
     
-    #@documents = Document.all
-    @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
+      @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
 
-    flash[:notice]="Searched data in #{ttime} seconds."
+      flash[:notice]="Searched data in #{ttime} seconds."
+    else
+        @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
+    end
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @documents }
-    end
     end
   end
 
