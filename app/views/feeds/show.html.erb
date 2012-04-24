@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @feed.name %>
+</p>
+
+<p>
+  <b>Feed url:</b>
+  <%= @feed.feed_url %>
+</p>
+
+<p>
+  <b>Interval val:</b>
+  <%= @feed.interval_val %>
+</p>
+
+<p>
+  <b>Interval unit:</b>
+  <%= @feed.interval_unit %>
+</p>
+
+<p>
+  <b>Document:</b>
+  <%= @feed.document_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_feed_path(@feed) %> |
+<%= link_to 'Back', feeds_path %>

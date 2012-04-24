@@ -1,0 +1,31 @@
+<h1>Listing feeds</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Feed url</th>
+    <th>Interval val</th>
+    <th>Interval unit</th>
+    <th>Document</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @feeds.each do |feed| %>
+  <tr>
+    <td><%= feed.name %></td>
+    <td><%= feed.feed_url %></td>
+    <td><%= feed.interval_val %></td>
+    <td><%= feed.interval_unit %></td>
+    <td><%= Document.find(feed.document_id).name %></td>
+    <td><%= link_to 'Show', feed %></td>
+    <td><%= link_to 'Edit', edit_feed_path(feed) %></td>
+    <td><%= link_to 'Destroy', feed, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Feed', new_feed_path %>

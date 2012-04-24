@@ -1,6 +1,7 @@
 
 <h3>Document Upload and Import</h3>
- <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
+
+<%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
  <table>
    <tr>
      <td>
@@ -17,6 +18,9 @@
    <tr>
      <td>
      	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => 'Select Filter'})%>
+     </td>
+     <td>
+     	<%= link_to "Filters...", ifilters_path %>
      </td>
    </tr>
    <tr>

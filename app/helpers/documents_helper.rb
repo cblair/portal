@@ -1,6 +1,9 @@
 module DocumentsHelper
   
   def get_data_colnames(d)
+    if d.empty?
+      return []
+    end
     return d.first().keys()
   end
   
@@ -8,7 +11,8 @@ module DocumentsHelper
   #TODO: probably needs to be values in record that user can update
   def convert_data_to_native_types(d)
     #TODO: replace with get_data_colnames
-    colnames=d.first().keys()
+    #colnames=d.first().keys()
+    colnames = get_data_colnames(d)
     colnames.each do |colname|
       #*binary
       #*boolean
@@ -101,6 +105,25 @@ module DocumentsHelper
           matches.each {|row| retval << row}
         end
       end
+    
+      end
+  end
+
+  def document_search_data_couch(start_search, end_search = "")
+    #TODO: untested
+    #Use any Document instance to access the Stuffing view method
+    #If exact value searched for, call key view
+    if end_search == ""
+      docs = Document.first().view("all_data_values/view1", {:startkey => start_search})["rows"]
+    #Otherwise, call startkey - endkey view
+    else
+      docs = Document.first().view("all_data_values/view1", {:startkey => start_search, :endkey => end_search})["rows"]
+    end
+    
+    #Compile the resulting data back into a record-like array of hashes
+    retval = []
+    docs.each do |doc|
+      retval << doc["value"]
     end
     
     return retval

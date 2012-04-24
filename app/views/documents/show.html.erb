@@ -10,8 +10,16 @@
 
 <hr/>
 
-<% @row = @document.stuffing_data.first() %>
-<% @colnames = @row.keys %>
+<% 
+#Get row data
+@row = @document.stuffing_data.first()
+#if there is no first row, set to empty instead of nil
+if @row == nil
+	@row = {}
+end 
+@colnames = get_data_colnames(@document.stuffing_data) 
+%>
+
 <%= render 'viz/visualization', :layout => 'true' %>
 <hr/>
 
@@ -28,9 +36,9 @@
         <%= colname %>
         </li>
     <% end %>
+    <%= submit_tag("Manipulate")%>
 <% end %><!--end Data Manip form-->
 </ul>
-<%= submit_tag("Manipulate")%>
 </div>
 
 <hr/>
@@ -38,13 +46,18 @@
 <div>
     <h2>Data</h2>
 	<!--Display data-->
+	<!--TODO: make a partial-->
     <table class="table table-striped table-bordered table-condensed" style="width:0;">
         <thead><tr>
             <th><!--place holder for axis labels --></th>
-    <% @row.keys.each do |name| %>
+    <% row_keys = [] %>
+    <% if !@row.empty? %>
+    	<% row_keys = @row.keys %>
+    <% end %>
+    <% row_keys.each do |name| %>
             <th><%= name %></th>
     <% end %>
-        </tr></thhead>
+        </tr>></thhead>
 	<% @document.stuffing_data.each do |row| %>
 		<tr>
 			<td><!--place holder for axis labels--></td>

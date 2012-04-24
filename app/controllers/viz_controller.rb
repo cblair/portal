@@ -6,7 +6,6 @@ class VizController < ApplicationController
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
 
-
   def chart
     if not params[:id] then
         chart_id = newchart(params)
