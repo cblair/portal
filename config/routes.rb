@@ -1,4 +1,6 @@
 Portal::Application.routes.draw do
+  resources :feeds
+
   resources :uploads
 
   root :to => 'home#index'

@@ -72,6 +72,7 @@ class DocumentsController < ApplicationController
   # POST /documents
   # POST /documents.json
   def create
+    debugger
     @document = Document.new(params[:document])
 
     respond_to do |format|
