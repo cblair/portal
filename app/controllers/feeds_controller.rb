@@ -1,7 +1,5 @@
 class FeedsController < ApplicationController
   include FeedsHelper
-  require 'open-uri'
-  require 'json'
 
   # GET /feeds
   # GET /feeds.json
@@ -45,33 +43,6 @@ class FeedsController < ApplicationController
   # POST /feeds.json
   def create
     @feed = Feed.new(params[:feed])
-    
-    interval_val = params[:feed][:interval_val]
-    interval_unit = format_rufus_unit(params[:feed][:interval_unit])
-    document_id = params[:feed][:document_id]
-    feed_url = params[:feed][:feed_url]
-
-    scheduler = Rufus::Scheduler.start_new
-    scheduler.every("#{interval_val}#{interval_unit}") do
-      doc = Document.find(document_id)
-      d = doc.stuffing_data
-      
-      #if max size is reached, cut down the data in the document
-      feed_max_size = 10
-      if d.count > feed_max_size
-        n_over = d.count - feed_max_size #how much are we over?
-        d = d[n_over...d.count]
-      end
-        
-      begin
-        d << JSON.parse(open(feed_url).read)
-      rescue Exception => e
-        d << { "no data" => feed_url, "error" => e }
-      end
-      
-      doc.stuffing_data = d
-      doc.save
-    end
 
     respond_to do |format|
       if @feed.save
@@ -82,6 +53,8 @@ class FeedsController < ApplicationController
         format.json { render json: @feed.errors, status: :unprocessable_entity }
       end
     end
+    
+    create_feed_scheduler(@feed)
   end
 
   # PUT /feeds/1
