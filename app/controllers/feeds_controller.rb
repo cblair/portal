@@ -43,6 +43,7 @@ class FeedsController < ApplicationController
   # POST /feeds.json
   def create
     @feed = Feed.new(params[:feed])
+    @feed.jid = create_feed_scheduler(@feed)
 
     respond_to do |format|
       if @feed.save
@@ -54,7 +55,6 @@ class FeedsController < ApplicationController
       end
     end
     
-    create_feed_scheduler(@feed)
   end
 
   # PUT /feeds/1
@@ -62,7 +62,8 @@ class FeedsController < ApplicationController
   def update
     @feed = Feed.find(params[:id])
     
-    #TODO: update rufus scheduler
+    destroy_feed_scheduler(@feed)
+    @feed.jid = create_feed_scheduler(@feed)
 
     respond_to do |format|
       if @feed.update_attributes(params[:feed])
@@ -79,9 +80,8 @@ class FeedsController < ApplicationController
   # DELETE /feeds/1.json
   def destroy
     @feed = Feed.find(params[:id])
+    destroy_feed_scheduler(@feed)
     @feed.destroy
-    
-    #TODO: destroy rufus scheduler
 
     respond_to do |format|
       format.html { redirect_to feeds_url }

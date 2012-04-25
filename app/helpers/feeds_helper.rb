@@ -24,9 +24,16 @@ module FeedsHelper
     feed_url = feed[:feed_url]
     
     scheduler = Rufus::Scheduler.start_new
-    scheduler.every("#{interval_val}#{interval_unit}") do
+    job = scheduler.every("#{interval_val}#{interval_unit}") do
       doc = Document.find(document_id)
       d = doc.stuffing_data
+      
+      last_id = doc.stuffing_last_id
+      if last_id == nil
+        last_id = 0
+      else
+        last_id = doc.stuffing_last_id + 1
+      end
       
       #if max size is reached, cut down the data in the document
       feed_max_size = 10
@@ -36,14 +43,27 @@ module FeedsHelper
       end
         
       begin
-        d << JSON.parse(open(feed_url).read)
+        row = JSON.parse(open(feed_url).read)
       rescue Exception => e
-        d << { "no data" => feed_url, "error" => e, "feed attributes" => feed }
+        row = { "no data" => feed_url, "error" => e, "feed attributes" => feed }
       end
       
+      row = row.merge({"id" => last_id})
+      d << row
+      
+      doc.stuffing_last_id = last_id
       doc.stuffing_data = d
       doc.save
     end
+    
+    return job.job_id
+  end
+  
+  def destroy_feed_scheduler(feed)
+    scheduler = Rufus::Scheduler.start_new
+    debugger
+    
+    scheduler.unschedule(feed.jid)
   end
   
 end
