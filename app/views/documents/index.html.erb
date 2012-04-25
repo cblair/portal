@@ -3,7 +3,8 @@
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
     <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
+    <%= submit_tag "Hatch Search", :name => "search_type" %>
+    <%= submit_tag "I'm Feeling Lucky", :name => "search_type" %>
   </p>
   <div id="documents"><%= render 'documents' %></div>
 <% end %>
