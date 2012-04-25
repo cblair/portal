@@ -1,5 +1,5 @@
 if not $rails_rake_task
-    d = document.new(:name => "temp")
+    d = Document.new(:name => "temp")
     d.save
     if !d.view_exists("all_data_values")
       d.create_simple_view("all_data_values", 
