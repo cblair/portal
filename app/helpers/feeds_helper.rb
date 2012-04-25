@@ -59,11 +59,18 @@ module FeedsHelper
     return job.job_id
   end
   
+  #TODO: doesn't work!
   def destroy_feed_scheduler(feed)
     scheduler = Rufus::Scheduler.start_new
     debugger
     
     scheduler.unschedule(feed.jid)
+  end
+  
+  #Gives you the data since and not including last_id
+  def get_latest_data(document_id, last_id)
+    doc = Document.find(document_id)
+    return doc.stuffing_data.find_all {|item| item["id"] > last_id }
   end
   
 end
