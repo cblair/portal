@@ -63,7 +63,9 @@ end
 			<td><!--place holder for axis labels--></td>
 			<% row.values.each do |val|%>
 			<td>
-				<%= val %>
+				<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
+    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
+    			<% end %>
 			</td>
 			<% end %>
 		</tr>

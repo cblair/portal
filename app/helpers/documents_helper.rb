@@ -109,15 +109,15 @@ module DocumentsHelper
       end
   end
 
-  def document_search_data_couch(start_search, end_search = "")
+  def document_search_data_couch(search, lucky_search = false)
     #TODO: untested
     #Use any Document instance to access the Stuffing view method
     #If exact value searched for, call key view
-    if end_search == ""
-      docs = Document.first().view("all_data_values/view1", {:startkey => start_search})["rows"]
+    if lucky_search == false
+      docs = Document.first().view("all_data_values/view1", {:startkey => search})["rows"]
     #Otherwise, call startkey - endkey view
     else
-      docs = Document.first().view("all_data_values/view1", {:startkey => start_search, :endkey => end_search})["rows"]
+      docs = Document.first().view("all_data_values/view1", {:key => search})["rows"]
     end
     
     #Compile the resulting data back into a record-like array of hashes

@@ -17,7 +17,7 @@ class DocumentsController < ApplicationController
       #Delete any temp search docs so we don't search them too 
       Document.destroy_all(:name => ENV['temp_search_doc'])
      
-      d = document_search_data_couch(params[:search])
+      d = document_search_data_couch(params[:search], params.has_key?("lucky_search"))
       c=Collection.find_or_create_by_name("Recent Searches")
       c.save
       
