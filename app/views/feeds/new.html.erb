@@ -22,7 +22,7 @@
 <tr>
 	<td>Document: (to over write):</td>
 	<td><%= f.select(:document_id, Document.all.collect {|d| [ d.name, d.id ] }) %></td>
-	<td><%= link_to 'New Document', new_document_path %></td>
+	<td><%= link_to 'New Document', new_document_path, :target => '_blank' %></td>
 </tr>
 <tr>
 	<td><%= f.submit %></td>
