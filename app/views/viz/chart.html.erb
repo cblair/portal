@@ -1,6 +1,7 @@
 <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" %>
 <%= javascript_include_tag :high_charts %>
 <%= javascript_include_tag :exporting %>
+<%= javascript_include_tag "application" %>
 <%= high_chart('chart', @hc) do |c| %>
     <%if @streaming %>
     <%= "function requestData() {
@@ -29,3 +30,5 @@
 <% @colnames = @row.keys %>
 
 <%= render 'viz/visualization', :layout => 'true' %>
+
+<% # <%= link_to "Delete this chart", @chart, :confirm => 'Are you sure?', :method => :delete %>

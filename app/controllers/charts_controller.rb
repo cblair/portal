@@ -74,9 +74,10 @@ class ChartsController < ApplicationController
   def destroy
     @chart = Chart.find(params[:id])
     @chart.destroy
+    puts 'GOT DESTROY'
 
     respond_to do |format|
-      format.html { redirect_to charts_url }
+      format.html { redirect_to visualizations_url, notice: 'Chart deleted' }
       format.json { head :ok }
     end
   end
