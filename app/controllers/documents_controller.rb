@@ -125,7 +125,9 @@ class DocumentsController < ApplicationController
                                 :name => "#{d.name}_manip", 
                                 :collection => d.collection,
                                 :stuffing_data => get_data_map(d, colname))
-                                
+    chart = Chart.find_by_document_id(@document)
+    @chart = chart || Chart.find(newchart({:document_id => @document}))
+    
     render "show"
   end
 

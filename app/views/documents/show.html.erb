@@ -25,17 +25,17 @@ end
 
 <div>
 <!--Document Manip Form-->
-    <%= form_tag(document_manip_path) do %>
-    <%= hidden_field_tag(:id, @document[:id]) %>
-<h2>Data Manipulation</h2>
-<%= select_tag(:manip_func, options_for_select([ ["map","map"] ]))%>
-<ul>
-    <% @colnames.each do |colname|%>
-        <li>
-        <%= radio_button_tag("manip_colname", colname) %> 
-        <%= colname %>
-        </li>
-    <% end %>
+<%= form_tag(document_manip_path) do %>
+	<%= hidden_field_tag(:id, @document[:id]) %>
+	<h2>Data Manipulation</h2>
+	
+	<% @colnames.each do |colname|%>
+    	<%= radio_button_tag("manip_colname", colname) %> 
+    	<%= colname %>
+	<% end %>
+	<br />
+	<%= select_tag(:manip_func, options_for_select([ ["categorize","categorize"] ]))%>
+	<br />
     <%= submit_tag("Manipulate")%>
 <% end %><!--end Data Manip form-->
 </ul>
@@ -57,7 +57,7 @@ end
     <% row_keys.each do |name| %>
             <th><%= name %></th>
     <% end %>
-        </tr>></thhead>
+        </tr></thhead>
 	<% @document.stuffing_data.each do |row| %>
 		<tr>
 			<td><!--place holder for axis labels--></td>

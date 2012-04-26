@@ -70,7 +70,7 @@ module DocumentsHelper
     
     dc.each do |row|
       data_col_hash = {}
-      colnames = ["value","map"]
+      colnames = ["value","count"]
       key = row.keys().first()
       data_col_hash["value"] = key
       data_col_hash["map"] = row[key]
@@ -110,7 +110,6 @@ module DocumentsHelper
   end
 
   def document_search_data_couch(search, lucky_search = false)
-    #TODO: untested
     #Use any Document instance to access the Stuffing view method
     #If exact value searched for, call key view
     if lucky_search == false
