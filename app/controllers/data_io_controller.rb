@@ -80,19 +80,18 @@ class DataIOController < ApplicationController
     #                    :collection => c,
     #                    :stuffing_data => data_columns
     #                  )
-    d=Document.new
-    d.name=fname
-    d.collection=c
-    d.stuffing_data=data_columns
-    d.save
+    @document=Document.new
+    @document.name=fname
+    @document.collection=c
+    @document.stuffing_data=data_columns
+    @document.save
     
     etime = Time.now() #end time
     ttime = etime - stime #total time
 
-    flash[:notice]="CSV Import successful,  #{d.stuffing_data.count} new rows added to data base in #{ttime}"
+    flash[:notice]="CSV Import successful,  #{@document.stuffing_data.count} new rows added to data base in #{ttime}"
 
-    render :action => "index"   
-    #redirect_to "/Metadata/#{md.id}"
+    redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
 
   def csv_export
