@@ -61,6 +61,21 @@ module DocumentsHelper
     d.stuffing_data.find_all {|item| dc << item[colname]}
     return dc
   end
+
+  def get_last_n_above_id(d, xname, yname, lastid, max)
+      out = []
+      document = Document.find(d)
+      lid = lastid.to_i
+      last = lid
+      document.stuffing_data.find_all do |item|
+          if item["id"] != nil && item["id"] > lid
+              out << [item[xname], item[yname]]
+              last = item["id"]
+          end
+      end
+      out = out.last(max.to_i)
+      return {"lastpt" => last, "points" => out}
+  end
   
   #Gives the count of every value in a column
   def get_data_map(d, colname)

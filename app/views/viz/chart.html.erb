@@ -4,16 +4,20 @@
 <%= javascript_include_tag "application" %>
 <%= high_chart('chart', @hc) do |c| %>
     <%if @streaming %>
+        <%= "var theurl = '#{@liveurl}';
+        var lastpt = 0;" %>
     <%= "function requestData() {
     $.ajax({
-        url: '#{@liveurl}',
-        success: function(points) {
+        url: theurl + lastpt + '.json',
+        success: function(dict) {
+            lastpt = dict.lastpt;
+            points = dict.points;
             var series = chart.series[0],
                 shift = (series.data.length + points.length) > #{@numdraw}; // shift if the series is longer than 20
 
             // add the points
-            for(point in points){
-                chart.series[0].addPoint(eval(point), true, shift);
+            for(var i = 0; i < points.length; i++){
+                chart.series[0].addPoint(eval(points[i]), true, shift);
             }
             // call it again after one second
             setTimeout(requestData, 1000);	

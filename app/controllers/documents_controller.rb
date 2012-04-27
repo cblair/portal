@@ -55,7 +55,6 @@ class DocumentsController < ApplicationController
       format.json { render json: @document }
     end
   end
-
   # GET /documents/new
   # GET /documents/new.json
   def new

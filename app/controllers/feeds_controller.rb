@@ -19,9 +19,10 @@ class FeedsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @feed }
+      format.json { render json: get_latest_data_max() }
     end
   end
+
 
   # GET /feeds/new
   # GET /feeds/new.json
