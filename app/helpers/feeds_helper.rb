@@ -72,5 +72,14 @@ module FeedsHelper
     doc = Document.find(document_id)
     return doc.stuffing_data.find_all {|item| item["id"] > last_id }
   end
+
+  def get_latest_data_max(document_id, last_id, maxitems)
+      doc = Document.find(document_id)
+      data = doc.stuffing_data.find_all{ |item|
+          item["id"] > last_id
+      }
+      puts data
+      return data.last(maxitems)
+  end
   
 end

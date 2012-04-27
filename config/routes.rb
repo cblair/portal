@@ -28,6 +28,8 @@ Portal::Application.routes.draw do
   
   match '/visualize' => 'viz#chart', :as => 'visualize'
 
+  match '/charts/:id/:last_id' => 'charts#showjson', :as => :chart_update
+
   #Demo stuff
   match '/Movies' => "Movies#index"
   

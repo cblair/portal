@@ -1,4 +1,5 @@
 class ChartsController < ApplicationController
+    include DocumentsHelper
   # GET /charts
   # GET /charts.json
   def index
@@ -10,16 +11,20 @@ class ChartsController < ApplicationController
     end
   end
 
-  # GET /charts/1
-  # GET /charts/1.json
-  def show
+  # GET /chart/:id/:last_id
+  def showjson
     @chart = Chart.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @chart }
+      format.json { render json: get_last_n_above_id(@chart.document_id,
+                                                     @chart.x_column,
+                                                     @chart.y_column,
+                                                     params[:last_id],
+                                                     @chart.numdraw)}
     end
   end
+
 
   # GET /charts/new
   # GET /charts/new.json
@@ -74,9 +79,10 @@ class ChartsController < ApplicationController
   def destroy
     @chart = Chart.find(params[:id])
     @chart.destroy
+    puts 'GOT DESTROY'
 
     respond_to do |format|
-      format.html { redirect_to charts_url }
+      format.html { redirect_to visualizations_url, notice: 'Chart deleted' }
       format.json { head :ok }
     end
   end

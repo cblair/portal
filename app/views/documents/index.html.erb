@@ -1,4 +1,4 @@
-<h1>Documents</h1>
+<h2>Search</h2>
 
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
@@ -10,7 +10,7 @@
 <% end %>
 
 <% if @temp_search_document %>
-<h1>Data</h1>
+<h2>Data</h2>
 <p><%= link_to 'Show as document', @temp_search_document %></p>
 
 <div>
@@ -46,9 +46,8 @@
 		</table>
 	<% end %>
 </div>
-<% end %>
 
-<h1>Documents</h1>
+<h2>Documents</h2>
 <table class="table" style="width: 0;">
   <thead>
   <tr>
@@ -74,5 +73,6 @@
   </tbody>
 </table>
 
+<% end %>
 
 <%= link_to 'Upload New Document', csv_import_path %>
