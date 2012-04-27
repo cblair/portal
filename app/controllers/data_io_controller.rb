@@ -10,7 +10,6 @@ class DataIOController < ApplicationController
   end
   
   def csv_import
-        
     fname=params[:dump][:file].original_filename
     #fname=params[:files].first()
     filter_id=params[:post][:ifilter_id]
@@ -41,8 +40,13 @@ class DataIOController < ApplicationController
       colnames = [1]
     end
 
-    #Save metadata
-    c=Collection.find_or_create_by_name(fname)
+    #Save collection
+    #if params.has_key?("collection_text")
+    #  c=Collection.find_or_create_by_name(params[:collection_text])
+    #else
+    #  c=Collection.find(params["collection_id"])
+    #end
+    c=Collection.find(fname)
     c.users_id = current_user.id
     c.save
     

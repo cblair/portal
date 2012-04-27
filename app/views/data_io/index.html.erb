@@ -24,8 +24,16 @@
      </td>
    </tr>
    <tr>
+	<td>Collection:</td>
+	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }) %></td>
+   </tr>
+   <tr>
+   	<td>Or type in an existing/new collection:</td>
+   	<td><%= f.text_field :name => "collection_text"%></td>
+   </tr>
+   <tr>
      <td>
-         <%= f.check_box :contains_header, :checked => true %> File has header
+         <%= f.check_box :contains_header, :checked => false %> File has header
      </td>
    </tr>
    <tr>
