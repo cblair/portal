@@ -74,8 +74,8 @@ class DocumentsController < ApplicationController
   # POST /documents
   # POST /documents.json
   def create
-    debugger
     @document = Document.new(params[:document])
+    @document.stuffing_data = []
 
     respond_to do |format|
       if @document.save
