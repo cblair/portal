@@ -1,0 +1,199 @@
+\section{Parallel Programming}
+Parallel programming is merely the application of parallel concepts. In Section \ref{sec:par_con}, the general
+approach was discussed on how to recognize potentially parallelizable situations. Moving into parallel
+programing, parallelization must be formalized a little more.
+
+In Section \ref{sec:par_con}, tasks that happened over and over again were what were used to show the 
+parallelization process. These repeated tasks are what are called iteration in computer science, and they are
+one of the easiest speedup that can be gained in parallelization. Although there are other gains to be had,
+this report will focus on iteration. 
+
+\subsection{Data parallelism}
+Data Parallelism is very similar to Task Parallelism. The difference practically is that instead of using libraries
+in say R to parallelize tasks, we would just run the whole program parallel:
+\scriptsize
+\begin{lstlisting}
+> R CMD BATCH primes.r -y 5 &
+[1] 1228
+> R CMD BATCH primes.r -y 7 &
+[1] 1229
+\end{lstlisting}
+\normalsize
+
+Above, we use the '\&' symbol in linux to run the process in the background. If our computer has multiple 
+CPUs, the operating system will send each program to a free CPU. There is no need to profile the program
+or calculate speedup. The speedup will always be ideal on independent data. Since it is so simple, it is 
+encouraged as a first step towards parallelism. It does not, however, speed up each individual program run. 
+If the program itself needs speedup, you need Task Parallelism.
+
+These processes will die, however, when the user logs out. This becomes problematic when processes take a 
+lot of time. A need for batch servers and schedulers grows, which are common in \gls{HPC} environments. 
+These are discussed in Section \ref{sec:hpc}.
+
+\subsection{Task parallelism}
+Task Parallelism is when many tasks or processes are ran at one time. This is very similar to Data Parallelism,
+in that Task Parallelism usually involves starting with some data and performing an operation on it. The
+difference is that Task Parallelism ends up performing a slighlty different task on different data, where
+Data Parallelism is the exact same task performed for many sets of data.
+
+In your research project, parallel alarm bells should sound if you have an algorithm like the following:
+\begin{figure}[h]
+	\begin{center}
+		\LARGE
+		\begin{tabular}{l r}
+			$ x $		&	$ = \sum_{i = 1}^1 f(i)$ \\
+		\end{tabular}
+
+		\normalsize
+		\begin{tabular}{l l}
+			$ where $  & \\
+					&	$ f(i) $ is some function that uses $i$ \\
+		\end{tabular}
+		\caption{A potentially parallelizable algorithm} 
+		\label{sigma}
+	\end{center}
+\end{figure}
+\normalsize
+
+For the layman, this means any function that is applied to many different values, and all the results can then
+be collected. An example would be calculating how many numbers are prime upto a variable $ y $. The 
+function would then be $ f(i) = 1 $ if $i$ is prime, $f(i) = 0$ if $i$ is not prime. So for 7, the equation is as
+follows:
+
+\begin{figure}[h]
+	\begin{center}
+		%\LARGE
+		\begin{tabular}{l l}
+			$ x $		&	$ = \sum_{i = 1}^1 f(i)$ \\
+					&	$ = f(1) + f(2) + f(3) + f(4) + f(5) + f(6) + f(7)$ \\
+					&	$ = 1 + 1 + 1 + 0 + 1 + 0 + 1 $\\
+					&	$ = 5 $ \\
+		\end{tabular}
+
+		\normalsize
+		\begin{tabular}{l l}
+			$ where $  & \\
+					&	$ f(i) = 1$ if $i$ is prime \\
+					&	$ f(i) = 1$ if $i$ is not prime \\
+		\end{tabular}
+		\caption{How many primes factors are in a number} 
+		\label{primes}
+	\end{center}
+\end{figure}
+\normalsize
+
+This may be a trivial example, but as numbers get bigger, it will take more time. The time requirements come
+down to how you determine if a number is prime or not. This process can take a long time with big numbers.
+Cryptography algorithms depend on it! Each $f(i)$ can be treated like the mathematicians and bingo boards
+in Section \ref{sec:par_con}, so this algorithm has potential to be parallelized.
+
+Using the R language, we can code Figure \ref{primes} as follows:
+\scriptsize
+\begin{lstlisting}
+> 
+> is.prime <- function(i) {
++ 	... #some R magic
++ }
+> 
+> y = 7
+> sum = 0
+> for(i in 1:y) {
++ 	sum <- sum + is.prime(i)
++ }
+> 
+> print(sum)
+[1] 5
+\end{lstlisting}
+\normalsize
+
+This is not the best way in R to write this, but is easier to understand. A method that better prepares us for
+parallelism is using lapply:
+
+\scriptsize
+\begin{lstlisting}
+> y <- 7
+> sum <- 0
+> results <- lapply(1:y, is.prime)
+> for(i in 1:length(results)) {
++ 	sum <- sum + results[[i]][1]
++ }
+> print(sum)
+[1] 5
+\end{lstlisting}
+\normalsize
+
+What if $is_prime()$ takes a really long time to compute? This is where the R library SNOW comes in. SNOW
+creates a SNOW MPI virtual cluster, using the Rmpi library. All of these terms will be expanded on in Section
+\ref{sec:hpc}.
+
+\scriptsize
+\begin{lstlisting}
+> require(snow)
+> c1 <- startCluster(4, type="MPI")
+> y <- 7
+> sum <- 0
+> results <- parLapply(c1,1:y, is.prime)
+> for(i in 1:length(results)) {
++ 	sum <- sum + results[[i]][1]
++ }
+> print(sum)
+[1] 5
+\end{lstlisting}
+\normalsize
+
+
+\subsubsection{Process Granularity (P)}
+Granularity in \ref{primes} is how long it takes for $f(i)$ to complete. In the code examples, this comes down
+to how long is.prime() takes. We can measure this using methods in Section \ref{sec:proc_prof}
+
+\subsubsection{Process profiling}
+\label{sec:proc_prof}
+In R, one can measure very simply the time it takes for a process to complete using proc.time() .
+
+\scriptsize
+\begin{lstlisting}
+> stime <- proc.time()[3]
+> is_prime(5)
+> etime <- proc.time()[3]
+> runtime <- etime - stime
+> print(paste("Granularit (P) =", runtime))
+[1] "Granularit (P) = .385"
+\end{lstlisting}
+\normalsize
+
+To get more information about the program, Rprof can be used, along with more profilers. These are good 
+tools to see which functions take the most process time, and are generally good in point you in the right 
+direction of time expensive portions of the code. Most languages have other methods of timing and profiling code. The methods are very similar.
+
+\subsection{Pipeline Parallelism}
+Pipeline Parallelism is a trickier version of Task Parallelism, in which there are data dependencies between
+all the different tasks. The result is a slowed down parallel process. Consider the following algorithm:
+
+\begin{figure}[h]
+	\begin{center}
+		\LARGE
+		\begin{tabular}{l r}
+			$ x $		&	$ = \sum_{i = 1}^1 f(i) * f(i - 1)$ \\
+		\end{tabular}
+
+		\normalsize
+		\begin{tabular}{l l}
+			$ where $  & \\
+					&	$ f(i) $ is some function that uses $i$ \\
+		\end{tabular}
+		\caption{A potentially Pipeline Parallel algorithm} 
+		\label{pipe_par}
+	\end{center}
+\end{figure}
+\normalsize
+
+In Figure \ref{pipe_par}, each iteration depends on the results before it. This results in process time spent 
+waiting on results from other tasks. Although this is less than ideal, it is still may be beneficial to calculate
+$f(i)$, so that when the results for $f(i - 1)$ are found, the task has already completed its time expensive 
+task. The speedup isn't as great as data independent parallelized processes, but can still be beneficial.
+
+
+%\subsection{Mutual Exclusion issues}
+
+%\subsection{Data dependency}
+

@@ -1,0 +1,356 @@
+% $Id: AllegProposal.tex,v 1.8 2000/07/05 21:02:12 culver Exp $
+% AllegProposal.tex
+% by A. Thall
+% 13. Feb 2003
+%
+% Small edits and a few additions made by R. Roos
+% 21 Jan 2007
+% Most particularly, the "box" around the thesis statement has been removed,
+% section titles have been modified. The section named "Prior work II" has
+% been commented out. The \topmargin has been changed to -.5in and the
+% change to \parindent has been commented out.
+% The filename "nausicaa.eps" has been changed to simply "nausicaa" so that
+% pdflatex can be used on the file (and a file named "nausicaa.pdf" has
+% been created using the "epstopdf" command).
+% Several subsections have been added to illustrate subsection usage.
+% The word "comp" has been replaced by "project" or "thesis" throughout.
+% Other small changes have been made.
+%
+% This document provides a sample Senior Project Proposal template for use
+% by students in Allegheny's CS and Applied Computing programs.
+
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[11pt]{article}
+
+%The following is used by WinEdt to set up cross-referencing to the BibTeX files
+%It is NOT commented out---the comment lets it be simply ignored by non-WinEdt LaTeX compilers
+
+%GATHER{mybibtexDB.bib}
+
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{fancybox}
+\usepackage{listings}
+\usepackage{algo}
+\usepackage{url}
+
+\setlength{\textheight}{9in}
+\setlength{\textwidth}{6in}
+\setlength{\oddsidemargin}{.25in}
+\setlength{\topmargin}{-.5in}  % changed from -.25 by RSR on 1/21/07
+%\parindent .5in    % commented out by RSR 1/21/07
+
+%put words in the hyphenation statement if you want to enforce
+%how LaTeX should break them (or not) at the end of a line.
+%\hyphenation{repre-sen-tations problems exact linear}
+\hyphenation{itself}
+
+%%%%%
+%% Commented out -- RSR, 1/21/07
+%%%%%
+% The following provides a box to surround the thesis statement
+%\newenvironment{Thesis}%
+%{\begin{Sbox}\begin{minipage}{.95\linewidth}}%
+%{\end{minipage}\end{Sbox}\begin{center}\fbox{\TheSbox}\end{center}}
+
+\title{A Senior Thesis Proposal Template for CS Students at Allegheny}
+\author{Stu Dent \\ Possible thesis advisor:  I.\ M.\ Firstreader}
+
+\begin{document}
+
+% You can specify a language and other options for
+% the code-formatting "listings" package
+\lstset{language=C++,basicstyle=\small,
+        stringstyle=\ttfamily,showstringspaces=false}
+
+\singlespace
+\maketitle
+
+\begin{abstract}                % ~350 words max
+A \LaTeX\ template for Senior Project proposals would be of benefit to
+students who find the organizational aspects of such a project
+difficult or unclear.  This paper proposes itself as just such a
+template.  Using this template as a reference guide, students should be
+able to understand the form and function of the different parts of a
+formal thesis proposal; they may, of course, choose to deviate from it
+as necessary or desirable in the context of their own project
+proposals.  Future work will provide another template for the formal written
+thesis itself, complete with a {\tt gatorthesis.sty} style-file.
+\end{abstract}
+
+\doublespace
+% This sets section-numbering to only include Section and Subsection numbers
+\setcounter{secnumdepth}{2}
+
+\section{Introduction}\label{ch:overview}
+
+Creation of a formal research proposal is a daunting task; while authors
+such as Zobel~\cite{zobel:97} discuss the basic mechanics of technical
+writing, and writers such as Griffith et al.~\cite{griffiths:97}
+explain the basics of using \LaTeX\ for such writing, there is little
+guidance on the actual structure of a research proposal.
+This structure may vary considerably depending on the nature of the
+research topic---whether it consists of a coding project, a theoretical
+study, a literature survey or other acceptable topics.  Despite their
+differences, all proposals share common features, and this paper provides
+a \LaTeX\ template suitable for most such projects.  It is expected that
+a user will modify this template according to the specifics of the
+proposed research; in particular, boiler-plate section headings
+and subheadings should be replaced by informative ones specific to
+the topic.
+
+\subsection{Components of a Proposal}
+The introduction of a proposal typically acquaints the reader with
+the nature of problem being addressed and the basic idea of the
+project being proposed to address it.  It should hit many of the points
+of the abstract while giving more of the motivation and need for the
+work being proposed.  It should then lay out the structure of the
+paper, telling the reader what will be found in the sections which
+follow.  Thus, the next sections should address the following topics:
+\begin{itemize}
+\item
+the thesis statement and research objectives;
+\item
+prior work and current art---other approaches to the problem and
+their drawbacks;
+\item
+methodology and experiment---including background research
+to be done, necessary equipment and algorithmic techniques, and general
+plan-of-attack;
+\item
+analysis and validation---how results will be judged and interpreted;
+\item
+a time-table for achieving key objectives, and one or more fallback plans
+in cases where goals are not met by specific target dates;
+\item concluding remarks.
+\end{itemize}
+The proposal should also include a bibiography/reading-list.  In
+this case, it is permissible to include references which are not directly
+cited in the text.  (You can use the \verb+\nocite{*}+ command before the
+bibliography section, as below, to include all Bib\TeX\ references
+from a database file in the bibliography.)  You should still cite
+references in the text as appropriate.
+
+\section{Prior Work}
+
+Depending on the nature of the topic, prior work should either precede
+or follow the thesis statement.  Some topics will require the
+background information to put the thesis proposal in context.  Others
+are best served by giving the thesis statement first and then contrasting
+and comparing it with prior work in the field.
+
+\subsection{\TeX}
+If this were a real proposal dealing with how to write proposals,
+it might be appropriate to say a few words
+about Knuth, inventor of the \TeX\ typesetting language \cite{knuth:84}.
+Description of Knuth's contribution goes here.
+
+\subsection{\LaTeX\ (Lamport, 1984)}
+Description of Lamport's contribution \cite{lamport:94} goes here.
+
+\subsection{Other Work}
+Description of other contributions leading up to this thesis goes here,
+e.g., Zobel's book on writing for computer science \cite{zobel:97}.
+
+\section{Thesis}
+
+It is difficult for students to begin a proposal without an adequate guide;
+my project, therefore, will demonstrate the following thesis:
+%\begin{Thesis}
+\singlespace
+\begin{quote}
+It is both simple and useful to provide students with a \LaTeX\ template
+for their formal thesis proposals.  This will result in far fewer
+questions from students uncertain as to what belongs in their proposals.
+Such a template will be of benefit to students in Computer
+Science/Applied Computing as well as to any others willing and able
+to use \LaTeX\ for their work.
+\end{quote}
+%\end{Thesis}
+\doublespace
+
+A formal thesis statement should be a \emph{falsifiable} statement about
+the goal you will attempt to achieve with your research project.
+For a purely scientific project, this is the hypothesis you are testing
+with your research.  For an applied programming project, it is usually a
+statement about the feasibility and correctness of your approach and
+the advantages it has over other approaches.  For a survey or study,
+it is usually a statement regarding the need or usefulness of such
+a study, its intended audience, and so on.
+
+Often, you may want to include an itemized list of goals you plan to
+achieve.  Thus, this paper has the goals of
+\begin{itemize}
+\item
+helping students, by ridding their minds of confusion;
+\item
+helping faculty, too, by eliminating their need to say ``No, no, no!
+You need to include a section on \emph{bleh} and \emph{blah}!
+I told \emph{everybody} that.  I thought I told everybody that.  Arrgghh!!!''
+\end{itemize}
+In summary, this section gives the main idea of what you propose,
+with the goals and contributions it will make to the field; the
+details of proposed implementation and methodology will be given later
+in Sec.~\ref{sec:implem}.
+
+%\section{Prior work II:  advantages of the proposed work over other approaches}
+
+If you didn't already discuss prior work, this is a good place to do so.
+%You might include these remarks, if brief, in the preceding section.
+
+\section{Implementation and Methodology}\label{sec:implem}
+
+Here, you should lay out the details of how you propose to solve the
+problem and otherwise conduct the research necessary to support your
+thesis.  Include details regarding hardware and software you will use,
+resources you will draw on, algorithms you will implement, and other
+ideas about how you will accomplish your task.  It is inevitable that
+your final work will deviate from earlier plans, as you research your
+topic, learn new methods, and discover what works as expected.
+
+\subsection{Using Tables and Figures}
+Use tables and figures as appropriate; a picture can explain a lot
+in very compact form, and can keep readers interested.  Avoid things
+that are merely flash and do not
+\begin{figure}
+\centering
+\begin{tabular}{l l l}
+\epsfxsize=1.8in\epsffile{Nausicaa} &
+\epsfxsize=1.8in\epsffile{Nausicaa} &
+\epsfxsize=1.8in\epsffile{Nausicaa} \\
+\end{tabular}
+\caption{Include images in a proposal as appropriate}\label{fig:nausicaa}
+\end{figure}
+add any relevant information.  (See Fig.~\ref{fig:nausicaa}.)
+
+\subsection{Working with Code and Pseudocode}
+If you have source code to include, you can do so using the
+\emph{listings} package,
+which will format short inline code fragments such as
+
+\singlespace
+\begin{lstlisting} {}
+for (int i = 0; i < n; i++)
+    cout << "It's easy to add source code to LaTeX documents";
+\end{lstlisting}
+or simply using the \emph{verbatim} environment, which gives a Courier font to literal text:
+\begin{verbatim}
+for (int i = 0; i < n; i++)
+    cout << "It's easy to add source code to LaTeX documents";
+\end{verbatim}
+\doublespace
+The listing environment is good for longer code examples and for use in figures,
+such as in Fig.~\ref{fig:surprisecode}.
+
+\begin{figure}[t]
+\lstset{basicstyle=\scriptsize}
+\lstinputlisting{surprise.c}
+\caption{This mystery code (\copyright 1987 Roemer B.\ Lievaart) was
+included from a source file.  The \LaTeX\ file also shows how to
+change the font-size for a code-listing.}\label{fig:surprisecode}
+\end{figure}
+
+Another frequent need is to include algorithms written in pseudocode.
+The \emph{algo} package can be used to format algorithms presentably in your
+documents; Fig.~\ref{fig:mutation_adequacy} on
+Pg.~\pageref{fig:mutation_adequacy} shows an example of this.
+For more options on these packages, consult online resources.
+
+\begin{figure}[t]
+\begin{algorithm}{CalculateMutationAdequacy}[T, P, M_o]
+{
+\qcomment{Calculation of Strong Mutation Adequacy}
+\qinput{Test Suite $T$; \newline
+        Program Under Test $P$; \newline
+        Set of Mutation Operators; $M_o$
+}
+\qoutput{Mutation Adequacy Score; $MS(P,T,M_o)$}
+}
+${\cal D} \qlet {\cal Z}_{n \times s}$ \\
+${\cal E} \qlet {\cal Z}_{s}$ \\
+\qfor $l \in \mbox{\it ComputeMutationLocations}(P)$ \\
+\qdo $\Phi_P \qlet \mbox{\it GenerateMutants}(l,P,M_o)$ \\
+\qfor $\phi_r \in \Phi_P$ \\
+\qdo \qfor $T_f \in \langle T_1, \ldots, T_e \rangle$ \\
+\qdo $R_f^P \qlet \mbox{\it ExecuteTest}(T_f,P)$ \\
+$R_f^{\phi_r} \qlet \mbox{\it ExecuteTest}(T_f,\phi_r)$ \\
+\qif $R_f^P \neq R_f^{\phi_r}$ \\
+\qdo ${\cal D}[f][r] \qlet 1$ \\
+\qelse \qif ${\it \mbox{\it IsEquivalentMutant}}(P,\phi_r)$
+                                                 \\ \label{equivalent}
+\qdo ${\cal E}[r] \qlet 1$ \qfi \qfi \qrof \qrof \qrof \\
+$D_{num} \qlet \sum_{r=1}^s pos( \sum_{f=1}^n {\cal D}[f][r] )$ \\ \label{sum1}
+$E_{num} \qlet \sum_{r=1}^s {\cal E}[r] $ \\ \label{sum2}
+$MS(P,T,M_o) \qlet \frac{D_{num}}{(|\Phi_P| - E_{num})}$ \\ \label{result}
+$\qreturn \; MS(P,T,M_o)$
+\end{algorithm}
+\caption{Algorithm for the Computation of Mutation Adequacy.  This example
+pseudocode is by Gregory M.\ Kapfhammer.}
+\label{fig:mutation_adequacy}
+\end{figure}
+
+\section{Research and Writing Timetable}\label{sec:timetable}
+
+Give a brief overview of how you will proceed to accomplish the project,
+including a rough schedule for accomplishing the following tasks:
+\begin{itemize}
+\item background research,
+\item final proposal completion,
+\item proposal defense,
+\item research intermediate and final goals, and
+\item writing of key chapters, leading to final written thesis.
+\end{itemize}
+The timetable should take into account the actual schedule followed by
+the department, CS600 in the fall is devoted to the background research,
+final proposal and its defense, beginnings of primary project work and
+writing of first two chapters.  CS601 in the spring is spent finishing
+the research and the writing and preparing for the thesis defense.
+
+The timetable section may also include contingency plans---see below in
+Sec.~\ref{sec:conclusion}.
+
+\section{Conclusion}\label{sec:conclusion}
+
+Concluding remarks may discuss future research directions that will
+be made possible when the work succeeds, and possible places where
+the work might be cut short (due to difficulties) while still achieving
+some of the significant objectives.  The latter might alternatively
+be discussed above in Sec.~\ref{sec:timetable}.
+
+The conclusion may also discuss future applications of and extensions
+to the thesis work.  After completing this thesis proposal template,
+a logical next step is to create a template for the written thesis itself.
+Since writing a $50+$ page document requires even more discipline and
+organization, this will entail creating a \LaTeX\ style file, tentatively
+named \verb+gatorthesis.sty+, which will be called by a
+\verb+\usepackage{gatorthesis}+ command.  This will provide automatic
+formatting for title pages, abstract and acknowledgement pages, Tables
+of Contents and Figures, chapter headings, and so forth.  For
+an experienced \LaTeX\ user, with a Bib\TeX\ database already assembled
+for the proposal, this will make thesis writing go a lot smoother.
+
+This paper has shown only one of many different ways you might structure
+your project proposal.  Individual proposals will vary depending on the
+nature of the project, but most of them will have the same essential
+components.  You will have many other occasions to write
+proposals---whether for graduate projects and theses, grant proposals,
+or industry-related projects.  The important thing is to express
+your ideas in a concise and effective fashion, so that a reader is
+neither confused nor bored nor irritated.  \emph{Too long and wordy}
+is as bad as \emph{too short and lacking in detail}; grammatical
+and spelling errors are likewise unacceptable.  Write fast, rewrite
+thoroughly, and proofread religiously.
+
+\pagebreak
+
+% This includes all references from the BibTeX file in the bibliography
+\nocite{*}
+
+\begin{spacing}{1}
+  \bibliographystyle{plain}
+  \bibliography{mybibtexDB}
+\end{spacing}
+
+\end{document}

@@ -1,0 +1,127 @@
+
+%%%%%%%%% MASTER -- compiles the sections
+
+\documentclass[11pt,letterpaper]{article}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+\usepackage{listings} %for source code figures
+\usepackage[toc,xindy,style=long3colheaderborder,footnote]{glossaries}
+%\usepackage[toc,xindy]{glossaries}
+\makeindex
+\makeglossaries
+
+\input{reportGlossary.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{plain}                                                      %%
+%%%%%%%%%% EXACT 1in MARGINS %%%%%%%                                   %%
+\setlength{\textwidth}{6.5in}     %%                                   %%
+\setlength{\oddsidemargin}{0in}   %% (It is recommended that you       %%
+\setlength{\evensidemargin}{0in}  %%  not change these parameters,     %%
+\setlength{\textheight}{8.5in}    %%  at the risk of having your       %%
+\setlength{\topmargin}{0in}       %%  proposal dismissed on the basis  %%
+\setlength{\headheight}{0in}      %%  of incorrect formatting!!!)      %%
+\setlength{\headsep}{0in}         %%                                   %%
+\setlength{\footskip}{.5in}       %%                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                   %%
+\newcommand{\required}[1]{\section*{\hfil #1\hfil}}                    %%
+\renewcommand{\refname}{\hfil References Cited\hfil}                   %%
+\bibliographystyle{plain}                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%PUT YOUR MACROS HERE
+
+\date{Spring 2012}
+\title{Team EcoData - Hatch Tool\\
+}
+
+\author{Mike Solomon\\
+	Colby Blair \\
+	Computer Science Undergraduates \\
+	University of Idaho Computer Science Department\\
+	CS 481 Capstone Project \\
+}
+
+
+\begin{document}
+
+\section*{Letter of Transmittal}
+\textbf{Subject.} High Performance Computing in Natural Resources.
+
+\textbf{Purpose.} This report focuses on Hatch project, and the challenges with managing data in the
+scientific research environment. The goal is to introduce new approaches to organizing data, and making
+it more searchable. The Hatch project creates a foundation for a tool that allows users to upload, search,
+format, and visualize their data in ways they didn't think of before. This report highlights some of the 
+problems with computation and data management in the current research environment, and makes 
+suggestions for new approaches. It talks about specific algorithms for searching data, and standards for
+formatting and storing it.
+
+\textbf{Background.} The amount of data being stored in scientific databases today is growing 
+exponentially. The amount of computational power in cpu's, however, is no longer growing exponentially.
+The consequence is an gap opening between data and results. Researchers are trying to build and rebuild
+their computational infrastructure, to try to get computational growth back to the pace of data growth.
+But in this report, we suggest a complimentary approach to computing research data. The Hatch project
+comes from the idea that a significant amount of research data is redundant or not wanted. But it is also
+vast and not managable. Researchers end up wasting computation time on data points and sets that they do 
+not care about, at the expense of ones they do care about.
+
+\textbf{Preliminary Work}. With the experience of the authors of this report, there is more than 8 years of work in computer science, bioinformatics, and natural resources. There is 2+ years of work in computing
+clusters for the University of Idaho Initiative for Bioinformatics and Evolutionary STudies (IBEST), as well as 
+1.5 years of research in wildlife management. 
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\maketitle
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+
+\pagebreak
+
+\begin{abstract}
+With today's exponential increase of data, the demand for processing is outpacing the supply. The way we 
+processed data yesterday would take years to do today. Unfortunately, the lack of fluency with computing in
+today's research proposals results in processing a fraction of the data collected. This weakens research 
+projects, and leads to a lot of unnecessary data collection. 
+
+Today's researchers need tools to become more efficient with processing data. Until computation can keep
+up again with exponential data growth, researchers will need to carefully select the data that they want to 
+do research on, and throw away data that will not yield results. The users of such tools range anywhere from
+fish researchers in the Columbia Basin, to bioinformaticians, to economists, and more. Having more 
+searchable, usable data applies to almost everyone, and the use cases and usefulness of a tool like Hatch
+are endless.
+
+\end{abstract}
+
+\setcounter{page}{1}
+
+\pagebreak
+
+%\input{reportSumm.tex} % - this stuff is ok, but I think the proposal stuff is better
+\input{../proposal/reportSumm.tex}
+\include{reportDatabase}
+%\include{reportSearch}
+%\include{reportVizualization}
+%\include{reportConclusion}
+\include{reportRefs}
+%\printglossaries
+
+
+
+\end{document}

@@ -1,0 +1,12 @@
+\glossarysection[\glossarytoctitle]{\glossarytitle}\glossarypreamble
+\begin{theglossary}\glossaryheader
+\glsgroupheading{H}\relax\glsresetentrylist
+\glossaryentryfield{HPC}{\glsnamefont{HPC}}{High Performance Computing.}{\relax }{\glossaryentrynumbers{\relax 
+\setentrycounter{page}\glsnumberformat{4}}}\glsgroupskip
+\glsgroupheading{P}\relax\glsresetentrylist
+\glossaryentryfield{paralellization}{\glsnamefont{paralellization}}{Taking independent or semi-independent processes, and processing them in parallel (at the same time).}{\relax }{\glossaryentrynumbers{\relax 
+\setentrycounter{page}\glsnumberformat{3}}}\glsgroupskip
+\glsgroupheading{S}\relax\glsresetentrylist
+\glossaryentryfield{speedup}{\glsnamefont{speedup}}{The overall time gain of a process or computation.}{\relax }{\glossaryentrynumbers{\relax 
+\setentrycounter{page}\glsnumberformat{2}}}%
+\end{theglossary}\glossarypostamble
