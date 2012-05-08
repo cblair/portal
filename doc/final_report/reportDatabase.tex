@@ -129,3 +129,76 @@ for just the ones wanted for specific doucments, and would be inefficient.
 The other issue is that every retrieval of data from a document would require lot and 
 lots of lookups. Data retrieval over significantly high data sets would quickly become
 very computationally intensive, and not practical.
+
+
+\subsection{CouchDB}
+When one thinks about the fundemental issues with storing, searching, and merging 
+research data, a core issue is identified: data is semi-structured. This is what
+makes trying to use relational databases so hard. They were made for datasets where
+you knew the structure up front, and seldom wanted to change their structures.
+
+The one assumption that Hatch makes about the data is that \textbf{there are rows and
+columns}. This is the only assumption Hatch makes. This leaves the database and 
+interface designs free from whatever changes are needed by the users.
+
+This is done by storing data in JSON format. The data is stored in an array of hashes,
+modeled exactly like how Ruby on Rails 3 returns records from its Active Record.
+This allows users to input data however they like, define delimiters for columns using
+Hatch Input Filters, and Hatch does the rest. It finds the most specific data type the
+values can be stored in, skips non-matching entries, and populates all the forms on 
+the web pages according to the data. All without actually knowing the structure of the 
+data.
+
+This leads to the technical implementation of the Hatch Database.
+
+
+\subsection{Hatch Database}
+Since Hatch uses Ruby on Rails, there are lots of tools and libraries for using the 
+standard relational database, via Rails' Active Record. In many/most cases, Hatch
+actually wants to stick to the relational database. With Hatch's internal database
+structured, order is important. For example, a user will always have a name, email
+address, etc. A document will always have a name and an owner. But the data in the
+document is the semi-structured data. Hatch only wants to use CouchDB for that.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/hatch_db_hybrid}
+	\caption{The Hatch relational - non-relational database hybrid} 
+	\label{hatch_db_hybrid}
+	\end{center}
+\end{figure}
+
+The result is a relation - non-relational database hybrid. Hatch uses traditional 
+relational database columns when the columns are ubiquitous, and can add columns to
+a database entity (called scaffold) on the fly using CouchDB. For example, we create
+a scaffold called Documents. Document always have a name, id, and collection/folder
+they belong to. But, documents may have a data section, or they may not. That
+data section may have infinite columns and rows of data, that would match the flat 
+file they came from (like an Excel file). Or document may have any other data that
+can be stored in JSON format. It is up to the Hatch interface, not database, to 
+decide. And by allowing the interface to decide the structure and fields of data, Hatch
+is by extension allowing the user to decide how to format data.
+
+\pagebreak
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/couchdb_json_ex}
+	\caption{Typical representation of document data in CouchDB / JSON} 
+	\label{couchdb_json_ex}
+	\end{center}
+\end{figure}
+
+Most Rails applications that use CouchDB completely replace Active Record with some
+library's version of it, like \textbf{couchrest's Active Model}. But if you replace
+Active Record, you lose tons of support for libraries that lots of Rails developers
+make, like pagination. 
+
+Hatch gets around this by using its database hybrid, using a Ruby library called
+\textbf{stuffing}. Stuffing is a link that ties Rails Active Record records with
+CouchDB documents. It allows for rapid prototyping in development, and is a nice, modest
+alternative to ripping out the guts of Active Record. Since the base model for 
+database scaffolds are still Active Record, the huge amount of Rails Active Record based
+libraries still work.
+
+

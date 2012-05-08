@@ -2,4 +2,6 @@
 \contentsline {figure}{\numberline {2}{\ignorespaces A database representing for PTAGIS data}}{5}{figure.2}
 \contentsline {figure}{\numberline {3}{\ignorespaces A database representation for DNA data}}{5}{figure.3}
 \contentsline {figure}{\numberline {4}{\ignorespaces The SQL syntax for creating the table in Figure \ref {ptagis_ex1} }}{6}{figure.4}
-\contentsline {figure}{\numberline {5}{\ignorespaces The SQL syntax for creating the table in Figure \ref {ptagis_ex1} }}{7}{figure.5}
+\contentsline {figure}{\numberline {5}{\ignorespaces Document table as a lookup table}}{7}{figure.5}
+\contentsline {figure}{\numberline {6}{\ignorespaces The Hatch relational - non-relational database hybrid}}{8}{figure.6}
+\contentsline {figure}{\numberline {7}{\ignorespaces Typical representation of document data in CouchDB / JSON}}{9}{figure.7}
