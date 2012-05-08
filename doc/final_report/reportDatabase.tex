@@ -179,16 +179,6 @@ can be stored in JSON format. It is up to the Hatch interface, not database, to
 decide. And by allowing the interface to decide the structure and fields of data, Hatch
 is by extension allowing the user to decide how to format data.
 
-\pagebreak
-
-\begin{figure}[h]
-	\begin{center}
-	\includegraphics[width=120mm]{images/couchdb_json_ex}
-	\caption{Typical representation of document data in CouchDB / JSON} 
-	\label{couchdb_json_ex}
-	\end{center}
-\end{figure}
-
 Most Rails applications that use CouchDB completely replace Active Record with some
 library's version of it, like \textbf{couchrest's Active Model}. But if you replace
 Active Record, you lose tons of support for libraries that lots of Rails developers
@@ -201,4 +191,12 @@ alternative to ripping out the guts of Active Record. Since the base model for
 database scaffolds are still Active Record, the huge amount of Rails Active Record based
 libraries still work.
 
+\pagebreak
 
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/couchdb_json_ex}
+	\caption{Typical representation of document data in CouchDB / JSON} 
+	\label{couchdb_json_ex}
+	\end{center}
+\end{figure}
