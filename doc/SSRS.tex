@@ -4,19 +4,22 @@
 \usepackage{layout}
 %\usepackage{lscape}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{listings} %for source code figures
 \textwidth=475pt
 \hoffset=-.5in
 \begin{document}
 % ----------------------------------------------- front matter of the document
 %\maketitle
 \part{System and Software Design Description (SSDD): Incorporating
-     Architectural Views and Detailed Design Criteria \\ for \\ Portal}
+     Architectural Views and Detailed Design Criteria \\ for \\ Hatch}
 \tableofcontents                                % chapter with the table of contents
 \listoffigures
 \listoftables
 %------------------------------------------------ body of the document
 \chapter{Introduction}
-This is the SSDD for Portal.
+\include{final_report/reportSumm}
+
 
 %------------------------------------------------
 \begin{comment}
@@ -49,14 +52,26 @@ This is the SSDD for Portal.
 \end{comment}
 
 \chapter{Requirements Traceability}
-		\include{SSRS/RequirementsTraceability.tex}
+		\section{Customer Requirements}
+			\include{final_report/reportDatabase}
+			\include{SSRS/DocumentRequirements}
+			\include{SSRS/CollectionRequirements}
+			\include{SSRS/HomeRequirements}
+			\include{SSRS/IFiltersRequirements}
+			\include{SSRS/DataIORequirements}
+			\include{final_report/reportVisualization}
+			\include{SSRS/ChartsRequirements}
+			\include{SSRS/VizRequirements}
+			\include{final_report/reportSearch}
+			%\include{SSRS/SearchRequirements}
 
-\part{Systems and Software Requirements Specification (SSRS) \\ for \\ Portal}
+
+\begin{comment}
+\part{Systems and Software Requirements Specification (SSRS) \\ for \\ Hatch}
 
 \chapter{Overall Description}
 
 %------------------------------------------------
-\begin{comment}
 
 	\section{Product Perspective}
 		\include{SSRS/ProductPerspective.tex}
@@ -75,12 +90,11 @@ This is the SSDD for Portal.
 		\include{SSRS/ExternalInterfaceReq.tex}
 
 %------------------------------------------------
-\end{comment}
 
 	\section{System Features}
 		\subsection{Use Case Diagrams}
 		\include{SSRS/UC/example.tex}
-
+\end{comment}
 %----------------------------------------------- back matter of the document
 %\appendix                                      % following chapters are appendixes
 \end{document}

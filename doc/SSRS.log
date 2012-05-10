@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  2 FEB 2012 13:33
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  10 MAY 2012 13:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -73,95 +73,359 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks14
 \verbatim@line=\toks15
 \verbatim@in@stream=\read1
-) (./SSRS.aux
-(./SSRS/RequirementsTraceability.tex.aux) (./SSRS/UC/example.tex.aux))
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/message (HO)
+)
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/04/18 v1.20 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count119
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count120
+\lst@gtempboxa=\box26
+\lst@token=\toks17
+\lst@length=\count121
+\lst@currlwidth=\dimen105
+\lst@column=\count122
+\lst@pos=\count123
+\lst@lostspace=\dimen106
+\lst@width=\dimen107
+\lst@newlines=\count124
+\lst@lineno=\count125
+\lst@maxwidth=\dimen108
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count126
+\lst@skipnumbers=\count127
+\lst@framebox=\box27
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+(./SSRS.aux (./final_report/reportSumm.aux) (./final_report/reportDatabase.aux)
+(./SSRS/DocumentRequirements.aux) (./SSRS/CollectionRequirements.aux
+
+LaTeX Warning: Label `sec:document_spec' multiply defined.
+
+) (./SSRS/HomeRequirements.aux
+
+LaTeX Warning: Label `sec:document_spec' multiply defined.
+
+) (./SSRS/IFiltersRequirements.aux
+
+LaTeX Warning: Label `sec:document_spec' multiply defined.
+
+) (./SSRS/DataIORequirements.aux) (./final_report/reportVisualization.aux)
+(./SSRS/ChartsRequirements.aux
+
+LaTeX Warning: Label `sec:document_spec' multiply defined.
+
+) (./SSRS/VizRequirements.aux) (./final_report/reportSearch.aux)
+(./SSRS/UC/example.tex.aux))
 \openout1 = `SSRS.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
-LaTeX Font Info:    ... okay on input line 9.
- [1
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+
+(/usr/local/texlive/2011/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count128
+\scratchdimen=\dimen109
+\scratchbox=\box28
+\nofMPsegments=\count129
+\nofMParguments=\count130
+\everyMPshowfont=\toks18
+\MPscratchCnt=\count131
+\MPscratchDim=\dimen110
+\MPnumerator=\count132
+\makeMPintoPDFobject=\count133
+\everyMPtoPDFconversion=\toks19
+) (/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/04/22 v0.16 Utilities of pdfTeX for LuaTeX (HO)
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2011/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Managing graphics extensions (HO)
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Defining keys (HO)
+))
+(/usr/local/texlive/2011/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2010/12/23 v3.10 Keyval support for LaTeX options (HO)
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2011/04/07 v1.13 Key value parser (HO)
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Prefix for e-TeX command names (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\c@lstlisting=\count134
+
+[1
 
 
-{/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./SSRS
-.toc
+{/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(./SSRS.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 6.
+(Font)              <12> on input line 3.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 6.
+(Font)              <8> on input line 3.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 6.
+(Font)              <6> on input line 3.
 )
 \tf@toc=\write3
 \openout3 = `SSRS.toc'.
 
+ [2
 
-[2
-
-] (./SSRS.lof)
+] [3] (./SSRS.lof)
 \tf@lof=\write4
 \openout4 = `SSRS.lof'.
 
- [3
+ [4
 
 ] (./SSRS.lot)
 \tf@lot=\write5
 \openout5 = `SSRS.lot'.
 
- [4
+ [5
 
 ]
 Chapter 1.
-[5
-
-]
-Chapter 2.
 [6
 
 ]
-\openout2 = `SSRS/RequirementsTraceability.tex.aux'.
+\openout2 = `final_report/reportSumm.aux'.
+
+ (./final_report/reportSumm.tex
+
+LaTeX Warning: Citation `james' on page 7 undefined on input line 27.
 
 
-No file SSRS/RequirementsTraceability.tex.tex.
-[7
+LaTeX Warning: Citation `gordon_moore' on page 7 undefined on input line 28.
 
-
+) [7
 
 ]
-Chapter 3.
+Chapter 2.
 [8
 
+
 ]
-\openout2 = `SSRS/UC/example.tex.aux'.
+\openout2 = `final_report/reportDatabase.aux'.
+
+ (./final_report/reportDatabase.tex
+Overfull \hbox (6.41861pt too wide) in paragraph at lines 55--60
+[]\OT1/cmr/m/n/12 The prob-lem with need-ing to know the struc-ture of re-searc
+h data be-fore de-sign-ing databases,
+ []
+
+[9
+
+] [10] <images/rel_db_lookup.png, id=36, 908.39375pt x 655.44875pt>
+File: images/rel_db_lookup.png Graphic file (type png)
+
+<use images/rel_db_lookup.png>
+Package pdftex.def Info: images/rel_db_lookup.png used on input line 115.
+(pdftex.def)             Requested size: 227.62204pt x 164.23183pt.
+ [11 <./images/rel_db_lookup.png>]
+<images/hatch_db_hybrid.png, id=40, 995.72pt x 615.29875pt>
+File: images/hatch_db_hybrid.png Graphic file (type png)
+
+<use images/hatch_db_hybrid.png>
+Package pdftex.def Info: images/hatch_db_hybrid.png used on input line 165.
+(pdftex.def)             Requested size: 341.43306pt x 210.99203pt.
 
 
-No file SSRS/UC/example.tex.tex.
-(./SSRS.aux (./SSRS/RequirementsTraceability.tex.aux)
-(./SSRS/UC/example.tex.aux)) ) 
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12] [13 <./images/hatch_db_hybrid.png>]
+<images/couchdb_json_ex.png, id=48, 1120.185pt x 613.29124pt>
+File: images/couchdb_json_ex.png Graphic file (type png)
+
+<use images/couchdb_json_ex.png>
+Package pdftex.def Info: images/couchdb_json_ex.png used on input line 198.
+(pdftex.def)             Requested size: 341.43306pt x 186.92722pt.
+) [14 <./images/couchdb_json_ex.png>]
+\openout2 = `SSRS/DocumentRequirements.aux'.
+
+
+(./SSRS/DocumentRequirements.tex [15
+
+
+] [16]) [17]
+\openout2 = `SSRS/CollectionRequirements.aux'.
+
+
+(./SSRS/CollectionRequirements.tex) [18
+
+
+]
+\openout2 = `SSRS/HomeRequirements.aux'.
+
+ (./SSRS/HomeRequirements.tex) [19
+
+
+]
+\openout2 = `SSRS/IFiltersRequirements.aux'.
+
+
+(./SSRS/IFiltersRequirements.tex) [20
+
+
+]
+\openout2 = `SSRS/DataIORequirements.aux'.
+
+ (./SSRS/DataIORequirements.tex
+Missing character: There is no â in font cmr12!
+Missing character: There is no € in font cmr12!
+Missing character: There is no ™ in font cmr12!
+
+
+LaTeX Warning: Reference `sec:filter' on page 21 undefined on input line 17.
+
+[21
+
+
+]) [22]
+\openout2 = `final_report/reportVisualization.aux'.
+
+
+No file final_report/reportVisualization.tex.
+\openout2 = `SSRS/ChartsRequirements.aux'.
+
+(./SSRS/ChartsRequirements.tex) [23
+
+
+
+
+]
+\openout2 = `SSRS/VizRequirements.aux'.
+
+ (./SSRS/VizRequirements.tex
+
+LaTeX Warning: Reference `sec:metadata_spec' on page 24 undefined on input line
+ 6.
+
+[24
+
+
+] [25]) [26]
+\openout2 = `final_report/reportSearch.aux'.
+
+ (./final_report/reportSearch.tex
+<images/search_ss1.png, id=91, 993.7125pt x 367.3725pt>
+File: images/search_ss1.png Graphic file (type png)
+
+<use images/search_ss1.png>
+Package pdftex.def Info: images/search_ss1.png used on input line 10.
+(pdftex.def)             Requested size: 341.43306pt x 126.22792pt.
+ [27
+
+
+ <./images/search_ss1.png>]
+<images/couchdb_b_tree.png, id=95, 278.4804pt x 212.9556pt>
+File: images/couchdb_b_tree.png Graphic file (type png)
+
+<use images/couchdb_b_tree.png>
+Package pdftex.def Info: images/couchdb_b_tree.png used on input line 53.
+(pdftex.def)             Requested size: 341.43306pt x 261.10521pt.
+) [28 <./images/couchdb_b_tree.png>] (./SSRS.aux (./final_report/reportSumm.aux
+) (./final_report/reportDatabase.aux)
+(./SSRS/DocumentRequirements.aux) (./SSRS/CollectionRequirements.aux)
+(./SSRS/HomeRequirements.aux) (./SSRS/IFiltersRequirements.aux)
+(./SSRS/DataIORequirements.aux) (./final_report/reportVisualization.aux)
+(./SSRS/ChartsRequirements.aux) (./SSRS/VizRequirements.aux)
+(./final_report/reportSearch.aux))
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 380 strings out of 493633
- 4570 string characters out of 3143378
- 52982 words of memory out of 3000000
- 3728 multiletter control sequences out of 15000+200000
- 8500 words of font info for 30 fonts, out of 3000000 for 9000
+ 2910 strings out of 493633
+ 43534 string characters out of 3143378
+ 103802 words of memory out of 3000000
+ 6106 multiletter control sequences out of 15000+200000
+ 8847 words of font info for 31 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 23i,4n,20p,279b,113s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/2011/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr12.pfb>
-Output written on SSRS.pdf (8 pages, 31754 bytes).
+ 38i,7n,32p,278b,984s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
+/usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on SSRS.pdf (28 pages, 283644 bytes).
 PDF statistics:
- 39 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
+ 111 PDF objects out of 1000 (max. 8388607)
+ 72 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
