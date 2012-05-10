@@ -13,6 +13,7 @@
     linkcolor=black,%
     urlcolor=black
 }
+\usepackage{setspace}
 \usepackage{listings} %for source code figures
 \usepackage[toc,xindy,style=long3colheaderborder,footnote]{glossaries}
 \addtokomafont{disposition}{\rmfamily}
@@ -120,28 +121,36 @@ sophisticated scientific data management.
 
 \pagebreak
 
-\begin{abstract}
-With today's exponential increase of data, the demand for processing is outpacing the supply \cite{gordon_moore}. 
-The way we 
-processed data yesterday would take years to do today. Unfortunately, the lack of fluency with computing in
-today's research proposals results in processing a fraction of the data collected. This weakens research 
-projects, and leads to a lot of unnecessary data collection. 
+\doublespacing
 
-Today's researchers need tools to become more efficient with processing data. Until computation can keep
-up again with exponential data growth, researchers will need to carefully select the data that they want to 
-do research on, and throw away data that will not yield results. The users of such tools range anywhere from
-fish researchers in the Columbia Basin, to bioinformaticians, to economists, and more. Having more 
-searchable, usable data applies to almost everyone, and the use cases and usefulness of a tool like Hatch
-are endless.
+\section{Executive Summary}
+Large amounts of data are often collected for modern scientific projects.  Once this data is 
+collected, it must be stored in an accessible location with easy access to tools for information 
+management.  Centralized databases often provide storage and access, but do not provide easy-to-use 
+data management tools or basic data exploration such as graphing and visualization.
 
-\end{abstract}
+Our primary target is easing the management of large sets of ecological data from projects like 
+PTAGIS, which collects information on tagged fish in the Columbia Basin.  Large data sets such as
+these require large amounts of processing.  There is a widening gap between the supply of data
+and our ability to process it \cite{gordon_moore}.
+
+Clearly, the inability to process scientific data weakens research projects.  The Hatch project
+attempts to give researchers the means to visualize and explore their data before attempting
+comprehensive processing and testing.  The ability to do this from a remote location via a
+web interface, combined with an inherently scalable design, means that a central processing location 
+can be scaled transparently to allow more complex visualizations, data transformations, and
+forms of scientific analysis.
+
+This tool is designed to work with general data sets, so any project that needs to filter, 
+visualize, or transform data can make use of it.  It has been built to support ecological data sets 
+without specifically adding functionality that will not apply to other types of data.
 
 \setcounter{page}{1}
 
 \pagebreak
 
 %\input{reportSumm.tex} % - this stuff is ok, but I think the proposal stuff is better
-\input{../proposal/reportSumm.tex}
+\include{reportSumm}
 %\include{reportSoftware.text} %should include what technologies we use; rails, couchdb, etc
 \include{reportDatabase}
 \include{reportSearch}
