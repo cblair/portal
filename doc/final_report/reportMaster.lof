@@ -1,10 +1,10 @@
 \contentsline {figure}{\numberline {1}{\ignorespaces This proposal software's application domain in DE-CRRP}}{4}{figure.1}
-\contentsline {figure}{\numberline {2}{\ignorespaces A database representing for PTAGIS data}}{7}{figure.2}
-\contentsline {figure}{\numberline {3}{\ignorespaces A database representation for DNA data}}{7}{figure.3}
-\contentsline {figure}{\numberline {4}{\ignorespaces The SQL syntax for creating the table in Figure \ref {ptagis_ex1} }}{9}{figure.4}
-\contentsline {figure}{\numberline {5}{\ignorespaces Document table as a lookup table}}{10}{figure.5}
+\contentsline {figure}{\numberline {2}{\ignorespaces A database representing for PTAGIS data}}{6}{figure.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces A database representation for DNA data}}{6}{figure.3}
+\contentsline {figure}{\numberline {4}{\ignorespaces The SQL syntax for creating the table in Figure\nobreakspace {}\ref {ptagis_ex1} }}{8}{figure.4}
+\contentsline {figure}{\numberline {5}{\ignorespaces Document table as a lookup table}}{9}{figure.5}
 \contentsline {figure}{\numberline {6}{\ignorespaces The Hatch relational - non-relational database hybrid}}{11}{figure.6}
-\contentsline {figure}{\numberline {7}{\ignorespaces Typical representation of document data in CouchDB / JSON}}{13}{figure.7}
-\contentsline {figure}{\numberline {8}{\ignorespaces The search interface}}{14}{figure.8}
-\contentsline {figure}{\numberline {9}{\ignorespaces CoucbDB search through its internal binary tree.}}{16}{figure.9}
-\contentsline {figure}{\numberline {10}{\ignorespaces A vizualization example.}}{17}{figure.10}
+\contentsline {figure}{\numberline {7}{\ignorespaces Typical representation of document data in CouchDB / JSON}}{12}{figure.7}
+\contentsline {figure}{\numberline {8}{\ignorespaces The search interface}}{12}{figure.8}
+\contentsline {figure}{\numberline {9}{\ignorespaces CoucbDB search through its internal binary tree.}}{14}{figure.9}
+\contentsline {figure}{\numberline {10}{\ignorespaces A vizualization example.}}{15}{figure.10}

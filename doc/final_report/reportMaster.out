@@ -2,13 +2,14 @@
 \BOOKMARK [1][-]{section.2}{Background}{}
 \BOOKMARK [1][-]{section.3}{Problem Definition}{}
 \BOOKMARK [1][-]{section.4}{Objectives}{}
-\BOOKMARK [1][-]{section.5}{Database}{}
-\BOOKMARK [2][-]{subsection.5.1}{Introduction}{section.5}
-\BOOKMARK [2][-]{subsection.5.2}{Relation Databases with table creations}{section.5}
-\BOOKMARK [2][-]{subsection.5.3}{Relational Databases with tables for each datatype}{section.5}
-\BOOKMARK [2][-]{subsection.5.4}{CouchDB}{section.5}
-\BOOKMARK [2][-]{subsection.5.5}{Hatch Database}{section.5}
-\BOOKMARK [1][-]{section.6}{Search}{}
-\BOOKMARK [2][-]{subsection.6.1}{Views}{section.6}
-\BOOKMARK [1][-]{section.7}{Visualization}{}
-\BOOKMARK [1][-]{section.8}{Conclusion}{}
+\BOOKMARK [1][-]{section.5}{Design Selection and Alternatives}{}
+\BOOKMARK [2][-]{subsection.5.1}{Database}{section.5}
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Introduction}{subsection.5.1}
+\BOOKMARK [3][-]{subsubsection.5.1.2}{Relation Databases: per-document table creations}{subsection.5.1}
+\BOOKMARK [3][-]{subsubsection.5.1.3}{Relational Databases: tables for each datatype}{subsection.5.1}
+\BOOKMARK [3][-]{subsubsection.5.1.4}{CouchDB}{subsection.5.1}
+\BOOKMARK [3][-]{subsubsection.5.1.5}{Hatch Database}{subsection.5.1}
+\BOOKMARK [2][-]{subsection.5.2}{Search}{section.5}
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Views}{subsection.5.2}
+\BOOKMARK [2][-]{subsection.5.3}{Visualization}{section.5}
+\BOOKMARK [1][-]{section.6}{Conclusion}{}

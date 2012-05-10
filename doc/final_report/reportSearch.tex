@@ -1,4 +1,4 @@
-\section{Search}
+\subsection{Search}
 After the EcoData team addressed the issues with storing semi-structured data, the next 
 big problem to address was how to efficiently search through the data. The interface 
 that was desired was one much like Google's search; a simple search box, with two
@@ -23,7 +23,7 @@ all values that match. This would make search impractically slow. Luckily, Couch
 to the rescue for us.
 
 
-\subsection{Views}
+\subsubsection{Views}
 CouchDB uses precompiled queries called \textbf{views}. Views take developer defined
 query templates and apply them to every document that is created or updated in the 
 database, when the document is saved. The result are precomipled lookout tables 
