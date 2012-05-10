@@ -1,3 +1,10 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces A database representing for PTAGIS data}}{9}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces A database representation for DNA data}}{9}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces The SQL syntax for creating the table in Figure 2.1\hbox {} }}{10}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Document table as a lookup table}}{11}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces The Hatch relational - non-relational database hybrid}}{13}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Typical representation of document data in CouchDB / JSON}}{14}
+\contentsline {figure}{\numberline {2.7}{\ignorespaces The search interface}}{27}
+\contentsline {figure}{\numberline {2.8}{\ignorespaces CoucbDB search through its internal binary tree.}}{28}

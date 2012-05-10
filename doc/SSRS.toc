@@ -1,7 +1,44 @@
-\contentsline {part}{I\hspace {1em}System and Software Design Description (SSDD): Incorporating Architectural Views and Detailed Design Criteria \\ for \\ Portal}{1}
-\contentsline {chapter}{\numberline {1}Introduction}{5}
-\contentsline {chapter}{\numberline {2}Requirements Traceability}{6}
-\contentsline {part}{II\hspace {1em}Systems and Software Requirements Specification (SSRS) \\ for \\ Portal}{7}
-\contentsline {chapter}{\numberline {3}Overall Description}{8}
-\contentsline {section}{\numberline {3.1}System Features}{8}
-\contentsline {subsection}{\numberline {3.1.1}Use Case Diagrams}{8}
+\contentsline {part}{I\hspace {1em}System and Software Design Description (SSDD): Incorporating Architectural Views and Detailed Design Criteria \\ for \\ Hatch}{1}
+\contentsline {chapter}{\numberline {1}Introduction}{6}
+\contentsline {section}{\numberline {1.1}Project Summary}{7}
+\contentsline {subsection}{\numberline {1.1.1}Background}{7}
+\contentsline {subsection}{\numberline {1.1.2}Problem Statement}{7}
+\contentsline {subsection}{\numberline {1.1.3}Objectives}{7}
+\contentsline {chapter}{\numberline {2}Requirements Traceability}{8}
+\contentsline {section}{\numberline {2.1}Customer Requirements}{8}
+\contentsline {section}{\numberline {2.2}Database}{9}
+\contentsline {subsection}{\numberline {2.2.1}Introduction}{9}
+\contentsline {subsection}{\numberline {2.2.2}Relation Databases with table creations}{10}
+\contentsline {subsection}{\numberline {2.2.3}Relational Databases with tables for each datatype}{11}
+\contentsline {subsection}{\numberline {2.2.4}CouchDB}{12}
+\contentsline {subsection}{\numberline {2.2.5}Hatch Database}{12}
+\contentsline {subsection}{\numberline {2.2.6}Documents - Requirements}{15}
+\contentsline {subsubsection}{Scaffold}{15}
+\contentsline {subsubsection}{Scaffold - Views}{15}
+\contentsline {subsubsection}{Helpers}{16}
+\contentsline {subsection}{\numberline {2.2.7}Collection - Requirements}{18}
+\contentsline {subsubsection}{Scaffold}{18}
+\contentsline {subsubsection}{Scaffold - Views}{18}
+\contentsline {subsubsection}{Helpers}{18}
+\contentsline {subsection}{\numberline {2.2.8}Home - Requirements}{19}
+\contentsline {subsubsection}{Scaffold}{19}
+\contentsline {subsubsection}{Scaffold - Views}{19}
+\contentsline {subsubsection}{Helpers}{19}
+\contentsline {subsection}{\numberline {2.2.9}IFilters - Requirements}{20}
+\contentsline {subsubsection}{Scaffold}{20}
+\contentsline {subsubsection}{Scaffold - Views}{20}
+\contentsline {subsubsection}{Helpers}{20}
+\contentsline {subsection}{\numberline {2.2.10}Data I/O - Requirements}{21}
+\contentsline {subsubsection}{Input}{21}
+\contentsline {subsubsection}{Data Types}{22}
+\contentsline {subsection}{\numberline {2.2.11}Charts - Requirements}{23}
+\contentsline {subsubsection}{Scaffold}{23}
+\contentsline {subsubsection}{Scaffold - Views}{23}
+\contentsline {subsubsection}{Helpers}{23}
+\contentsline {subsection}{\numberline {2.2.12}Visualization - Requirements}{24}
+\contentsline {subsubsection}{Graphs - Types}{24}
+\contentsline {subsubsection}{Data sets - Types}{24}
+\contentsline {subsubsection}{Views - Show}{25}
+\contentsline {subsubsection}{Views - Summary}{25}
+\contentsline {section}{\numberline {2.3}Search}{27}
+\contentsline {subsection}{\numberline {2.3.1}Views}{27}
