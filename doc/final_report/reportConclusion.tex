@@ -1,12 +1,21 @@
 
 \section{Conclusion}
-In summary, this project showed even the author some suprising aspects of parallelism. In our own project,
-the tail end of Amdahl's Law came much sooner than we thought. Applying parallel concepts can be difficult,
-even for professionals. But it doesn't need to be. The concepts are simple in nature, and if good coding 
-standards are accepted from the beginning, then the translation into parallel code will be easy.
+In conclusion, the Hatch project had great aspirations, and fell short. But in these
+aspirations, design patterns were followed to allow futher development to continue
+along a sound path. Despite not getting everything done the EcoData team set out to 
+do, we did accomplish some really great things with the tool. We were able to show
+the client some important ideas and concepts that they didn't realize the gravity of
+until the ideas were implemented.
 
-The speedups that are seen in parallelism are very important. Without them, science of tomorrow will not be
-possible. Researchers need to become familiar with the limitations of even parallel processing, and adjust their
-project proposals accordingly. Not doing so will lead to failure. And a lack of understanding of parallelism may
-cause a project to fail unnecessarily. HPC is the language of today, and we must all speak it to answer any 
-questions about tomorrow.
+Hatch defines a new model for aggregating, storing, and searching data. It embraces
+RESTful design and the DRY mantra. Hatch decouples design from data at all times;
+something that is not too common in scientific research. As a result, the features
+that are added to Hatch will continue to support any kind of data, as long as that 
+data follows the core assumption Hatch makes; data has rows and columns.
+
+Hatch embraces JSON as much as possible; Hatch's Rails views all have json version of
+the web pages. Feeds syncs with JSON data on the web, and stores data in CouchDB's
+native JSON format. The result is embracing open data exchange through the web.
+Although the decentralized database syncing is not yet implemented, the core for it
+is there, and the future functionality of Hatch is only limited by developers and 
+ideas.
