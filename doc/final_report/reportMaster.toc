@@ -8,4 +8,7 @@
 \contentsline {subsection}{\numberline {2.3}Relational Databases with tables for each datatype}{6}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}CouchDB}{7}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}Hatch Database}{7}{subsection.2.5}
-\contentsline {section}{\numberline {3}Bibliography}{10}{section.3}
+\contentsline {section}{\numberline {3}Search}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}Views}{10}{subsection.3.1}
+\contentsline {section}{\numberline {4}Visualization}{12}{section.4}
+\contentsline {section}{\numberline {5}Bibliography}{13}{section.5}

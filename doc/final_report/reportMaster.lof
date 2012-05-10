@@ -5,3 +5,6 @@
 \contentsline {figure}{\numberline {5}{\ignorespaces Document table as a lookup table}}{7}{figure.5}
 \contentsline {figure}{\numberline {6}{\ignorespaces The Hatch relational - non-relational database hybrid}}{8}{figure.6}
 \contentsline {figure}{\numberline {7}{\ignorespaces Typical representation of document data in CouchDB / JSON}}{9}{figure.7}
+\contentsline {figure}{\numberline {8}{\ignorespaces The search interface}}{10}{figure.8}
+\contentsline {figure}{\numberline {9}{\ignorespaces CoucbDB search through its internal binary tree.}}{11}{figure.9}
+\contentsline {figure}{\numberline {10}{\ignorespaces A vizualization example.}}{12}{figure.10}
