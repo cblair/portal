@@ -12,4 +12,9 @@
 \BOOKMARK [2][-]{subsection.5.2}{Search}{section.5}
 \BOOKMARK [3][-]{subsubsection.5.2.1}{Views}{subsection.5.2}
 \BOOKMARK [2][-]{subsection.5.3}{Visualization}{section.5}
-\BOOKMARK [1][-]{section.6}{Conclusion}{}
+\BOOKMARK [1][-]{section.6}{Future Work}{}
+\BOOKMARK [2][-]{subsection.6.1}{New visualization types}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{New data manipulation methods}{section.6}
+\BOOKMARK [2][-]{subsection.6.3}{Performance enhancements}{section.6}
+\BOOKMARK [2][-]{subsection.6.4}{Cross-instance replication and sharing}{section.6}
+\BOOKMARK [1][-]{section.7}{Conclusion}{}

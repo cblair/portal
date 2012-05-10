@@ -1,21 +1,76 @@
+\section{Future Work}
+
+Hatch has been specifically designed to be extensible and modular.  Because the needs
+of the customer are so wide-ranging and would require a larger effort than our small
+development team could reasonably complete in this time frame, Hatch has been
+constructed with future extension in mind since day one.
+
+Several major areas exist which could readily be improved or extended.  Included are
+a few of these areas along with brief descriptions and time estimates, based on a team of
+two working about 15 hours per week each.  Many other parts of Hatch could be extended,
+but these are some of the most important areas for scientific research.
+
+\subsection{New visualization types}
+Currently, Hatch only fully supports single-series spline, line, and scatterplot
+charts. Most of the code exists to extend this to categorical types and the
+corresponding charts, such as pie and bar charts.  In addition, supporting
+multiple-series data on a single chart is another obvious way to improve Hatch.
+
+\textbf{Time estimate:} 1 week per chart type; 2 weeks for multiple-series data
+
+\subsection{New data manipulation methods}
+Hatch supports basic data manipulations such as filtering, sorting, and bringing
+together columns from different data sets.  Obvious and useful extensions include
+single-step joins between different data sets, log transforms, summary columns,
+and suggested data joins.  These would form the basis for a more sophisticated
+data manipulation pipeline that could be separated into a distinct package,
+if desired.
+
+\textbf{Time estimate:} 2 weeks per manipulation
+
+\subsection{Performance enhancements}
+Some areas of Hatch are not as responsive as could be.  While performance is not
+crippling to the software, it can occasionally take a few seconds to complete
+an action such as a search.  Some of this can be solved through more powerful
+hardware (most tests were run on aging laptops), but algorithmic improvements
+as well as general optimization could improve responsiveness greatly.
+
+\textbf{Time estimate:} 1 month to double performance (more if other features are added)
+
+\subsection{Cross-instance replication and sharing}
+The original vision for Hatch included a system where each researcher could
+run a localized Hatch instance and use the fully functional software on their
+own machine.  Later, this data could be shared with a centralized Hatch instance,
+or shared with other researcher's Hatch instances.  This requires solutions for
+several difficult but solvable problems, and would require extensive testing.
+
+\textbf{Time estimate:} 5 months
 
 \section{Conclusion}
-In conclusion, the Hatch project had great aspirations, and fell short. But in these
-aspirations, design patterns were followed to allow futher development to continue
-along a sound path. Despite not getting everything done the EcoData team set out to 
-do, we did accomplish some really great things with the tool. We were able to show
-the client some important ideas and concepts that they didn't realize the gravity of
-until the ideas were implemented.
+The Hatch project attempted to solve several difficult problems in an easy-to-use
+package.  Due to time and resource constraints, Hatch must be seen as the beginning
+of a comprehensive data management system that Hatch is positioned to grow into over time
+through future efforts.
+
+The developers followed accepted design patterns and consciously constructed the
+software to be easily extended in every area.  Since it is likely this software
+will be developed further in the future, a considerable amount of effort was spent
+ensuring that each piece could be replaced or extended as necessary. Although the
+project does not meet every need the customer has, it accomplished the goal of 
+either meeting crucial needs or putting most of the pieces in place to allow the
+straightforward extension of Hatch to meet them in the future.
 
 Hatch defines a new model for aggregating, storing, and searching data. It embraces
-RESTful design and the DRY mantra. Hatch decouples design from data at all times;
+RESTful design and the Don't Repeat Yourself mantra.
+Hatch decouples design from data at all times;
 something that is not too common in scientific research. As a result, the features
 that are added to Hatch will continue to support any kind of data, as long as that 
-data follows the core assumption Hatch makes; data has rows and columns.
+data follows the core assumption Hatch makes: that data is in rows and columns.
+Hatch embraces JSON as much as possible, providing JSON views whenever possible.
+Feeds sync with JSON data on the web, and stores data in CouchDB's
+native JSON format. The result is embracing open data exchange through the web in
+one of the most ubiquitous and universal formats.
 
-Hatch embraces JSON as much as possible; Hatch's Rails views all have json version of
-the web pages. Feeds syncs with JSON data on the web, and stores data in CouchDB's
-native JSON format. The result is embracing open data exchange through the web.
-Although the decentralized database syncing is not yet implemented, the core for it
-is there, and the future functionality of Hatch is only limited by developers and 
-ideas.
+Although the certain features are not yet implemented, the essential core has
+been demonstrated to work as desired, and the future functionality of Hatch is
+only limited by developers and ideas.
