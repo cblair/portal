@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  
+  
+
+  
+
+
+  <head>
+    <title>
+      Error: Not Found – portal
+    </title>
+        <link rel="search" href="/trac/portal/search" />
+        <link rel="help" href="/trac/portal/wiki/TracGuide" />
+        <link rel="start" href="/trac/portal/wiki" />
+        <link rel="stylesheet" href="/trac/portal/chrome/common/css/trac.css" type="text/css" />
+        <link rel="shortcut icon" href="/trac/portal/chrome/common/trac.ico" type="image/x-icon" />
+        <link rel="icon" href="/trac/portal/chrome/common/trac.ico" type="image/x-icon" />
+      <link type="application/opensearchdescription+xml" rel="search" href="/trac/portal/search/opensearch" title="Search portal" />
+    <script type="text/javascript" src="/trac/portal/chrome/common/js/jquery.js"></script><script type="text/javascript" src="/trac/portal/chrome/common/js/trac.js"></script><script type="text/javascript" src="/trac/portal/chrome/common/js/search.js"></script>
+    <!--[if lt IE 7]>
+    <script type="text/javascript" src="/trac/portal/chrome/common/js/ie_pre7_hacks.js"></script>
+    <![endif]-->
+    <script type="text/javascript">/*<![CDATA[*/
+      jQuery(document).ready(function($) {
+       var descr = $("#description").text();
+       descr = descr.replace(/==== System Information ====\s+/m,
+         "User Agent was: `" + navigator.userAgent + "`\n\n$&"
+       );
+       descr = descr.replace(/\|\|\s+==== Python Traceback ====/m,
+         "||\n|| '''jQuery:''' || `" + $().jquery + "` $&"
+       );
+       $("#description").text(descr);
+      });
+    /*]]>*/</script>
+  </head>
+  <body>
+    <div id="banner">
+      <div id="header">
+        <a id="logo" href="/trac/portal/wiki/TracIni#header_logo-section"><img src="/trac/portal/chrome/site/your_project_logo.png" alt="portal" /></a>
+      </div>
+      <form id="search" action="/trac/portal/search" method="get">
+        <div>
+          <label for="proj-search">Search:</label>
+          <input type="text" id="proj-search" name="q" size="18" value="" />
+          <input type="submit" value="Search" />
+        </div>
+      </form>
+      <div id="metanav" class="nav">
+    <ul>
+      <li class="first"><a href="/trac/portal/login">Login</a></li><li><a href="/trac/portal/prefs">Preferences</a></li><li><a href="/trac/portal/wiki/TracGuide">Help/Guide</a></li><li><a href="/trac/portal/about">About Trac</a></li><li><a href="/trac/portal/register">Register</a></li><li class="last"><a href="/trac/portal/reset_password">Forgot your password?</a></li>
+    </ul>
+  </div>
+    </div>
+    <div id="mainnav" class="nav">
+    <ul>
+      <li class="first"><a href="/trac/portal/wiki">Wiki</a></li><li><a href="/trac/portal/timeline">Timeline</a></li><li><a href="/trac/portal/roadmap">Roadmap</a></li><li><a href="/trac/portal/browser">Browse Source</a></li><li><a href="/trac/portal/report">View Tickets</a></li><li class="last"><a href="/trac/portal/search">Search</a></li>
+    </ul>
+  </div>
+    <div id="main">
+      <div id="ctxtnav" class="nav">
+        <h2>Context Navigation</h2>
+        <hr />
+      </div>
+    <div id="content" class="error">
+          <h1>Error: Not Found</h1>
+            <p class="message">File your_project_logo.png not found</p>
+      <p>
+        <a href="/trac/portal/wiki/TracGuide">TracGuide</a> — The Trac User and Administration Guide
+      </p>
+    </div>
+    </div>
+    <div id="footer" lang="en" xml:lang="en"><hr />
+      <a id="tracpowered" href="http://trac.edgewall.org/"><img src="/trac/portal/chrome/common/trac_logo_mini.png" height="30" width="107" alt="Trac Powered" /></a>
+      <p class="left">
+        Powered by <a href="/trac/portal/about"><strong>Trac 0.11.7</strong></a><br />
+        By <a href="http://www.edgewall.org/">Edgewall Software</a>.
+      </p>
+      <p class="right">Visit the Trac open source project at<br /><a href="http://trac.edgewall.org/">http://trac.edgewall.org/</a></p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+	
+	
+
+
+<script>
+function addRow(name, url, isdir, size, date_modified) {
+  if (name == ".")
+    return;
+
+  var root = "" + document.location;
+  if (root.substr(-1) !== "/")
+    root += "/";
+
+  var table = document.getElementById("table");
+  var row = document.createElement("tr");
+  var file_cell = document.createElement("td");
+  var link = document.createElement("a");
+
+  link.className = isdir ? "icon dir" : "icon file";
+
+  if (name == "..") {
+    link.href = root + "..";
+    link.innerText = document.getElementById("parentDirText").innerText;
+    link.className = "icon up";
+    size = "";
+    date_modified = "";
+  } else {
+    if (isdir) {
+      name = name + "/";
+      url = url + "/";
+      size = "";
+    } else {
+      link.draggable = "true";
+      link.addEventListener("dragstart", onDragStart, false);
+    }
+    link.innerText = name;
+    link.href = root + url;
+  }
+  file_cell.appendChild(link);
+
+  row.appendChild(file_cell);
+  row.appendChild(createCell(size));
+  row.appendChild(createCell(date_modified));
+
+  table.appendChild(row);
+}
+
+function onDragStart(e) {
+  var el = e.srcElement;
+  var name = el.innerText.replace(":", "");
+  var download_url_data = "application/octet-stream:" + name + ":" + el.href;
+  e.dataTransfer.setData("DownloadURL", download_url_data);
+  e.dataTransfer.effectAllowed = "copy";
+}
+
+function createCell(text) {
+  var cell = document.createElement("td");
+  cell.setAttribute("class", "detailsColumn");
+  cell.innerText = text;
+  return cell;
+}
+
+function start(location) {
+  var header = document.getElementById("header");
+  header.innerText = header.innerText.replace("LOCATION", location);
+
+  document.getElementById("title").innerText = header.innerText;
+}
+
+function onListingParsingError() {
+  var box = document.getElementById("listingParsingErrorBox");
+  box.innerHTML = box.innerHTML.replace("LOCATION", encodeURI(document.location)
+      + "?raw");
+  box.style.display = "block";
+}
+</script>
+
+<style>
+
+  h1 {
+    border-bottom: 1px solid #c0c0c0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  tr.header {
+    font-weight: bold;
+  }
+
+  td.detailsColumn {
+    padding-left: 2em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  a.icon {
+    padding-left: 1.5em;
+    text-decoration: none;
+  }
+
+  a.icon:hover {
+    text-decoration: underline;
+  }
+
+  a.file {
+    background : url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMAAAAAAABupgeRAAABHUlEQVR42o2RMW7DIBiF3498iHRJD5JKHurL+CRVBp+i2T16tTynF2gO0KSb5ZrBBl4HHDBuK/WXACH4eO9/CAAAbdvijzLGNE1TVZXfZuHg6XCAQESAZXbOKaXO57eiKG6ft9PrKQIkCQqFoIiQFBGlFIB5nvM8t9aOX2Nd18oDzjnPgCDpn/BH4zh2XZdlWVmWiUK4IgCBoFMUz9eP6zRN75cLgEQhcmTQIbl72O0f9865qLAAsURAAgKBJKEtgLXWvyjLuFsThCSstb8rBCaAQhDYWgIZ7myM+TUBjDHrHlZcbMYYk34cN0YSLcgS+wL0fe9TXDMbY33fR2AYBvyQ8L0Gk8MwREBrTfKe4TpTzwhArXWi8HI84h/1DfwI5mhxJamFAAAAAElFTkSuQmCC ") left top no-repeat;
+  }
+
+  a.dir {
+    background : url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAd5JREFUeNqMU79rFUEQ/vbuodFEEkzAImBpkUabFP4ldpaJhZXYm/RiZWsv/hkWFglBUyTIgyAIIfgIRjHv3r39MePM7N3LcbxAFvZ2b2bn22/mm3XMjF+HL3YW7q28YSIw8mBKoBihhhgCsoORot9d3/ywg3YowMXwNde/PzGnk2vn6PitrT+/PGeNaecg4+qNY3D43vy16A5wDDd4Aqg/ngmrjl/GoN0U5V1QquHQG3q+TPDVhVwyBffcmQGJmSVfyZk7R3SngI4JKfwDJ2+05zIg8gbiereTZRHhJ5KCMOwDFLjhoBTn2g0ghagfKeIYJDPFyibJVBtTREwq60SpYvh5++PpwatHsxSm9QRLSQpEVSd7/TYJUb49TX7gztpjjEffnoVw66+Ytovs14Yp7HaKmUXeX9rKUoMoLNW3srqI5fWn8JejrVkK0QcrkFLOgS39yoKUQe292WJ1guUHG8K2o8K00oO1BTvXoW4yasclUTgZYJY9aFNfAThX5CZRmczAV52oAPoupHhWRIUUAOoyUIlYVaAa/VbLbyiZUiyFbjQFNwiZQSGl4IDy9sO5Wrty0QLKhdZPxmgGcDo8ejn+c/6eiK9poz15Kw7Dr/vN/z6W7q++091/AQYA5mZ8GYJ9K0AAAAAASUVORK5CYII= ") left top no-repeat;
+  }
+
+  a.up {
+    background : url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmlJREFUeNpsU0toU0EUPfPysx/tTxuDH9SCWhUDooIbd7oRUUTMouqi2iIoCO6lceHWhegy4EJFinWjrlQUpVm0IIoFpVDEIthm0dpikpf3ZuZ6Z94nrXhhMjM3c8895977BBHB2PznK8WPtDgyWH5q77cPH8PpdXuhpQT4ifR9u5sfJb1bmw6VivahATDrxcRZ2njfoaMv+2j7mLDn93MPiNRMvGbL18L9IpF8h9/TN+EYkMffSiOXJ5+hkD+PdqcLpICWHOHc2CC+LEyA/K+cKQMnlQHJX8wqYG3MAJy88Wa4OLDvEqAEOpJd0LxHIMdHBziowSwVlF8D6QaicK01krw/JynwcKoEwZczewroTvZirlKJs5CqQ5CG8pb57FnJUA0LYCXMX5fibd+p8LWDDemcPZbzQyjvH+Ki1TlIciElA7ghwLKV4kRZstt2sANWRjYTAGzuP2hXZFpJ/GsxgGJ0ox1aoFWsDXyyxqCs26+ydmagFN/rRjymJ1898bzGzmQE0HCZpmk5A0RFIv8Pn0WYPsiu6t/Rsj6PauVTwffTSzGAGZhUG2F06hEc9ibS7OPMNp6ErYFlKavo7MkhmTqCxZ/jwzGA9Hx82H2BZSw1NTN9Gx8ycHkajU/7M+jInsDC7DiaEmo1bNl1AMr9ASFgqVu9MCTIzoGUimXVAnnaN0PdBBDCCYbEtMk6wkpQwIG0sn0PQIUF4GsTwLSIFKNqF6DVrQq+IWVrQDxAYQC/1SsYOI4pOxKZrfifiUSbDUisif7XlpGIPufXd/uvdvZm760M0no1FZcnrzUdjw7au3vu/BVgAFLXeuTxhTXVAAAAAElFTkSuQmCC ") left top no-repeat;
+  }
+
+  #listingParsingErrorBox {
+    border: 1px solid black;
+    background: #fae691;
+    padding: 10px;
+    display: none;
+  }
+</style>
+
+<title id="title">Meeting minutes</title>
+
+</head>
+
+<body>
+	    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="index.html">EcoData: Hatch</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="../../index.html">Home</a></li>
+              <li><a href="../../definition.html">Problem Definition</a></li>
+			  <li><a href="../../design.html">Design</a></li>
+              <li><a href="../../team.html">Team Biographies</a></li>
+			  <li><a href="../../documents.html">Document Archive</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+<div id="listingParsingErrorBox" i18n-values=".innerHTML:listingParsingErrorBoxText">Oh, no! This server is sending data Google Chrome can't understand. Please <a href="http://code.google.com/p/chromium/issues/entry">report a bug</a>, and include the <a href="LOCATION">raw listing</a>.</div>
+
+
+<h1 id="header" i18n-content="header">Meeting minutes</h1>
+
+<table id="table">
+  <tbody><tr class="header">
+    <td i18n-content="headerName">Name</td>
+    <td class="detailsColumn" i18n-content="headerSize">Size</td>
+    <td class="detailsColumn" i18n-content="headerDateModified">Date Modified</td>
+  </tr>
+</tbody><tr><td><a class="icon up" href="../..">[parent directory]</a></td><td class="detailsColumn"></td><td class="detailsColumn"></td></tr><tr><td><a class="icon file" draggable="true" href="%2321%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#21 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">81.5 kB</td><td class="detailsColumn">5/10/12 2:13:38 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2324%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#24 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">79.9 kB</td><td class="detailsColumn">5/10/12 2:13:38 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2340%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#40 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.3 kB</td><td class="detailsColumn">5/10/12 2:13:40 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2341%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#41 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.6 kB</td><td class="detailsColumn">5/10/12 2:13:43 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2342%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#42 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.2 kB</td><td class="detailsColumn">5/10/12 2:13:41 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2343%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#43 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.8 kB</td><td class="detailsColumn">5/10/12 2:13:43 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2344%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#44 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">81.5 kB</td><td class="detailsColumn">5/10/12 2:13:45 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2345%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#45 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">83.7 kB</td><td class="detailsColumn">5/10/12 2:13:45 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2346%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#46 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">84.3 kB</td><td class="detailsColumn">5/10/12 2:13:47 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2347%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#47 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">83.2 kB</td><td class="detailsColumn">5/10/12 2:13:48 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2348%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#48 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.6 kB</td><td class="detailsColumn">5/10/12 2:13:48 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2349%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#49 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">83.4 kB</td><td class="detailsColumn">5/10/12 2:13:50 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%235%20(Visualization%20Customer%20Requirements)%20%E2%80%93%20portal.pdf">#5 (Visualization Customer Requirements) – portal.pdf</a></td><td class="detailsColumn">79.9 kB</td><td class="detailsColumn">5/10/12 2:13:51 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2350%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#50 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">83.3 kB</td><td class="detailsColumn">5/10/12 2:13:52 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2351%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#51 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.6 kB</td><td class="detailsColumn">5/10/12 2:13:53 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%2352%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#52 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">82.3 kB</td><td class="detailsColumn">5/10/12 2:13:53 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%236%20(Customer%20Specification%20Meeting)%20%E2%80%93%20portal.pdf">#6 (Customer Specification Meeting) – portal.pdf</a></td><td class="detailsColumn">90.8 kB</td><td class="detailsColumn">5/10/12 2:13:56 PM</td></tr><tr><td><a class="icon file" draggable="true" href="%237%20(Customer%20Specification%20Review)%20%E2%80%93%20portal.pdf">#7 (Customer Specification Review) – portal.pdf</a></td><td class="detailsColumn">91.5 kB</td><td class="detailsColumn">5/10/12 2:13:55 PM</td></tr></table>
+
+
+</body></html>
