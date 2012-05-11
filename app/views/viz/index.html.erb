@@ -11,7 +11,7 @@
 
             <input type="checkbox" id="<%= collection.object_id %>"/>
         <ol>
-            <li><%= link_to "View collection", collection_path(collection[:collection])%></li>
+            <li><%= link_to "View/rename collection", edit_collection_path(collection[:collection])%></li>
             <li>Documents</li>
         <% collection[:documents].each do |document| %>
                 <li>
@@ -20,7 +20,8 @@
                 </label>
                 <input type="checkbox" id="<%= document.object_id %>"/>
                 <ol>
-                    <li><%= link_to "View document", document_path(document[:document])%></li>
+                    <li><%= link_to "View/edit document", document_path(document[:document]) %></li>
+                    <li><%= link_to "Download document as CSV", csv_export_path(document[:document]) %></li>
                     <li>Charts</li>
                     
                 <% document[:charts].each do |chart| %>

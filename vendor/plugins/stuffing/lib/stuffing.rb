@@ -103,9 +103,31 @@ module Stuffing
           couchdb.delete_doc(couchdb_content)
         end
         
-        def view 
-          #(name, params, payload, &block)
-          #couchdb.temp_view({}, {:data => "data"}, nil)
+        #Simply passes off to couchrest view
+        def view(name,  params = {}, &block)
+          #TODO: pass the rest of the parameters
+          d = couchdb.view(name, params, &block)
+          return d
+        end
+        
+        def create_simple_view(name, map)
+          couchdb.save_doc({'_id' => "_design/#{name}", 
+                                            :views => {
+                                              :view1 => {
+                                                :map => map
+                                              }
+                                            }
+                                           }
+                              )
+        end
+        
+        def view_exists(name)
+          name = "_design/#{name}"
+          begin
+            return !couchdb.get(name).empty?
+          rescue
+            return false
+          end
         end
         
         def respond_to?(*args)

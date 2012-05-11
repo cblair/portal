@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  feed_url: MyString
+  interval_val: 1
+  interval_unit: MyString
+  document_id: 1
+
+two:
+  name: MyString
+  feed_url: MyString
+  interval_val: 1
+  interval_unit: MyString
+  document_id: 1

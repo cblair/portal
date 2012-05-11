@@ -6,7 +6,6 @@ class VizController < ApplicationController
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
 
-
   def chart
     if not params[:id] then
         chart_id = newchart(params)
@@ -17,8 +16,7 @@ class VizController < ApplicationController
 
         @streaming = @chart.streaming
         if @streaming then
-            # TODO: replace this with the actual URL
-            @liveurl = '/datapt.json'
+            @liveurl = "/charts/#{@chart.id}/"
             @numdraw = @chart.numdraw
         end
 

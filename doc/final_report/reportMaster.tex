@@ -1,0 +1,165 @@
+
+%%%%%%%%% MASTER -- compiles the sections
+
+\documentclass[12pt,letterpaper]{scrartcl}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+\usepackage{setspace}
+\usepackage{listings} %for source code figures
+\usepackage[toc,xindy,style=long3colheaderborder,footnote]{glossaries}
+\addtokomafont{disposition}{\rmfamily}
+%\usepackage[toc,xindy]{glossaries}
+\makeindex
+\makeglossaries
+
+\input{reportGlossary.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{plain}                                                      %%
+%%%%%%%%%% EXACT 1in MARGINS %%%%%%%                                   %%
+\setlength{\textwidth}{6.5in}     %%                                   %%
+\setlength{\oddsidemargin}{0in}   %% (It is recommended that you       %%
+\setlength{\evensidemargin}{0in}  %%  not change these parameters,     %%
+\setlength{\textheight}{8.5in}    %%  at the risk of having your       %%
+\setlength{\topmargin}{0in}       %%  proposal dismissed on the basis  %%
+\setlength{\headheight}{0in}      %%  of incorrect formatting!!!)      %%
+\setlength{\headsep}{0in}         %%                                   %%
+\setlength{\footskip}{.5in}       %%                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                   %%
+\newcommand{\required}[1]{\section*{\hfil #1\hfil}}                    %%
+\renewcommand{\refname}{\hfil References Cited\hfil}                   %%
+\bibliographystyle{plain}                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%PUT YOUR MACROS HERE
+
+\date{Spring 2012}
+\title{Team EcoData\\
+}
+\subtitle{``Hatch'' Data Management Tool}
+
+\author{Mike Solomon\\
+	Colby Blair \\
+	Computer Science Undergraduates \\
+	University of Idaho Computer Science Department\\
+	CS 481 Capstone Project \\
+}
+
+
+\begin{document}
+
+\begin{flushright}
+    Team EcoData \\
+    CS Department \\
+    University of Idaho \\
+    May 10, 2012 \\
+\end{flushright}
+
+\noindent
+Alex Fremier \\
+Associate Professor \\
+College of Natural Resources \\
+University of Idaho
+
+\section*{Letter of Transmittal}
+
+\textbf{To:} Alex Fremier and other interested parties
+
+\noindent
+\textbf{Subject:} Hatch data management tool for the College of Natural Resources.
+
+\textbf{Purpose:} This final report discusses the outcome, design, and development of the Hatch data management project.
+The goal of the Hatch project is to introduce new approaches to organizing data and making
+it more searchable in order to address the challenges of managing data in a scientific research
+environment.
+The Hatch project creates the foundation for a tool that allows users to upload, search,
+format, and visualize their data in ways they didn't think of before. This report highlights some of the 
+problems with computation and data management in the current research environment, and makes 
+suggestions for new approaches. It talks about specific algorithms for searching data, and standards for
+formatting and storing it.
+
+\textbf{Background:} The amount of data being stored in scientific databases today is growing 
+exponentially. The amount of available computational power, however, is no longer growing 
+exponentially.
+The consequence is an gap opening between data and results. Researchers are trying to build and rebuild
+their computational infrastructure, to try to get computational growth back to the pace of data growth.
+But in this report, we suggest a complimentary approach to computing research data. The Hatch project
+comes from the idea that a significant amount of research data is redundant or not wanted. But it is also
+vast and currently unmanagable. Researchers end up wasting computation time on data points and sets
+that they do not care about, at the expense of ones they do care about.
+
+\textbf{Preliminary Work:} With the experience of the authors of this report, there is more than 8 
+years of work in computer science, bioinformatics, and natural resources. There are over 3 years of 
+work in computing clusters for the University of Idaho Initiative for Bioinformatics and 
+Evolutionary STudies (IBEST), as well as 1.5 years of research in wildlife management.
+
+By making use of these experiences, the EcoData team was able to create an extensible prototype for 
+sophisticated scientific data management.
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\maketitle
+
+\thispagestyle{empty}
+
+\pagebreak
+
+\thispagestyle{empty}
+\tableofcontents
+\listoffigures
+
+\pagebreak
+
+\doublespacing
+
+\section{Executive Summary}
+Large amounts of data are often collected for modern scientific projects.  Once this data is 
+collected, it must be stored in an accessible location with easy access to tools for information 
+management.  Centralized databases often provide storage and access, but do not provide easy-to-use 
+data management tools or basic data exploration such as graphing and visualization.
+
+Our primary target is easing the management of large sets of ecological data from projects like 
+PTAGIS, which collects information on tagged fish in the Columbia Basin.  Large data sets such as
+these require large amounts of processing.  There is a widening gap between the supply of data
+and our ability to process it \cite{gordon_moore}.
+
+Clearly, the inability to process scientific data weakens research projects.  The Hatch project
+attempts to give researchers the means to visualize and explore their data before attempting
+comprehensive processing and testing.  The ability to do this from a remote location via a
+web interface, combined with an inherently scalable design, means that a central processing location 
+can be scaled transparently to allow more complex visualizations, data transformations, and
+forms of scientific analysis.
+
+This tool is designed to work with general data sets, so any project that needs to filter, 
+visualize, or transform data can make use of it.  It has been built to support ecological data sets 
+without specifically adding functionality that will not apply to other types of data.
+
+\setcounter{page}{1}
+
+\pagebreak
+
+%\input{reportSumm.tex} % - this stuff is ok, but I think the proposal stuff is better
+\input{reportSumm}
+%\include{reportSoftware.text} %should include what technologies we use; rails, couchdb, etc
+\section{Design Selection and Alternatives}
+\input{reportDatabase}
+\input{reportSearch}
+\input{reportVizualization}
+\input{reportConclusion}
+\include{reportRefs}
+%\printglossaries
+
+
+
+\end{document}

@@ -1,0 +1,82 @@
+
+R version 2.12.1 (2010-12-16)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: i386-apple-darwin9.8.0/i386 (32-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> Rprof(tmp <- tempfile())
+> 
+> is_prime <- function(i) {
++ 	return(1)
++ 	sleep(1.5)
++ }
+> 
+> y <- 7
+> sum <- 0
+> for(i in 1:y) {
++ 	sum <- sum + is_prime(i)
++ }
+> 
+> print(sum)
+[1] 7
+> 
+> y <- 7
+> sum <- 0
+> results <- lapply(1:y, is_prime)
+> print(results)
+[[1]]
+[1] 1
+
+[[2]]
+[1] 1
+
+[[3]]
+[1] 1
+
+[[4]]
+[1] 1
+
+[[5]]
+[1] 1
+
+[[6]]
+[1] 1
+
+[[7]]
+[1] 1
+
+> for(i in 1:length(results)) {
++ 	sum <- sum + results[[i]][1]
++ }
+> print(sum)
+[1] 7
+> 
+> stime <- proc.time()[3]
+> is_prime(5)
+[1] 1
+> etime <- proc.time()[3]
+> runtime <- etime - stime
+> print(paste("Granularit (P) =", runtime))
+[1] "Granularit (P) = 0"
+> print(proc.time()[3])
+elapsed 
+   0.35 
+> 
+> Rprof()
+> summaryRprof(tmp)
+Error in summaryRprof(tmp) : no events were recorded
+Execution halted

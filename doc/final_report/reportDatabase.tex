@@ -1,0 +1,205 @@
+\subsection{Database}
+
+\subsubsection{Introduction}
+One of the biggest challenges with Hatch was how to organize data. Specifically,
+most organizations with scientific data have their own standard or format on 
+how they store research data. Many of these organizations want to share data between 
+each other, but they cannot decide how to merge the formats. Consider the following
+examples:
+
+\begin{figure}[h]
+	\begin{center}
+	\begin{tabular}{ | c | c | c | }
+		\hline
+		site	&	datetime		&	unique fish tag	\\
+		\hline
+		TUC	&	02/16/06 19:08:15 	&	3D9.1BF1E7919A 	\\
+		TUC	&	02/16/06 19:18:36 	&	3D9.1BF1A998FA 	\\
+		TUC	&	02/17/06 18:21:03 	&	3D9.1BF20E8FE2	\\
+		...	&	...			&	...		\\
+		\hline
+	\end{tabular}
+	\caption{A database representing for PTAGIS data} 
+	\label{ptagis_ex1}
+	\end{center}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{center}
+	\begin{tabular}{ | c | c | }
+		\hline
+		unique fish tag	&	DNA sequence	\\
+		\hline
+		3D9.1BF1E7919A 	&	ATGCTTAC...	\\
+		3D9.1BF1A998FA 	&	TTACGATC...	\\
+		3D9.1BF20E8FE2	&	GTGGASCT...	\\
+		...		&	...		\\
+		\hline
+	\end{tabular}
+	\caption{A database representation for DNA data} 
+	\label{dna_ex1}
+	\end{center}
+\end{figure}
+
+In each of the examples above, the data is represented with \textbf{rows} and
+\textbf{columns}, much the same way someone would represent the data in a
+spreadsheet, such as Microsoft Excel. These structures in a typical
+relational database (MySQL, etc).  are called tables.
+
+The above examples are simplifications of the rows and columns in actual research 
+data, but they highlight one of the biggest issues with data storage using relational
+databases: they require you to know the column names ahead of time. Not only that,
+but they require that you know the data types of the values that go in those columns,
+and once a table is created expecting a certain format, it is hard to change.
+
+The problem with needing to know the structure of research data before designing
+databases is that research data is semi-structured at best. Once it does
+represent some structure, it often changes. For example, once researchers finally 
+decide what columns and data types should go in the table in Figure~\ref{ptagis_ex1},
+another researcher may suggest more columns that should go in to the table.
+
+This leads to endless edits to the database and program design by some software 
+developer. The standard table format that everyone can agree on isn't useful to many
+researchers, because it usually leaves out many other needed columns and fields,
+or includes many irrelevant fields.
+
+A better approach is needed. Researchers, not committees, should decide how to store 
+data. Data should be mergable based on common values in different tables (like the 
+unique fish tag column in Figures~\ref{ptagis_ex1} and~\ref{dna_ex1}. The 
+person who enters the data should decide how one particular dataset is stored in a 
+database, and should be able to choose to store the same data in a different table 
+format as they choose. There should be a simple tool that helps them do this.
+
+The following sections describe different approaches to implementing a database design
+that enables data storage for dynamic or semi-structured data.
+
+
+\subsubsection{Relation Databases: per-document table creations}
+This approach is the simplest and follows the concept of table creation for data sets
+pretty closely. Basically, for each input document in the form of a spreadsheet, a new
+SQL table is created. The columns names and type are determined from the headers and 
+data values in the spreadsheet.
+
+\begin{figure}[h]
+	\begin{center}
+	\begin{lstlisting}
+		CREATE TABLE ptagis_doc1
+			(
+				id int, 
+				site char(50), 
+				read_data_time date,
+				tag char(50)
+			); 
+	\end{lstlisting}
+	\caption{The SQL syntax for creating the table in Figure~\ref{ptagis_ex1} } 
+	\label{ptagis_ex1_sql}
+	\end{center}
+\end{figure}
+
+The biggest problem with this approach is that each document
+in the database is a table. When searching for a specific document, the database 
+typically searches for the table name. This search is linear, and with hundreds,
+thousands, or hundreds of thousands of documents, frequently searching the database
+to look for values would be increasingly slow and therefore useless.
+
+Another problem with this design is that building software to support this would
+be difficult and complicated, since it is not regarded as a good practice.
+
+
+\subsubsection{Relational Databases: tables for each datatype}
+Another approach is to create column tables for each data type, and let document 
+tables just be collections of columns. Each of the document column values point to 
+respective values in the column tables.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=80mm]{images/rel_db_lookup}
+	\caption{Document table as a lookup table} 
+	\label{rel_db_lookup}
+	\end{center}
+\end{figure}
+
+This allows for documents to have a dynamic number of columns with variable data types,
+but there are two problems with this approach. First, every value of a given type in every document
+in the database is put into one table (e.g.\ all values with a `string' data type
+go into the `string' table). With potential millions of data values, each table
+becomes an overflowing bucket and doesn't utilize the advantages of storing multiple
+columns and values in one table. Searches for data would require lots of filtering 
+for just the data required from specific doucments and would therefore be inefficient.
+
+The other issue is that every retrieval of data from a document would require
+many lookups. Data retrieval over significantly large data sets would quickly become
+very computationally intensive, and eventually  impractical.
+
+
+\subsubsection{CouchDB}
+When one thinks about the fundamental issues with storing, searching, and merging 
+research data, a core issue is identified: data is semi-structured. This is what
+makes trying to use relational databases so hard. They were made for datasets where
+you knew the structure up front, and seldom wanted to change their structures.
+
+The one assumption that Hatch makes about the data is that \textbf{there are rows and
+columns}. This is the only assumption Hatch makes. This leaves the database and 
+interface designs free from whatever changes are needed by the users.
+
+This is done by storing data in JSON format. The data is this lightweight format,
+modeled exactly like Ruby on Rails 3 returns records from its Active Record.
+This allows users to input data however they like, define delimiters for columns using
+Hatch Input Filters, and Hatch does the rest. It finds the most specific data type the
+values can be stored in, skips non-matching entries, and populates all the forms on 
+the web pages according to the data, all without dictating the structure of the 
+data, or even knowing it before hand.
+
+This leads to the technical implementation of the Hatch Database.
+
+
+\subsubsection{Hatch Database}
+Since Hatch uses Ruby on Rails, there are lots of tools and libraries for using the 
+standard relational database, via Rails' Active Record. In many/most cases, Hatch
+actually wants to stick to the relational database. With Hatch's internal database
+structure, order is important. For example, a user will always have a name, email
+address, etc. A document will always have a name and an owner. However, the data in the
+document is the semi-structured data, and Hatch only wants to use CouchDB for that for
+the reasons described above.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/hatch_db_hybrid}
+	\caption{The Hatch relational - non-relational database hybrid} 
+	\label{hatch_db_hybrid}
+	\end{center}
+\end{figure}
+
+The result is a relational--non-relational database hybrid. Hatch uses traditional 
+relational database columns when the columns are fixed and known in advance (as is
+often the case for information such as user names and e-mails), and can add columns to
+a database entity (called a scaffold) on the fly using CouchDB. For example, we create
+a scaffold called Documents. Document always have a name, id, and collection/folder
+they belong to. But, documents may have a ``data'' section, or they may not. That
+data section may have arbitrary numbers of columns and rows of data that would match the flat 
+file they came from (like an Excel file). The document may instead have any other data that
+can be stored in JSON format. It is up to the user of the Hatch interface, not the database, to 
+decide. By allowing Hatch to infer the structure and fields of data, Hatch
+is by extension allowing the user to decide how to format data.
+
+Most Rails applications that use CouchDB completely replace Active Record with some
+library's version of it, like couchrest's Active Model. However, by replacing
+Active Record, you lose support for libraries that lots of Rails developers
+make, like pagination package \texttt{will\_paginate}. 
+
+Hatch gets around this by using its database hybrid through a Ruby library called
+stuffing. Stuffing is a link that ties Rails Active Record records with
+CouchDB documents. It allows for rapid prototyping in development, and is a nice, modest
+alternative to replacing the internals of Active Record. Since the base model for 
+database scaffolds is still Active Record, the huge amount of Rails Active Record based
+libraries still work.
+
+\pagebreak
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/couchdb_json_ex}
+	\caption{Typical representation of document data in CouchDB / JSON} 
+	\label{couchdb_json_ex}
+	\end{center}
+\end{figure}

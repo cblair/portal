@@ -6,3 +6,4 @@ Portal::Application.initialize!
 
 ENV['RAILS_ENV'] ||= 'development'
 
+ENV['temp_search_doc'] = "temp_search_doc"

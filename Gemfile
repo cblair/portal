@@ -5,8 +5,7 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
-
+gem 'sqlite3', '>= 1.3.1', :require => 'sqlite3'
 gem 'json'
 
 # Gems used only for assets and not required
@@ -55,3 +54,10 @@ gem 'devise', '~> 2'
 
 gem 'will_paginate', '3.0.pre2'
 gem 'jquery-rails'
+
+gem 'rufus-scheduler'
+
+#Profiling -- only for development
+group :development do
+    gem "ruby-prof"
+end

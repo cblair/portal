@@ -1,5 +1,8 @@
 Portal::Application.routes.draw do
   resources :charts
+  resources :feeds
+
+  resources :uploads
 
   root :to => 'home#index'
   devise_for :users
@@ -21,6 +24,12 @@ Portal::Application.routes.draw do
   match '/chart/:id' => 'viz#chart', :as => 'chart'
   match '/chart/:id/:share_token' => 'viznoauth#sharechart', :as => 'sharechart'
   match '/chart' => 'viz#chart', :as => 'visualize'
+  match '/DataIO/index'  =>  "DataIO#index", :as => :data_io_index
+  
+  match '/visualize' => 'viz#chart', :as => 'visualize'
+
+  match '/charts/:id/:last_id' => 'charts#showjson', :as => :chart_update
+
   #Demo stuff
   match '/Movies' => "Movies#index"
   

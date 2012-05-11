@@ -1,0 +1,20 @@
+\contentsline {section}{\numberline {1}Executive Summary}{1}{section.1}
+\contentsline {section}{\numberline {2}Background}{2}{section.2}
+\contentsline {section}{\numberline {3}Problem Definition}{3}{section.3}
+\contentsline {section}{\numberline {4}Objectives}{4}{section.4}
+\contentsline {section}{\numberline {5}Design Selection and Alternatives}{6}{section.5}
+\contentsline {subsection}{\numberline {5.1}Database}{6}{subsection.5.1}
+\contentsline {subsubsection}{\numberline {5.1.1}Introduction}{6}{subsubsection.5.1.1}
+\contentsline {subsubsection}{\numberline {5.1.2}Relation Databases: per-document table creations}{8}{subsubsection.5.1.2}
+\contentsline {subsubsection}{\numberline {5.1.3}Relational Databases: tables for each datatype}{8}{subsubsection.5.1.3}
+\contentsline {subsubsection}{\numberline {5.1.4}CouchDB}{9}{subsubsection.5.1.4}
+\contentsline {subsubsection}{\numberline {5.1.5}Hatch Database}{10}{subsubsection.5.1.5}
+\contentsline {subsection}{\numberline {5.2}Search}{12}{subsection.5.2}
+\contentsline {subsubsection}{\numberline {5.2.1}Views}{13}{subsubsection.5.2.1}
+\contentsline {subsection}{\numberline {5.3}Visualization}{14}{subsection.5.3}
+\contentsline {section}{\numberline {6}Future Work}{16}{section.6}
+\contentsline {subsection}{\numberline {6.1}New visualization types}{16}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}New data manipulation methods}{16}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Performance enhancements}{17}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.4}Cross-instance replication and sharing}{17}{subsection.6.4}
+\contentsline {section}{\numberline {7}Conclusion}{18}{section.7}

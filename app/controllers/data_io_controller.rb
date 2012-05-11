@@ -9,8 +9,9 @@ class DataIOController < ApplicationController
   def index
   end
   
-  def csv_import    
+  def csv_import
     fname=params[:dump][:file].original_filename
+    #fname=params[:files].first()
     filter_id=params[:post][:ifilter_id]
     
     f=nil
@@ -24,9 +25,11 @@ class DataIOController < ApplicationController
     #TODO: if filter specified, don't try CSV
     #CSV import. Each call on @parsed_file.<method> incremenst the cursor
     if CSV.const_defined? :Reader
-        @parsed_file=CSV::Reader.parse(params[:dump][:file])
+        #@parsed_file=CSV::Reader.parse(params[:dump][:file])
+        @parsed_file=CSV::Reader.parse(fname)
     else
         @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        #@parsed_file=CSV::CSV.open(fname.tempfile)
     end
     
     #Get the column name
@@ -37,8 +40,13 @@ class DataIOController < ApplicationController
       colnames = [1]
     end
 
-    #Save metadata
-    c=Collection.find_or_create_by_name(fname)
+    #Save collection
+    #if params.has_key?("collection_text")
+    #  c=Collection.find_or_create_by_name(params[:collection_text])
+    #else
+    #  c=Collection.find(params["collection_id"])
+    #end
+    c=Collection.find(fname)
     c.users_id = current_user.id
     c.save
     
@@ -76,19 +84,18 @@ class DataIOController < ApplicationController
     #                    :collection => c,
     #                    :stuffing_data => data_columns
     #                  )
-    d=Document.new
-    d.name=fname
-    d.collection=c
-    d.stuffing_data=data_columns
-    d.save
+    @document=Document.new
+    @document.name=fname
+    @document.collection=c
+    @document.stuffing_data=data_columns
+    @document.save
     
     etime = Time.now() #end time
     ttime = etime - stime #total time
 
-    flash[:notice]="CSV Import successful,  #{i} new rows added to data base in #{ttime}"
+    flash[:notice]="CSV Import successful,  #{@document.stuffing_data.count} new rows added to data base in #{ttime}"
 
-    render :action => "index"   
-    #redirect_to "/Metadata/#{md.id}"
+    redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
 
   def csv_export

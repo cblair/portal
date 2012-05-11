@@ -1,15 +1,15 @@
-<h1>Documents</h1>
+<h2>Search</h2>
 
 <%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
   <p>
     <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
+    <%= submit_tag "Hatch Search", :name => "hatch_search" %>
+    <%= submit_tag "I'm Feeling Lucky", :name => "lucky_search" %>
   </p>
-  <div id="documents"><%= render 'documents' %></div>
 <% end %>
 
 <% if @temp_search_document %>
-<h1>Data</h1>
+<h2>Data</h2>
 <p><%= link_to 'Show as document', @temp_search_document %></p>
 
 <div>
@@ -25,22 +25,28 @@
 	            <th><%= name %></th>
 	    <% end %>
 	        </tr></thhead>
-		<% @temp_search_document.stuffing_data.each do |row| %>
+		<% @temp_search_document.stuffing_data[0..50].each do |row| %>
 			<tr>
 				<td><!--place holder for axis labels--></td>
 				<% row.values.each do |val|%>
 				<td>
-					<%= val %>
+					<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
+    					<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
+    				<% end %>
 				</td>
 				<% end %>
 			</tr>
 		<% end %>
+			<tr>
+				<td>
+					<%= link_to '...', @temp_search_document %>
+				</td>
+			</tr>
 		</table>
 	<% end %>
 </div>
-<% end %>
 
-<h1>Documents</h1>
+<h2>Documents</h2>
 <table class="table" style="width: 0;">
   <thead>
   <tr>
@@ -54,7 +60,7 @@
     <td><%= document.name %></td>
     <% cname = "(none)" %>
     <% if document[:collection] != nil %>
-    	<% cname = Document.find(document[:collection]).name %>
+    	<% cname = document[:collection].name %>
     <% end %>
     <td><%= cname %></td>
     <td><%= link_to 'Show', document %></td>
@@ -66,5 +72,6 @@
   </tbody>
 </table>
 
+<% end %>
 
 <%= link_to 'Upload New Document', csv_import_path %>

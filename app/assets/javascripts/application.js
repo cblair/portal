@@ -13,8 +13,8 @@ $(function() {
     $.getScript(this.href);
     return false;
   });
-  $("#documents_search input").keyup(function() {
-    $.get($("#documents_search").attr("action"), $("#documents_search").serialize(), null, "script");
+  $("#documents_search").submit(function() {
+    $.get(this.action, this.serialize(), null, "script");
     return false;
   });
 });

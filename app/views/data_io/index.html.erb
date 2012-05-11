@@ -1,6 +1,7 @@
 
 <h3>Document Upload and Import</h3>
- <%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
+
+<%= form_for :dump, :url=>{:controller=>"DataIO", :action=>"csv_import"}, :html => { :multipart => true } do |f| -%>
  <table>
    <tr>
      <td>
@@ -18,10 +19,21 @@
      <td>
      	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => 'Select Filter'})%>
      </td>
+     <td>
+     	<%= link_to "Filters...", ifilters_path %>
+     </td>
+   </tr>
+   <tr>
+	<td>Collection:</td>
+	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }) %></td>
+   </tr>
+   <tr>
+   	<td>Or type in an existing/new collection:</td>
+   	<td><%= f.text_field :name => "collection_text"%></td>
    </tr>
    <tr>
      <td>
-         <%= f.check_box :contains_header, :checked => true %> File has header
+         <%= f.check_box :contains_header, :checked => false %> File has header
      </td>
    </tr>
    <tr>
@@ -33,4 +45,4 @@
 <% end -%>
 
 <h3>Existing Documents</h3>
-<p>Download, export, and visualize data from the <%= link_to 'Documents', documents_path %> page </p>
+<p>Download, export, and visualize data from the <%= link_to 'Data Explorer', visualizations_path %> page </p>

@@ -1,6 +1,9 @@
 module DocumentsHelper
   
   def get_data_colnames(d)
+    if d.empty?
+      return []
+    end
     return d.first().keys()
   end
   
@@ -8,7 +11,8 @@ module DocumentsHelper
   #TODO: probably needs to be values in record that user can update
   def convert_data_to_native_types(d)
     #TODO: replace with get_data_colnames
-    colnames=d.first().keys()
+    #colnames=d.first().keys()
+    colnames = get_data_colnames(d)
     colnames.each do |colname|
       #*binary
       #*boolean
@@ -57,6 +61,21 @@ module DocumentsHelper
     d.stuffing_data.find_all {|item| dc << item[colname]}
     return dc
   end
+
+  def get_last_n_above_id(d, xname, yname, lastid, max)
+      out = []
+      document = Document.find(d)
+      lid = lastid.to_i
+      last = lid
+      document.stuffing_data.find_all do |item|
+          if item["id"] != nil && item["id"] > lid
+              out << [item[xname], item[yname]]
+              last = item["id"]
+          end
+      end
+      out = out.last(max.to_i)
+      return {"lastpt" => last, "points" => out}
+  end
   
   #Gives the count of every value in a column
   def get_data_map(d, colname)
@@ -66,7 +85,7 @@ module DocumentsHelper
     
     dc.each do |row|
       data_col_hash = {}
-      colnames = ["value","map"]
+      colnames = ["value","count"]
       key = row.keys().first()
       data_col_hash["value"] = key
       data_col_hash["map"] = row[key]
@@ -101,6 +120,24 @@ module DocumentsHelper
           matches.each {|row| retval << row}
         end
       end
+    
+      end
+  end
+
+  def document_search_data_couch(search, lucky_search = false)
+    #Use any Document instance to access the Stuffing view method
+    #If exact value searched for, call key view
+    if lucky_search == false
+      docs = Document.first().view("all_data_values/view1", {:startkey => search})["rows"]
+    #Otherwise, call startkey - endkey view
+    else
+      docs = Document.first().view("all_data_values/view1", {:key => search})["rows"]
+    end
+    
+    #Compile the resulting data back into a record-like array of hashes
+    retval = []
+    docs.each do |doc|
+      retval << doc["value"]
     end
     
     return retval
