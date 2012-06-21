@@ -12,12 +12,12 @@
 
 <% 
 #Get row data
-@row = @document.stuffing_data.first()
+@row = @paged_sdata.first()
 #if there is no first row, set to empty instead of nil
 if @row == nil
 	@row = {}
 end 
-@colnames = get_data_colnames(@document.stuffing_data) 
+@colnames = get_data_colnames(@paged_sdata) 
 %>
 
 <%= render 'viz/visualization', :layout => 'true' %>
@@ -58,7 +58,7 @@ end
             <th><%= name %></th>
     <% end %>
         </tr></thhead>
-	<% @document.stuffing_data.each do |row| %>
+	<% @paged_sdata.each do |row| %>
 		<tr>
 			<td><!--place holder for axis labels--></td>
 			<% row.values.each do |val|%>
@@ -72,6 +72,8 @@ end
 	<% end %>
 	</table>
 </div>
+
+<%= will_paginate @paged_sdata %>
 
 <%= link_to 'Edit', edit_document_path(@document) %> |
 <%= link_to 'Back', documents_path %>

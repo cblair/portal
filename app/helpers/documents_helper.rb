@@ -1,4 +1,94 @@
 module DocumentsHelper
+  require 'csv'
+  require 'Zippy'
+  include IfiltersHelper
+  
+  # @param fname A string of the file name
+  # @param c A Collection object
+  # @param f A IFilter object
+  def save_zip_to_documents(fname, c, f)
+    tf = params[:dump][:file].tempfile
+    Zippy.open(tf) do |zip|
+      zip.paths.each do |afname|
+        
+        file_text = zip[afname] #text
+        if file_text != nil
+          file_text.split(/\r?\n/).each do |row_text|
+            row = get_filtered_row(f, row_text)
+            debugger
+          end
+        end
+      end
+    end
+  end
+  
+  #save a file from a web upload to an db doc
+  # 
+  # @param fname A string of the file name
+  # @param c A Collection object
+  # @param f A IFilter object
+  def save_file_to_document(fname, c, f)    
+    #TODO: if filter specified, don't try CSV
+    #csv import. Each call on @parsed_file.<method> incremenst the cursor
+    if CSV.const_defined? :Reader
+        #@parsed_file=CSV::Reader.parse(params[:dump][:file])
+        @parsed_file=CSV::Reader.parse(fname)
+    else
+        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        #@parsed_file=CSV::CSV.open(fname.tempfile)
+    end
+    
+    #get the column names
+    colnames=[]
+    if params[:dump][:contains_header] == "1"
+      colnames = @parsed_file.first()
+    else
+      colnames = [1]
+    end
+    
+    debugger
+    
+    data_columns=[]
+    i = 0
+    @parsed_file.each do |row|
+      data_col_hash = {}
+      
+      #apply input filter
+      if f != nil
+       #overwrite row with filtered row
+       row = get_filtered_row(f, row)
+       #overwrite col names with numbered colnames
+       
+       colnames = get_filtered_colnames(row)
+      end
+      
+      for j in (0..row.count-1)
+        data_col_hash[ colnames[j] ] = row[j]
+      end
+      
+      #data_columns[i] = data_col_hash
+      #i = i + 1
+      data_columns << data_col_hash  
+    end
+    
+    #Remove empty elements
+    data_columns.reject! { |item| item.empty? }
+    
+    #Transform all values to native ruby types
+    data_columns=convert_data_to_native_types(data_columns)
+    
+    #Save Document
+    #TODO: bug, 'create' is not working now, makes all values nill. Going to 'new'. ?
+    #d=Document.create(  :name => fname,
+    #                    :collection => c,
+    #                    :stuffing_data => data_columns
+    #                  )
+    @document=Document.new
+    @document.name=fname
+    @document.collection=c
+    @document.stuffing_data=data_columns
+    @document.save
+  end
   
   def get_data_colnames(d)
     if d.empty?

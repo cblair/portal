@@ -48,6 +48,12 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
+    
+    @sdata = @document.stuffing_data
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    
     chart = Chart.find_by_document_id(@document)
     @chart = chart || Chart.find(newchart({:document_id => @document}))
     respond_to do |format|

@@ -2,7 +2,9 @@ class CollectionsController < ApplicationController
   # GET /collections
   # GET /collections.json
   def index
-    @collections = Collection.all
+    #@collections = Collection.all
+    
+    @root_collections = Collection.where(:collection_id => nil)
 
     respond_to do |format|
       format.html # index.html.erb

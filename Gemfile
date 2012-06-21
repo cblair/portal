@@ -61,3 +61,6 @@ gem 'rufus-scheduler'
 group :development do
     gem "ruby-prof"
 end
+
+#Zippy
+gem 'zippy', :git => 'https://github.com/toretore/zippy.git', :require => false
