@@ -1,0 +1,9 @@
+<h1>Listing collections</h1>
+
+<% @root_collections.each do |collection| %>
+	<%= render :partial => "collection_new", :locals => {:collection => collection} %>
+<% end %>
+
+<br />
+
+<%= link_to 'New Collection', new_collection_path %>

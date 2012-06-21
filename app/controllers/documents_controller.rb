@@ -12,12 +12,19 @@ class DocumentsController < ApplicationController
   def index
     #Search for data if search comes in
     if params[:search] != nil
-      #start recording run time
-      stime = Time.now() #start time
       #Delete any temp search docs so we don't search them too 
       Document.destroy_all(:name => ENV['temp_search_doc'])
      
+      #start recording run time
+      data_stime = Time.now() #start time
+     
       d = document_search_data_couch(params[:search], params.has_key?("lucky_search"))
+      data_etime = Time.now() #end time
+      data_ttime = data_etime - data_stime #total time
+      
+      #start recording run time
+      doc_stime = Time.now() #start time
+      
       c=Collection.find_or_create_by_name("Recent Searches")
       c.save
       
@@ -27,13 +34,18 @@ class DocumentsController < ApplicationController
       @temp_search_document.stuffing_data = d
       @temp_search_document.stuffing_is_search_doc = TRUE
       @temp_search_document.save
-      
-      etime = Time.now() #end time
-      ttime = etime - stime #total time
     
+#TODO: taking out document searching for now, because it is so slow!  
+=begin      
+      doc_etime = Time.now() #end time
+      doc_ttime = doc_etime - doc_stime #total time
+          
       @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
 
-      flash[:notice]="Searched data in #{ttime} seconds."
+      flash[:notice]="Searched data in #{data_ttime} seconds, searched document names in #{doc_ttime}."
+=end
+      @documents = []
+      flash[:notice]="Searched data in #{data_ttime} seconds."
     else
         @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
     end

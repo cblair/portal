@@ -1,0 +1,10 @@
+  <ul>
+    <li><%= collection.name %>
+    	<%= link_to 'Show', collection %>
+    	<%= link_to 'Edit', edit_collection_path(collection) %>
+    	<%= link_to 'Destroy', collection, confirm: 'Are you sure?', method: :delete %>
+    </li>
+    <% Collection.where(:collection_id => collection.id).each do |child_collection| %>
+		<%= render :partial => "collection_new", :locals => {:collection => child_collection} %>
+  	<% end %>
+  </ul>
