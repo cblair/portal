@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  include CouchdbHelper
+
   #Profiler for development
   #around_filter :profile if Rails.env == 'development'
 

@@ -1,23 +1,26 @@
-if not $rails_rake_task
-    d = Document.new(:name => "temp")
-    d.save
-    if !d.view_exists("all_data_values")
-      d.create_simple_view("all_data_values", 
-      "function(doc) 
-        {
-          if (doc.data && !doc.is_search_doc)
+include CouchdbHelper
+
+if not $rails_rake_task and is_couchdb_running?
+      d = Document.new(:name => "temp")
+      d.save
+    
+      if !d.view_exists("all_data_values")
+        d.create_simple_view("all_data_values", 
+        "function(doc) 
           {
-            for(row_key in doc.data)
+            if (doc.data && !doc.is_search_doc)
             {
-              row = doc.data[row_key];
-              for(col_key in row)
+              for(row_key in doc.data)
               {
-                emit(row[col_key], row);
+                row = doc.data[row_key];
+                for(col_key in row)
+                {
+                  emit(row[col_key], row);
+                }
               }
             }
-          }
-        }")
-    end
-
-    d.destroy
+          }")
+      end
+  
+      d.destroy
 end
