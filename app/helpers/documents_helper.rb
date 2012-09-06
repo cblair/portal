@@ -1,8 +1,9 @@
 module DocumentsHelper
   require 'csv'
-  require 'Zippy'
+  #require 'Zippy'
   include IfiltersHelper
   
+=begin
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
@@ -20,8 +21,9 @@ module DocumentsHelper
         end
       end
     end
-  end
-  
+  end 
+=end
+
   #save a file from a web upload to an db doc
   # 
   # @param fname A string of the file name
