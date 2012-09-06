@@ -63,4 +63,4 @@ group :development do
 end
 
 #Zippy
-gem 'zippy', :git => 'https://github.com/toretore/zippy.git', :require => false
+#gem 'zippy', :git => 'https://github.com/toretore/zippy.git', :require => false
