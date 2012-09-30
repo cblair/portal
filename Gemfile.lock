@@ -7,13 +7,6 @@ GIT
       ruby_core_source (>= 0.1.4)
 
 GIT
-  remote: https://github.com/toretore/zippy.git
-  revision: eadae77061ffe128fecd7fbb2aa34243f4be7c2c
-  specs:
-    zippy (0.2.0)
-      rubyzip (>= 0.9.1)
-
-GIT
   remote: https://github.com/tribune/ruby-debug-base19.git
   revision: fb0c03823944d2165edfc5e4d37c441c003eac5c
   specs:
@@ -175,10 +168,10 @@ DEPENDENCIES
   ruby-debug-base19!
   ruby-debug19
   ruby-prof
+  rubyzip
   rufus-scheduler
   sass-rails (~> 3.1.5)
   sqlite3 (>= 1.3.1)
   therubyracer
   uglifier (>= 1.0.3)
   will_paginate (= 3.0.pre2)
-  zippy!

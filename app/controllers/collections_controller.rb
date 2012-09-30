@@ -1,4 +1,6 @@
 class CollectionsController < ApplicationController
+  include CollectionsHelper
+  
   # GET /collections
   # GET /collections.json
   def index
@@ -75,6 +77,17 @@ class CollectionsController < ApplicationController
   # DELETE /collections/1.json
   def destroy
     @collection = Collection.find(params[:id])
+    
+    #destroy all child documents
+    @collection.documents.each do |d|
+      d.destroy
+    end
+    
+    #destroy all child collections
+    @collection.collections.each do |c|
+      collection_recursive_destroy(c)
+    end
+    
     @collection.destroy
 
     respond_to do |format|

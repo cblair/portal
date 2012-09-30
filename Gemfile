@@ -33,9 +33,9 @@ gem 'jquery-rails'
 #   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
 #  TODO: Probably want this for other versions of Mac/Linux too.
 if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
-gem 'ruby-debug19', :require => false
-gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.git', :require => false
-gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
+  gem 'ruby-debug19', :require => false
+  gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.git', :require => false
+  gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
 else
   #Ubuntu 11.10 likes this. ?
   gem 'ruby-debug', :platforms => :ruby_18
@@ -62,5 +62,8 @@ group :development do
     gem "ruby-prof"
 end
 
-#Zippy
-gem 'zippy', :git => 'https://github.com/toretore/zippy.git', :require => false
+#Rubyzip
+gem 'rubyzip'
+
+#Paperclip
+#gem "paperclip", "~> 3.0"

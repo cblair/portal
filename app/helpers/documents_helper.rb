@@ -1,22 +1,29 @@
 module DocumentsHelper
   require 'csv'
-  require 'Zippy'
+  require 'zip/zipfilesystem'
   include IfiltersHelper
   
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_zip_to_documents(fname, c, f)
-    tf = params[:dump][:file].tempfile
-    Zippy.open(tf) do |zip|
-      zip.paths.each do |afname|
-        
-        file_text = zip[afname] #text
-        if file_text != nil
-          file_text.split(/\r?\n/).each do |row_text|
-            row = get_filtered_row(f, row_text)
-            debugger
-          end
+  def save_zip_to_documents(zip_fname, zip_file_object, user_c, f)
+    c = Collection.new(:name => zip_fname, :collection => user_c)
+    c.save
+          
+    Zip::ZipFile.open(zip_file_object.tempfile) do |zipfile|
+      zipfile.each do |file|
+        if file.directory?
+          c = Collection.new(:name => file.name, :collection => c)
+          c.save
+        else
+          fname = file.name
+          basename = File.basename(fname)
+
+          tempfile = Tempfile.new(basename)
+          tempfile.binmode
+          tempfile.write file.get_input_stream.read
+          
+          save_file_to_document(fname, tempfile, c, f)
         end
       end
     end
@@ -27,17 +34,15 @@ module DocumentsHelper
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_file_to_document(fname, c, f)    
-    #TODO: if filter specified, don't try CSV
+  def save_file_to_document(fname, file, c, f)    
     #csv import. Each call on @parsed_file.<method> incremenst the cursor
     if CSV.const_defined? :Reader
-        #@parsed_file=CSV::Reader.parse(params[:dump][:file])
         @parsed_file=CSV::Reader.parse(fname)
     else
-        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
-        #@parsed_file=CSV::CSV.open(fname.tempfile)
+        #@parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        @parsed_file=CSV::CSV.open(file)
     end
-    
+
     #get the column names
     colnames=[]
     if params[:dump][:contains_header] == "1"
@@ -45,8 +50,6 @@ module DocumentsHelper
     else
       colnames = [1]
     end
-    
-    debugger
     
     data_columns=[]
     i = 0
