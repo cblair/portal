@@ -6,7 +6,7 @@ module CollectionsHelper
     end
     
     #destroy all child documents
-    @collection.documents.each do |d|
+    c.documents.each do |d|
       d.destroy
     end
     

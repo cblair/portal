@@ -162,7 +162,7 @@ DEPENDENCIES
   devise (~> 2)
   jquery-rails
   json
-  lazy_high_charts (~> 1.1.5)
+  lazy_high_charts
   linecache19!
   rails (= 3.1.3)
   ruby-debug-base19!

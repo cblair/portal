@@ -42,18 +42,17 @@ else
   gem 'ruby-debug19', :platforms => :ruby_19
 end
 
-gem 'lazy_high_charts', '~> 1.1.5'
+#gem 'lazy_high_charts', '~> 1.1.5'
+gem 'lazy_high_charts'
 
 gem 'couchrest'
 #also, you will need to run this afterward... don't know if it is in a gem yet
 #TODO: make a script I guess
 #rails plugin install git://github.com/cblair/stuffing.git
 
-gem 'lazy_high_charts', '~> 1.1.5'
 gem 'devise', '~> 2'
 
 gem 'will_paginate', '3.0.pre2'
-gem 'jquery-rails'
 
 gem 'rufus-scheduler'
 
