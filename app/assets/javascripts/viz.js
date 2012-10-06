@@ -3,7 +3,13 @@
 
 jQuery(function($) {
 	$(document).ready(function () {
-		//$('div#viz_attrs').children('h2').toggle();
-		//$('div"viz_attrs h2').hide();
+		$('div#hidden_form > a.btn-inverse').toggle();
+		$('div#hidden_form > form').toggle();
+
+		$('div#hidden_form > a.btn').click(function(e){
+			e.preventDefault();
+			$(this).parent().children('a.btn').toggle();
+			$(this).parent().children('form').fadeToggle();
+		});
 	});
 });

@@ -1,61 +1,65 @@
-<div id="viz_attrs">
+<div>
+	<div id="hidden_form">
 	<h2>Visualization</h2>
-		<%= form_tag(visualize_path) do %>
-			<%= hidden_field_tag(:document_id, @document[:id]) %>
-            <h4>Share this chart at <%= link_to sharechart_url(@chart.id, @chart.share_token), sharechart_path(@chart.id, @chart.share_token) %> <p>
-    <table>
-        <thead>
-            <tr>
-                <th>X axis</th>
-                <th>Y axis</th>
-                <th>Chart type</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <%= select_tag("x_axis", options_for_select(@colnames + ["auto-number"], @chart.x_column))%>
-            </td>
-            <td>
-                <%= select_tag("y_axis", options_for_select(@colnames + ["auto-number"], @chart.y_column))%>
-            </td>
-            <td>
-                <%= select_tag("chart_type", 
-                options_for_select(['spline', 'line', 'scatter'], @chart.chart_type))
-                %>
-        </td>
-        </tbody>
-</table>
+	<a class="btn btn-info" href="#">More</a>
+	<a class="btn btn-inverse" href="#">Hide</a>
+	<%= form_tag(visualize_path) do %>
+		<%= hidden_field_tag(:document_id, @document[:id]) %>
+		<h4>Share this chart at <%= link_to sharechart_url(@chart.id, @chart.share_token), sharechart_path(@chart.id, @chart.share_token) %> </h4>
+	    <table>
+	        <thead>
+	            <tr>
+	                <th>X axis</th>
+	                <th>Y axis</th>
+	                <th>Chart type</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	        <tr>
+	            <td>
+	                <%= select_tag("x_axis", options_for_select(@colnames + ["auto-number"], @chart.x_column))%>
+	            </td>
+	            <td>
+	                <%= select_tag("y_axis", options_for_select(@colnames + ["auto-number"], @chart.y_column))%>
+	            </td>
+	            <td>
+	                <%= select_tag("chart_type", 
+	                options_for_select(['spline', 'line', 'scatter'], @chart.chart_type))
+	                %>
+	        </td>
+	        </tbody>
+		</table>
 
-<%= label_tag(:title, 'Title') %>
-<%= text_field_tag(:title, @chart.title) %>
-<%= label_tag(:xlab, 'X-axis label') %>
-<%= text_field_tag(:xlab, @chart.xlab) %>
-<%= label_tag(:ylab, 'Y-axis label') %>
-<%= text_field_tag(:ylab, @chart.ylab) %>
-<%= label_tag :streaming, 'Live chart' %>
-<%= check_box_tag :streaming, true, @chart.streaming %>
-<%= label_tag :numdraw, 'Maximum points on live chart' %>
-<%= number_field_tag :numdraw, @chart.numdraw%>
+		<%= label_tag(:title, 'Title') %>
+		<%= text_field_tag(:title, @chart.title) %>
+		<%= label_tag(:xlab, 'X-axis label') %>
+		<%= text_field_tag(:xlab, @chart.xlab) %>
+		<%= label_tag(:ylab, 'Y-axis label') %>
+		<%= text_field_tag(:ylab, @chart.ylab) %>
+		<%= label_tag :streaming, 'Live chart' %>
+		<%= check_box_tag :streaming, true, @chart.streaming %>
+		<%= label_tag :numdraw, 'Maximum points on live chart' %>
+		<%= number_field_tag :numdraw, @chart.numdraw%>
 
-<table class="table" style"width: 0;">
-    <thead>
-        <tr>
-            <th>Column Name</th>
-            <th>Data Type</th>
-        </tr>
-    </thead>
-    <tbody>
-    <% @colnames.each do |colname| %>
-        <tr>
-            <td><%= colname %></td>
-            <td><%= @row[colname].class %></td>
-        </tr>
-    <% end %>
-    </tbody>
-</table>
+		<table class="table" style"width: 0;">
+		    <thead>
+		        <tr>
+		            <th>Column Name</th>
+		            <th>Data Type</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		    <% @colnames.each do |colname| %>
+		        <tr>
+		            <td><%= colname %></td>
+		            <td><%= @row[colname].class %></td>
+		        </tr>
+		    <% end %>
+		    </tbody>
+		</table>
 
-    <%= submit_tag("Visualize")%>
+    	<%= submit_tag("Visualize")%>
 			
-    <% end %><!--end axis form-->
+    	<% end %><!--end axis form-->
+    </div><!--end viz_attrs-->
 </div>
