@@ -3,8 +3,9 @@ module DocumentsHelper
   require 'zip/zipfilesystem'
   include IfiltersHelper
   
-  # @param fname A string of the file name
-  # @param c A Collection object
+  # @param zip_fname A string of the zip file name
+  # @param zip_file_object A file object for the zip file
+  # @param user_c A Collection object
   # @param f A IFilter object
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f)
     c = Collection.new(:name => zip_fname, :collection => user_c)
