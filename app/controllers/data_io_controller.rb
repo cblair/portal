@@ -37,8 +37,8 @@ class DataIOController < ApplicationController
     if filter_id != ""
       f=Ifilter.find(filter_id)
     end
-    save_zip_to_documents(fname, params[:dump][:file], c, f)
-    #save_file_to_document(fname, params[:dump][:file].tempfile, c, f)
+    save_zip_to_documents(fname, c, f)
+    #save_file_to_document(fname, c, f)
     
     etime = Time.now() #end time
     ttime = etime - stime #total time
