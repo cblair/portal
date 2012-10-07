@@ -6,29 +6,26 @@
    <tr>
      <td>
       <label for="dump_file">
-        Select a CSV File :
+        Select a file (zip, csv, or text):
       </label>
      </td>
+     <td><%= f.file_field :file -%></td>
    </tr>
    <tr>
-     <td >
-       <%= f.file_field :file -%>
-     </td>
-   </tr>
-   <tr>
+   	<td>(select a filter):</td>
      <td>
-     	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => 'Select Filter'})%>
+     	<%= select("post", "ifilter_id", Ifilter.all.collect {|f| [ f.name, f.id ] }, {:prompt => '(none)'}) %>
      </td>
      <td>
      	<%= link_to "Filters...", ifilters_path %>
      </td>
    </tr>
-   <tr>
-	<td>Collection:</td>
-	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }) %></td>
+   <tr id="collection_id">
+	<td>(select a collection):</td>
+	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }, {:prompt => '(none)'}) %></td>
    </tr>
-   <tr>
-   	<td>Or type in an existing/new collection:</td>
+   <tr id="collection_text">
+   	<td>(new collection name):</td>
    	<td><%= f.text_field "collection_text" %></td>
    </tr>
    <tr>
