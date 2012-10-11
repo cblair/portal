@@ -14,6 +14,7 @@ module DocumentsHelper
     Zip::ZipFile.open(zip_file_object.tempfile) do |zipfile|
       zipfile.each do |file|
         if file.directory?
+          #debugger
           c = Collection.new(:name => file.name, :collection => c)
           c.save
         else
@@ -28,7 +29,12 @@ module DocumentsHelper
         end
       end
     end
-  end 
+  end
+  
+  def save_sub_files_and_directories()
+    
+  end
+   
 
   #save a file from a web upload to an db doc
   # 
