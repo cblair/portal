@@ -8,45 +8,67 @@ module DocumentsHelper
   # @param user_c A Collection object
   # @param f A IFilter object
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f)
-    c = Collection.new(:name => zip_fname, :collection => user_c)
-    c.save
+    #TODO: replace all back slagshes with forward slashes
+    
+    #a dictionary of dircetories, than point to collections 
+    zip_collections = {}
           
     Zip::ZipFile.open(zip_file_object.tempfile) do |zipfile|
       zipfile.each do |file|
+        fname = file.name
+        basename = File.basename(fname)
+          
         if file.directory?
-          c = Collection.new(:name => file.name, :collection => c)
+          #strip trailing slashes
+          if fname[fname.length-1] == '/' or fname[fname.length-1] == '\''
+            fname = fname[0..fname.length-2]
+          end
+          
+          c = Collection.new( :name => basename, 
+                              :collection => zip_collections[File.dirname(fname)])
           c.save
+          
+          #save to collections dictionary
+          zip_collections[fname] = c
         else
-          fname = file.name
-          basename = File.basename(fname)
-
           tempfile = Tempfile.new(basename)
           tempfile.binmode
           tempfile.write file.get_input_stream.read
+          tempfile.rewind
+          tempfile.close
           
-          save_file_to_document(fname, tempfile, c, f)
+          c_name = File.dirname(fname)
+          save_file_to_document(fname, tempfile, zip_collections[c_name], f)
         end
       end
     end
-  end
-  
-  def save_sub_files_and_directories()
-    #heres a comment
+    
+    #put all parentless zip collections under the user_c
+    zip_collections.keys.each do |k|
+      c = zip_collections[k]
+      if c.collection == nil
+        c.collection = user_c
+        c.save
+      end
+    end
   end
    
-
+   
   #save a file from a web upload to an db doc
   # 
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_file_to_document(fname, file, c, f)    
-    #csv import. Each call on @parsed_file.<method> incremenst the cursor
-    if CSV.const_defined? :Reader
-        @parsed_file=CSV::Reader.parse(fname)
-    else
-        #@parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
-        @parsed_file=CSV::CSV.open(file)
+  def save_file_to_document(fname, file, c, f)
+    #csv import. Each call on @parsed_file.<method> increments the cursor
+    begin
+      if CSV.const_defined? :Reader
+          @parsed_file=CSV::Reader.parse(fname)
+      else
+          @parsed_file=CSV::CSV.open(file)
+      end
+    rescue
+      return #unsupported file type
     end
 
     #get the column names

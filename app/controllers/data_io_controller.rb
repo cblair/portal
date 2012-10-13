@@ -31,6 +31,7 @@ class DataIOController < ApplicationController
     
     #File stuff
     fname=params[:dump][:file].original_filename
+    
     #filter
     filter_id=params[:post][:ifilter_id]
     f=nil
