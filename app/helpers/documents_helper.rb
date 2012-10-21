@@ -38,7 +38,7 @@ module DocumentsHelper
           tempfile.close
           
           c_name = File.dirname(fname)
-          save_file_to_document(fname, tempfile, zip_collections[c_name], f)
+          save_file_to_document(basename, tempfile, zip_collections[c_name], f)
         end
       end
     end
