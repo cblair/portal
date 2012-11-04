@@ -1,8 +1,8 @@
 Portal::Application.routes.draw do
+  resources :uploads
+
   resources :charts
   resources :feeds
-
-  resources :uploads
 
   root :to => 'home#index'
   devise_for :users
@@ -31,7 +31,8 @@ Portal::Application.routes.draw do
   match '/charts/:id/:last_id' => 'charts#showjson', :as => :chart_update
 
   #Demo stuff
-  match '/Movies' => "Movies#index"
+  match '/tests' => "tests#index"
+  match '/tests/index' => "tests#index"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

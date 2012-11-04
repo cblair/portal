@@ -40,7 +40,8 @@ class UploadsController < ApplicationController
   # POST /uploads
   # POST /uploads.json
   def create
-    @upload = Upload.new(params[:upload])
+    #@upload = Upload.new(params[:upload])
+    @upload = Upload.create(params[:upload])
 
     respond_to do |format|
       if @upload.save
@@ -73,6 +74,10 @@ class UploadsController < ApplicationController
   # DELETE /uploads/1.json
   def destroy
     @upload = Upload.find(params[:id])
+
+    @upload.upfile = nil
+    @upload.save
+
     @upload.destroy
 
     respond_to do |format|

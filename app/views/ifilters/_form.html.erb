@@ -10,11 +10,33 @@
       </ul>
     </div>
   <% end %>
+  
+<div class="field">
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</div>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
+<!--TODO: mockup
+<h2>Header Filter</h2>
+<table class="header-filters table">
+	<tr>
+		<td>
+			<%= text_field_tag "header_regex_1" %>
+			_
+			<%= text_field_tag "header_regex_2" %>
+		</td>
+		<td>
+			<%= select_tag "heder_1_type", options_for_select([["integer", 1]]) %>
+		</td>
+	</tr>
+	<tr>
+		<td><%= link_to "(none)", "#", :class => "btn" %></td>
+		<td><%= link_to "+ Add", "#", :class => "btn btn-success" %></td>
+	</tr>
+</table>
+-->
+
+<h2>Data Filter</h2>
   <div class="field">
     <%= f.label :regex %><br />
     <%= f.text_field :regex %>

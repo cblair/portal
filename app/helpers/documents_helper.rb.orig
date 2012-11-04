@@ -8,79 +8,49 @@ module DocumentsHelper
   # @param user_c A Collection object
   # @param f A IFilter object
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f)
-    #TODO: replace all back slagshes with forward slashes
-    
-    #a dictionary of dircetories, than point to collections 
-    zip_collections = {}
+    c = Collection.new(:name => zip_fname, :collection => user_c)
+    c.save
           
-    #Zip::ZipFile.open(zip_file_object.tempfile) do |zipfile|
-    Zip::ZipFile.open(zip_file_object.upfile.path) do |zipfile|
+    Zip::ZipFile.open(zip_file_object.tempfile) do |zipfile|
       zipfile.each do |file|
-        fname = file.name
-        basename = File.basename(fname)
-          
         if file.directory?
-          #strip trailing slashes
-          if fname[fname.length-1] == '/' or fname[fname.length-1] == '\''
-            fname = fname[0..fname.length-2]
-          end
-          
-          c = Collection.new( :name => basename, 
-                              :collection => zip_collections[File.dirname(fname)])
+          c = Collection.new(:name => file.name, :collection => c)
           c.save
-          
-          #save to collections dictionary
-          zip_collections[fname] = c
         else
-          logger.info "Processing..."
-=begin
+          fname = file.name
+          basename = File.basename(fname)
+
           tempfile = Tempfile.new(basename)
           tempfile.binmode
           tempfile.write file.get_input_stream.read
-          tempfile.rewind
-          tempfile.close
-=end
-          tempfile = File.new('/tmp/' + basename, 'w')
-          tempfile.binmode
-          tempfile.write file.get_input_stream.read
-          tempfile.rewind
-          tempfile.close
           
-          c_name = File.dirname(fname)
-          save_file_to_document(basename, tempfile, zip_collections[c_name], f)
-
+          save_file_to_document(fname, tempfile, c, f)
         end
       end
     end
-    
-    #put all parentless zip collections under the user_c
-    zip_collections.keys.each do |k|
-      c = zip_collections[k]
-      if c.collection == nil
-        c.collection = user_c
-        c.save
-      end
-    end
+  end
+  
+  def save_sub_files_and_directories()
+<<<<<<< HEAD
+    #heres a comment
+=======
+    #something else
+>>>>>>> 2e954c4589dadd45ec03aa3c623cabe4b2992036
   end
    
-   
+
   #save a file from a web upload to an db doc
   # 
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_file_to_document(fname, file, c, f)
-    stime = Time.now()
-    
-    #csv import. Each call on @parsed_file.<method> increments the cursor
-    begin
-      if CSV.const_defined? :Reader
-          @parsed_file=CSV::Reader.parse(fname)
-      else
-          @parsed_file=CSV::CSV.open(file)
-      end
-    rescue
-      return #unsupported file type
+  def save_file_to_document(fname, file, c, f)    
+    #csv import. Each call on @parsed_file.<method> incremenst the cursor
+    if CSV.const_defined? :Reader
+        @parsed_file=CSV::Reader.parse(fname)
+    else
+        #@parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
+        @parsed_file=CSV::CSV.open(file)
     end
 
     #get the column names
@@ -114,24 +84,11 @@ module DocumentsHelper
       data_columns << data_col_hash  
     end
     
-    etime = Time.now()
-    
-    logger.info "Filtered document #{fname} in #{etime - stime} seconds."
-    
-    stime = Time.now()
-    
     #Remove empty elements
     data_columns.reject! { |item| item.empty? }
     
     #Transform all values to native ruby types
-    #TODO: optimize before enabling
-    #data_columns=convert_data_to_native_types(data_columns)
-    
-    etime = Time.now()
-    
-    #logger.info "Converted document #{fname} data in #{etime - stime} seconds."
-    
-    stime = Time.now()
+    data_columns=convert_data_to_native_types(data_columns)
     
     #Save Document
     #TODO: bug, 'create' is not working now, makes all values nill. Going to 'new'. ?
@@ -144,13 +101,8 @@ module DocumentsHelper
     @document.collection=c
     @document.stuffing_data=data_columns
     @document.save
-    
-    etime = Time.now()
-    
-    logger.info "Saved document #{fname} in #{etime - stime} seconds."
   end
-
-
+  
   def get_data_colnames(d)
     if d.empty?
       return []

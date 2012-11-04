@@ -65,4 +65,7 @@ end
 gem 'rubyzip'
 
 #Paperclip
-#gem "paperclip", "~> 3.0"
+gem "paperclip", "~> 3.0"
+
+#Spawn - for forking processing
+gem "spawn", :git => 'git://github.com/rfc2822/spawn'

@@ -6,8 +6,8 @@
     </li>
     
 	<% collection.documents.each do |doc| %>
-		<ul>
-			<li><%= doc.name %>
+		<ul class="document row" id="<%= doc.id %>">
+			<li class="span4"><%= doc.name %>
 				<%= link_to 'Show', doc %>
     			<%= link_to 'Edit', edit_document_path(doc) %>
     			<%= link_to 'Destroy', doc, confirm: 'Are you sure?', method: :delete %>
