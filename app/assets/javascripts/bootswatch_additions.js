@@ -1,7 +1,7 @@
 //Some extra Bootswatch sauce
 
-	//Progress bars for document uploads
-	//hide by default
+//Progress bars for document uploads
+//hide by default
 function updateProgressBar() {
 	$.ajax('/tests/index.json', {
 		data: { data : "div.test" },

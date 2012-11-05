@@ -6,6 +6,12 @@
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag 'jquery' %>
   <%= csrf_meta_tags %>
+  
+  <script>
+  	//for live_scaffold.js.erb
+	var CONTROLLER_NAME = "<%= params[:controller] %>";
+  </script>
+  
   <%= yield :head %>
 </head>
 <body>
