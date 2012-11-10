@@ -15,10 +15,24 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  
   <div class="field">
     <%= f.label :collection_id %><br />
-    <%= f.number_field :collection_id %>
+  	<%= 
+	f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }, 
+				{:selected => @document.collection_id} )
+  	%>
   </div>
+  
+  <p>Add new collaborator</p>
+  <div class="field">
+  	<%= 
+    	select_tag("new_user_id", 
+    		options_from_collection_for_select(User.all, "id", "email"), 
+    		:include_blank => true)
+  	%>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

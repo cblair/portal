@@ -26,8 +26,7 @@ class DataIOController < ApplicationController
     end
 
     #User
-    #TODO: should probably go into the core
-    c.users_id = current_user.id
+    c.user = current_user
     c.save
     
     #File stuff

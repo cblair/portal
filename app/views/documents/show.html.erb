@@ -8,6 +8,13 @@
   <%= @document.collection_id %>
 </p>
 
+<p>
+	<b>Owner:</b>
+	<% if @document.user %>
+		<%= @document.user.email %> 
+	<% end %>
+</p>
+
 <hr/>
 
 <% 
@@ -50,7 +57,9 @@ end
 	</table>
 </div>
 
-<%= will_paginate @paged_sdata %>
+<% if @paged_sdata != [] %>
+	<%= will_paginate @paged_sdata %>
+<% end %>
 
 
 <%= render 'viz/visualization', :layout => 'true' %>

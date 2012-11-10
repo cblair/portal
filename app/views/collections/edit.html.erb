@@ -2,5 +2,12 @@
 
 <%= render 'form' %>
 
+<p>
+	<b>Owner:</b>
+	<% if @collection.user %>
+		<%= @collection.user.email %> 
+	<% end %>
+</p>
+
 <%= link_to 'Show', @collection %> |
 <%= link_to 'Back', collections_path %>

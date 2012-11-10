@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121031040212) do
+ActiveRecord::Schema.define(:version => 20121109053341) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20121031040212) do
     t.datetime "updated_at"
     t.integer  "users_id"
     t.integer  "collection_id"
+    t.integer  "user_id"
   end
 
   create_table "documents", :force => true do |t|
@@ -42,6 +43,12 @@ ActiveRecord::Schema.define(:version => 20121031040212) do
     t.integer  "collection_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+  end
+
+  create_table "documents_users", :id => false, :force => true do |t|
+    t.integer "document_id"
+    t.integer "user_id"
   end
 
   create_table "feeds", :force => true do |t|
@@ -100,5 +107,10 @@ ActiveRecord::Schema.define(:version => 20121031040212) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "users_documents", :id => false, :force => true do |t|
+    t.integer "user_id"
+    t.integer "document_id"
+  end
 
 end

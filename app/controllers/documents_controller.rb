@@ -64,7 +64,11 @@ class DocumentsController < ApplicationController
     @sdata = @document.stuffing_data
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
-    @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
     
     chart = Chart.find_by_document_id(@document)
     @chart = chart || Chart.find(newchart({:document_id => @document}))
@@ -73,6 +77,7 @@ class DocumentsController < ApplicationController
       format.json { render json: @document }
     end
   end
+  
   # GET /documents/new
   # GET /documents/new.json
   def new
@@ -94,6 +99,7 @@ class DocumentsController < ApplicationController
   def create
     @document = Document.new(params[:document])
     @document.stuffing_data = []
+    @document.user = current_user
 
     respond_to do |format|
       if @document.save
@@ -110,6 +116,15 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @document = Document.find(params[:id])
+
+    user = User.where(:id => params[:new_user_id]).first
+    
+    debugger
+    
+    if not user.documents.include?(@document)
+      user.documents << @document
+      user.save
+    end
 
     respond_to do |format|
       if @document.update_attributes(params[:document])

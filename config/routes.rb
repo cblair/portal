@@ -5,7 +5,11 @@ Portal::Application.routes.draw do
   resources :feeds
 
   root :to => 'home#index'
+  match '/home/dashboard' => "home#dashboard", :as => :home_dashboard
+  
+  #Devise / Users
   devise_for :users
+  
   resources :ifilters
 
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test

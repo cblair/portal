@@ -1,5 +1,6 @@
 class CollectionsController < ApplicationController
   include CollectionsHelper
+  include DocumentsHelper
   
   # GET /collections
   # GET /collections.json
@@ -45,6 +46,7 @@ class CollectionsController < ApplicationController
   # POST /collections.json
   def create
     @collection = Collection.new(params[:collection])
+    @collection.user = current_user
 
     respond_to do |format|
       if @collection.save

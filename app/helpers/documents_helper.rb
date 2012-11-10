@@ -27,6 +27,7 @@ module DocumentsHelper
           
           c = Collection.new( :name => basename, 
                               :collection => zip_collections[File.dirname(fname)])
+          c.user = current_user
           c.save
           
           #save to collections dictionary
@@ -143,6 +144,7 @@ module DocumentsHelper
     @document.name=fname
     @document.collection=c
     @document.stuffing_data=data_columns
+    @document.user = current_user
     @document.save
     
     etime = Time.now()
@@ -289,6 +291,41 @@ module DocumentsHelper
     retval = []
     docs.each do |doc|
       retval << doc["value"]
+    end
+    
+    return retval
+  end
+  
+  #If the collection has any viewable docs or sub-collections
+  def collection_is_viewable(col)
+    retval = false
+    
+    col.documents.each do |doc|
+      if doc_is_viewable(doc)
+        retval = true
+      end
+    end
+    
+    #child collections
+    col.collections.each do |child_col|
+      if collection_is_viewable(child_col)
+        retval = true
+      end
+    end
+    
+    return retval
+  end
+  
+  def doc_is_viewable(col_or_doc)
+    retval = false
+    
+    #Note: if both are nil, or actual user is record's user...
+    if (col_or_doc.user == nil) or (col_or_doc.user == current_user)
+      retval = true
+    end
+    
+    if current_user.documents.include?(col_or_doc)
+      retval = true
     end
     
     return retval
