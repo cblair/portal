@@ -90,8 +90,15 @@ class DocumentsController < ApplicationController
   end
 
   # GET /documents/1/edit
-  def edit
+  def edit    
     @document = Document.find(params[:id])
+    
+    @colab_users = []
+    User.all.each do |user|
+      if user.documents.include?(@document)
+        @colab_users << user
+      end
+    end
   end
 
   # POST /documents
@@ -118,12 +125,20 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
 
     user = User.where(:id => params[:new_user_id]).first
+   
+    #Add collaborator
+    if user != nil
+      if not user.documents.include?(@document)
+        user.documents << @document
+        user.save
+      end
+    end
     
-    debugger
-    
-    if not user.documents.include?(@document)
-      user.documents << @document
-      user.save
+    #Remove collaborators
+    if params[:colab_user_ids]
+      User.find(params[:colab_user_ids]).each do |user|
+        user.documents.delete(@document)
+      end
     end
 
     respond_to do |format|

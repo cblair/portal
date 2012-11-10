@@ -32,6 +32,15 @@
     		:include_blank => true)
   	%>
   </div>
+  
+  <p>Remove existing collaborators</p>
+  <% @colab_users.each do |user| %>
+  	  <div class="field">
+	  	<%= check_box_tag("colab_user_ids[]", user.id)%>
+	  	<%= user.email %>
+	  </div>
+  <% end %>
+  <br />
 
   <div class="actions">
     <%= f.submit %>
