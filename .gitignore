@@ -9,4 +9,7 @@ db/*.sqlite3
 
 *.tmproj
 *.sw?
+*.orig
 
+Gemfile.lock
+public/system

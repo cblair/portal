@@ -31,31 +31,37 @@ end
     <h2>Data</h2>
 	<!--Display data-->
 	<!--TODO: make a partial-->
-    <table class="table table-striped table-bordered table-condensed" style="width:0;">
-        <thead><tr>
-            <th><!--place holder for axis labels --></th>
-    <% row_keys = [] %>
-    <% if !@row.empty? %>
-    	<% row_keys = @row.keys %>
-    <% end %>
-    <% row_keys.each do |name| %>
-            <th><%= name %></th>
-    <% end %>
-        </tr></thhead>
-	<% @paged_sdata.each do |row| %>
-		<tr>
-			<td><!--place holder for axis labels--></td>
-			<% row.values.each do |val|%>
-			<td>
-				<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
-    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
-    			<% end %>
-			</td>
-			<% end %>
-		</tr>
-	<% end %>
+	<!--TODO: documents_path is not right for this data-->
+    <table id="documents" class="table table-striped table-bordered table-condensed" style="width:0;">
+     <thead>
+      <tr>
+    	<th><!--place holder for axis labels --></th>
+		    <% row_keys = [] %>
+		    <% if !@row.empty? %>
+		    	<% row_keys = @row.keys %>
+		    <% end %>
+		    <% row_keys.each do |name| %>
+		    	<th><%= name %></th>
+		    <% end %>
+      </tr>
+     </thead>
+     <tbody>
+		<% @paged_sdata.each do |row| %>
+			<tr>
+				<td><!--place holder for axis labels--></td>
+				<% row.values.each do |val|%>
+				<td>
+					<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
+	    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
+	    			<% end %>
+				</td>
+				<% end %>
+			</tr>
+		<% end %>
+	 </tbody>
 	</table>
 </div>
+
 
 <% if @paged_sdata != [] %>
 	<%= will_paginate @paged_sdata %>

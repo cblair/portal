@@ -12,9 +12,14 @@ gem 'json'
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.1.5'
-  gem 'therubyracer'
+  #gem 'therubyracer'
+  #gem 'therubyracer', '0.11.0beta5'
+  #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
+  #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+  gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
+  gem 'jquery-ui-rails'
 end
 
 gem 'jquery-rails'
@@ -49,6 +54,7 @@ gem 'couchrest'
 #also, you will need to run this afterward... don't know if it is in a gem yet
 #TODO: make a script I guess
 #rails plugin install git://github.com/cblair/stuffing.git
+gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"
 
 gem 'devise', '~> 2'
 
