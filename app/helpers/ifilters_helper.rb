@@ -21,4 +21,16 @@ module IfiltersHelper
     return (1..row.count).to_a
   end
   
+  def get_ifilter_headers(ifilter)
+    retval = []
+    begin
+      if ifilter.stuffing_headers != nil
+        retval = ifilter.stuffing_headers
+      end
+    rescue
+      retval = []
+    end
+    
+    return retval
+  end
 end

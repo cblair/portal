@@ -1,6 +1,9 @@
 class IfiltersController < ApplicationController
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
+  
+  include IfiltersHelper
+  
   # GET /ifilters
   # GET /ifilters.json
   def index
@@ -27,6 +30,8 @@ class IfiltersController < ApplicationController
   # GET /ifilters/new.json
   def new
     @ifilter = Ifilter.new
+    
+    @ifilter_headers = get_ifilter_headers(@ifilter)
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,12 +42,23 @@ class IfiltersController < ApplicationController
   # GET /ifilters/1/edit
   def edit
     @ifilter = Ifilter.find(params[:id])
+    @ifilter_headers = get_ifilter_headers(@ifilter)
   end
 
   # POST /ifilters
   # POST /ifilters.json
   def create
     @ifilter = Ifilter.create(params[:ifilter])
+    
+    @ifilter.stuffing_headers = []
+    if params.include?('ifilter_headers')
+      params[:ifilter_headers].each do |header|
+        @ifilter.stuffing_headers <<  {
+                                        :id => header[0],
+                                        :val => header[1]
+                                      }
+      end
+    end
 
     respond_to do |format|
       if @ifilter.save
@@ -59,6 +75,17 @@ class IfiltersController < ApplicationController
   # PUT /ifilters/1.json
   def update
     @ifilter = Ifilter.find(params[:id])
+    
+    debugger
+    @ifilter.stuffing_headers = []
+    if params.include?('ifilter_headers')
+      params[:ifilter_headers].each do |header|
+        @ifilter.stuffing_headers <<  {
+                                        :id => header[0],
+                                        :val => header[1]
+                                      }
+      end
+    end
 
     respond_to do |format|
       if @ifilter.update_attributes(params[:ifilter])

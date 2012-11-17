@@ -1,3 +1,7 @@
 class Ifilter < ActiveRecord::Base
-  attr_accessible :name, :regex
+  require 'stuffing'
+  
+  attr_accessible :name, :regex, :stuffing_headers
+  
+  stuffing
 end
