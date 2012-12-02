@@ -50,6 +50,12 @@ class IfiltersController < ApplicationController
   def create
     @ifilter = Ifilter.create(params[:ifilter])
     
+    #get header filters
+    if params.include?('ifilter_headers')
+      @ifilter.stuffing_filter_headers = params[:ifilter_headers]
+    end
+    
+    
     @ifilter.stuffing_headers = []
     if params.include?('ifilter_headers')
       params[:ifilter_headers].each do |header|
@@ -75,8 +81,7 @@ class IfiltersController < ApplicationController
   # PUT /ifilters/1.json
   def update
     @ifilter = Ifilter.find(params[:id])
-    
-    debugger
+
     @ifilter.stuffing_headers = []
     if params.include?('ifilter_headers')
       params[:ifilter_headers].each do |header|

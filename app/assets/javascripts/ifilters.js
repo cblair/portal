@@ -28,7 +28,7 @@ function removeIfilterHeaderFormElement(e) {
 	//tr
 	// td
 	//  a
-	$(this).parent().parent().hide();
+	$(this).parent().parent().remove();
 };
 
 jQuery(function($) {

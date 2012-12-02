@@ -62,6 +62,8 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     
     @sdata = @document.stuffing_data
+    @msdata = get_document_metadata(@document)
+    
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
     

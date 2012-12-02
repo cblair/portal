@@ -87,23 +87,42 @@ module DocumentsHelper
     #get the column names
     colnames=[]
     if params[:dump][:contains_header] == "1"
-      colnames = @parsed_file.first()
+      colnames = @parsed_file.first() #gets the next row, increments the iterator
     else
       colnames = [1]
     end
     
+    #get filtered headers, put them in metadata
+    metadata_columns=[]
+    if f != nil
+      get_ifilter_headers(f).each do |h|
+        metadata_col_hash = {}
+        
+        row = @parsed_file.first() #gets the next row, increments the iterator
+        row = get_ifiltered_header(h, row)
+        
+        colnames = get_ifiltered_colnames(row)
+        
+        for j in (0..row.count-1)
+          metadata_col_hash[ colnames[j] ] = row[j]
+        end
+        debugger
+        metadata_columns << metadata_col_hash 
+      end
+    end
+        
     data_columns=[]
     i = 0
     @parsed_file.each do |row|
       data_col_hash = {}
       
-      #apply input filter
-      if f != nil
+      #apply input filters
+      if f != nil        
        #overwrite row with filtered row
-       row = get_filtered_row(f, row)
+       row = get_ifiltered_row(f, row)
        #overwrite col names with numbered colnames
        
-       colnames = get_filtered_colnames(row)
+       colnames = get_ifiltered_colnames(row)
       end
       
       for j in (0..row.count-1)
@@ -144,6 +163,7 @@ module DocumentsHelper
     @document.name=fname
     @document.collection=c
     @document.stuffing_data=data_columns
+    @document.stuffing_metadata=metadata_columns
     @document.user = current_user
     @document.save
     
@@ -214,6 +234,20 @@ module DocumentsHelper
     d.stuffing_data.find_all {|item| dc << item[colname]}
     return dc
   end
+
+
+  #Gets stuffing metadata, catching exception if doc metadata dne
+  def get_document_metadata(d)
+    md = []
+    begin
+      md = d.stuffing_metadata
+    rescue
+       md = []
+    end
+    
+    return md
+  end
+
 
   def get_last_n_above_id(d, xname, yname, lastid, max)
       out = []

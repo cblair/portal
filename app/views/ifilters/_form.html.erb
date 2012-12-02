@@ -16,7 +16,6 @@
 	<%= f.text_field :name %>
 </div>
 
-<!--
 <h2>Header Filter</h2>
 <table class="table ifilter-header">
 	<% i = 0 %>
@@ -25,10 +24,6 @@
 		<td>
 			<%= text_field_tag "ifilter_headers[" + header["id"].to_s + "]", 
 				header["val"] , {:id => "ifilter_headers"}%>
-		</td>
-		<td><%= select_tag "ifilter_headers_type[" + header["id"].to_s + "]",
-				options_for_select([["integer"], ["string"]])
-			%>
 		</td>
 		<td><%= link_to "- Remove", "#", 
 				:class => "btn btn-primary remove-ifilter-header" %></td>
@@ -39,7 +34,6 @@
 		<td><%= link_to "+ Add", "#", :class => "btn btn-success add-ifilter-header" %></td>
 	</tr>
 </table>
--->
 
 <h2>Data Filter</h2>
   <div class="field">

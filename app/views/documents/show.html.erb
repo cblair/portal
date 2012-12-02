@@ -17,14 +17,30 @@
 
 <hr/>
 
+<h2>Metadata</h2>
+<table class="table table-striped table-bordered table-condensed" style="width:0;">
+	<% @mcolnames = get_data_colnames(@msdata) %>
+	<tbody>
+	<% @msdata.each do |msdata_row| %>
+	<tr>
+		<% msdata_row.values.each do |val| %>
+			<td>
+				<%= val %>
+			</td>
+		<% end %>
+	</tr>
+	<% end %>
+	</tbody>
+</table>
+
 <% 
-#Get row data
-@row = @paged_sdata.first()
-#if there is no first row, set to empty instead of nil
-if @row == nil
-	@row = {}
-end 
-@colnames = get_data_colnames(@paged_sdata) 
+	#Get row data
+	@row = @paged_sdata.first()
+	#if there is no first row, set to empty instead of nil
+	if @row == nil
+		@row = {}
+	end 
+	@colnames = get_data_colnames(@paged_sdata) 
 %>
 
 <div>

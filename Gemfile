@@ -41,6 +41,7 @@ if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
   gem 'ruby-debug19', :require => false
   gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.git', :require => false
   gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
+  gem 'rack-mini-profiler'
 else
   #Ubuntu 11.10 likes this. ?
   gem 'ruby-debug', :platforms => :ruby_18
