@@ -17,7 +17,7 @@
 </div>
 
 <h2>Header Filter</h2>
-<table class="table ifilter-header">
+<table class="table ifilter-header" data-headers="<%= @ifilter_headers.count %>">
 	<% i = 0 %>
 	<% @ifilter_headers.each do |header| %>
 	<tr>

@@ -212,4 +212,13 @@ class DocumentsController < ApplicationController
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
+  
+  def filter
+    @document = Document.find(params[:id])
+    
+    respond_to do |format|
+      format.html { redirect_to @document }
+      format.json { render json: @document.stuffing_data }
+    end
+  end
 end

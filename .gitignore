@@ -5,6 +5,7 @@
 .DS_Store
 
 tmp/
+public/*
 db/*.sqlite3
 
 *.tmproj

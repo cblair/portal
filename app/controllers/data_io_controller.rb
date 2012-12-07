@@ -41,7 +41,7 @@ class DataIOController < ApplicationController
     
     upload = Upload.create(:name => fname, :upfile => params[:dump][:file])
     
-    #spawn_block do
+    spawn_block do
       #Parse file into db
       if upload.upfile.content_type == "application/zip"
         #save_zip_to_documents(fname, uploaded_file, c, f)
@@ -50,7 +50,7 @@ class DataIOController < ApplicationController
         #save_file_to_document(fname, uploaded_file.tempfile, c, f)
         save_file_to_document(fname, upload.upfile.path, c, f) 
       end
-    #end
+    end
 
     etime = Time.now() #end time
     ttime = etime - stime #total time

@@ -20,6 +20,8 @@ function addIfilterHeaderFormElement(e) {
 	addClickEventToRemoveButtons();
 	
 	IFILTER_HEADER_FORM_ELEMENTS++;
+	
+	$('table.ifilter-header').attr('data-headers', IFILTER_HEADER_FORM_ELEMENTS);
 };
 
 function removeIfilterHeaderFormElement(e) {
@@ -32,6 +34,11 @@ function removeIfilterHeaderFormElement(e) {
 };
 
 jQuery(function($) {
+	if ( $('table.ifilter-header').attr('data-headers') != undefined)
+	{
+		IFILTER_HEADER_FORM_ELEMENTS = $('table.ifilter-header').attr('data-headers');
+	}
+	
 	$('a.add-ifilter-header').bind({
 		click: addIfilterHeaderFormElement
 	});
