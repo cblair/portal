@@ -18,31 +18,28 @@
 </head>
 <body>
 	
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <%= link_to "Hatch", root_path, {:class => "brand"} %>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-	            <li><%= link_to "Home", root_path %></li>
-	            <li><%= link_to "Data Import", csv_import_path %></li>
-	            <li><%= link_to "Search", documents_path %></li>
-	            <li><%= link_to "Data Explorer", visualizations_path %></li>
-	            <li><%= link_to "Feeds", feeds_path %></li>
-            </ul>
-            <ul class="nav pull-right">
-              <li><%= render 'layouts/registration_items' %></li>
-              <li><%= render 'layouts/login_items' %></li>
-          </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <%= link_to "Hatch", root_path, {:class => "brand"} %>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+            <li><%= link_to "Home", root_path %></li>
+            <li><%= link_to "Data Import", csv_import_path %></li>
+            <li><%= link_to "Search", documents_path %></li>
+            <li><%= link_to "Data Explorer", visualizations_path %></li>
+            <li><%= link_to "Feeds", feeds_path %></li>
+        </ul>
+        <%= render 'layouts/login_items' %>
+      </div><!--/.nav-collapse -->
     </div>
+  </div>
+</div>
 
 <%
 	#if the couchdb is not running, override alert

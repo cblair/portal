@@ -1,6 +1,39 @@
 
 <% if user_signed_in? %>
-    <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+	<ul class="nav pull-right">
+    	<li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+    </ul>
 <% else %>
-    <%= link_to('Login', new_user_session_path) %>
+
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "new_user navbar-form pull-right"} ) do |f| %>
+	  <%= f.email_field :email, {:class => "span2", :placeholder => "Email"} %>	
+	  <%= f.password_field :password, {:class => "span2", :placeholder => "Password"} %>
+	  <%= f.submit "Sign in", {:class => "btn"} %>
+	  <%= link_to('Register', new_user_registration_path, {:class => "btn"}) %>
+	<% end %>
+	
+    <!--
+    <% if user_signed_in? %>
+	    <li><%= link_to(current_user.email, home_dashboard_path, {:class => "navbar-link"}) %></li>
+	<% else %>
+	    <li><%= link_to('Register', new_user_registration_path, {:class => "navbar-link"}) %></li>
+	<% end %>
+    	
+    <% @user = User.new %>
+    <%= form_for(@user, :url => user_session_path, :class => "navbar-form pull-right") do |f| %>
+	  <div><%= f.label :email %><br />
+	  <%= f.email_field :email, {:class => "span2"} %></div>
+	
+	  <div><%= f.label :password %><br />
+	  <%= f.password_field :password, {:class => "span2"} %></div>
+
+  	  <div><%= f.submit "Sign in", {:class => "btn"} %></div>
+	<% end %>
+	
+	            <form class="navbar-form pull-right">
+              <input class="span2" type="text" placeholder="Email">
+              <input class="span2" type="password" placeholder="Password">
+              <button type="submit" class="btn">Sign in</button>
+            </form>
+   -->
 <% end %>
