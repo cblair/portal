@@ -18,11 +18,21 @@ group :assets do
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
   #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-  gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
+  #gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
   gem 'jquery-ui-rails'
+  
+  gem 'less'
+  gem 'less-rails'
+  gem 'therubyracer', '0.9.9'
+  gem 'libv8', '~> 3.3.10'
+  
+  gem 'twitter-bootstrap-rails'
 end
 
 gem 'jquery-rails'
+gem 'jquery-fileupload-rails'
+#this requires the command:
+# rails g bootstrap:install
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -41,7 +51,7 @@ if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
   gem 'ruby-debug19', :require => false
   gem 'ruby-debug-base19', :git => 'https://github.com/tribune/ruby-debug-base19.git', :require => false
   gem 'linecache19', :git => 'git@github.com:chuckg/linecache19.git', :branch => "0_5_13/dependencies", :require => false
-  gem 'rack-mini-profiler'
+  #gem 'rack-mini-profiler'
 else
   #Ubuntu 11.10 likes this. ?
   gem 'ruby-debug', :platforms => :ruby_18

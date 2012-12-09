@@ -1,6 +1,5 @@
-
-<% if user_signed_in? %>
-    <li><%= link_to(current_user.email, home_dashboard_path) %></li>
-<% else %>
-    <li><%= link_to('Register', new_user_registration_path) %></li>
-<% end %>
+	<% if user_signed_in? %>
+	    <%= link_to(current_user.email, home_dashboard_path, {:class => "navbar-link"}) %>
+	<% else %>
+	    <%= link_to('Register', new_user_registration_path, {:class => "navbar-link"}) %>
+	<% end %>

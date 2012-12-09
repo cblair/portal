@@ -23,6 +23,7 @@ Portal::Application.routes.draw do
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
   match '/DataIO/csv_export/:id'  =>  "DataIO#csv_export", :as => :csv_export, :formats => 'csv'
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/DataIO/jsu_index'  =>  "DataIO#jsu_index", :as => :jsu_csv_import
   
   match '/visualizations' => 'viz#index', :as => 'visualizations'
   match '/chart/:id' => 'viz#chart', :as => 'chart'

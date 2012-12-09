@@ -86,7 +86,9 @@ module DocumentsHelper
 
     #get the column names
     colnames=[]
-    if params[:dump][:contains_header] == "1"
+    #TODO
+    #if params[:dump][:contains_header] == "1"
+    if false
       colnames = @parsed_file.first() #gets the next row, increments the iterator
     else
       colnames = [1]
