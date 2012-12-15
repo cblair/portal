@@ -108,7 +108,6 @@ module DocumentsHelper
         for j in (0..row.count-1)
           metadata_col_hash[ colnames[j] ] = row[j]
         end
-        debugger
         metadata_columns << metadata_col_hash 
       end
     end
@@ -360,8 +359,8 @@ module DocumentsHelper
       retval = true
     end
     
-    if current_user.documents.include?(col_or_doc)
-      retval = true
+    if current_user != nil and current_user.documents != nil and current_user.documents.include?(col_or_doc)
+        retval = true
     end
     
     return retval

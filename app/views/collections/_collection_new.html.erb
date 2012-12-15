@@ -5,6 +5,7 @@
 	    	<!--<%= link_to collection.name, edit_collection_path(collection) %>-->
 	    	<%= link_to 'Destroy', collection, confirm: 'Are you sure?', method: :delete %>
 	    	<%= link_to 'Unvalidated', "#", {:class => "label label-primary"}%>
+	    	<%= link_to 'Zip', "#", {:class => "label label-info"}%>
 	    </li>
     <% end %>
     
@@ -16,6 +17,8 @@
 	    			<!--<%= link_to doc.name, edit_document_path(doc) %>-->
 	    			<%= link_to 'Destroy', doc, confirm: 'Are you sure?', method: :delete %>
 			    	<%= link_to 'Unvalidated', "#", {:class => "label label-primary"}%>
+			    	<%= link_to 'Zip', csv_export_path(doc, :format => 'csv'), {:class => "label label-info"} %>
+			    	
 				</li>
 			</ul>
 		<% end %>

@@ -1,6 +1,7 @@
 class DataIOController < ApplicationController
   require 'csv'
   require 'spawn'
+  require 'zip/zip'
   include DocumentsHelper
   include IfiltersHelper
 
@@ -70,19 +71,40 @@ class DataIOController < ApplicationController
       @headings = document.stuffing_data.first.keys
 
       csv_data = CSV.generate do |csv|
-          csv << @headings
+          #Metadata
+          document.stuffing_metadata.each do |row|
+            csv << row.values
+          end
+          
+          #Data headings
+          #if there is only one column names "1", its the default column for
+          # a unfiltered document. Ignore the column
+          if !(@headings.length == 1 and @headings[0] == "1")
+            csv << @headings
+          end
+          
+          #Data
           document.stuffing_data.each do |row|
               csv << row.values
           end
       end
-      puts csv_data
 
-      send_data csv_data, :filename => "#{document.name}",
-          :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment" 
+      temp_doc = Tempfile.new(document.name)
+      temp_doc.write(csv_data)
+      temp_doc.rewind #rewind data for zip reading?
 
+      zip_fname = "hatch_data_io"
+      temp_zip = Tempfile.new(zip_fname)
+      Zip::ZipOutputStream.open(temp_zip.path) do |z|
+        z.put_next_entry(document.name)
+        z.print IO.read(temp_doc.path)
+      end
       
-
+      send_file temp_zip.path,  :type => 'application/zip',
+                                :disposition => 'attachment',
+                                :filename => zip_fname
+      temp_zip.close
+      temp_doc.close
   end
 
 
