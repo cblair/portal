@@ -3,7 +3,7 @@ jQuery(function($) {
 	var is_none_collection = (collection_selected == "(none)");
 
 	if(is_none_collection != true) {
-		$('tr#collection_text').hide();
+		$('select#collection_text').hide();
 	}
 	
 	$('input#collection_id select').change(function(){

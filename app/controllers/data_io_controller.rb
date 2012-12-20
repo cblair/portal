@@ -2,6 +2,7 @@ class DataIOController < ApplicationController
   require 'csv'
   require 'spawn'
   require 'zip/zip'
+  require 'tmpdir'
   include DocumentsHelper
   include IfiltersHelper
 
@@ -64,12 +65,15 @@ class DataIOController < ApplicationController
 
     #redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
-
-  def csv_export
-
-      document = Document.find(params[:id])
+  
+  #TODO: put in helpers
+  #Populate doc list hash with temp doc objects
+  # returns a hash of {doc_name => temp_doc Tempfile}
+  def pop_temp_docs_list(doc_list)
+    doc_list.each do |key, val|
+      document = key
       @headings = document.stuffing_data.first.keys
-
+  
       csv_data = CSV.generate do |csv|
           #Metadata
           document.stuffing_metadata.each do |row|
@@ -77,8 +81,8 @@ class DataIOController < ApplicationController
           end
           
           #Data headings
-          #if there is only one column names "1", its the default column for
-          # a unfiltered document. Ignore the column
+          # if there is only one column named "1", its the default column for
+          # a unfiltered document. Ignore the column.
           if !(@headings.length == 1 and @headings[0] == "1")
             csv << @headings
           end
@@ -88,24 +92,75 @@ class DataIOController < ApplicationController
               csv << row.values
           end
       end
-
+  
       temp_doc = Tempfile.new(document.name)
       temp_doc.write(csv_data)
       temp_doc.rewind #rewind data for zip reading?
-
-      zip_fname = "hatch_data_io"
-      temp_zip = Tempfile.new(zip_fname)
-      Zip::ZipOutputStream.open(temp_zip.path) do |z|
-        z.put_next_entry(document.name)
-        z.print IO.read(temp_doc.path)
-      end
       
-      send_file temp_zip.path,  :type => 'application/zip',
-                                :disposition => 'attachment',
-                                :filename => zip_fname
-      temp_zip.close
-      temp_doc.close
+      doc_list[key] = temp_doc
+    end #end for i in doc_list
+  
+    return doc_list
   end
 
+  def csv_export
+    #Export scaffold type - Collection or Document
+    stype = params[:stype]
 
+    #Create zip
+    zip_fname = "hatch_data_io"
+    temp_zip = Tempfile.new(zip_fname)
+    
+    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+      parent_dir_path = ''
+      
+      #Get doc_list
+      if stype == "Document"
+        document = Document.find(params[:id])
+        doc_list = {document => nil}
+        zip_doc_list([], zipfile, doc_list)
+      elsif stype == "Collection"
+        collection = Collection.find(params[:id])
+        doc_list = {}
+        collection.documents.each do |key|
+          doc_list[key] = nil
+        end
+        recursive_collection_zip([], zipfile, collection)
+        
+      #TODO: else error  
+      end
+    end
+          
+    #Send the zip back, and cleanup
+    send_file temp_zip.path,  :type => 'application/zip',
+                              :disposition => 'attachment',
+                              :filename => zip_fname
+    temp_zip.close
+  end
+
+  
+  def zip_doc_list(parent_dirs, zipfile, doc_list)
+    doc_list = pop_temp_docs_list(doc_list)
+      
+    #docs for current dir
+    doc_list.each do |doc, temp_doc|
+      zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
+      zipfile.print IO.read(temp_doc.path)
+      temp_doc.close
+    end
+  end
+
+  
+  def recursive_collection_zip(parent_dirs, zipfile, collection)
+    doc_list = {}
+    collection.documents.each do |key|
+      doc_list[key] = nil
+    end
+    zip_doc_list(parent_dirs << collection.name, zipfile, doc_list)
+    
+    collection.collections.each do |sub_collection|
+      recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
+                              sub_collection)
+    end
+  end
 end

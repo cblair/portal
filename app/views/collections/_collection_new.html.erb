@@ -3,9 +3,18 @@
 	    <li>
 	    	<%= link_to collection.name, collection %>
 	    	<!--<%= link_to collection.name, edit_collection_path(collection) %>-->
-	    	<%= link_to 'Destroy', collection, confirm: 'Are you sure?', method: :delete %>
-	    	<%= link_to 'Unvalidated', "#", {:class => "label label-primary"}%>
-	    	<%= link_to 'Zip', "#", {:class => "label label-info"}%>
+	    	<a class="label label-inverse" href="<%= edit_collection_path(collection) %>">
+    			<span class="icon-save icon-white"></span>
+  			</a>
+	    	<%= link_to 'X', collection, confirm: 'Are you sure?', method: :delete,
+	    				class: "label label-important" %>
+	    	<a class="label label-warning" href="#">
+    			<span class="icon-check-empty icon-white"></span>
+  			</a>
+  			<a class="label label-info" href="<%= csv_export_path(collection, :format => 'zip', :stype => 'Collection') %>">
+    			<span class="icon-download icon-white"></span>
+    			zip
+  			</a>
 	    </li>
     <% end %>
     
@@ -15,10 +24,18 @@
 				<li class="span4">
 					<%= link_to doc.name, doc %>
 	    			<!--<%= link_to doc.name, edit_document_path(doc) %>-->
-	    			<%= link_to 'Destroy', doc, confirm: 'Are you sure?', method: :delete %>
-			    	<%= link_to 'Unvalidated', "#", {:class => "label label-primary"}%>
-			    	<%= link_to 'Zip', csv_export_path(doc, :format => 'csv'), {:class => "label label-info"} %>
-			    	
+	    			<a class="label label-inverse" href="<%= edit_document_path(doc) %>">
+    					<span class="icon-save icon-white"></span>
+  					</a>
+	    			<%= link_to 'X', doc, confirm: 'Are you sure?', method: :delete, 
+	    				class: "label label-important" %>
+			    	<a class="label label-warning" href="#">
+    					<span class="icon-check-empty icon-white"></span>
+  					</a>
+		  			<a class="label label-info" href="<%= csv_export_path(collection, :format => 'zip', :stype => 'Document') %>">
+    					<span class="icon-download icon-white"></span>
+		    			zip
+		  			</a>
 				</li>
 			</ul>
 		<% end %>
