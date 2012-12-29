@@ -24,9 +24,7 @@
         </button>
         <input type="checkbox" class="toggle">
         <%= select("post", "collection_id", Collection.where(:user_id => current_user.id).collect {|c| [ c.name, c.id ] }, {:prompt => '(select a collection)'}) %>
-        <%= text_field "collection_text", "post" %>
-        <%= select("post", "ifilter_id", Ifilter.all.collect {|ifilter| [ ifilter.name, ifilter.id ] }, {:prompt => '(select a filter)'}) %>
- 		<%= link_to "Filters...", ifilters_path %> 		
+        <%= text_field "collection_text", "post" %>		
       </div>
       <div class="span5">
         <!-- The global progress bar -->

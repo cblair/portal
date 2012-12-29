@@ -83,66 +83,17 @@ module DocumentsHelper
     rescue
       return #unsupported file type
     end
-
-    #get the column names
-    colnames=[]
-    #TODO
-    #if params[:dump][:contains_header] == "1"
-    if false
-      colnames = @parsed_file.first() #gets the next row, increments the iterator
-    else
-      colnames = [1]
-    end
     
     #get filtered headers, put them in metadata
-    metadata_columns=[]
-    if f != nil
-      get_ifilter_headers(f).each do |h|
-        metadata_col_hash = {}
+    metadata_columns = filter_metadata_columns(f, @parsed_file)
         
-        row = @parsed_file.first() #gets the next row, increments the iterator
-        row = get_ifiltered_header(h, row)
-        
-        colnames = get_ifiltered_colnames(row)
-        
-        for j in (0..row.count-1)
-          metadata_col_hash[ colnames[j] ] = row[j]
-        end
-        metadata_columns << metadata_col_hash 
-      end
-    end
-        
-    data_columns=[]
-    i = 0
-    @parsed_file.each do |row|
-      data_col_hash = {}
-      
-      #apply input filters
-      if f != nil        
-       #overwrite row with filtered row
-       row = get_ifiltered_row(f, row)
-       #overwrite col names with numbered colnames
-       
-       colnames = get_ifiltered_colnames(row)
-      end
-      
-      for j in (0..row.count-1)
-        data_col_hash[ colnames[j] ] = row[j]
-      end
-      
-      #data_columns[i] = data_col_hash
-      #i = i + 1
-      data_columns << data_col_hash  
-    end
+    data_columns= filter_data_columns(f,@parsed_file)
     
     etime = Time.now()
     
     logger.info "Filtered document #{fname} in #{etime - stime} seconds."
     
     stime = Time.now()
-    
-    #Remove empty elements
-    data_columns.reject! { |item| item.empty? }
     
     #Transform all values to native ruby types
     #TODO: optimize before enabling
@@ -172,7 +123,7 @@ module DocumentsHelper
     
     logger.info "Saved document #{fname} in #{etime - stime} seconds."
   end
-
+  
 
   def get_data_colnames(d)
     if d.empty?
@@ -180,6 +131,95 @@ module DocumentsHelper
     end
     return d.first().keys()
   end
+  
+  
+  def filter_metadata_columns(f, iterator)
+    metadata_columns = []
+    if f != nil and iterator != nil
+      i = 0
+      get_ifilter_headers(f).each do |h|
+        metadata_col_hash = {}
+        
+        begin
+          row = iterator[i]
+        rescue
+          row = []
+          logger.info "WARNING: filter_metadata_columns() is parsing empty data"
+        end
+        
+        #if row is a hash (i.e. from a Couchdb doc and not a Tempfile),
+        # join it back into one string
+        if row.is_a? Hash
+          row = row.map {|k,v| v}.join
+        end
+        
+        row = get_ifiltered_header(h, row)
+        
+        colnames = get_ifiltered_colnames(row)
+        
+        for j in (0..row.count-1)
+          metadata_col_hash[ colnames[j] ] = row[j]
+        end
+        
+        metadata_columns << metadata_col_hash
+        i = i + 1 
+      end
+    else
+      metadata_columns = []
+    end
+    
+    return metadata_columns
+  end
+  
+  
+  def filter_data_columns(f, iterator)
+    if iterator == nil
+      return []
+    end
+    
+    #get the column names
+    colnames=[]
+    #TODO
+    #if params[:dump][:contains_header] == "1"
+    if false
+      colnames = iterator.first() #gets the next row, increments the iterator
+    else
+      colnames = [1]
+    end
+    
+    data_columns=[]
+    i = 0
+    iterator.each do |row|
+      data_col_hash = {}
+      
+      #apply input filters
+      if f != nil
+       #if row is a hash (i.e. from a Couchdb doc and not a Tempfile),
+       # join it back into an Array
+       if row.is_a? Hash
+        row = row.map {|k,v| v}
+       end
+        
+       #overwrite row with filtered row
+       row = get_ifiltered_row(f, row)
+       #overwrite col names with numbered colnames
+       
+       colnames = get_ifiltered_colnames(row)
+      end
+      
+      for j in (0..row.count-1)
+        data_col_hash[ colnames[j] ] = row[j]
+      end
+      
+      #data_columns[i] = data_col_hash
+      #i = i + 1
+      data_columns << data_col_hash  
+    end
+    
+    data_columns = data_columns.reject! { |item| item.empty? }
+    return data_columns
+  end
+  
   
   #Converts row value strings to native data type if possible
   #TODO: probably needs to be values in record that user can update
@@ -283,6 +323,7 @@ module DocumentsHelper
     return data_columns
   end
   
+  
   def document_search_data(search)
     #view
     retval = []
@@ -364,5 +405,126 @@ module DocumentsHelper
     end
     
     return retval
+  end
+  
+  
+  #Populate doc list hash with temp doc objects
+  # returns a hash of {doc_name => temp_doc Tempfile}
+  def pop_temp_docs_list(doc_list)
+    doc_list.each do |key, val|
+      document = key
+      @headings = document.stuffing_data.first.keys
+  
+      csv_data = CSV.generate do |csv|
+          #Metadata
+          document.stuffing_metadata.each do |row|
+            csv << row.values
+          end
+          
+          #Data headings
+          # if there is only one column named "1", its the default column for
+          # a unfiltered document. Ignore the column.
+          if !(@headings.length == 1 and @headings[0] == "1")
+            csv << @headings
+          end
+          
+          #Data
+          document.stuffing_data.each do |row|
+              csv << row.values
+          end
+      end
+  
+      temp_doc = Tempfile.new(document.name)
+      temp_doc.write(csv_data)
+      temp_doc.rewind #rewind data for zip reading?
+      
+      doc_list[key] = temp_doc
+    end #end for i in doc_list
+  
+    return doc_list
+  end
+  
+  
+  def zip_doc_list(parent_dirs, zipfile, doc_list)
+    doc_list = pop_temp_docs_list(doc_list)
+      
+    #docs for current dir
+    doc_list.each do |doc, temp_doc|
+      zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
+      zipfile.print IO.read(temp_doc.path)
+      temp_doc.close
+    end
+  end
+
+  
+  def recursive_collection_zip(parent_dirs, zipfile, collection)
+    doc_list = {}
+    collection.documents.each do |key|
+      doc_list[key] = nil
+    end
+    
+    collection_name = collection.name
+    #if collection name is blank, we need some other name
+    if collection_name == ""
+      collection_name = "(blank)"
+    end
+    
+    zip_doc_list(parent_dirs << collection_name, zipfile, doc_list)
+    
+    collection.collections.each do |sub_collection|
+      recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
+                              sub_collection)
+    end
+  end
+  
+  
+  def validate_document_helper(document, ifilter=nil)
+    #Try to filter until successful or 
+    # either successfully filtered or are out of filters
+    validation_finished = false
+    suc_valid = false
+    
+    if ifilter == nil
+      ifilters = Ifilter.all
+      ifilters_count = ifilters.count
+    else
+      ifilters = [ifilter]
+      ifilters_count = 1
+    end
+
+    #filter index
+    i = 0
+    while validation_finished == false
+      #copy these so filter attempts don't overwrite the original data
+      stuffing_metadata = document.stuffing_metadata
+      stuffing_data = document.stuffing_data
+      
+      f = ifilters[i]
+      
+      #Attempt filter
+      stuffing_metadata = filter_metadata_columns(f, stuffing_data)
+      stuffing_data = filter_data_columns(f, stuffing_data)
+
+      #Check if filter was successfu=l
+      if stuffing_data != nil and not stuffing_data.empty?
+        if  (f.stuffing_headers != nil \
+             and stuffing_metadata.count == f.stuffing_headers.count)\
+            or \
+            (f.stuffing_headers == nil and stuffing_metadata.empty?)
+          validation_finished = true
+          document.stuffing_metadata = stuffing_metadata
+          document.stuffing_data = stuffing_data
+          document.validated = true
+          suc_valid = document.save
+        end
+      end
+      
+      i = i + 1
+      if i >= (ifilters_count)
+        validation_finished = true
+      end
+    end
+    
+    return suc_valid
   end
 end

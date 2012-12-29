@@ -73,12 +73,11 @@ class UploadsController < ApplicationController
     fname=params[:upload][:upfile].original_filename
     
     #filter
-    filter_id=params[:post][:ifilter_id]
     f=nil
-    if filter_id != ""
-      f=Ifilter.find(filter_id)
+    if params[:post].include?("ifilter_id")
+      f=Ifilter.find(params[:post][:ifilter_id])
     end
-    
+
     #upload = Upload.create(:name => fname, :upfile => params[:dump][:file])
     
     #spawn_block do

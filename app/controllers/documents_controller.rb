@@ -125,6 +125,11 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @document = Document.find(params[:id])
+    
+    if params.include?("post") and params[:post].include?("ifilter_id")
+      f = Ifilter.find(params[:post][:ifilter_id])
+      validate_document_helper(@document, f)
+    end    
 
     user = User.where(:id => params[:new_user_id]).first
    

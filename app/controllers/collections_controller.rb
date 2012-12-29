@@ -63,6 +63,11 @@ class CollectionsController < ApplicationController
   # PUT /collections/1.json
   def update
     @collection = Collection.find(params[:id])
+    
+    if params.include?("post") and params[:post].include?("ifilter_id")
+      f = Ifilter.find(params[:post][:ifilter_id])
+      validate_collection_helper(@collection, f)
+    end
 
     respond_to do |format|
       if @collection.update_attributes(params[:collection])
@@ -95,6 +100,44 @@ class CollectionsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to collections_url }
       format.json { head :ok }
+    end
+  end
+  
+  
+  # 
+  def validate_collection
+    @collection = Collection.find(params[:id])
+    
+    suc_valid = validate_collection_helper(@collection)
+    
+    respond_to do |format|
+      if suc_valid
+        format.html { redirect_to @collection, notice: 'Collection successfully validated.' }
+        format.json { head :ok }
+      else
+        flash[:error] = 'Collection FAILED to validate.'
+        format.html { redirect_to @collection }
+        format.json { render json: @collection.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
+  
+  # 
+  def validate_doc
+    @document = Document.find(params[:id])
+    
+    suc_valid = validate_document_helper(@document)
+    
+    respond_to do |format|
+      if suc_valid
+        format.html { redirect_to @document, notice: 'Document successfully validated.' }
+        format.json { head :ok }
+      else
+        flash[:error] = 'Document FAILED to validate.'
+        format.html { redirect_to @document }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
     end
   end
 end
