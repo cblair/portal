@@ -46,4 +46,16 @@ module CollectionsHelper
     
     return suc_valid
   end
+    
+  #recursively sets all (sub) documents 
+  def set_pub_priv_collection_helper(collection, public)
+    collection.documents.each do |doc|
+      doc.public = public
+      doc.save
+    end
+    
+    collection.collections.each do |sub_collection|
+      set_pub_priv_collection_helper(sub_collection, public)
+    end
+  end
 end

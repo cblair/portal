@@ -400,8 +400,13 @@ module DocumentsHelper
       retval = true
     end
     
+    #if the user is a collaborator
     if current_user != nil and current_user.documents != nil and current_user.documents.include?(col_or_doc)
-        retval = true
+      retval = true
+    end
+    
+    if col_or_doc.is_a? Document and col_or_doc.public
+      retval = true
     end
     
     return retval

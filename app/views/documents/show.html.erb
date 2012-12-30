@@ -16,6 +16,19 @@
 		<% end %>
 	</p>
 	
+	<p>
+		<% if @document.public %>
+			<a class="label label-important" href="<%= pub_priv_doc_path(@document, :public => "false") %>">
+				<i class="icon-eye-open icon-white"></i>
+				public
+		<% else %>
+			<a class="label label-default" href="<%= pub_priv_doc_path(@document, :public => "true") %>">
+				<i class="icon-eye-close icon-white"></i>
+				private
+		<% end %>
+		</a>
+	</p>
+	
 	<hr/>
 	
 	<h2>Metadata</h2>
@@ -68,9 +81,13 @@
 					<td><!--place holder for axis labels--></td>
 					<% row.values.each do |val|%>
 					<td>
+						<!--TODO: re-implement with search-->
+						<!--
 						<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
 		    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
 		    			<% end %>
+		    			-->
+		    			<%= val %>
 					</td>
 					<% end %>
 				</tr>

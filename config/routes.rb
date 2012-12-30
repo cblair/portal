@@ -31,8 +31,12 @@ Portal::Application.routes.draw do
   match '/chart' => 'viz#chart', :as => 'visualize'
   match '/DataIO/index'  =>  "DataIO#index", :as => :data_io_index
   
+  #TODO: to document_controller
   match '/collections/validate_doc/:id' =>  "Collections#validate_doc", :as => :validate_doc
   match '/collections/validate_collection/:id' =>  "Collections#validate_collection", :as => :validate_collection
+  
+  match '/documents/pub_priv_doc/:id' =>  "Documents#pub_priv_doc", :as => :pub_priv_doc
+  match '/collections/pub_priv_collection/:id' =>  "Collections#pub_priv_collection", :as => :pub_priv_collection
   
   match '/visualize' => 'viz#chart', :as => 'visualize'
 

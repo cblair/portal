@@ -5,11 +5,36 @@ class DocumentsController < ApplicationController
     
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
+  before_filter :require_permissions
+  
+  
+  def require_permissions
+    if params.include?("id")
+      document = Document.find(params[:id])
+      
+      if not doc_is_viewable(document)
+        flash[:error] = "Document not found, or you do not have view permissions."
+        redirect_to collections_path
+      end
+    end
+  end
   
   
   # GET /documents
   # GET /documents.json
   def index
+    @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
+    
+    redirect_to collections_path
+    #respond_to do |format|
+    #  format.html # index.html.erb
+    #  format.json { render json: @documents }
+    #end
+  end
+  
+  #TODO: re-implement with search
+  def index_search
+    return
     #Search for data if search comes in
     if params[:search] != nil
       #Delete any temp search docs so we don't search them too 
@@ -224,6 +249,29 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to @document }
       format.json { render json: @document.stuffing_data }
+    end
+  end
+  
+  
+  def pub_priv_doc
+    @document = Document.find(params[:id])
+    
+    if params.include?("public")
+      if params[:public] == "true"
+        @document.public = true
+      else
+        @document.public = false
+      end
+    end
+
+    respond_to do |format|
+      if @document.save
+        format.html { redirect_to @document, notice: 'Document permissions were successfully changed.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
     end
   end
 end

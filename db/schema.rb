@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121223162056) do
+ActiveRecord::Schema.define(:version => 20121229201609) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(:version => 20121223162056) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.boolean  "validated"
+    t.boolean  "public"
   end
 
   create_table "documents_users", :id => false, :force => true do |t|
