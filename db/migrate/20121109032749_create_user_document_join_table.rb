@@ -1,4 +1,4 @@
-class CreateDocumentUserJoinTable < ActiveRecord::Migration
+class CreateUserDocumentJoinTable < ActiveRecord::Migration
   def change
     create_table :users_documents, :id => false do |t|
       t.integer :user_id
