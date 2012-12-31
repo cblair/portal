@@ -26,13 +26,12 @@ group :assets do
   gem 'less-rails'
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
-  
-  gem 'twitter-bootstrap-rails'
 end
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-fileupload-rails'
+gem 'twitter-bootstrap-rails'
 
 #this requires the command:
 # rails g bootstrap:install
