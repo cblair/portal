@@ -31,7 +31,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
-#gem 'jquery-ui-rails'
+gem 'jquery-ui-rails'
 #gem 'jquery-fileupload-rails'
 
 #this requires the command:
