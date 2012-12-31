@@ -1,5 +1,20 @@
 <h1>New collection</h1>
 
-<%= render 'form' %>
+
+<%= form_for :collection, :url => { :action => "create" }, :html => {:class => "collection"} do |f| %>
+<table>
+<tr>
+	<td>Name:</td>
+	<td><%= f.text_field :name %></td>
+</tr>
+<tr>
+	<td>Parent:</td>
+	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }) %></td>
+</tr>
+<tr>
+	<td><%= f.submit %></td>
+</tr>
+</table>
+<% end %>
 
 <%= link_to 'Back', collections_path %>

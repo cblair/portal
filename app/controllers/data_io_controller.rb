@@ -1,5 +1,8 @@
 class DataIOController < ApplicationController
   require 'csv'
+  require 'spawn'
+  require 'zip/zip'
+  require 'tmpdir'
   include DocumentsHelper
   include IfiltersHelper
 
@@ -10,114 +13,92 @@ class DataIOController < ApplicationController
   end
   
   def csv_import
-    fname=params[:dump][:file].original_filename
-    #fname=params[:files].first()
-    filter_id=params[:post][:ifilter_id]
+    #start recording run time
+    stime = Time.now() #start time
     
+    #Collection - find / create
+    c_text = params[:dump][:collection_text]
+    if c_text == nil
+      #take the collection from the select menu
+      c=Collection.find(params[:dump][:collection_id])
+    else
+      #create a new collection at the root
+      c=Collection.new
+      c.name = c_text
+    end
+
+    #User
+    c.user = current_user
+    c.save
+    
+    #File stuff
+    fname=params[:dump][:file].original_filename
+    
+    #filter
+    filter_id=params[:post][:ifilter_id]
     f=nil
     if filter_id != ""
       f=Ifilter.find(filter_id)
     end
     
-    #start recording run time
-    stime = Time.now() #start time
+    upload = Upload.create(:name => fname, :upfile => params[:dump][:file])
     
-    #TODO: if filter specified, don't try CSV
-    #CSV import. Each call on @parsed_file.<method> incremenst the cursor
-    if CSV.const_defined? :Reader
-        #@parsed_file=CSV::Reader.parse(params[:dump][:file])
-        @parsed_file=CSV::Reader.parse(fname)
-    else
-        @parsed_file=CSV::CSV.open(params[:dump][:file].tempfile)
-        #@parsed_file=CSV::CSV.open(fname.tempfile)
-    end
-    
-    #Get the column name
-    colnames=[]
-    if params[:dump][:contains_header] == "1"
-      colnames = @parsed_file.first()
-    else
-      colnames = [1]
+    spawn_block do
+      #Parse file into db
+      if upload.upfile.content_type == "application/zip"
+        #save_zip_to_documents(fname, uploaded_file, c, f)
+        save_zip_to_documents(fname, upload, c, f)
+      else #hopefully is something like a "text/plain"
+        #save_file_to_document(fname, uploaded_file.tempfile, c, f)
+        save_file_to_document(fname, upload.upfile.path, c, f) 
+      end
     end
 
-    #Save collection
-    #if params.has_key?("collection_text")
-    #  c=Collection.find_or_create_by_name(params[:collection_text])
-    #else
-    #  c=Collection.find(params["collection_id"])
-    #end
-    c=Collection.find(fname)
-    c.users_id = current_user.id
-    c.save
-    
-    data_columns=[]
-    i = 0
-    @parsed_file.each do |row|
-      data_col_hash = {}
-      
-      #apply input filter
-      if f != nil
-       #overwrite row with filtered row
-       row = get_filtered_row(f, row)
-       #overwrite col names with numbered colnames
-       
-       colnames = get_filtered_colnames(row)
-      end
-      
-      for j in (0..row.count-1)
-        data_col_hash[ colnames[j] ] = row[j]
-      end
-      
-      data_columns[i] = data_col_hash
-      i = i + 1  
-    end
-    
-    #Remove empty elements
-    data_columns.reject! { |item| item.empty? }
-    
-    #Transform all values to native ruby types
-    data_columns=convert_data_to_native_types(data_columns)
-    
-    #Save Document
-    #TODO: bug, 'create' is not working now, makes all values nill. Going to 'new'. ?
-    #d=Document.create(  :name => fname,
-    #                    :collection => c,
-    #                    :stuffing_data => data_columns
-    #                  )
-    @document=Document.new
-    @document.name=fname
-    @document.collection=c
-    @document.stuffing_data=data_columns
-    @document.save
-    
     etime = Time.now() #end time
     ttime = etime - stime #total time
+    
+    #flash[:notice]="Collection '#{c_text}' import successful,  #{@document.stuffing_data.count} new rows added to data base in #{ttime}"
+    flash[:notice]="Files uploaded successfully. "
+    redirect_to :controller => "collections"
 
-    flash[:notice]="CSV Import successful,  #{@document.stuffing_data.count} new rows added to data base in #{ttime}"
+    #flash[:notice] +="Collection '#{c_text}' import successful."
 
-    redirect_to :controller => "documents", :action => "show", :id => @document[:id]
+    #redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
+  
 
   def csv_export
+    #Export scaffold type - Collection or Document
+    stype = params[:stype]
 
-      document = Document.find(params[:id])
-      @headings = document.stuffing_data.first.keys
-
-      csv_data = CSV.generate do |csv|
-          csv << @headings
-          document.stuffing_data.each do |row|
-              csv << row.values
-          end
-      end
-      puts csv_data
-
-      send_data csv_data, :filename => "#{document.name}",
-          :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment" 
-
+    #Create zip
+    zip_fname = "hatch_data_io"
+    temp_zip = Tempfile.new(zip_fname)
+    
+    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+      parent_dir_path = ''
       
-
+      #Get doc_list
+      if stype == "Document"
+        document = Document.find(params[:id])
+        doc_list = {document => nil}
+        zip_doc_list([], zipfile, doc_list)
+      elsif stype == "Collection"
+        collection = Collection.find(params[:id])
+        doc_list = {}
+        collection.documents.each do |key|
+          doc_list[key] = nil
+        end
+        recursive_collection_zip([], zipfile, collection)
+        
+      #TODO: else error  
+      end
+    end
+          
+    #Send the zip back, and cleanup
+    send_file temp_zip.path,  :type => 'application/zip',
+                              :disposition => 'attachment',
+                              :filename => zip_fname
+    temp_zip.close
   end
-
-
 end

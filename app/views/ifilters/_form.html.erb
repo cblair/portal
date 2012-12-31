@@ -10,11 +10,32 @@
       </ul>
     </div>
   <% end %>
+  
+<div class="field">
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</div>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
+<h2>Header Filter</h2>
+<table class="table ifilter-header" data-headers="<%= @ifilter_headers.count %>">
+	<% i = 0 %>
+	<% @ifilter_headers.each do |header| %>
+	<tr>
+		<td>
+			<%= text_field_tag "ifilter_headers[" + header["id"].to_s + "]", 
+				header["val"] , {:id => "ifilter_headers"}%>
+		</td>
+		<td><%= link_to "- Remove", "#", 
+				:class => "btn btn-primary remove-ifilter-header" %></td>
+	</tr>
+	<% i += 1 %>
+	<% end %>
+	<tr>
+		<td><%= link_to "+ Add", "#", :class => "btn btn-success add-ifilter-header" %></td>
+	</tr>
+</table>
+
+<h2>Data Filter</h2>
   <div class="field">
     <%= f.label :regex %><br />
     <%= f.text_field :regex %>

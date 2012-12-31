@@ -4,64 +4,79 @@
   <title>Hatch</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
+  <!--jquery is include with jquery-fileupload, so no need for it here. Doing
+  	both causes neither to load.-->
+  <!--<%= javascript_include_tag 'jquery' %>-->
+  <%= javascript_include_tag 'jquery-fileupload' %>
   <%= csrf_meta_tags %>
+  
+  <script>
+  	//for live_scaffold.js.erb
+	var CONTROLLER_NAME = "<%= params[:controller] %>";
+  </script>
+  
   <%= yield :head %>
 </head>
 <body>
-  <div class="page-header">
-    <h1 class="brand">Hatch</h1>
-    <p></p>
-  <div class="navbar">
-    <div class="navbar-inner">
-      <div class="container" style="width: auto;">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <div class="nav-collapse">
-          <ul class="nav">
+	
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <%= link_to "Hatch", root_path, {:class => "brand", :style => "color: #ffffff"} %>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
             <li><%= link_to "Home", root_path %></li>
-            <li class="divider-vertical"></li>
             <li><%= link_to "Data Import", csv_import_path %></li>
-            <li class="divider-vertical"></li>
-            <li><%= link_to "Search", documents_path %></li>
-            <li class="divider-vertical"></li>
-            <li><%= link_to "Data Explorer", visualizations_path %></li>
-            <li class="divider-vertical"></li>
-            <li><%= link_to "Feeds", feeds_path %></li>
-          </ul>
-          <ul class="nav pull-right">
-              <%= render 'layouts/registration_items' %>
-              <li class="divider-vertical"></li>
-              <%= render 'layouts/login_items' %>
-          </ul>
-        </div><!-- /.nav-collapse -->
-      </div>
-    </div><!-- /navbar-inner -->
-  </div><!-- /navbar -->
+            <li><%= link_to "Data Explorer", collections_path %></li>
+            <!--TODO: someday-->
+            <!--<li><%= link_to "Feeds", feeds_path %></li>-->
+        </ul>
+        <%= render 'layouts/login_items' %>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
 </div>
-<div class="container well" style="background-color: #dfdfdf;">
-    <% if notice || alert %>
-        <%= javascript_include_tag "bootstrap-alert" %>
-    <% end %>
-    <% if notice %>
-    <div id="notice" class="alert alert-info"">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <%= notice %>
-    </div>
-    <% end %>
-    <% if alert %>
-    <div id="alert" class="alert">
-        <a class="close" data-dismiss="alert" href="#">&times;</a>
-        <%= alert %>
-    </div>
-    <% end %>
 
-<div class="well" style="background-color: #f5f5f5;">
-<%= yield %>
+<%
+	#if the couchdb is not running, override alert
+	if !is_couchdb_running?
+		alert = 'Warning: couchdb is not reachable.'
+	end
+%>
+
+<div class="container well" style="background-color: #dfdfdf;">
+	<div class="well" style="background-color: #f5f5f5;">
+		<!--These flash notices are probably the old style, and neeed updated-->
+	    <% if notice || alert %>
+	        <%= javascript_include_tag "bootstrap-alert" %>
+	    <% end %>
+	    <% if notice %>
+	    <div id="notice" class="alert alert-info">
+	        <a class="close" data-dismiss="alert" href="#">&times;</a>
+	        <%= notice %>
+	    </div>
+	    <% end %>
+	    <% if alert %>
+	    <div id="alert" class="alert">
+	        <a class="close" data-dismiss="alert" href="#">&times;</a>
+	        <%= alert %>
+	    </div>
+	    <% end %>
+		<% if flash[:error] %>
+	    <div id="alert" class="alert alert-error">
+	        <a class="close" data-dismiss="alert" href="#">&times;</a>
+	        <%= flash[:error] %>
+	    </div>
+	    <% end %>
+	<%= yield %>
+	</div>
 </div>
-</div>
+
 </body>
 
 </html>

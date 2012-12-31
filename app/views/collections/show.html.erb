@@ -5,6 +5,13 @@
   <%= @collection.name %>
 </p>
 
+<p>
+	<b>Owner:</b>
+	<% if @collection.user %>
+		<%= @collection.user.email %> 
+	<% end %>
+</p>
+
 
 <%= link_to 'Edit', edit_collection_path(@collection) %> |
 <%= link_to 'Back', collections_path %>

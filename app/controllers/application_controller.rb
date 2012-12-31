@@ -1,6 +1,18 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  include CouchdbHelper
+  
+=begin
+  before_filter :miniprofiler
+
+  private
+  
+  def miniprofiler
+    Rack::MiniProfiler.authorize_request # if user.admin?
+  end
+=end
+
   #Profiler for development
   #around_filter :profile if Rails.env == 'development'
 

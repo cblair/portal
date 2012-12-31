@@ -1,6 +1,15 @@
 
 <% if user_signed_in? %>
-    <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+	<ul class="nav pull-right">
+		<li><%= link_to current_user.email, home_dashboard_path %></li>
+    	<li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+    </ul>
 <% else %>
-    <li><%= link_to('Login', new_user_session_path) %></li>
+
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "new_user navbar-form pull-right"} ) do |f| %>
+	  <%= f.email_field :email, {:class => "span2", :placeholder => "Email"} %>	
+	  <%= f.password_field :password, {:class => "span2", :placeholder => "Password"} %>
+	  <%= f.submit "Sign in", {:class => "btn"} %>
+	  <%= link_to('Register', new_user_registration_path, {:class => "btn"}) %>
+	<% end %>
 <% end %>

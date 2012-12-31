@@ -1,0 +1,18 @@
+MAIL
+colby
+*git access to dropbox account
+*time tracking / task tracking tool
+*meta - data - header information
+	** create meta-data record? mostly couch
+*deploy to heroku - s3
+*data io latency
+
+
+shane
+*add github account
+*
+
+
+somebody
+*survey of use cases
+*qa/qc?

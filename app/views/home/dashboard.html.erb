@@ -1,0 +1,49 @@
+<div class="page-header">
+	<h1>Dashboard</h1>
+</div>
+
+<div class="form-horizontal well">
+	<h2>Settings</h2>
+	<%= link_to("Edit my account", edit_user_registration_path) %>
+</div>
+
+<div class="form-horizontal well">
+	<h2>Recent Documents</h2>
+	<table class="table">
+		<% if @owned_docs.empty? %>
+		<tr>
+			<td>(none)</td>
+		</tr>
+		<% end %>
+		
+		<% @owned_docs.each do |document| %>
+		<tr>			
+			<td><%= link_to document.name, document %></td>
+		</tr>
+		<% end %>
+	</table>
+	<p><%= link_to "See all", visualizations_path %></p>
+</div>
+
+<div class="form-horizontal well">
+	<h2>My Collaborations</h2>
+	<table class="table">
+		<% if @colab_docs.empty? %>
+		<tr>
+			<td>(none)</td>
+		</tr>
+		<% end %>
+		
+		<% @colab_docs.each do |document| %>
+		<tr>
+			<% owner_email = "" %>
+			<% if document.user != nil %>
+				<%= owner_email = document.user.email %>
+			<% end %>
+			
+			<td><%= link_to document.name, document %></td>
+			<td><%= owner_email %></td>
+		</tr>
+		<% end %>
+	</table>
+</div>

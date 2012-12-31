@@ -6,15 +6,11 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require twitter/bootstrap
 
-$(function() {
-  $("#documents th a, #documents .pagination a").live("click", function() {
-    $.getScript(this.href);
-    return false;
-  });
-  $("#documents_search").submit(function() {
-    $.get(this.action, this.serialize(), null, "script");
-    return false;
-  });
-});
+//TODO: I don't know why application.js isn't including this, but this following doesn't work
+//= require jquery-fileupload
+
+//= require jquery-ui
+//= require highcharts
+//= require_tree .

@@ -55,5 +55,8 @@ class VizController < ApplicationController
           end
           @tree << {:collection => collection, :documents => documents}
       end
+      
+      @root_collections = Collection.where(:collection_id => nil)
+      redirect_to :controller => 'collections', :action => 'index'
   end
 end

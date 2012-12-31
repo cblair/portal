@@ -15,6 +15,13 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  
+  <div>
+  	<p>Validate...</p>
+  	<%= select("post", "ifilter_id", Ifilter.all.collect {|ifilter| [ ifilter.name, ifilter.id ] }, {:prompt => '(select a filter)'}) %>
+ 	<%= link_to "Filters...", ifilters_path %>
+  </div>
+   
   <div class="actions">
     <%= f.submit %>
   </div>

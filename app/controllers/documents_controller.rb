@@ -5,19 +5,51 @@ class DocumentsController < ApplicationController
     
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
+  before_filter :require_permissions
+  
+  
+  def require_permissions
+    if params.include?("id")
+      document = Document.find(params[:id])
+      
+      if not doc_is_viewable(document)
+        flash[:error] = "Document not found, or you do not have view permissions."
+        redirect_to collections_path
+      end
+    end
+  end
   
   
   # GET /documents
   # GET /documents.json
   def index
+    @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
+    
+    redirect_to collections_path
+    #respond_to do |format|
+    #  format.html # index.html.erb
+    #  format.json { render json: @documents }
+    #end
+  end
+  
+  #TODO: re-implement with search
+  def index_search
+    return
     #Search for data if search comes in
     if params[:search] != nil
-      #start recording run time
-      stime = Time.now() #start time
       #Delete any temp search docs so we don't search them too 
       Document.destroy_all(:name => ENV['temp_search_doc'])
      
+      #start recording run time
+      data_stime = Time.now() #start time
+     
       d = document_search_data_couch(params[:search], params.has_key?("lucky_search"))
+      data_etime = Time.now() #end time
+      data_ttime = data_etime - data_stime #total time
+      
+      #start recording run time
+      doc_stime = Time.now() #start time
+      
       c=Collection.find_or_create_by_name("Recent Searches")
       c.save
       
@@ -27,13 +59,18 @@ class DocumentsController < ApplicationController
       @temp_search_document.stuffing_data = d
       @temp_search_document.stuffing_is_search_doc = TRUE
       @temp_search_document.save
-      
-      etime = Time.now() #end time
-      ttime = etime - stime #total time
     
+#TODO: taking out document searching for now, because it is so slow!  
+=begin      
+      doc_etime = Time.now() #end time
+      doc_ttime = doc_etime - doc_stime #total time
+          
       @documents = Document.search(params[:search]).order(sort_column + " " + sort_direction).paginate(:per_page => 5, :page => params[:page])
 
-      flash[:notice]="Searched data in #{ttime} seconds."
+      flash[:notice]="Searched data in #{data_ttime} seconds, searched document names in #{doc_ttime}."
+=end
+      @documents = []
+      flash[:notice]="Searched data in #{data_ttime} seconds."
     else
         @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
     end
@@ -48,6 +85,18 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
+    
+    @sdata = @document.stuffing_data
+    @msdata = get_document_metadata(@document)
+    
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+    
     chart = Chart.find_by_document_id(@document)
     @chart = chart || Chart.find(newchart({:document_id => @document}))
     respond_to do |format|
@@ -55,6 +104,7 @@ class DocumentsController < ApplicationController
       format.json { render json: @document }
     end
   end
+  
   # GET /documents/new
   # GET /documents/new.json
   def new
@@ -67,8 +117,15 @@ class DocumentsController < ApplicationController
   end
 
   # GET /documents/1/edit
-  def edit
+  def edit    
     @document = Document.find(params[:id])
+    
+    @colab_users = []
+    User.all.each do |user|
+      if user.documents.include?(@document)
+        @colab_users << user
+      end
+    end
   end
 
   # POST /documents
@@ -76,6 +133,7 @@ class DocumentsController < ApplicationController
   def create
     @document = Document.new(params[:document])
     @document.stuffing_data = []
+    @document.user = current_user
 
     respond_to do |format|
       if @document.save
@@ -92,6 +150,28 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @document = Document.find(params[:id])
+    
+    if params.include?("post") and params[:post].include?("ifilter_id")
+      f = Ifilter.find(params[:post][:ifilter_id])
+      validate_document_helper(@document, f)
+    end    
+
+    user = User.where(:id => params[:new_user_id]).first
+   
+    #Add collaborator
+    if user != nil
+      if not user.documents.include?(@document)
+        user.documents << @document
+        user.save
+      end
+    end
+    
+    #Remove collaborators
+    if params[:colab_user_ids]
+      User.find(params[:colab_user_ids]).each do |user|
+        user.documents.delete(@document)
+      end
+    end
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
@@ -124,6 +204,12 @@ class DocumentsController < ApplicationController
                                 :name => "#{d.name}_manip", 
                                 :collection => d.collection,
                                 :stuffing_data => get_data_map(d, colname))
+    
+    @sdata = @document.stuffing_data
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})                            
+    
     chart = Chart.find_by_document_id(@document)
     @chart = chart || Chart.find(newchart({:document_id => @document}))
     
@@ -155,5 +241,37 @@ class DocumentsController < ApplicationController
   
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
+  
+  def filter
+    @document = Document.find(params[:id])
+    
+    respond_to do |format|
+      format.html { redirect_to @document }
+      format.json { render json: @document.stuffing_data }
+    end
+  end
+  
+  
+  def pub_priv_doc
+    @document = Document.find(params[:id])
+    
+    if params.include?("public")
+      if params[:public] == "true"
+        @document.public = true
+      else
+        @document.public = false
+      end
+    end
+
+    respond_to do |format|
+      if @document.save
+        format.html { redirect_to @document, notice: 'Document permissions were successfully changed.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
+    end
   end
 end
