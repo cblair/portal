@@ -22,6 +22,8 @@ group :assets do
   #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
   #gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
   gem 'jquery-ui-rails'
+  gem 'jquery-rails'
+  gem 'jquery-fileupload-rails'
   
   gem 'less'
   gem 'less-rails'
@@ -31,8 +33,6 @@ group :assets do
   gem 'twitter-bootstrap-rails'
 end
 
-gem 'jquery-rails'
-gem 'jquery-fileupload-rails'
 #this requires the command:
 # rails g bootstrap:install
 
