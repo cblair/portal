@@ -31,10 +31,9 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-fileupload-rails'
-gem 'twitter-bootstrap-rails'
-
 #this requires the command:
 # rails g bootstrap:install
+gem 'twitter-bootstrap-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
