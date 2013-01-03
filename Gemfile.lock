@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/cblair/stuffing.git
-  revision: c5beb34289ee878d7e6c637b72092ab6592e91bb
+  revision: 0bdb7f862d6edf9d39c50c9e139c9ca6f348217e
   branch: integration
   specs:
-    stuffing (0.0.1)
+    stuffing (0.0.2)
 
 GIT
   remote: git://github.com/rfc2822/spawn
@@ -78,7 +78,7 @@ GEM
     jquery-ui-rails (3.0.0)
       jquery-rails
       railties (>= 3.1.0)
-    json (1.7.5)
+    json (1.7.6)
     lazy_high_charts (1.3.2)
       bundler (~> 1.0)
       hash-deep-merge
