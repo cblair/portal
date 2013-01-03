@@ -16,6 +16,8 @@ module CouchdbHelper
       
       conn_str += "#{host}:#{port}/"
       
+      logger.info "Using couchdb: #{conn_str}"
+      
       CouchRest.get conn_str
       return true
     rescue
