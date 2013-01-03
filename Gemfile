@@ -5,7 +5,6 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-#gem 'sqlite3', '>= 1.3.1', :require => 'sqlite3'
 gem 'pg'
 
 gem 'json'
@@ -19,9 +18,6 @@ group :assets do
   #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-  #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-  #gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
-  
   gem 'less'
   gem 'less-rails'
   gem 'therubyracer', '0.9.9'
@@ -59,13 +55,9 @@ else
   #gem 'ruby-debug19', :platforms => :ruby_19
 end
 
-#gem 'lazy_high_charts', '~> 1.1.5'
 gem 'lazy_high_charts'
 
 gem 'couchrest'
-#also, you will need to run this afterward... don't know if it is in a gem yet
-#TODO: make a script I guess
-#rails plugin install git://github.com/cblair/stuffing.git
 gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"
 
 gem 'devise', '~> 2'
