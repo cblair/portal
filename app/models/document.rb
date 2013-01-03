@@ -7,7 +7,7 @@ class Document < ActiveRecord::Base
   #has_and_belongs_to_many :users  #collaborators
   belongs_to :user                #owner
   has_many :charts, :dependent => :destroy
-  stuffing :host => '192.168.1.145', :username => 'cblair', :password => 'Aba-Gal#'
+  stuffing :host => '192.168.1.145', :username => 'cblair3', :password => 'SHIhel7'
     
   #Search for document names
   def self.search(search)
