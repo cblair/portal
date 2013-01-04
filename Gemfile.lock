@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/cblair/stuffing.git
-  revision: 0bdb7f862d6edf9d39c50c9e139c9ca6f348217e
+  revision: b7da3b8858a3d0e77b9f682b44340441d624611b
   branch: integration
   specs:
-    stuffing (0.0.2)
+    stuffing (0.0.3)
 
 GIT
   remote: git://github.com/rfc2822/spawn
