@@ -3,5 +3,9 @@ class Ifilter < ActiveRecord::Base
   
   attr_accessible :name, :regex, :stuffing_headers
   
-  stuffing :host => '192.168.1.145', :username => 'cblair', :password => 'Aba-Gal#'
+  stuffing  :host     => ENV['COUCHDB_HOST'], 
+            :port     => ENV['COUCHDB_PORT'],
+            :username => ENV['COUCHDB_USERNAME'],
+            :password => ENV['COUCHDB_PASSWORD'],
+            :https    => ENV['COUCHDB_HTTPS'] == 'true'
 end
