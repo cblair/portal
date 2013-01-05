@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/cblair/stuffing.git
-  revision: b7da3b8858a3d0e77b9f682b44340441d624611b
+  revision: 7fdbf24bd0fdebfdce93ab8cf621e9f9ca2cf749
   branch: integration
   specs:
-    stuffing (0.0.3)
+    stuffing (0.0.4)
 
 GIT
   remote: git://github.com/rfc2822/spawn
@@ -136,7 +136,7 @@ GEM
     rubyzip (0.9.9)
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
-    sass (3.2.4)
+    sass (3.2.5)
     sass-rails (3.1.6)
       actionpack (~> 3.1.0)
       railties (~> 3.1.0)
@@ -153,7 +153,7 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
-    twitter-bootstrap-rails (2.1.9)
+    twitter-bootstrap-rails (2.2.0)
       actionpack (>= 3.1)
       execjs
       railties (>= 3.1)
