@@ -1,3 +1,3 @@
 class Post < ActiveRecord::Base
-  stuffing
+  #stuffing
 end
