@@ -18,8 +18,6 @@ group :assets do
   #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-  gem 'less'
-  gem 'less-rails'
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 end
@@ -27,6 +25,8 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-fileupload-rails'
+gem 'less'
+gem 'less-rails'
 #this requires the command:
 # rails g bootstrap:install
 gem 'twitter-bootstrap-rails'
