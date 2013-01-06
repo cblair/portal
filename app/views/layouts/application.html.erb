@@ -42,15 +42,18 @@
   </div>
 </div>
 
+<p><%= Portal::Application.config.couchdb['COUCHDB_HOST'] %></p>
+
 <%
 	#if the couchdb is not running, override alert
-	if (!is_couchdb_running?(	host=ENV['COUCHDB_HOST'],
-								port=ENV['COUCHDB_PORT'],
-								username=ENV['COUCHDB_USERNAME'], 
-                          		password=ENV['COUCHDB_PASSWORD'],
-                          		https=ENV['COUCHDB_HTTPS'] == 'true'
-                          	 )
-      	)
+	if (!is_couchdb_running?(
+			host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
+			port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
+			username = Portal::Application.config.couchdb['COUCHDB_USERNAME'],
+			password = Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
+			https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
+      	 )
+      )
 		alert = 'Warning: couchdb is not reachable.'
 	end
 %>
