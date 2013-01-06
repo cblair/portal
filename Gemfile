@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.0'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -12,11 +12,11 @@ gem 'json'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.1.5'
+  gem 'sass-rails'#,   '~> 3.1.5'
   #gem 'therubyracer'
   #gem 'therubyracer', '0.11.0beta5'
   #gem 'libv8', '~> 3.11.8'
-  gem 'coffee-rails', '~> 3.1.1'
+  gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
   gem 'less'
   gem 'less-rails'
@@ -62,7 +62,7 @@ gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "inte
 
 gem 'devise', '~> 2'
 
-gem 'will_paginate', '3.0.pre2'
+gem 'will_paginate'#, '3.0.pre2'
 
 gem 'rufus-scheduler'
 
