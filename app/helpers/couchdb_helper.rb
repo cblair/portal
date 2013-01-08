@@ -1,8 +1,22 @@
 module CouchdbHelper
 
-  def is_couchdb_running?
+  def is_couchdb_running?(host = "localhost", port = "5984", username = nil, 
+                          password = nil, https = false
+                          )
     begin
-      CouchRest.get "http://localhost:5984/"
+      if https
+        conn_str = "https://"
+      else
+        conn_str = "http://"
+      end
+      
+      if username != nil and password != nil
+        conn_str += "#{username}:#{password}@"
+      end
+      
+      conn_str += "#{host}:#{port}/"
+      
+      CouchRest.get conn_str
       return true
     rescue
       return false

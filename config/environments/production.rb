@@ -58,4 +58,13 @@ Portal::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+  
+  #CouchDB stuff
+  config.couchdb = {
+                              'COUCHDB_HOST'      => 'app10534904.heroku.cloudant.com',
+                              'COUCHDB_PORT'      => '443',
+                              'COUCHDB_USERNAME'  => 'app10534904.heroku',
+                              'COUCHDB_PASSWORD'  => 'QTRGjtDrQkATkjPuCGUAVUPh',
+                              'COUCHDB_HTTPS'     => true
+                   }
 end

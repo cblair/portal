@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.3'
+gem 'rails', '3.2.0'
+ruby '1.9.3'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-#gem 'sqlite3', '>= 1.3.1', :require => 'sqlite3'
 gem 'pg'
 
 gem 'json'
@@ -13,17 +13,12 @@ gem 'json'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.1.5'
+  gem 'sass-rails'#,   '~> 3.1.5'
   #gem 'therubyracer'
   #gem 'therubyracer', '0.11.0beta5'
   #gem 'libv8', '~> 3.11.8'
-  gem 'coffee-rails', '~> 3.1.1'
+  gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-  #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-  #gem 'jquery-datatables-rails'#, :git => 'https://github.com/rweng/jquery-datatables-rails.git'
-  
-  gem 'less'
-  gem 'less-rails'
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 end
@@ -31,10 +26,11 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-fileupload-rails'
-gem 'twitter-bootstrap-rails'
-
+gem 'less'
+gem 'less-rails'
 #this requires the command:
 # rails g bootstrap:install
+gem 'twitter-bootstrap-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -60,18 +56,14 @@ else
   #gem 'ruby-debug19', :platforms => :ruby_19
 end
 
-#gem 'lazy_high_charts', '~> 1.1.5'
 gem 'lazy_high_charts'
 
 gem 'couchrest'
-#also, you will need to run this afterward... don't know if it is in a gem yet
-#TODO: make a script I guess
-#rails plugin install git://github.com/cblair/stuffing.git
 gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"
 
 gem 'devise', '~> 2'
 
-gem 'will_paginate', '3.0.pre2'
+gem 'will_paginate'#, '3.0.pre2'
 
 gem 'rufus-scheduler'
 

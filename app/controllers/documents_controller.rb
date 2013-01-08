@@ -1,4 +1,6 @@
 class DocumentsController < ApplicationController
+  require 'will_paginate/array'
+  
   include DocumentsHelper
   include VizHelper
   helper_method :sort_column, :sort_direction
