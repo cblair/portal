@@ -9,7 +9,7 @@ class CollectionsController < ApplicationController
       collection = Collection.find(params[:id])
       
       if not collection_is_viewable(collection)
-        flash[:error] = "Collection not found, or you do not have view permissions."
+        flash[:error] = "Collection not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
     end
@@ -77,7 +77,7 @@ class CollectionsController < ApplicationController
   def update
     @collection = Collection.find(params[:id])
     
-    if params.include?("post") and params[:post].include?("ifilter_id")
+    if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
       f = Ifilter.find(params[:post][:ifilter_id])
       validate_collection_helper(@collection, f)
     end

@@ -15,7 +15,7 @@ class DocumentsController < ApplicationController
       document = Document.find(params[:id])
       
       if not doc_is_viewable(document)
-        flash[:error] = "Document not found, or you do not have view permissions."
+        flash[:error] = "Document not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
     end
