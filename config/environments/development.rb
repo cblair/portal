@@ -32,20 +32,12 @@ Portal::Application.configure do
   config.assets.debug = false
   
   #CouchDB stuff
-=begin
   config.couchdb = {
-                              'COUCHDB_HOST'      => '192.168.1.145',
+                              'COUCHDB_HOST'      => '127.0.0.1',
                               'COUCHDB_PORT'      => '5984',
-                              'COUCHDB_USERNAME'  => 'cblair3',
-                              'COUCHDB_PASSWORD'  => 'SHIhel7',
+                              'COUCHDB_USERNAME'  => '',
+                              'COUCHDB_PASSWORD'  => '',
                               'COUCHDB_HTTPS'     => false
                    }
-=end
-  config.couchdb = {
-                              'COUCHDB_HOST'      => 'app10534904.heroku.cloudant.com',
-                              'COUCHDB_PORT'      => '443',
-                              'COUCHDB_USERNAME'  => 'app10534904.heroku',
-                              'COUCHDB_PASSWORD'  => 'QTRGjtDrQkATkjPuCGUAVUPh',
-                              'COUCHDB_HTTPS'     => true
-                   }                   
+                 
 end
