@@ -58,4 +58,57 @@ module CollectionsHelper
       set_pub_priv_collection_helper(sub_collection, public)
     end
   end
+  
+  #Get all category options, with indentation  
+  def get_all_collection_select_options()
+    o = []
+    
+    collections = Collection.where(:collection_id => nil)
+    
+    if collections == nil
+      return o
+    end
+    
+    collections.each do |c|
+      get_collection_select_options(c).each do |c_option|
+        o << c_option
+      end
+    end
+    return o
+  end
+  
+  #Makes form select_options, indenting the children
+  def get_collection_select_options(c, level=0)
+    retval = []
+    
+    if not collection_is_viewable(c)
+      return retval
+    end
+    
+    retval << [('-' * level) + c.name, c.id]
+    c.collections.each do |child_c|
+      get_collection_select_options(child_c, level + 1).each do |child_c|
+        retval << child_c
+      end
+    end
+    
+    return retval
+  end
+
+  
+  #checks to see if 
+  def collection_is_parent(potential_parent_collection, collection)
+    retval = false
+
+    puts "TS" + collection.email
+    puts collection.collection == potential_parent_collection
+    
+    if collection.collection == potential_parent_collection
+      retval = true
+    end
+    
+    retval = retval or collection_is_parent(potential_parent_collection, collection.collection)
+      
+    return retval
+  end
 end

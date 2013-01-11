@@ -77,6 +77,17 @@ class CollectionsController < ApplicationController
   def update
     @collection = Collection.find(params[:id])
     
+    #parent collection stuff
+    if params.include?("collection") and params[:collection].include?("collection_id") and params[:collection]["collection_id"] != ""
+      parent_collection = Collection.find(params[:collection]["collection_id"])
+      if !collection_is_parent(@collection, parent_collection)
+        @collection.collection = parent_collection
+      else
+        flash[:alert] = "Warning: cannot set parent collection to a child"
+      end
+    end
+    debugger
+    
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
       f = Ifilter.find(params[:post][:ifilter_id])
       validate_collection_helper(@collection, f)

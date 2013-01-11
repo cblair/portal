@@ -17,9 +17,15 @@
   </div>
   
   <div>
-  	<p>Validate...</p>
+  	<p>Validate:</p>
   	<%= select("post", "ifilter_id", Ifilter.all.collect {|ifilter| [ ifilter.name, ifilter.id ] }, {:prompt => '(select a filter)'}) %>
  	<%= link_to "Filters...", ifilters_path %>
+  </div>
+  
+  <div>
+  	<p>Parent collection:</p>
+  	<%= f.select(:collection_id, get_all_collection_select_options, 
+			{:include_blank => '(none)'} ) %>
   </div>
    
   <div class="actions">

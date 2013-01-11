@@ -1,4 +1,4 @@
-class DataIOController < ApplicationController
+class DataIoController < ApplicationController
   require 'csv'
   require 'spawn'
   require 'zip/zip'
