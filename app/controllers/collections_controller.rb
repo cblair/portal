@@ -20,7 +20,7 @@ class CollectionsController < ApplicationController
   def index
     #@collections = Collection.all
     
-    @root_collections = Collection.where(:collection_id => nil)
+    @root_collections = Collection.where(:collection_id => nil).order('name')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -78,15 +78,15 @@ class CollectionsController < ApplicationController
     @collection = Collection.find(params[:id])
     
     #parent collection stuff
+    parent_child_violation = false
     if params.include?("collection") and params[:collection].include?("collection_id") and params[:collection]["collection_id"] != ""
       parent_collection = Collection.find(params[:collection]["collection_id"])
       if !collection_is_parent(@collection, parent_collection)
         @collection.collection = parent_collection
       else
-        flash[:alert] = "Warning: cannot set parent collection to a child"
+        parent_child_violation = true
       end
     end
-    debugger
     
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
       f = Ifilter.find(params[:post][:ifilter_id])
@@ -94,7 +94,10 @@ class CollectionsController < ApplicationController
     end
 
     respond_to do |format|
-      if @collection.update_attributes(params[:collection])
+      if parent_child_violation 
+        flash[:error] =  "Warning: cannot set parent collection to a child."
+        format.html { redirect_to @collection }
+      elsif @collection.update_attributes(params[:collection])
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
         format.json { head :ok }
       else

@@ -99,16 +99,20 @@ module CollectionsHelper
   #checks to see if 
   def collection_is_parent(potential_parent_collection, collection)
     retval = false
-
-    puts "TS" + collection.email
-    puts collection.collection == potential_parent_collection
+    
+    if (potential_parent_collection == nil or collection == nil)
+      return false
+    end
     
     if collection.collection == potential_parent_collection
       retval = true
     end
     
-    retval = retval or collection_is_parent(potential_parent_collection, collection.collection)
-      
+    retval = (retval or collection_is_parent(potential_parent_collection, collection.collection))
+    
+    puts "TS" + collection.name
+    puts retval
+    
     return retval
   end
 end

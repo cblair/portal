@@ -53,20 +53,25 @@ class UploadsController < ApplicationController
     stime = Time.now() #start time
     
     #Collection - find / create
-    c_text = params[:collection_text][:post]
-    if c_text == nil
-      #take the collection from the select menu
-      c=Collection.find(params[:collection_id][:post])
-      c=Collection.new
-    else
-      #create a new collection at the root
-      c=Collection.new
-      c.name = c_text
+    c_id = nil
+    c_text = params[:post][:collection_text]
+    if ( params.include?("post") and params[:post].include?("collection_id") and params[:post]["collection_id"] != "" ) 
+      c_id = params[:post]["collection_id"].to_i
     end
-
-    #User
-    c.user = current_user
-    c.save
+    
+    if c_id != nil
+      c = Collection.find(c_id)
+      #User
+      c.user = current_user
+      c.save
+    elsif c_text != ""
+      c=Collection.new(:name => c_text)
+      #User
+      c.user = current_user
+      c.save
+    else
+      c = nil
+    end
     
     #File stuff
     #fname=params[:dump][:file].original_filename
@@ -77,8 +82,6 @@ class UploadsController < ApplicationController
     if params[:post].include?("ifilter_id")
       f=Ifilter.find(params[:post][:ifilter_id])
     end
-
-    #upload = Upload.create(:name => fname, :upfile => params[:dump][:file])
     
     #spawn_block do
       #Parse file into db

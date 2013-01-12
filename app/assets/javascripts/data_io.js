@@ -1,20 +1,15 @@
 jQuery(function($) {
-	var collection_selected = $('tr#collection_id select option:selected').text();
-	var is_none_collection = (collection_selected == "(none)");
-
-	if(is_none_collection != true) {
-		$('select#collection_text').hide();
+	function isCollectionSelected() { 
+		var collection_selected = $('select#post_collection_id option:selected').text();
+		return(collection_selected == "(none)");
 	}
 	
-	$('input#collection_id select').change(function(){
-		collection_selected = $('tr#collection_id select option:selected').text();
-		is_none_collection = (collection_selected == "(none)");
-		
-		if(is_none_collection == true) {
-			$('input#collection_text').show();
+	$('select#post_collection_id').change(function(){
+		if(isCollectionSelected() == true) {
+			$('input#post_collection_text').removeAttr('disabled');
 		}
 		else {
-			$('input#collection_text').hide();
+			$('input#post_collection_text').attr('disabled', 'disabled');
 		}
 	});
 });

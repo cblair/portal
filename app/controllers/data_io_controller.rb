@@ -12,6 +12,9 @@ class DataIoController < ApplicationController
   def index
   end
   
+  
+  #Note - this method is no longer used; the jQuery upload form uses the 
+  #       new upload controller  
   def csv_import
     #start recording run time
     stime = Time.now() #start time
@@ -20,11 +23,11 @@ class DataIoController < ApplicationController
     c_text = params[:dump][:collection_text]
     if c_text == nil
       #take the collection from the select menu
+      c_id = params[:dump][:collection_id]
       c=Collection.find(params[:dump][:collection_id])
     else
       #create a new collection at the root
-      c=Collection.new
-      c.name = c_text
+      c=Collection.new(:name => ctext)
     end
 
     #User

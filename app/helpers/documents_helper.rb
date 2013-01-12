@@ -376,6 +376,10 @@ module DocumentsHelper
   def collection_is_viewable(col)
     retval = false
     
+    if (col.collections.empty? and col.documents.empty?)
+      return true
+    end
+    
     col.documents.each do |doc|
       if doc_is_viewable(doc)
         retval = true
