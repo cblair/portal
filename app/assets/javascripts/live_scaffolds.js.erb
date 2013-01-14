@@ -1,73 +1,214 @@
 var SCAFFOLD_RESULTS = [];
 var BLACKLIST_KEYS = ["created_at", "id", "updated_at"];
 
-//CONTROLLER_NAME - comes from app/views/layouts/application.html.erb
+//Comes from app/views/layouts/application.html.erb
+// CONTROLLER_NAME - comes from app/views/layouts/application.html.erb
+// CONTROLLER_WHERE - optional; if set, should be set to 'column_name=value'
 
-function getScaffoldTableText(result)
-{	
-	var text = "<table class=\"table\">";
-	
-	for(var key in result[0]) {
-		//don't display certain keys
-		if(BLACKLIST_KEYS.indexOf(key) == -1) {
-			text += "<td>";
-			text += "<b>" + key + "</b>";
-			text += "</td>\n";
-		}
+
+jQuery.ajaxSetup({ 
+	'beforeSend': function(xhr) {
+					xhr.setRequestHeader("Accept", "text/javascript");
+					xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+					}
+})
+
+jQuery(function($) {
+
+	function destroyScaffold(e) {
+		e.preventDefault();
+		
+		//$.post(this.href, {_method:'delete'}, null, "script");
+		$.ajax({
+			type: 'POST',
+			beforeSend: function(xhr){
+	        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+	    	},
+			url: this.href,
+			data: {_method:'delete'},
+			success: null,
+			dataType: "script"
+		});
+			
+		return(false);
 	}
 	
-	for( var i in result)
-	{
-		text += "\t<tr>\n";
-		var dict = result[i];
+	
+	///////////////////////////////////////////////////////////////////////////////
+	// Live Table functions
+	///////////////////////////////////////////////////////////////////////////////
+	
+	function getScaffoldTableText(result)
+	{	
+		var text = "<table class=\"table\">";
 		
-		for(var key in dict) {
+		for(var key in result[0]) {
 			//don't display certain keys
 			if(BLACKLIST_KEYS.indexOf(key) == -1) {
 				text += "<td>";
-				text += dict[key];
+				text += "<b>" + key + "</b>";
 				text += "</td>\n";
 			}
 		}
 		
-		text += "<td>";
-		text += '<a href="' + CONTROLLER_NAME + '/' + dict['id'] + '">Show</a> ';
-		text += '<a href="' + CONTROLLER_NAME + '/' + dict['id'] + '/edit">Edit</a> ';
-		text += '<a href="' + CONTROLLER_NAME + '/' + dict['id'] + '" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Destroy</a>';
-		text += "</td>";
-		text += "\t</tr>\n";
-	}
-	text += "</table>\n";
-	
-	return text;
-}
-
-function updateScaffold() {
-	$.ajax('/uploads.json', {
-		//data: { data : "div.uploads" },
-		cache: false,
-		beforeSend: function(result) {
-			//$('div.scaffold table').hide();
-		},
-		success: function(result) {
-			//$('div.scaffold table').after('<p>test</p>');
-			if(result != SCAFFOLD_RESULTS) {
-				SCAFFOLD_RESULTS = result;
-				text = getScaffoldTableText(result);
-				
-				$('div.scaffold table').remove();
-				$('div.scaffold').append(text);
-			}	
-			setTimeout(updateScaffold, 2000);
-		},
-		error: function(result) {
-			$('#error').show();
+		for( var i in result)
+		{
+			text += "\t<tr>\n";
+			var dict = result[i];
+			
+			for(var key in dict) {
+				//don't display certain keys
+				if(BLACKLIST_KEYS.indexOf(key) == -1) {
+					text += "<td>";
+					text += dict[key];
+					text += "</td>\n";
+				}
+			}
+			
+			text += "<td>";
+			text += '<a href="/' + CONTROLLER_NAME + '/' + dict['id'] + '">Show</a> ';
+			text += '<a href="/' + CONTROLLER_NAME + '/' + dict['id'] + '/edit">Edit</a> ';
+			text += '<a href="/' + CONTROLLER_NAME + '/' + dict['id'] + '" class="scaffold-delete">Destroy</a>';
+			text += "</td>";
+			text += "\t</tr>\n";
 		}
+		text += "</table>\n";
+		
+		return text;
+	}
+	
+	
+	function updateScaffoldTable() {
+		var url_str = '/' + CONTROLLER_NAME + '.json';
+		
+		if(typeof(CONTROLLER_WHERE) != "undefined") {
+			url_str += '?' + CONTROLLER_WHERE;
+		}
+		
+		$.ajax(url_str, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//$('div.scaffold table').hide();
+			},
+			success: function(result) {
+				//$('div.scaffold table').after('<p>test</p>');
+				if(result != SCAFFOLD_RESULTS) {
+					SCAFFOLD_RESULTS = result;
+					text = getScaffoldTableText(result);
+					
+					$('div.scaffold table').remove();
+					$('div.scaffold').append(text);
+				}
+				//TODO: renabled for continued updating, but we need to do long polling	
+				//setTimeout(updateScaffoldTable, 2000);
+			},
+			error: function(result) {
+				$('#error').show();
+			}
+		});
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////
+	// Live Tree functions
+	///////////////////////////////////////////////////////////////////////////////
+	function getScaffoldCollectionTreeText(result)
+	{	
+		var text = "<div class=\"collection-tree\">";
+		
+		text += '<ul>\n';
+		//node stuff done incrementally
+		text += '</ul>\n';
+		
+		text += '</div\n';
+		
+		return text;
+	}
+	
+	
+	function addScaffoldCollectionTreeNodes(parent, result) {
+		var text = "";
+		
+		for( var i in result)
+		{
+			var dict = result[i];
+			var text = "";
+			
+			text += "\t<li>\n";
+			
+			text += '<i class="icon-folder-close icon-white"></i>';
+	    	text += '<a href="/collections/' + dict['id'] + '">' + dict['name'] + '</a> ';
+			text += '<span>\n';
+		    text += '	<a class="col-doc-plus-minus" id="col-doc-plus" href="#">\n';
+		    text += '		<i class="icon-plus icon-white"></i>\n';
+		    text += '	</a>\n';
+		    text += '	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">\n';
+		    text += '		<i class="icon-minus icon-white"></i>\n';
+		    text += ' 	</a>\n';
+		    text += '</span>\n';
+				
+			text += "\t</li>\n";
+			
+			parent.append(text);
+		}
+	}
+	
+	
+	function updateScaffoldCollectionTree() {
+		var url_str = '/collections.json';
+		
+		if(typeof(CONTROLLER_WHERE) != "undefined") {
+			url_str += '?' + CONTROLLER_WHERE;
+		}
+		
+		$.ajax(url_str, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//$('div.scaffold tree').hide();
+			},
+			success: function(result) {
+				if(result != SCAFFOLD_RESULTS) {
+					SCAFFOLD_RESULTS = result;
+					
+					var text 	= '<ul class="collection-tree-root col-doc">\n';
+					text 		+= '</ul>\n';
+					
+					$('ul.collection-tree-root').remove();
+					var ctree_root = $('div.collection-tree').append(text);
+					
+					addScaffoldCollectionTreeNodes(ctree_root, result);
+				}
+				//TODO: renabled for continued updating, but we need to do long polling	
+				//setTimeout(updateScaffoldCollectionTree, 2000);
+			},
+			error: function(result) {
+				$('#error').show();
+			}
+		});
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////////
+	// Live Scaffold Main
+	///////////////////////////////////////////////////////////////////////////////
+	$(document).ready(function () {
+		//new binding to destroy
+		$('a.scaffold-delete').live("click", destroyScaffold);
+			
+		var s_table = $('div.scaffold table');
+		var s_tree 	= $('div.scaffold div.collection-tree')
+			
+		//Scaffold table stuff
+		if(s_table.length > 0) {
+			s_table.remove();
+			updateScaffoldTable();
+		}
+		else if(s_tree.length > 0) {
+			updateScaffoldCollectionTree();
+		}
+		
+		$.initCollectionTree();
 	});
-}
-
-jQuery(function($) {
-	//$('div.scaffold table').remove();
-	//updateScaffold();
-	//setTimeout(updateScaffold, 2000);
 });

@@ -1,9 +1,26 @@
+<script>
+	//For live_scaffold.js.erb
+	// --get rid of more columns we don't want on the page
+	BLACKLIST_KEYS += ['collection_id', 'user_id', 'users_id', 'validated'];
+</script>
+
 <div class="hero-unit">
 	<h2>Listing collections</h2>
 	
+	<h2>test no js</h2>
 	<% @root_collections.each do |collection| %>
-		<%= render :partial => "collection_new", :locals => {:collection => collection} %>
+		<%= 
+			render 	:partial => "rec_collection_render", 
+					:locals => {:collection => collection} 
+		%>
 	<% end %>
+	
+	
+	<h2>test js</h2>
+	<div class="scaffold">
+		<!--<table></table>-->
+		<div class="collection-tree"></div>
+	</div>
 	
 	<br />
 	

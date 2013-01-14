@@ -1,4 +1,8 @@
+///////////////////////////////////////////////////////////////////////////////
+// Tree Nodes showing/hiding
+///////////////////////////////////////////////////////////////////////////////
 jQuery(function($) {
+	
 	function updateDocColSubfields(e) {
 		e.preventDefault();
 		
@@ -8,7 +12,8 @@ jQuery(function($) {
 		$(this).parent().parent().parent().children('ul.col-doc').toggle();
 	}
 	
-	$(document).ready(function () {
+	
+	$.initCollectionTree = function() {
 		var colUl = $('ul.col-doc');
 		colUl.children('li').children('ul').toggle();
 		colUl.children('li').children('span').children('a#col-doc-minus').toggle();
@@ -17,5 +22,10 @@ jQuery(function($) {
 	    colUl.children('li').children('span').children('a.col-doc-plus-minus').click(
 	    	updateDocColSubfields
 	    );
+	}
+	
+	
+	$(document).ready(function () {
+		//$.initCollectionTree($);
 	});
 });

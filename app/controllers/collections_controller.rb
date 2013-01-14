@@ -20,11 +20,18 @@ class CollectionsController < ApplicationController
   def index
     #@collections = Collection.all
     
-    @root_collections = Collection.where(:collection_id => nil).order('name')
+    @root_collections = []
+    @all_root_collections = Collection.where(:collection_id => nil).order('name')
+
+    @all_root_collections.each do |c|
+      if collection_is_viewable(c)
+        @root_collections << c
+      end
+    end
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @collections }
+      format.json { render json: @root_collections }
     end
   end
 
