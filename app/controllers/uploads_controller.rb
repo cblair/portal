@@ -54,7 +54,12 @@ class UploadsController < ApplicationController
     
     #Collection - find / create
     c_id = nil
-    c_text = params[:post][:collection_text]
+    c_text = ""
+
+    if ( params.include?("post") and params[:post].include?("collection_text") and params[:post]["collection_text"] != "" )
+      c_text = params[:post][:collection_text]
+    end
+    
     if ( params.include?("post") and params[:post].include?("collection_id") and params[:post]["collection_id"] != "" ) 
       c_id = params[:post]["collection_id"].to_i
     end
@@ -79,7 +84,7 @@ class UploadsController < ApplicationController
     
     #filter
     f=nil
-    if params[:post].include?("ifilter_id")
+    if ( params.include?("post") and params[:post].include?("ifilter_id") )
       f=Ifilter.find(params[:post][:ifilter_id])
     end
     
@@ -100,14 +105,23 @@ class UploadsController < ApplicationController
     flash[:notice]="Files uploaded successfully. "
     #redirect_to :controller => "collections"
 
+    #debugger
     respond_to do |format|
+      #debugger
       if @upload.save
-        format.html { redirect_to @upload, notice: 'Upload was successfully created.' }
-        #format.json { render json: @upload, status: :created, location: @upload }
+        #format.html { redirect_to @upload }
+        format.html {
+          render :json => [@upload.to_jq_upload].to_json,
+          :content_type => 'text/html',
+          :layout => false
+        }
         format.json { render json: [@upload.to_jq_upload].to_json, status: :created, location: @upload }
       else
         format.html { render action: "new" }
-        format.json { render json: @upload.errors, status: :unprocessable_entity }
+        format.json { 
+          render json: [@upload.to_jq_upload].to_json, status: :created, location: @upload
+          #render json: @upload.errors, status: :unprocessable_entity 
+          }
       end
     end
   end

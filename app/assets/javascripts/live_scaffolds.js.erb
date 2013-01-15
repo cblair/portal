@@ -137,16 +137,55 @@ jQuery(function($) {
 			
 			text += "\t<li>\n";
 			
-			text += '<i class="icon-folder-close icon-white"></i>';
-	    	text += '<a href="/collections/' + dict['id'] + '">' + dict['name'] + '</a> ';
-			text += '<span>\n';
-		    text += '	<a class="col-doc-plus-minus" id="col-doc-plus" href="#">\n';
-		    text += '		<i class="icon-plus icon-white"></i>\n';
-		    text += '	</a>\n';
-		    text += '	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">\n';
-		    text += '		<i class="icon-minus icon-white"></i>\n';
-		    text += ' 	</a>\n';
-		    text += '</span>\n';
+			text += '\
+				<i class="icon-folder-close icon-white"></i>\
+				<a href="/collections/' + dict['id'] + '">' + dict['name'] + '</a>\
+				<span>\
+				<a class="col-doc-plus-minus" id="col-doc-plus" href="#" data-collection-id="' + dict['id'] + '">\
+		    		<i class="icon-plus icon-white"></i>\
+		    	</a>\
+		    	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">\
+		    		<i class="icon-minus icon-white"></i>\
+		     	</a>\
+		   		</span>\
+				\
+		   		<ul class="col-doc-attr-form">\
+			    	<a class="label label-inverse" href="/collections/' + dict['id'] + '/edit">\
+		    			<i class="icon-save icon-white"></i>\
+		  			</a>\
+		  			<a class="label label-important" href="/collections/' + dict['id'] + '" class="scaffold-delete">X</a> \
+				';
+				
+				if(dict['validated'] == true) {
+					text += '\
+					<a class="label label-success" href="#">\
+						<i class="icon-check icon-white"></i>\
+					</a>\
+					';
+				} else {
+					text += '\
+					<a class="label label-warning" href="/collections/validate_collection/' + dict['id'] + '">\
+						<i class="icon-check-empty icon-white"></i>\
+					</a>\
+					';
+				}
+				
+				text += '\
+				<a class="label label-important" href="/collections/pub_priv_collection/' + dict['id'] + '?public=true">\
+					<i class="icon-eye-open icon-white"></i>\
+				</a>\
+				<a class="label label-default" href="/collections/pub_priv_collection/' + dict['id'] + '?public=false">\
+					<i class="icon-eye-close icon-white"></i>\
+				</a>\
+				<a class="label label-info" href="/DataIO/csv_export/' + dict['id'] + '.zip?stype=Collection">\
+	    			<i class="icon-download icon-white"></i>\
+	    			zip\
+	  			</a>\
+				';
+				
+				text += '\
+				</ul>\
+				';
 				
 			text += "\t</li>\n";
 			
@@ -176,9 +215,12 @@ jQuery(function($) {
 					text 		+= '</ul>\n';
 					
 					$('ul.collection-tree-root').remove();
-					var ctree_root = $('div.collection-tree').append(text);
+					$('div.collection-tree').append(text);
+					var ctree_root = $('ul.collection-tree-root');
 					
 					addScaffoldCollectionTreeNodes(ctree_root, result);
+					
+					$.initCollectionTree();
 				}
 				//TODO: renabled for continued updating, but we need to do long polling	
 				//setTimeout(updateScaffoldCollectionTree, 2000);
@@ -190,13 +232,38 @@ jQuery(function($) {
 	}
 	
 	
+	function addCollectionAttrs(e) {
+		e.preventDefault();
+		
+		var collection_id = $(this).attr('data-collection-id');
+		alert(collection_id);
+		
+		var url_str = '/collections.json?parent_id=' + collection_id;
+		
+		$.ajax(url_str, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//$('div.scaffold tree').hide();
+			},
+			success: function(result) {
+				//TODO: WIP
+				var text = '<ul class="col-doc document row" id="109">';
+				
+				//TODO: renabled for continued updating, but we need to do long polling	
+				//setTimeout(, 2000);
+			},
+			error: function(result) {
+				$('#error').show();
+			}
+		});
+	}
+	
+	
 	///////////////////////////////////////////////////////////////////////////////
 	// Live Scaffold Main
 	///////////////////////////////////////////////////////////////////////////////
-	$(document).ready(function () {
-		//new binding to destroy
-		$('a.scaffold-delete').live("click", destroyScaffold);
-			
+	$(document).ready(function () {			
 		var s_table = $('div.scaffold table');
 		var s_tree 	= $('div.scaffold div.collection-tree')
 			
@@ -206,9 +273,12 @@ jQuery(function($) {
 			updateScaffoldTable();
 		}
 		else if(s_tree.length > 0) {
-			updateScaffoldCollectionTree();
+			//updateScaffoldCollectionTree();
 		}
 		
-		$.initCollectionTree();
+		//new binding to destroy
+		//$('a.scaffold-delete').live("click", destroyScaffold);
+		//new binding to plus
+		//$('a#col-doc-plus').live("click", addCollectionAttrs);
 	});
 });

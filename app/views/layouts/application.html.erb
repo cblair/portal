@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hatch</title>
+  <title>Hatch (βeta)</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <!--jquery is include with jquery-fileupload, so no need for it here. Doing
@@ -27,10 +27,9 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <%= link_to "Hatch", root_path, {:class => "brand", :style => "color: #ffffff"} %>
+      <%= link_to "Hatch (βeta)", root_path, {:class => "brand", :style => "color: #ffffff"} %>
       <div class="nav-collapse collapse">
         <ul class="nav">
-            <li><%= link_to "Home", root_path %></li>
             <li><%= link_to "Data Import", csv_import_path %></li>
             <li><%= link_to "Data Explorer", collections_path %></li>
             <!--TODO: someday-->

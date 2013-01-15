@@ -1,11 +1,13 @@
 class CollectionsController < ApplicationController
   include CollectionsHelper
   include DocumentsHelper
+
+  require 'will_paginate'
   
   before_filter :require_permissions
   
   def require_permissions
-    if params.include?("id")
+    if ( params.include?("collections") and params.include?("id") )
       collection = Collection.find(params[:id])
       
       if not collection_is_viewable(collection)
@@ -21,9 +23,22 @@ class CollectionsController < ApplicationController
     #@collections = Collection.all
     
     @root_collections = []
-    @all_root_collections = Collection.where(:collection_id => nil).order('name')
+    
+    #filter by parent collection id if requested
+    if params.include?('parent_id')
+      @all_collections = Collection.where(:collection_id => params['parent_id'].to_i)
+    else
+      #only root collections
+      @all_collections = Collection.where(:collection_id => nil).order('name')
+    end
+    
+    #add additional data, mostly for json requests
+    @all_collections.each do |c|
+      c.validated = collection_is_validated(c)
+    end
 
-    @all_root_collections.each do |c|
+    #filter for permission
+    @all_collections.each do |c|
       if collection_is_viewable(c)
         @root_collections << c
       end
@@ -39,7 +54,9 @@ class CollectionsController < ApplicationController
   # GET /collections/1.json
   def show    
     @collection = Collection.find(params[:id])
-    
+
+    @documents = Document.where(:collection_id => @collection.id).paginate(:per_page => 5, :page => params[:page])
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @collection }

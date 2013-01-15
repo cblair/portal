@@ -26,6 +26,6 @@ jQuery(function($) {
 	
 	
 	$(document).ready(function () {
-		//$.initCollectionTree($);
+		$.initCollectionTree($);
 	});
 });

@@ -102,15 +102,20 @@
 	<% end %>
 	
 	
-	<%= render 'viz/visualization', :layout => 'true' %>
+	<%= 
+		#render 'viz/visualization', :layout => 'true'
+	%>
 	<hr/>
 	
+	<!--
 	<div id="hidden_form">
 	<h2>Data Manipulation</h2>
 	<a class="btn btn-info" href="#">More</a>
 	<a class="btn btn-inverse" href="#">Hide</a>
-	
+	-->
+
 	<!--Document Manip Form-->
+	<!--
 	<%= form_tag(document_manip_path) do %>
 		<%= hidden_field_tag(:id, @document[:id]) %>
 		
@@ -122,10 +127,10 @@
 		<%= select_tag(:manip_func, options_for_select([ ["categorize","categorize"] ]))%>
 		<br />
 	    <%= submit_tag("Manipulate")%>
-	<% end %><!--end Data Manip form-->
+	<% end %>
 	</ul>
 	</div>
-	
+	-->
 	<hr/>
 	
 	<%= link_to 'Edit', edit_document_path(@document) %> |

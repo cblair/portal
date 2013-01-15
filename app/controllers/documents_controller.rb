@@ -153,7 +153,7 @@ class DocumentsController < ApplicationController
   def update
     @document = Document.find(params[:id])
     
-    if params.include?("post") and params[:post].include?("ifilter_id")
+    if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
       f = Ifilter.find(params[:post][:ifilter_id])
       validate_document_helper(@document, f)
     end    

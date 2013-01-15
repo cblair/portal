@@ -1,0 +1,13 @@
+01/14/13 Dev meeting
+
+Action list:
+x Finish Collection Tree stuff
+x JS on validation links
+x test is_collection_viewable correct
+x cut out viz stuff
+* add header filter checkbox - we may change this later
+x document no ifilter bug!
+x data io public bug
+*deploy
+
+*
