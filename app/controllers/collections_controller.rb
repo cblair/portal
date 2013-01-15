@@ -4,10 +4,13 @@ class CollectionsController < ApplicationController
 
   require 'will_paginate'
   
+  #before_filter :authenticate_user!
   before_filter :require_permissions
   
   def require_permissions
-    if ( params.include?("collections") and params.include?("id") )
+    if not authenticate_user!
+      redirect_to home_path
+    elsif ( params.include?("collections") and params.include?("id") )
       collection = Collection.find(params[:id])
       
       if not collection_is_viewable(collection)
