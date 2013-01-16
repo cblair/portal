@@ -13,6 +13,7 @@ class UploadsController < ApplicationController
       format.html # index.html.erb
       #format.json { render json: @uploads }
       format.json { render json: @uploads.map{|upload| upload.to_jq_upload } }
+      format.js { render json: @uploads.map{|upload| upload.to_jq_upload } }
     end
   end
 
@@ -105,9 +106,7 @@ class UploadsController < ApplicationController
     flash[:notice]="Files uploaded successfully. "
     #redirect_to :controller => "collections"
 
-    #debugger
     respond_to do |format|
-      #debugger
       if @upload.save
         #format.html { redirect_to @upload }
         format.html {
@@ -116,12 +115,11 @@ class UploadsController < ApplicationController
           :layout => false
         }
         format.json { render json: [@upload.to_jq_upload].to_json, status: :created, location: @upload }
+        format.js { render json: [@upload.to_jq_upload].to_json, status: :created, location: @upload }
       else
         format.html { render action: "new" }
-        format.json { 
-          render json: [@upload.to_jq_upload].to_json, status: :created, location: @upload
-          #render json: @upload.errors, status: :unprocessable_entity 
-          }
+        format.json {  render json: @upload.errors, status: :unprocessable_entity }
+        format.js {  render json: @upload.errors, status: :unprocessable_entity }
       end
     end
   end
