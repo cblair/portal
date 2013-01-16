@@ -46,7 +46,7 @@ gem 'twitter-bootstrap-rails'
 #   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
 #  TODO: Probably want this for other versions of Mac/Linux too.
 if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
-  gem 'debugger'
+  #gem 'debugger'
 
   #gem 'rack-mini-profiler'
 else
