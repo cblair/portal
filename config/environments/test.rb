@@ -36,4 +36,13 @@ Portal::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  #CouchDB stuff
+  config.couchdb = {
+                              'COUCHDB_HOST'      => '127.0.0.1',
+                              'COUCHDB_PORT'      => '5984',
+                              'COUCHDB_USERNAME'  => '',
+                              'COUCHDB_PASSWORD'  => '',
+                              'COUCHDB_HTTPS'     => false
+                   }
 end

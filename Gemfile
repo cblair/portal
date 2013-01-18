@@ -66,9 +66,10 @@ gem 'will_paginate'#, '3.0.pre2'
 
 gem 'rufus-scheduler'
 
-#Profiling -- only for development
+#Only for development
 group :development do
     gem "ruby-prof"
+    gem 'simplecov', :require => false, :group => :test
 end
 
 #Rubyzip
