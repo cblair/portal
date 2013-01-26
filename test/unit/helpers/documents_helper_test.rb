@@ -6,11 +6,14 @@ class DocumentsHelperTest < ActionView::TestCase
    #Helper tests
 
 	def setup
-
+		@user = users(:user1)
+		sign_in @user
 	end
 
 
 	def teardown
+		sign_out @user
+
 		Collection.all.each do |c|
 			c.destroy
 		end
@@ -40,10 +43,7 @@ class DocumentsHelperTest < ActionView::TestCase
  	end
 
 
-	test "save_zip_to_documents - basic" do
-		@user = users(:user1)
-		sign_in @user
-
+	test "save_zip_to_documents - create parent collection" do
 		c=Collection.new(:name => "test_save_zip_to_documents")
 		c.save
 		fname = 'TUC2.zip'
@@ -58,5 +58,10 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert c_names.include?("TUC2"), "TUC2 not in sub_collections: " + c_names.to_s
 
 		c.destroy
+	end
+
+
+	test "save_zip_to_documents - no parent collection" do
+
 	end
 end
