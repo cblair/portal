@@ -23,7 +23,9 @@ module CouchdbHelper
     end
   end
 
-  def get_couchrest_database(host = "localhost", port = "5984", username = nil, 
+  #TODO: not tested or used anywhere yet
+=begin
+  def get_couchrest_database(db_name, host = "127.0.0.1", port = "5984", username = nil, 
                           password = nil, https = false
                           )
     if https
@@ -36,8 +38,9 @@ module CouchdbHelper
       conn_str += "#{username}:#{password}@"
     end
     
-    conn_str += "#{host}:#{port}/"
+    conn_str += "#{host}:#{port}/#{db_name}"
     
     return CouchRest.database!(conn_str)
   end
+=end
 end

@@ -9,3 +9,8 @@
 #
 #two: {}
 #  column: value
+
+user1: 
+  id: 1
+  email: user1@test.eu
+  encrypted_password: abcdef1

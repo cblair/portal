@@ -2,12 +2,27 @@ module DocumentsHelper
   require 'csv'
   require 'zip/zipfilesystem'
   include IfiltersHelper
+  include Devise::TestHelpers
   
+  def is_json?(str)
+    begin
+      JSON.parse str
+    rescue JSON::ParserError
+      logger.info "Failed is_json?, ParserError"
+      return false
+    rescue
+      logger.info "Failed is_json? for unknown reason"
+      return false
+    end
+
+    return true
+  end
+
   # @param zip_fname A string of the zip file name
   # @param zip_file_object A file object for the zip file
   # @param user_c A Collection object
   # @param f A IFilter object
-  def save_zip_to_documents(zip_fname, zip_file_object, user_c, f)
+  def save_zip_to_documents(zip_fname, zip_file_object, user_c, f, user=current_user)
     #TODO: replace all back slagshes with forward slashes
     
     #a dictionary of dircetories, than point to collections 
@@ -27,7 +42,7 @@ module DocumentsHelper
           
           c = Collection.new( :name => basename, 
                               :collection => zip_collections[File.dirname(fname)])
-          c.user = current_user
+          c.user = user
           c.save
           
           #save to collections dictionary
@@ -48,7 +63,7 @@ module DocumentsHelper
           tempfile.close
           
           c_name = File.dirname(fname)
-          save_file_to_document(basename, tempfile, zip_collections[c_name], f)
+          save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
 
         end
       end
@@ -70,7 +85,7 @@ module DocumentsHelper
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_file_to_document(fname, file, c, f)
+  def save_file_to_document(fname, file, c, f, user=current_user)
     stime = Time.now()
 
     #csv import. Each call on @parsed_file.<method> increments the cursor
@@ -111,9 +126,13 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    @document.stuffing_data=data_columns
-    @document.stuffing_metadata=metadata_columns
-    @document.user = current_user
+    if ( is_json?(data_columns) and is_json?(metadata_columns) )
+      @document.stuffing_data=data_columns
+      @document.stuffing_metadata=metadata_columns
+    else
+      logger.info "WARN: Document data/metadata was not in proper JSON format"
+    end
+    @document.user = user
     @document.save
 
     @opened_file.close
