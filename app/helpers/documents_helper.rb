@@ -72,23 +72,20 @@ module DocumentsHelper
   # @param f A IFilter object
   def save_file_to_document(fname, file, c, f)
     stime = Time.now()
-    
+
     #csv import. Each call on @parsed_file.<method> increments the cursor
     begin
-      if CSV.const_defined? :Reader
-          @parsed_file=CSV::Reader.parse(fname)
-      else
-          @parsed_file=CSV::CSV.open(file)
-      end
+      #@opened_file=CSV::CSV.open(file)
+      @opened_file = File.open file
     rescue
       return #unsupported file type
     end
     
     #get filtered headers, put them in metadata
-    metadata_columns = filter_metadata_columns(f, @parsed_file)
+    metadata_columns = filter_metadata_columns(f, @opened_file)
         
-    data_columns= filter_data_columns(f,@parsed_file)
-    
+    data_columns= filter_data_columns(f,@opened_file)
+
     etime = Time.now()
     
     logger.info "Filtered document #{fname} in #{etime - stime} seconds."
@@ -118,6 +115,8 @@ module DocumentsHelper
     @document.stuffing_metadata=metadata_columns
     @document.user = current_user
     @document.save
+
+    @opened_file.close
     
     etime = Time.now()
     
@@ -205,18 +204,18 @@ module DocumentsHelper
        #overwrite col names with numbered colnames
        
        colnames = get_ifiltered_colnames(row)
+      else
+        row = [row]
       end
       
-      for j in (0..row.count-1)
+      for j in (0..row.count() - 1)
         data_col_hash[ colnames[j] ] = row[j]
       end
-      
-      #data_columns[i] = data_col_hash
-      #i = i + 1
+
       data_columns << data_col_hash  
     end
-    
-    data_columns = data_columns.reject! { |item| item.empty? }
+
+    data_columns.reject! { |item| item.empty? }
     return data_columns
   end
   

@@ -3,6 +3,8 @@ class Document < ActiveRecord::Base
   require 'stuffing'
 
   attr_accessible :name, :stuffing_data, :stuffing_search
+
+  after_initialize :create_default_couchdb
     
   belongs_to :collection
   #TODO: not working, server startup. dump?
@@ -17,14 +19,11 @@ class Document < ActiveRecord::Base
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
   
 
-  def after_nitialize()
+  def create_default_couchdb()
 
     if is_couchdb_running?
-      d = Document.new(:name => "temp")
-      d.save
-    
-      if !d.view_exists("all_data_values")
-        d.create_simple_view("all_data_values", 
+      if !self.view_exists("all_data_values")
+        self.create_simple_view("all_data_values", 
         "function(doc) 
           {
             if (doc.data && !doc.is_search_doc)
@@ -40,8 +39,6 @@ class Document < ActiveRecord::Base
             }
           }")
       end
-
-      d.destroy
     end
   end
 

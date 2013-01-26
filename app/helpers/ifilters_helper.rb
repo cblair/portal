@@ -2,7 +2,13 @@ module IfiltersHelper
   def get_ifiltered_row(f, row)
     retval = []
     
+    #TODO
+    #t = row
+    #if row.kind_of? Array
+    #  t = row.first() #ignore everything but first
+    #end
     t = row.first() #ignore everything but first
+
     matches = /#{f.regex}/.match(t)
 
     #if regex finds matches, populate 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121229201609) do
+ActiveRecord::Schema.define(:version => 20130118042326) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20121229201609) do
     t.string   "share_token"
     t.boolean  "streaming"
     t.integer  "numdraw"
+    t.integer  "source_doc"
   end
 
   create_table "collections", :force => true do |t|

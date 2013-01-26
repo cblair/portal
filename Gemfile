@@ -41,20 +41,6 @@ gem 'twitter-bootstrap-rails'
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-#  OSX Lion wants this fix for Ruby 1.9.3:
-#   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
-#  TODO: Probably want this for other versions of Mac/Linux too.
-if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
-  #gem 'debugger'
-
-  #gem 'rack-mini-profiler'
-else
-  #Ubuntu 11.10 likes this. ?
-  #gem 'ruby-debug', :platforms => :ruby_18
-  #gem 'ruby-debug19', :platforms => :ruby_19
-end
-
 gem 'lazy_high_charts'
 
 gem 'couchrest'
@@ -68,8 +54,22 @@ gem 'rufus-scheduler'
 
 #Only for development
 group :development do
-    gem "ruby-prof"
-    gem 'simplecov', :require => false, :group => :test
+  gem 'debugger'
+  gem "ruby-prof"
+  gem 'simplecov', :require => false, :group => :test
+  #gem 'rack-mini-profiler'
+
+  #  OSX Lion wants this fix for Ruby 1.9.3:
+  #   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
+  #  TODO: Probably want this for other versions of Mac/Linux too.
+  if RUBY_PLATFORM == 'x86_64-darwin11.3.0'
+    #gem 'debugger'
+    #gem 'rack-mini-profiler'
+  else
+    #Ubuntu 11.10 likes this. ?
+    #gem 'ruby-debug', :platforms => :ruby_18
+    #gem 'ruby-debug19', :platforms => :ruby_19
+  end
 end
 
 #Rubyzip
