@@ -45,7 +45,6 @@ class DocumentsHelperTest < ActionView::TestCase
 
 	test "save_zip_to_documents - create parent collection" do
 		c=Collection.new(:name => "test_save_zip_to_documents")
-		c.save
 		fname = 'TUC2.zip'
 		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
 		assert upload
@@ -54,14 +53,65 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		assert c.name == "test_save_zip_to_documents"
 
+		#There are 2 collections with the same name, due to how OSX zipped this for us
+		count = Collection.where(:name => "TUC2").count
+		assert count == 2, "TUC2 collection count 2 != #{count}"
+
 		c_names = c.collections.map {|sub_c| sub_c.name}
 		assert c_names.include?("TUC2"), "TUC2 not in sub_collections: " + c_names.to_s
+
+		sub_c =  Collection.where(:name => "TUC2").second
+		assert sub_c.collection.name == "test_save_zip_to_documents", "TUC2 parent name: #{sub_c.collection.name}"
+		assert sub_c.documents.count == 1
+
+		sub_c =  Collection.where(:name => "2011").first
+		assert sub_c.collection.name == "TUC2"
+		assert sub_c.documents.count == 2
+
+		sub_c =  Collection.where(:name => "2012").first
+		assert sub_c.collection.name == "TUC2"
+		assert sub_c.documents.count == 2
+
+		Collection.all.each do |sub_c|
+			sub_c.documents.each do |sub_d|
+				assert sub_d.user == @user, "Document #{sub_d.name} user #{sub_d.user.email} != #{@user.email}"
+			end
+		end
 
 		c.destroy
 	end
 
 
 	test "save_zip_to_documents - no parent collection" do
+		c = nil
 
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		c_names = Collection.where(:collection_id => nil).map {|sub_c| sub_c.name}
+		assert c_names.include?("TUC2"), "TUC2 not in sub_collections: " + c_names.to_s
+
+		#There are 2 collections with the same name, due to how OSX zipped this for us
+		count = Collection.where(:name => "TUC2").count
+		assert count == 2, "TUC2 collection count 2 != #{count}"
+
+		c_names = Collection.where(:name => "TUC2").first.collections.map {|sub_c| sub_c.name}
+		assert c_names.include?("2011"), "2011 not in sub_collections: " + c_names.to_s
+		assert c_names.include?("2012"), "2012 not in sub_collections: " + c_names.to_s
+		
+		sub_c =  Collection.where(:name => "TUC2").first
+		assert sub_c.collection == nil
+		assert sub_c.documents.count == 1
+
+		sub_c =  Collection.where(:name => "2011").first
+		assert sub_c.collection.name == "TUC2"
+		assert sub_c.documents.count == 2
+
+		sub_c =  Collection.where(:name => "2012").first
+		assert sub_c.collection.name == "TUC2"
+		assert sub_c.documents.count == 2
 	end
 end

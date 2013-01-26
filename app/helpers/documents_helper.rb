@@ -49,13 +49,6 @@ module DocumentsHelper
           zip_collections[fname] = c
         else
           logger.info "Processing..."
-=begin
-          tempfile = Tempfile.new(basename)
-          tempfile.binmode
-          tempfile.write file.get_input_stream.read
-          tempfile.rewind
-          tempfile.close
-=end
           tempfile = File.new('/tmp/' + basename, 'w')
           tempfile.binmode
           tempfile.write file.get_input_stream.read
