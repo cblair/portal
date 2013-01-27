@@ -18,11 +18,10 @@ class DocumentsHelperTest < ActionView::TestCase
 			c.destroy
 		end
 
-=begin
 		Document.all.each do |d|
 			d.destroy
 		end
-=end
+
 		Upload.all.each do |u|
 			u.destroy
 		end
@@ -137,10 +136,14 @@ class DocumentsHelperTest < ActionView::TestCase
 		c = nil
 		f = nil
 		fname = 'TMJ06001.A91_2.txt'
+		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
+		assert fp.is_a? File
+
 		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
 		assert upload
+		assert upload.upfile.path
 
-		save_file_to_document(fname, upload.upfile.path, c, f, @user)
+		assert save_file_to_document(fname, upload.upfile.path, c, f, @user)
 
 		d = Document.first
 		assert d.name == fname, "#{d.name} != #{fname}"

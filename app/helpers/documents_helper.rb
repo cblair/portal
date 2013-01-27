@@ -34,10 +34,11 @@ module DocumentsHelper
   # @param user_c A Collection object
   # @param f A IFilter object
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f, user=current_user)
-    status = false
+    #true until something fails
+    status = true
 
     if (zip_fname == nil or zip_file_object == nil)
-      logger.info "WARN: zip file name or zip file object was nil"
+      log_and_print "WARN: zip file name or zip file object was nil"
       return false
     end
 
@@ -66,7 +67,7 @@ module DocumentsHelper
           #save to collections dictionary
           zip_collections[fname] = c
         else
-          logger.info "Processing..."
+          log_and_print "Processing document '#{fname}'..."
           tempfile = File.new('/tmp/' + basename, 'w')
           tempfile.binmode
           tempfile.write file.get_input_stream.read
@@ -74,7 +75,7 @@ module DocumentsHelper
           tempfile.close
           
           c_name = File.dirname(fname)
-          status = save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
+          status = status and save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
         end
       end
     end
@@ -102,19 +103,19 @@ module DocumentsHelper
     status = false
 
     if (fname == nil or file == nil)
-      logger.info "WARN: file name or object was nil, can't save to document"
+      log_and_print "WARN: file name or object was nil, can't save to document"
       return false
     end
 
     stime = Time.now()
 
     #csv import. Each call on @parsed_file.<method> increments the cursor
-    begin
+    #begin
       #@opened_file=CSV::CSV.open(file)
       @opened_file = File.open file
-    rescue
-      return false #unsupported file type
-    end
+    #rescue
+    #  return false #unsupported file type
+    #end
     
     #get filtered headers, put them in metadata
     metadata_columns = filter_metadata_columns(f, @opened_file)
@@ -123,7 +124,7 @@ module DocumentsHelper
 
     etime = Time.now()
     
-    logger.info "Filtered document #{fname} in #{etime - stime} seconds."
+    log_and_print "Filtered document #{fname} in #{etime - stime} seconds."
     
     stime = Time.now()
     
@@ -138,11 +139,6 @@ module DocumentsHelper
     stime = Time.now()
     
     #Save Document
-    #TODO: bug, 'create' is not working now, makes all values nill. Going to 'new'. ?
-    #d=Document.create(  :name => fname,
-    #                    :collection => c,
-    #                    :stuffing_data => data_columns
-    #                  )
     @document=Document.new
     @document.name=fname
     @document.collection=c
@@ -153,16 +149,24 @@ module DocumentsHelper
 
     begin
       status = @document.save
-    rescue
-      log_and_print "ERROR: Couldn't save document for unknown reason."
-      status = false
+      etime = Time.now()
+      log_and_print "INFO: Saved document #{fname} in #{etime - stime} seconds."
+    rescue RestClient::Conflict
+      log_and_print "ERROR: 409 Conflict, couldn't save document. ActiveRecord and CouchDB databases may be out of sync."
+      return false
+    rescue RestClient::BadRequest
+      log_and_print "ERROR: Couldn't save document #{fname}, probably because of a parse error."
+
+      dc_is_valid_json = is_json?(data_columns.to_s)
+      mdc_is_valid_json = is_json?(metadata_columns.to_s)
+
+      log_and_print "ERROR: More parse information: "
+      log_and_print "ERROR:  is data json?: #{dc_is_valid_json}"
+      log_and_print "ERROR:  is metadata json?: #{mdc_is_valid_json}"
+      return false
     end
 
     @opened_file.close
-    
-    etime = Time.now()
-    
-    logger.info "Saved document #{fname} in #{etime - stime} seconds."
 
     return status
   end
