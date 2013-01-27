@@ -1,0 +1,27 @@
+    FILE TYPE                      : INTERROGATION
+    FILE TITLE                     : TMJ06001.A91
+    FILE CREATED                   : 01 JANUARY 2006 AT 00:00
+
+! This file contains all detections for 2006 from the juvenile bypass outfall.
+! The tags were detected using an FS-2001F portable transceiver and flat-plate
+! antenna.  These data were compiled from the original files by Dave Marvin,
+! PTAGIS.  The original data files are listed in the data stream below, 
+! followed by their contents.
+
+! TMJ06032.A1
+| 01 02/16/06 18:34:51 ::q
+:q.t. XX 91
+
+1a 2a
+| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91
+| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91
+| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91
+| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91
+| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91
+| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91
+| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+
+    FILE CLOSED                    : 28 JUNE 2006 AT 08:13

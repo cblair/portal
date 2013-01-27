@@ -2,8 +2,13 @@ module DocumentsHelper
   require 'csv'
   require 'zip/zipfilesystem'
   include IfiltersHelper
-  include Devise::TestHelpers
-  
+
+  #helpers for testing devise
+  if Rails.env.test?
+    include Devise::TestHelpers
+  end
+
+
   def is_json?(str)
     begin
       JSON.parse str
@@ -18,11 +23,24 @@ module DocumentsHelper
     return true
   end
 
+
+  def log_and_print(str)
+    logger.info str
+    puts str
+  end
+
   # @param zip_fname A string of the zip file name
   # @param zip_file_object A file object for the zip file
   # @param user_c A Collection object
   # @param f A IFilter object
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f, user=current_user)
+    status = false
+
+    if (zip_fname == nil or zip_file_object == nil)
+      logger.info "WARN: zip file name or zip file object was nil"
+      return false
+    end
+
     #TODO: replace all back slagshes with forward slashes
     
     #a dictionary of dircetories, than point to collections 
@@ -56,8 +74,7 @@ module DocumentsHelper
           tempfile.close
           
           c_name = File.dirname(fname)
-          save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
-
+          status = save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
         end
       end
     end
@@ -67,9 +84,12 @@ module DocumentsHelper
       c = zip_collections[k]
       if c.collection == nil
         c.collection = user_c
-        c.save
+
+        status = (c.save and status)
       end
     end
+
+    return status
   end
    
    
@@ -79,6 +99,13 @@ module DocumentsHelper
   # @param c A Collection object
   # @param f A IFilter object
   def save_file_to_document(fname, file, c, f, user=current_user)
+    status = false
+
+    if (fname == nil or file == nil)
+      logger.info "WARN: file name or object was nil, can't save to document"
+      return false
+    end
+
     stime = Time.now()
 
     #csv import. Each call on @parsed_file.<method> increments the cursor
@@ -86,7 +113,7 @@ module DocumentsHelper
       #@opened_file=CSV::CSV.open(file)
       @opened_file = File.open file
     rescue
-      return #unsupported file type
+      return false #unsupported file type
     end
     
     #get filtered headers, put them in metadata
@@ -119,20 +146,25 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    if ( is_json?(data_columns) and is_json?(metadata_columns) )
-      @document.stuffing_data=data_columns
-      @document.stuffing_metadata=metadata_columns
-    else
-      logger.info "WARN: Document data/metadata was not in proper JSON format"
-    end
+
+    @document.stuffing_data=data_columns
+    @document.stuffing_metadata=metadata_columns
     @document.user = user
-    @document.save
+
+    begin
+      status = @document.save
+    rescue
+      log_and_print "ERROR: Couldn't save document for unknown reason."
+      status = false
+    end
 
     @opened_file.close
     
     etime = Time.now()
     
     logger.info "Saved document #{fname} in #{etime - stime} seconds."
+
+    return status
   end
   
 

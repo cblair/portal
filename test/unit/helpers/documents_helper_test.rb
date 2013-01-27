@@ -18,8 +18,13 @@ class DocumentsHelperTest < ActionView::TestCase
 			c.destroy
 		end
 
+=begin
 		Document.all.each do |d|
 			d.destroy
+		end
+=end
+		Upload.all.each do |u|
+			u.destroy
 		end
  	end
 
@@ -113,5 +118,35 @@ class DocumentsHelperTest < ActionView::TestCase
 		sub_c =  Collection.where(:name => "2012").first
 		assert sub_c.collection.name == "TUC2"
 		assert sub_c.documents.count == 2
+	end
+
+
+	test "save_zip_to_documents - nil arguments" do
+		c = nil
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert !save_zip_to_documents(fname, nil, c, nil, @user)
+		assert !save_zip_to_documents(nil, upload, c, nil, @user)
+		assert !save_zip_to_documents(nil, nil, c, nil, @user)
+	end
+
+
+	test "save_file_to_document - valid upload file, no ifilter" do
+		c = nil
+		f = nil
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		save_file_to_document(fname, upload.upfile.path, c, f, @user)
+
+		d = Document.first
+		assert d.name == fname, "#{d.name} != #{fname}"
+		assert d.collection == nil
+		assert d.validated == nil, "#{d.validated} != nil"
+
+		assert d.stuffing_data, "Document doesn't have any data: " + d.stuffing_data.to_s
 	end
 end

@@ -182,7 +182,7 @@ DEPENDENCIES
   coffee-rails
   couchrest
   debugger
-  devise (~> 2)
+  devise
   jquery-fileupload-rails
   jquery-rails
   jquery-ui-rails
