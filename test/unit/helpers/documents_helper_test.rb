@@ -152,4 +152,9 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		assert d.stuffing_data, "Document doesn't have any data: " + d.stuffing_data.to_s
 	end
+
+
+	test "get_data_colnames - all" do
+		assert get_data_colnames([])
+	end
 end
