@@ -28,6 +28,10 @@
    	<td>(new collection name):</td>
    	<td><%= f.text_field "collection_text" %></td>
    </tr>
+   <tr id="project_id">
+	<td>(select a project):</td>
+	<td><%= f.select(:project_id, Project.all.collect {|p| [ p.name, p.id ] }, {:prompt => '(none)'}) %></td>
+   </tr>
    <tr>
      <td>
          <%= f.check_box :contains_header, :checked => false %> File has header

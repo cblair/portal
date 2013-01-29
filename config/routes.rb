@@ -17,6 +17,11 @@ Portal::Application.routes.draw do
   match '/documents/manip' => "documents#manip", :as => :document_manip
 
   resources :collections
+  
+  resources :projects
+  match '/projects/groups/:id' => "projects#groups", :as => :groups
+  match '/projects/owner' => "projects#owner", :as => :owner
+  
   resources :posts
   
   #I did something wrong to have to imply all of these

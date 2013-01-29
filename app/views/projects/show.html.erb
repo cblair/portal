@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @project.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @project.pdesc %>
+</p>
+
+<p>
+  <b>Project ID</b>
+  <td><%= @project.id %></td> <!-- debug -->
+</p>
+
+<h2>Listing documents</h2>
+<h4>Click a document to view details</h4>
+
+<br />
+
+<% Document.all.each do |doc| %>
+  <% if (doc.user == current_user) %>
+    <% if (doc.project == @project) %>
+      <ul>
+        <li> <%= link_to doc.name, doc %> </li>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>
+
+<br />
+
+<%= link_to 'Edit', edit_project_path(@project) %> |
+<%= link_to 'Back', projects_path %>

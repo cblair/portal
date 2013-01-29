@@ -70,7 +70,8 @@ module DocumentsHelper
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
-  def save_file_to_document(fname, file, c, f)
+  # @param p A project object
+  def save_file_to_document(fname, file, c, f, p)
     stime = Time.now()
     
     #csv import. Each call on @parsed_file.<method> increments the cursor
@@ -162,6 +163,7 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
+    @document.project=p		#links document to project
     @document.stuffing_data=data_columns
     @document.stuffing_metadata=metadata_columns
     @document.user = current_user
