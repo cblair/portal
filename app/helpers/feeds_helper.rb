@@ -61,8 +61,7 @@ module FeedsHelper
   
   #TODO: doesn't work!
   def destroy_feed_scheduler(feed)
-    scheduler = Rufus::Scheduler.start_new
-    debugger
+    scheduler = Rufus::Scheduler.start_new 
     
     scheduler.unschedule(feed.jid)
   end

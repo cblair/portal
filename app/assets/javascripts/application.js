@@ -5,19 +5,16 @@
 // the compiled file.
 //
 //= require jquery
-//= require jquery-ui
 //= require jquery_ujs
-//= require dataTables/jquery.dataTables
+//= require twitter/bootstrap
+
+//TODO: I don't know why application.js isn't including this, but this following doesn't work
+//= require jquery-fileupload
+
+//= require jquery-ui
 //= require highcharts
 //= require_tree .
 
-$(function() {
-  $("#documents th a, #documents .pagination a").live("click", function() {
-    $.getScript(this.href);
-    return false;
-  });
-  $("#documents_search").submit(function() {
-    $.get(this.action, this.serialize(), null, "script");
-    return false;
-  });
-});
+jQuery.ajaxSetup({ 
+  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 
+})

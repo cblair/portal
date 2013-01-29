@@ -1,0 +1,54 @@
+<!--Start of collection section-->
+  <% if collection_is_viewable(collection) %>
+  	<ul class="col-doc" data-collection-id="<%= collection%>">
+	    <li>
+	    	<i class="icon-folder-close icon-white"></i>
+	    	<%= link_to collection.name, collection %>
+	    	<span>
+		    	<a class="col-doc-plus-minus" id="col-doc-plus" href="#">
+		    		<i class="icon-plus icon-white"></i>
+		    	</a>
+		    	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">
+		    		<i class="icon-minus icon-white"></i>
+		    	</a>
+		    </span>
+	    	
+	    	<ul class="col-doc-attr-form">
+		    	<a class="label label-inverse" href="<%= edit_collection_path(collection) %>">
+	    			<i class="icon-save icon-white"></i>
+	  			</a>
+		    	<%= link_to 'X', collection, confirm: 'Are you sure?', method: :delete,
+		    				class: "label label-important" %>
+		    	<% if collection_is_validated(collection) %>
+		    		<a class="label label-success" href="#">
+						<i class="icon-check icon-white"></i>
+				<% else %>
+					<a class="label label-warning" data-confirm="Validations may take some time..." \
+    						rel="nofollow" href="<%= validate_collection_path(collection) %>">
+						<i class="icon-check-empty icon-white"></i>
+				<% end %>
+				</a>
+	    		<a class="label label-important" href="<%= pub_priv_collection_path(collection, :public => "true") %>">
+					<i class="icon-eye-open icon-white"></i>
+				</a>
+				<a class="label label-default" href="<%= pub_priv_collection_path(collection, :public => "false") %>">
+					<i class="icon-eye-close icon-white"></i>
+				</a>
+	  			<a class="label label-info" href="<%= csv_export_path(collection, :format => 'zip', :stype => 'Collection') %>">
+	    			<i class="icon-download icon-white"></i>
+	    			zip
+	  			</a>
+	  		</ul>
+	    </li>
+    
+	    <%= 
+	    	#render :partial => "collections/rec_collection_documents_render", :locals => {:collection => collection}
+	    %>
+	    <%= link_to 'View documents', collection_path(collection) %>
+	    
+	    <% Collection.where(:collection_id => collection.id).each do |child_collection| %>
+			<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection} %>
+	  	<% end %>
+	  </ul>
+  <% end %>
+<!--End of collection section-->

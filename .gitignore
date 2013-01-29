@@ -12,5 +12,5 @@ db/*.sqlite3
 *.sw?
 *.orig
 
-Gemfile.lock
 public/system
+vendor/bundle

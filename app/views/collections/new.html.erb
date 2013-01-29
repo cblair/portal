@@ -8,8 +8,11 @@
 	<td><%= f.text_field :name %></td>
 </tr>
 <tr>
-	<td>Parent:</td>
-	<td><%= f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }) %></td>
+	<td>Parent collection:</td>
+  	<td>
+  	<%= f.select(:collection_id, get_all_collection_select_options, 
+			{:include_blank => '(none)'} ) %>
+	</td>
 </tr>
 <tr>
 	<td><%= f.submit %></td>

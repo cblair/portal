@@ -30,4 +30,14 @@ Portal::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = false
+  
+  #CouchDB stuff
+  config.couchdb = {
+                              'COUCHDB_HOST'      => '127.0.0.1',
+                              'COUCHDB_PORT'      => '5984',
+                              'COUCHDB_USERNAME'  => '',
+                              'COUCHDB_PASSWORD'  => '',
+                              'COUCHDB_HTTPS'     => false
+                   }
+                 
 end

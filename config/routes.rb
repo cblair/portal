@@ -26,14 +26,22 @@ Portal::Application.routes.draw do
   
   #I did something wrong to have to imply all of these
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
-  match '/DataIO/csv_export/:id'  =>  "DataIO#csv_export", :as => :csv_export, :formats => 'csv'
+  match '/DataIO/csv_export/:id'  =>  "DataIO#csv_export", :as => :csv_export, :formats => 'zip'
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/DataIO/jsu_index'  =>  "DataIO#jsu_index", :as => :jsu_csv_import
   
   match '/visualizations' => 'viz#index', :as => 'visualizations'
   match '/chart/:id' => 'viz#chart', :as => 'chart'
   match '/chart/:id/:share_token' => 'viznoauth#sharechart', :as => 'sharechart'
   match '/chart' => 'viz#chart', :as => 'visualize'
   match '/DataIO/index'  =>  "DataIO#index", :as => :data_io_index
+  
+  #TODO: to document_controller
+  match '/collections/validate_doc/:id' =>  "Collections#validate_doc", :as => :validate_doc
+  match '/collections/validate_collection/:id' =>  "Collections#validate_collection", :as => :validate_collection
+  
+  match '/documents/pub_priv_doc/:id' =>  "Documents#pub_priv_doc", :as => :pub_priv_doc
+  match '/collections/pub_priv_collection/:id' =>  "Collections#pub_priv_collection", :as => :pub_priv_collection
   
   match '/visualize' => 'viz#chart', :as => 'visualize'
 

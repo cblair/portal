@@ -1,9 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  name: MyString
-  regex: MyString
-
-two:
-  name: MyString
-  regex: MyString
+ifilter1:
+  name: ifilter1
+  regex: ([0-9\/]{8} [0-9:]{8}) ([a-fA-F0-9.]+)

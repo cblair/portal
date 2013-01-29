@@ -1,15 +1,20 @@
-class DataIOController < ApplicationController
+class DataIoController < ApplicationController
   require 'csv'
   require 'spawn'
+  require 'zip/zip'
+  require 'tmpdir'
   include DocumentsHelper
   include IfiltersHelper
 
-  before_filter :autologin_if_dev
+  #before_filter :autologin_if_dev
   before_filter :authenticate_user!
 
   def index
   end
   
+  
+  #Note - this method is no longer used; the jQuery upload form uses the 
+  #       new upload controller  
   def csv_import
     #start recording run time
     stime = Time.now() #start time
@@ -18,11 +23,11 @@ class DataIOController < ApplicationController
     c_text = params[:dump][:collection_text]
     if c_text == nil
       #take the collection from the select menu
+      c_id = params[:dump][:collection_id]
       c=Collection.find(params[:dump][:collection_id])
     else
       #create a new collection at the root
-      c=Collection.new
-      c.name = c_text
+      c=Collection.new(:name => ctext)
     end
     
     #Project - find the project by id
@@ -66,27 +71,40 @@ class DataIOController < ApplicationController
 
     #redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
+  
 
   def csv_export
+    #Export scaffold type - Collection or Document
+    stype = params[:stype]
 
-      document = Document.find(params[:id])
-      @headings = document.stuffing_data.first.keys
-
-      csv_data = CSV.generate do |csv|
-          csv << @headings
-          document.stuffing_data.each do |row|
-              csv << row.values
-          end
-      end
-      puts csv_data
-
-      send_data csv_data, :filename => "#{document.name}",
-          :type => 'text/csv; charset=iso-8859-1; header=present',
-          :disposition => "attachment" 
-
+    #Create zip
+    zip_fname = "hatch_data_io"
+    temp_zip = Tempfile.new(zip_fname)
+    
+    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+      parent_dir_path = ''
       
-
+      #Get doc_list
+      if stype == "Document"
+        document = Document.find(params[:id])
+        doc_list = {document => nil}
+        zip_doc_list([], zipfile, doc_list)
+      elsif stype == "Collection"
+        collection = Collection.find(params[:id])
+        doc_list = {}
+        collection.documents.each do |key|
+          doc_list[key] = nil
+        end
+        recursive_collection_zip([], zipfile, collection)
+        
+      #TODO: else error  
+      end
+    end
+          
+    #Send the zip back, and cleanup
+    send_file temp_zip.path,  :type => 'application/zip',
+                              :disposition => 'attachment',
+                              :filename => zip_fname
+    temp_zip.close
   end
-
-
 end
