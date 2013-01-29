@@ -80,3 +80,6 @@ gem "paperclip", "~> 3.0"
 
 #Spawn - for forking processing
 gem "spawn", :git => 'git://github.com/rfc2822/spawn'
+
+#New Relic
+gem 'newrelic_rpm'

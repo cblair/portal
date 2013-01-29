@@ -102,6 +102,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.19)
     multi_json (1.5.0)
+    newrelic_rpm (3.5.6.46)
     orm_adapter (0.4.0)
     paperclip (3.4.0)
       activemodel (>= 3.0.0)
@@ -191,6 +192,7 @@ DEPENDENCIES
   less
   less-rails
   libv8 (~> 3.3.10)
+  newrelic_rpm
   paperclip (~> 3.0)
   pg
   rails (= 3.2.11)
