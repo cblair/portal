@@ -134,20 +134,11 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.0.3)
-    rbx-require-relative (0.0.9)
     rdoc (3.12)
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     ruby-prof (0.12.0)
-      columnize (>= 0.1)
-      ruby-debug-base (~> 0.10.4.0)
-    ruby-debug-base (0.10.4)
-      linecache (>= 0.3)
-    ruby-debug-base19 (0.11.25)
-      columnize (>= 0.3.1)
-      linecache19 (>= 0.5.11)
-      ruby_core_source (>= 0.1.4)
     rubyzip (0.9.9)
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
@@ -191,7 +182,7 @@ DEPENDENCIES
   coffee-rails
   couchrest
   debugger
-  devise
+  devise (~> 2)
   jquery-fileupload-rails
   jquery-rails
   jquery-ui-rails

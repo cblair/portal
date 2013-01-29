@@ -46,7 +46,7 @@ gem 'lazy_high_charts'
 gem 'couchrest'
 gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"
 
-gem 'devise'#, '~> 2'
+gem 'devise', '~> 2'
 
 gem 'will_paginate'#, '3.0.pre2'
 
