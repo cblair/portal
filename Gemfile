@@ -58,6 +58,9 @@ group :development do
   gem "ruby-prof"
   gem 'simplecov', :require => false, :group => :test
   #gem 'rack-mini-profiler'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
 
   #  OSX Lion wants this fix for Ruby 1.9.3:
   #   https://github.com/chuckg/chuckg.github.com/blob/master/ruby/193_and_rdebug.md
@@ -80,3 +83,6 @@ gem "paperclip", "~> 3.0"
 
 #Spawn - for forking processing
 gem "spawn", :git => 'git://github.com/rfc2822/spawn'
+
+#New Relic
+gem 'newrelic_rpm'
