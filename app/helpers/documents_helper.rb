@@ -300,6 +300,7 @@ module DocumentsHelper
     begin
       md = d.stuffing_metadata
     rescue
+      log_and_print "WARN: get_document_metadata threw an unknown exception"
        md = []
     end
     
@@ -307,18 +308,50 @@ module DocumentsHelper
   end
 
 
+  #Gets stuffing data, catching exception if doc metadata dne
+  def get_document_data(doc)
+    d = []
+    begin
+      d = doc.stuffing_data
+    rescue
+      log_and_print "WARN: get_document_data threw an unknown exception"
+      d = []
+    end
+    
+    return d
+  end
+
+
   def get_last_n_above_id(d, xname, yname, lastid, max)
       out = []
-      document = Document.find(d)
+
+      if d == nil
+        log_and_print "WARN: Calling with Document == nil"
+        return []
+      end
+
+      stuffing_data = get_document_data(d)
+
+      if stuffing_data.empty?
+        return []
+      end
+
       lid = lastid.to_i
       last = lid
-      document.stuffing_data.find_all do |item|
+      stuffing_data.find_all do |item|
           if item["id"] != nil && item["id"] > lid
               out << [item[xname], item[yname]]
               last = item["id"]
           end
       end
-      out = out.last(max.to_i)
+
+      if max >= 0
+        out = out.last(max.to_i)
+      else
+        out = []
+        last = -1
+      end
+
       return {"lastpt" => last, "points" => out}
   end
   

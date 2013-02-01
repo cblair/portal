@@ -154,6 +154,29 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert d.stuffing_data, "Document doesn't have any data: " + d.stuffing_data.to_s
 	end
 
+	test "save_file_to_document - valid upload file, ifilter" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, f, @user)
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1
+		d = docs.first
+
+		md = get_document_metadata(d)
+		assert md != [], md.to_s + " should not == []"
+	end
+
 
 	test "get_data_colnames - all" do
 		#empty tests
@@ -400,5 +423,218 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert get_data_column(d, '1') == []
 
 		assert get_data_column(nil, nil) == []
+	end
+
+
+	test "get_document_metadata - valid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+		assert validate_document_helper(@document, f)
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1
+		d = docs.first
+
+		md = get_document_metadata(d)
+		assert md != [], md.to_s + " should not == []"
+		assert md == 	[
+						{"1"=>"FILE TYPE", "2"=>"INTERROGATION"}, 
+						{"1"=>"FILE TITLE", "2"=>"TMJ06001.A91"}, 
+						{"1"=>"FILE CREATED", "2"=>"01 JANUARY 2006 AT 00:00"}
+						], md.to_s
+	end
+
+
+	test "get_document_metadata - invalid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, "doc count should == 1, but == #{docs.count}"
+		d = docs.first
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+		assert validate_document_helper(@document, nil)
+
+		#no filter, get nothing
+		md = get_document_metadata(d)
+		assert md == [], md.to_s + " should == []"
+
+		#if its empty, get empty
+		d.stuffing_metadata = []
+		md = get_document_metadata(d)
+		assert md == [], md.to_s + " should == []"
+
+		#cause rescue
+		d = nil
+		md = get_document_metadata(d)
+		assert md == [], md.to_s + " should == []"		
+	end
+
+
+	test "get_document_data - valid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		d = Document.where(:name => fname).first
+
+		assert validate_document_helper(d, f)
+
+		data = get_document_data(d)
+		assert data != [], data.to_s + " should not == []"
+		assert data == 	[
+						{"1"=>"02/16/06 19:08:15", "2"=>"3D9.1BF1E7919A"}, 
+						{"1"=>"02/16/06 19:18:36", "2"=>"3D9.1BF1A998FA"}, 
+						{"1"=>"02/17/06 18:21:03", "2"=>"3D9.1BF20E8FE2"}, 
+						{"1"=>"02/20/06 18:27:01", "2"=>"3D9.1BF11BFFF5"}, 
+						{"1"=>"02/22/06 01:56:38", "2"=>"3D9.1BF23F62D4"}, 
+						{"1"=>"02/22/06 03:56:10", "2"=>"3D9.1BF234346C"}, 
+						{"1"=>"02/22/06 17:59:11", "2"=>"3D9.1BF2342E83"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}
+						]
+	end
+
+
+	test "get_document_data - invalid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1
+		d = docs.first
+
+		#no filter, get unfiltered doc data
+		data = get_document_data(d)
+		assert data ==	[
+							{"1"=>"    FILE TYPE                      : INTERROGATION\n"}, 
+							{"1"=>"    FILE TITLE                     : TMJ06001.A91\n"}, 
+							{"1"=>"    FILE CREATED                   : 01 JANUARY 2006 AT 00:00\n"}, 
+							{"1"=>"\n"}, 
+							{"1"=>"! This file contains all detections for 2006 from the juvenile bypass outfall.\n"}, 
+							{"1"=>"! The tags were detected using an FS-2001F portable transceiver and flat-plate\n"}, 
+							{"1"=>"! antenna.  These data were compiled from the original files by Dave Marvin,\n"}, 
+							{"1"=>"! PTAGIS.  The original data files are listed in the data stream below, \n"}, 
+							{"1"=>"! followed by their contents.\n"}, {"1"=>"\n"}, {"1"=>"! TMJ06032.A1\n"}, 
+							{"1"=>"| 01 02/16/06 18:34:51 ::q\n"}, 
+							{"1"=>":q.t. XX 91\n"}, 
+							{"1"=>"\n"}, 
+							{"1"=>"1a 2a\n"}, 
+							{"1"=>"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n"}, 
+							{"1"=>"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n"}, 
+							{"1"=>"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n"}, 
+							{"1"=>"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+							{"1"=>"\n"}, 
+							{"1"=>"    FILE CLOSED                    : 28 JUNE 2006 AT 08:13\n"}
+						]
+
+		#if its empty, get empty
+		d.stuffing_data = []
+		data = get_document_data(d)
+		assert data == [], data.to_s + " should == []"
+
+		#cause rescue
+		d = nil
+		data = get_document_data(d)
+		assert data == [], data.to_s + " should == []"		
+	end
+
+
+	test "get_last_n_above_id - valid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		d = Document.where(:name => fname).first
+
+		d.stuffing_data = 	[
+								{"id" => 1, "x" => 1, "y" => 2},
+								{"id" => 2, "x" => 2, "y" => 4},
+								{"id" => 3, "x" => 3, "y" => 8}
+							]
+		d.save
+
+		data = get_last_n_above_id(d, "x", "y", 1, 3)
+		assert data == {"lastpt"=>3, "points"=>[[2, 4], [3, 8]]}
+
+		data = get_last_n_above_id(d, "x", "y", 2, 3)
+		assert data == {"lastpt"=>3, "points"=>[[3,8]]}
+
+		#id is passed whats in data
+		data = get_last_n_above_id(d, "x", "y", 3, 3)
+		assert data == {"lastpt"=>3, "points"=>[]}	
+
+		#small maxes
+		data = get_last_n_above_id(d, "x", "y", 1, 0)
+		assert data == {"lastpt"=>3, "points"=>[]}, data.to_s + " != []"
+		data = get_last_n_above_id(d, "x", "y", 1, -1)
+		assert data == {"lastpt"=>-1, "points"=>[]}
+
+		#weird ids
+		data = get_last_n_above_id(d, "x", "y", 0, 3)
+		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
+		data = get_last_n_above_id(d, "x", "y", -1, 3)
+		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
 	end
 end
