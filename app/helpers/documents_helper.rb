@@ -231,12 +231,8 @@ module DocumentsHelper
     
     #TODO: cleanup
     #get the column names
-    colnames=[]
-    if false
-      colnames = iterator.first() #gets the next row, increments the iterator
-    else
-      colnames = [1]
-    end
+    #TODO: just setting to [1] for now
+    colnames = [1]
     
     data_columns=[]
     i = 0
@@ -364,9 +360,6 @@ module DocumentsHelper
       dc = dc.group_by(&:capitalize).map {|k,v| {k => v.length}}
     rescue NoMethodError #one of the values wasn't a string, and the capitalize method dne
       dc = dc.group_by(&:to_s).map {|k,v| {k => v.length}}
-    rescue
-      log_and_print "WARN: get_data_row had an unknown exception while mapping data"
-      return []
     end
     
     dc.each do |row|

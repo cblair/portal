@@ -34,6 +34,7 @@ class DocumentsHelperTest < ActionView::TestCase
  	test 'is_json?' do
  		assert is_json?('{ "test" : ["a", 1, "b"] }')
  		assert !is_json?('{ "test" : ["a", 1, "b"] : "c"}')
+ 		assert !is_json?(nil)
  	end
 
 
@@ -178,6 +179,82 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		md = get_document_metadata(d)
 		assert md != [], md.to_s + " should not == []"
+	end
+
+
+	test "save_file_to_document - 409 error" do
+		d = Document.new(:name => "fakey")
+		d.save
+
+		host     = Portal::Application.config.couchdb['COUCHDB_HOST']
+		port     = Portal::Application.config.couchdb['COUCHDB_PORT']
+		username = Portal::Application.config.couchdb['COUCHDB_USERNAME']
+		password = Portal::Application.config.couchdb['COUCHDB_PASSWORD']
+		https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
+
+		#This name will have to change if the project name ever does
+		db_name = "portal_test"
+
+		if https
+        	conn_str = "https://"
+    	else
+        	conn_str = "http://"
+      	end
+      
+      	if username != nil and password != nil
+        	conn_str += "#{username}:#{password}@"
+      	end
+      
+      	conn_str += "#{host}:#{port}/#{db_name}"
+      
+      	assert host == "127.0.0.1", host.to_s
+
+      	db = CouchRest.database(conn_str)
+
+      	#jump ahead of stuffing and our ActiveRecord ids...
+      	response = db.save_doc({"_id" => "Document-#{d.id + 1}"})
+      	assert response["ok"] == true
+
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert !save_file_to_document(fname, upload.upfile.path, nil, f, @user)
+
+     	response = db.delete_doc(
+     								{
+     									"_id" => "Document-#{d.id + 1}", 
+     									"_rev" => response['rev']
+     								}
+     							)
+	end
+
+
+	test "save_file_to_document -  nil arguments" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		#assert save_file_to_document(fname, upload.upfile.path, nil, f, @user)
+		assert !save_file_to_document(nil, upload.upfile.path, nil, f, @user)
+		assert !save_file_to_document(fname, nil, nil, f, @user)
+		assert !save_file_to_document(nil, nil, nil, f, @user)
 	end
 
 
@@ -639,6 +716,12 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
 		data = get_last_n_above_id(d, "x", "y", -1, 3)
 		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
+
+		#empty stuffing data
+		d.stuffing_data = []
+		d.save
+		data = get_last_n_above_id(d, "x", "y", 0, 3)
+		assert data == []
 	end
 
 
@@ -953,8 +1036,17 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		assert save_zip_to_documents(fname, upload, c, nil, @user)
 
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
 		doc_list = {}
 		Document.all.each do |key|
+			assert validate_document_helper(key, f)
       		doc_list[key] = nil
     	end
 
@@ -1082,6 +1174,25 @@ class DocumentsHelperTest < ActionView::TestCase
 						"tmp/viewable_test/TUC2/2011/TMJ06001.B02.txt",
 						"tmp/viewable_test/TUC2/2012/TMJ06001.C01.txt",
 						"tmp/viewable_test/TUC2/2012/TMJ06001.C02.txt"
+					]
+		zipfile = Zip::ZipFile.open(temp_zip.path)
+		zipfile.each do |file|
+			assert entries.include?(file.to_s), file.to_s + " not in entries: #{entries}"
+		end
+
+		#make 'blank' named dir
+		c.name = ""
+		c.save
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert recursive_collection_zip(['tmp'], zipfile, c)
+		end
+
+		entries =	[
+						"tmp/(blank)/TUC2/TMJ06001.A01.txt",
+						"tmp/(blank)/TUC2/2011/TMJ06001.B01.txt",
+						"tmp/(blank)/TUC2/2011/TMJ06001.B02.txt",
+						"tmp/(blank)/TUC2/2012/TMJ06001.C01.txt",
+						"tmp/(blank)/TUC2/2012/TMJ06001.C02.txt"
 					]
 		zipfile = Zip::ZipFile.open(temp_zip.path)
 		zipfile.each do |file|
