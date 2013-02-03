@@ -1,5 +1,5 @@
 <!--Start of collection section-->
-  <% if collection_is_viewable(collection) %>
+  <% if collection_is_viewable(collection, current_user) %>
   	<ul class="col-doc" data-collection-id="<%= collection%>">
 	    <li>
 	    	<i class="icon-folder-close icon-white"></i>

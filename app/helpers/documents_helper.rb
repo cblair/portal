@@ -4,9 +4,9 @@ module DocumentsHelper
   include IfiltersHelper
 
   #helpers for testing devise
-  if Rails.env.test?
+  #if Rails.env.test?
     include Devise::TestHelpers
-  end
+  #end
 
 
   def is_json?(str)
@@ -325,8 +325,8 @@ module DocumentsHelper
   def get_last_n_above_id(d, xname, yname, lastid, max)
       out = []
 
-      if d == nil
-        log_and_print "WARN: Calling with Document == nil"
+      if ( (d == nil) or (xname == nil) or (yname == nil) )
+        log_and_print "WARN: Calling with Document, x or y name == nil"
         return []
       end
 
@@ -345,7 +345,7 @@ module DocumentsHelper
           end
       end
 
-      if max >= 0
+      if ((max != nil) and (max >= 0))
         out = out.last(max.to_i)
       else
         out = []
@@ -358,8 +358,16 @@ module DocumentsHelper
   #Gives the count of every value in a column
   def get_data_map(d, colname)
     data_columns = []
-    dc=get_data_column(d,colname)
-    dc = dc.group_by(&:capitalize).map {|k,v| {k => v.length}}
+    dc = get_data_column(d,colname)
+
+    begin
+      dc = dc.group_by(&:capitalize).map {|k,v| {k => v.length}}
+    rescue NoMethodError #one of the values wasn't a string, and the capitalize method dne
+      dc = dc.group_by(&:to_s).map {|k,v| {k => v.length}}
+    rescue
+      log_and_print "WARN: get_data_row had an unknown exception while mapping data"
+      return []
+    end
     
     dc.each do |row|
       data_col_hash = {}
@@ -373,6 +381,7 @@ module DocumentsHelper
     return data_columns
   end
   
+
 =begin #TODO: re-implement with search
   def document_search_data_couch(search, lucky_search = false)
     #Use any Document instance to access the Stuffing view method
@@ -394,23 +403,28 @@ module DocumentsHelper
   end
 =end
   
+
   #If the collection has any viewable docs or sub-collections
-  def collection_is_viewable(col)
+  def collection_is_viewable(col, user)
     retval = false
+
+    if col == nil
+      return false
+    end
     
     if (col.collections.empty? and col.documents.empty?)
       return true
     end
     
     col.documents.each do |doc|
-      if doc_is_viewable(doc)
+      if doc_is_viewable(doc, user)
         retval = true
       end
     end
     
     #child collections
     col.collections.each do |child_col|
-      if collection_is_viewable(child_col)
+      if collection_is_viewable(child_col, user)
         retval = true
       end
     end
@@ -418,20 +432,25 @@ module DocumentsHelper
     return retval
   end
   
-  def doc_is_viewable(col_or_doc)
+
+  def doc_is_viewable(col_or_doc, user)
     retval = false
-    
+
+    if col_or_doc == nil
+      return false
+    end
+
     #Note: if both are nil, or actual user is record's user...
-    if (col_or_doc.user == nil) or (col_or_doc.user == current_user)
+    if ((col_or_doc.is_a? Document and col_or_doc.user == nil) or (col_or_doc.user == user))
       retval = true
     end
     
     #if the user is a collaborator
-    if current_user != nil and current_user.documents != nil and current_user.documents.include?(col_or_doc)
+    if (user != nil and user.documents != nil and user.documents.include?(col_or_doc))
       retval = true
     end
     
-    if col_or_doc.is_a? Document and col_or_doc.public
+    if (col_or_doc.is_a? Document and col_or_doc.public)
       retval = true
     end
     
@@ -442,6 +461,10 @@ module DocumentsHelper
   #Populate doc list hash with temp doc objects
   # returns a hash of {doc_name => temp_doc Tempfile}
   def pop_temp_docs_list(doc_list)
+    if doc_list == nil
+      return {}
+    end
+
     doc_list.each do |key, val|
       document = key
       @headings = document.stuffing_data.first.keys

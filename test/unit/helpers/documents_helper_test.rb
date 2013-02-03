@@ -5,7 +5,10 @@ include CouchdbHelper
 class DocumentsHelperTest < ActionView::TestCase
    #Helper tests
 
+    include Devise::TestHelpers
+
 	def setup
+		@request.env["devise.mapping"] = Devise.mappings[:admin]
 		@user = users(:user1)
 		sign_in @user
 	end
@@ -636,5 +639,366 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
 		data = get_last_n_above_id(d, "x", "y", -1, 3)
 		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
+	end
+
+
+	test "get_last_n_above_id - invalid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		d = Document.where(:name => fname).first
+
+		d.stuffing_data = 	[
+								{"id" => 1, "x" => 1, "y" => 2},
+								{"id" => 2, "x" => 2, "y" => 4},
+								{"id" => 3, "x" => 3, "y" => 8}
+							]
+		d.save
+
+		data = get_last_n_above_id(nil, nil, nil, nil, nil)
+		assert data == [], data.to_s + " != []"
+
+		data = get_last_n_above_id(nil, "x", "y", 1, 3)
+		assert data == [], data.to_s + " != []"
+
+		data = get_last_n_above_id(d, nil, "y", 1, 3)
+		assert data == [], data.to_s + " != []"
+
+		data = get_last_n_above_id(d, "x", nil, 1, 3)
+		assert data == [], data.to_s + " != []"
+
+		data = get_last_n_above_id(d, "x", "y", nil, 3)
+		assert data == {"lastpt"=>3, "points"=>[[1, 2], [2, 4], [3, 8]]}
+
+		data = get_last_n_above_id(d, "x", "y", 1, nil)
+		assert data == {"lastpt"=>-1, "points"=>[]}
+	end
+
+
+	test "get_data_map - valid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		d = Document.where(:name => fname).first
+
+		d.stuffing_data = 	[
+								{"id" => 1, "x" => 1, "y" => 2},
+								{"id" => 2, "x" => 1, "y" => 4},
+								{"id" => 3, "x" => 1, "y" => 5},
+								{"id" => 4, "x" => 2, "y" => 1},
+								{"id" => 5, "x" => 2, "y" => 4},
+								{"id" => 6, "x" => 3, "y" => 8},
+								{"id" => 7, "x" => 3, "y" => 5},
+								{"id" => 8, "x" => 3, "y" => 8}
+							]
+		d.save
+
+		data = get_data_map(d, "x")
+		assert data ==	[
+							{"value"=>"1", "map"=>3}, 
+							{"value"=>"2", "map"=>2}, 
+							{"value"=>"3", "map"=>3}
+						], data.to_s
+
+		data = get_data_map(d, "y")
+		assert data ==	[
+							{"value"=>"2", "map"=>1}, 
+							{"value"=>"4", "map"=>2}, 
+							{"value"=>"5", "map"=>2}, 
+							{"value"=>"1", "map"=>1}, 
+							{"value"=>"8", "map"=>2}
+						], data.to_s
+
+		d.stuffing_data = []
+		d.save
+		data = get_data_map(d, "x")
+		assert data == []
+	end
+
+
+	test "get_data_map - invalid data" do
+		fname = 'TMJ06001.A91_2.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+
+		f = ifilters(:ifilter1)
+		f.stuffing_headers = 	[
+									{"val" => "[ ]*(FILE[ ]+TYPE)[ ]*:[ ]*([A-Z]+)"},
+									{"val" => "[ ]*(FILE[ ]+TITLE)[ ]*:[ ]*([A-Z0-9.]+)"},
+									{"val" => "[ ]*(FILE[ ]+CREATED)[ ]*:[ ]*([A-Z0-9: ]+)"}
+								]
+		f.save
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		d = Document.where(:name => fname).first
+
+		d.stuffing_data = 	[
+								{"id" => 1, "x" => 1, "y" => 2},
+								{"id" => 2, "x" => 1, "y" => 4},
+								{"id" => 3, "x" => 1, "y" => 5},
+								{"id" => 4, "x" => 2, "y" => 1},
+								{"id" => 5, "x" => 2, "y" => 4},
+								{"id" => 6, "x" => 3, "y" => 8},
+								{"id" => 7, "x" => 3, "y" => 5},
+								{"id" => 8, "x" => 3, "y" => 8}
+							]
+		d.save
+
+		data = get_data_map(nil, nil)
+		assert data == []
+
+		data = get_data_map(d, nil)
+		assert data == []
+
+		data = get_data_map(nil, "x")
+		assert data == []
+	end
+
+
+	test "collection_is_viewable - valid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		#this user uploaded the file, s the collection should be viewable
+		assert collection_is_viewable(c, @user)
+
+		#test zip file collections
+		c = Collection.where(:name => "TUC2").first
+		assert c
+		assert collection_is_viewable(c, @user)
+
+		c = Collection.where(:name => "2011").first
+		assert c
+		assert collection_is_viewable(c, @user)
+
+		c = Collection.where(:name => "2012").first
+		assert c
+		assert collection_is_viewable(c, @user)
+
+		user2 = User.new(:email => "test@test.com")
+		c = Collection.where(:name => "2012").first
+		assert !collection_is_viewable(c, user2)
+		
+		#set one of the documents of the collection to public, and the collection will then
+		# be public
+		d = Document.where(:name => "TMJ06001.B02.txt").first
+		assert d
+		d.public = true
+		d.save
+		assert doc_is_viewable(d, user2)
+		c = Collection.where(:name => "TUC2").first
+		assert c != nil
+		assert collection_is_viewable(c, user2)
+		c = Collection.where(:name => "2011").first
+		assert c != nil
+		assert collection_is_viewable(c, user2)
+		c = Collection.where(:name => "2012").first
+		assert c != nil
+		assert !collection_is_viewable(c, user2)
+
+		#set private, and user to user2
+		d.public = false
+		d.user = user2
+		d.save
+		assert doc_is_viewable(d, user2)
+		c = Collection.where(:name => "TUC2").first
+		assert c != nil
+		assert collection_is_viewable(c, user2)
+		c = Collection.where(:name => "2011").first
+		assert c != nil
+		assert collection_is_viewable(c, user2)
+		c = Collection.where(:name => "2012").first
+		assert c != nil
+		assert !collection_is_viewable(c, user2)		
+	end
+
+
+	test "collection_is_viewable - nil data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		user2 = User.new(:email => "test@test.com")
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		cols = Collection.where(:name => "TUC2")
+		assert cols.count == 2 #counting the weird hidden OSX zipped stuff
+		c = cols[1]
+		assert c != nil
+
+		#no collection
+		assert !collection_is_viewable(nil, nil)
+		assert !collection_is_viewable(nil, @user)
+
+		Document.all do |doc|
+			assert doc.user == @user, doc.name + " user == " + doc.user.email
+			assert !doc.public, "#{doc.name} should not == public"
+			assert !doc_is_viewable(doc, nil)
+		end
+
+		#no user
+		assert !(c.collections.empty? and c.documents.empty?)
+		c.documents.each do |doc|
+			assert !doc_is_viewable(doc, nil)
+		end
+
+		assert c!= nil
+		assert !collection_is_viewable(c, nil)
+	end
+
+
+	test "doc_is_viewable - valid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		user2 = User.new(:email => "test@test.com")
+
+		d = Document.where(:name => "TMJ06001.C02.txt").first
+
+		#this user uploaded the file, s the document should be viewable
+		assert doc_is_viewable(d, @user)
+		assert !doc_is_viewable(d, user2)
+
+		#public doc
+		d.public = true
+		d.save
+		assert doc_is_viewable(d, user2)
+
+		d.public = false
+		d.save
+		assert !doc_is_viewable(d, user2)
+
+		#add user2 as a collaborator
+		# TODO: seems like a user could hack around this; adding Task Manager task to test
+		# in User controller
+		user2.documents << d
+		user2.save
+
+		assert doc_is_viewable(d, user2), "#{user2.email} docs == #{user2.documents}, has no doc '#{d.name}'"
+	end
+
+
+	test "doc_is_viewable - invalid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		d = Document.where(:name => "TMJ06001.C02.txt").first
+
+		assert !doc_is_viewable(nil, nil)
+		assert !doc_is_viewable(nil, @user)
+		assert !doc_is_viewable(d, nil)
+
+		#pass it something else besides a Document
+		assert !doc_is_viewable(c, @user)
+	end
+
+
+	test "pop_temp_docs_list - valid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		doc_list = {}
+		Document.all.each do |key|
+      		doc_list[key] = nil
+    	end
+
+		pop_temp_docs_list(doc_list).each do |doc, temp_doc|
+			assert doc.kind_of?(Document)
+			assert temp_doc.kind_of?(Tempfile), "#{temp_doc.class} != Tempfile"
+		end
+	end
+
+
+	test "pop_temp_docs_list - invalid data" do
+		assert pop_temp_docs_list(nil) == {}
+	end
+
+
+	test "zip_doc_list - valid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		doc_list = {}
+		Document.all.each do |key|
+      		doc_list[key] = nil
+    	end
+
+		doc_list = pop_temp_docs_list(doc_list)
+
+		#Create zip
+	    zip_fname = "hatch_data_io"
+	    temp_zip = Tempfile.new(zip_fname)
+	    
+	    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			zip_doc_list(['tmp', 'sub_tmp'], zipfile, doc_list)
+		end
+
+		zipfile = Zip::ZipFile.open(temp_zip.path)
+		zipfile.each do |file|
+			assert false, file.to_s
+		end
 	end
 end
