@@ -500,6 +500,10 @@ module DocumentsHelper
   
   
   def zip_doc_list(parent_dirs, zipfile, doc_list)
+    if (parent_dirs == nil or zipfile == nil or doc_list == nil)
+      return false
+    end
+
     doc_list = pop_temp_docs_list(doc_list)
       
     #docs for current dir
@@ -508,10 +512,18 @@ module DocumentsHelper
       zipfile.print IO.read(temp_doc.path)
       temp_doc.close
     end
+
+    return true
   end
 
   
   def recursive_collection_zip(parent_dirs, zipfile, collection)
+    retval = true #true until a false happens
+
+    if (parent_dirs == nil or zipfile == nil or collection == nil)
+      return false
+    end
+
     doc_list = {}
     collection.documents.each do |key|
       doc_list[key] = nil
@@ -523,12 +535,15 @@ module DocumentsHelper
       collection_name = "(blank)"
     end
     
-    zip_doc_list(parent_dirs << collection_name, zipfile, doc_list)
+    retval = ( retval and zip_doc_list(parent_dirs << collection_name, zipfile, doc_list) )
     
     collection.collections.each do |sub_collection|
-      recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
-                              sub_collection)
+      retval =  ( retval and recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
+                                                      sub_collection)
+                )
     end
+
+    return retval
   end
   
   

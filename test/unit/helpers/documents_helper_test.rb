@@ -993,12 +993,285 @@ class DocumentsHelperTest < ActionView::TestCase
 	    temp_zip = Tempfile.new(zip_fname)
 	    
 	    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
-			zip_doc_list(['tmp', 'sub_tmp'], zipfile, doc_list)
+			assert zip_doc_list(['tmp', 'sub_tmp'], zipfile, doc_list)
 		end
 
+		entries = 	[
+						"tmp/sub_tmp/TMJ06001.B01.txt",
+						"tmp/sub_tmp/TMJ06001.B02.txt",
+						"tmp/sub_tmp/TMJ06001.C01.txt",
+						"tmp/sub_tmp/TMJ06001.C02.txt",
+						"tmp/sub_tmp/TMJ06001.A01.txt"
+					]
 		zipfile = Zip::ZipFile.open(temp_zip.path)
 		zipfile.each do |file|
-			assert false, file.to_s
+			assert entries.include?(file.to_s), file.to_s + " not in entries: #{entries}"
 		end
+	end
+
+
+	test "zip_doc_list - invalid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		doc_list = {}
+		Document.all.each do |key|
+      		doc_list[key] = nil
+    	end
+
+		doc_list = pop_temp_docs_list(doc_list)
+
+		#Create zip
+	    zip_fname = "hatch_data_io"
+	    temp_zip = Tempfile.new(zip_fname)
+	    
+	    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !zip_doc_list(nil, nil, nil)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !zip_doc_list(nil, zipfile, doc_list)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !zip_doc_list(['tmp', 'sub_tmp'], nil, doc_list)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !zip_doc_list(['tmp', 'sub_tmp'], zipfile, nil)
+		end
+	end
+
+
+	test "recursive_collection_zip - valid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		doc_list = {}
+		Document.all.each do |key|
+      		doc_list[key] = nil
+    	end
+
+		doc_list = pop_temp_docs_list(doc_list)
+
+		#Create zip
+	    zip_fname = "hatch_data_io"
+	    temp_zip = Tempfile.new(zip_fname)
+	    
+	    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert recursive_collection_zip(['tmp'], zipfile, c)
+		end
+
+		entries =	[
+						"tmp/viewable_test/TUC2/TMJ06001.A01.txt",
+						"tmp/viewable_test/TUC2/2011/TMJ06001.B01.txt",
+						"tmp/viewable_test/TUC2/2011/TMJ06001.B02.txt",
+						"tmp/viewable_test/TUC2/2012/TMJ06001.C01.txt",
+						"tmp/viewable_test/TUC2/2012/TMJ06001.C02.txt"
+					]
+		zipfile = Zip::ZipFile.open(temp_zip.path)
+		zipfile.each do |file|
+			assert entries.include?(file.to_s), file.to_s + " not in entries: #{entries}"
+		end
+	end
+
+
+	test "recursive_collection_zip - invalid data" do
+		c_name = "viewable_test"
+		c = Collection.new(:name => c_name)
+		c.save
+
+		fname = 'TUC2.zip'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		assert upload
+
+		assert save_zip_to_documents(fname, upload, c, nil, @user)
+
+		doc_list = {}
+		Document.all.each do |key|
+      		doc_list[key] = nil
+    	end
+
+		doc_list = pop_temp_docs_list(doc_list)
+
+		#Create zip
+	    zip_fname = "hatch_data_io"
+	    temp_zip = Tempfile.new(zip_fname)
+	    
+	    Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !recursive_collection_zip(nil, nil, nil)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !recursive_collection_zip(nil, zipfile, c)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !recursive_collection_zip(['tmp'], nil, c)
+		end
+
+		Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|
+			assert !recursive_collection_zip(['tmp'], zipfile, nil)
+		end
+	end
+
+
+	test "validate_document_helper - valid data, no ifilter" do
+		c = nil
+		f = nil
+		fname = 'TMJ06001.A91_2.txt'
+		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
+		assert fp.is_a? File
+		fp.close
+
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+		assert upload.upfile.path
+
+		assert save_file_to_document(fname, upload.upfile.path, c, nil, @user)
+
+		d = Document.first
+
+		validate_document_helper(d, nil)
+
+		md = get_document_metadata(d)
+
+		#should have found the right one
+		assert md != [], md.to_s + " should not == []"
+		assert md == 	[
+						{"1"=>"FILE TYPE", "2"=>"INTERROGATION"}, 
+						{"1"=>"FILE TITLE", "2"=>"TMJ06001.A91"}, 
+						{"1"=>"FILE CREATED", "2"=>"01 JANUARY 2006 AT 00:00"}
+						], md.to_s
+
+		data = get_document_data(d)
+		assert data != [], data.to_s + " should not == []"
+		assert data == 	[
+						{"1"=>"02/16/06 19:08:15", "2"=>"3D9.1BF1E7919A"}, 
+						{"1"=>"02/16/06 19:18:36", "2"=>"3D9.1BF1A998FA"}, 
+						{"1"=>"02/17/06 18:21:03", "2"=>"3D9.1BF20E8FE2"}, 
+						{"1"=>"02/20/06 18:27:01", "2"=>"3D9.1BF11BFFF5"}, 
+						{"1"=>"02/22/06 01:56:38", "2"=>"3D9.1BF23F62D4"}, 
+						{"1"=>"02/22/06 03:56:10", "2"=>"3D9.1BF234346C"}, 
+						{"1"=>"02/22/06 17:59:11", "2"=>"3D9.1BF2342E83"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}
+						]
+	end
+
+	
+	test "validate_document_helper - valid data, correct ifilter" do
+		c = nil
+		f = ifilters(:ifilter1)
+		fname = 'TMJ06001.A91_2.txt'
+		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
+		assert fp.is_a? File
+		fp.close
+
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+		assert upload.upfile.path
+
+		assert save_file_to_document(fname, upload.upfile.path, c, nil, @user)
+
+		d = Document.first
+
+		validate_document_helper(d, f)
+
+		md = get_document_metadata(d)
+
+		#should have found the right one
+		assert md != [], md.to_s + " should not == []"
+		assert md == 	[
+						{"1"=>"FILE TYPE", "2"=>"INTERROGATION"}, 
+						{"1"=>"FILE TITLE", "2"=>"TMJ06001.A91"}, 
+						{"1"=>"FILE CREATED", "2"=>"01 JANUARY 2006 AT 00:00"}
+						], md.to_s
+
+		data = get_document_data(d)
+		assert data != [], data.to_s + " should not == []"
+		assert data == 	[
+						{"1"=>"02/16/06 19:08:15", "2"=>"3D9.1BF1E7919A"}, 
+						{"1"=>"02/16/06 19:18:36", "2"=>"3D9.1BF1A998FA"}, 
+						{"1"=>"02/17/06 18:21:03", "2"=>"3D9.1BF20E8FE2"}, 
+						{"1"=>"02/20/06 18:27:01", "2"=>"3D9.1BF11BFFF5"}, 
+						{"1"=>"02/22/06 01:56:38", "2"=>"3D9.1BF23F62D4"}, 
+						{"1"=>"02/22/06 03:56:10", "2"=>"3D9.1BF234346C"}, 
+						{"1"=>"02/22/06 17:59:11", "2"=>"3D9.1BF2342E83"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}, 
+						{"1"=>"02/22/06 19:03:37", "2"=>"3D9.1BF23435A4"}
+						]
+	end
+
+
+	test "validate_document_helper - valid data, incorrect ifilter" do
+		c = nil
+		f = ifilters(:ifilter_bad)
+		fname = 'TMJ06001.A91_2.txt'
+		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
+		assert fp.is_a? File
+		fp.close
+
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
+		assert upload
+		assert upload.upfile.path
+
+		assert save_file_to_document(fname, upload.upfile.path, c, nil, @user)
+
+		d = Document.first
+
+		validate_document_helper(d, f)
+
+		md = get_document_metadata(d)
+
+		#should have found the right one
+		assert md == [], md.to_s + " should == []"
+
+		expected_data =
+			[
+				{"1"=>"    FILE TYPE                      : INTERROGATION\n"}, 
+				{"1"=>"    FILE TITLE                     : TMJ06001.A91\n"}, 
+				{"1"=>"    FILE CREATED                   : 01 JANUARY 2006 AT 00:00\n"}, 
+				{"1"=>"\n"}, 
+				{"1"=>"! This file contains all detections for 2006 from the juvenile bypass outfall.\n"}, 
+				{"1"=>"! The tags were detected using an FS-2001F portable transceiver and flat-plate\n"}, 
+				{"1"=>"! antenna.  These data were compiled from the original files by Dave Marvin,\n"}, 
+				{"1"=>"! PTAGIS.  The original data files are listed in the data stream below, \n"}, 
+				{"1"=>"! followed by their contents.\n"}, {"1"=>"\n"}, {"1"=>"! TMJ06032.A1\n"}, 
+				{"1"=>"| 01 02/16/06 18:34:51 ::q\n"}, 
+				{"1"=>":q.t. XX 91\n"}, 
+				{"1"=>"\n"}, 
+				{"1"=>"1a 2a\n"}, 
+				{"1"=>"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n"}, 
+				{"1"=>"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n"}, 
+				{"1"=>"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n"}, 
+				{"1"=>"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
+				{"1"=>"\n"}, 
+				{"1"=>"    FILE CLOSED                    : 28 JUNE 2006 AT 08:13\n"}
+			]
+		data = get_document_data(d)
+		assert data == expected_data, data.to_s
 	end
 end
