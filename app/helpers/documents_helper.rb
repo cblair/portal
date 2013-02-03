@@ -5,7 +5,7 @@ module DocumentsHelper
 
   #helpers for testing devise
   #if Rails.env.test?
-    include Devise::TestHelpers
+  #  include Devise::TestHelpers
   #end
 
 
