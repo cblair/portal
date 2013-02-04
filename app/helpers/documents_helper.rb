@@ -283,11 +283,22 @@ module DocumentsHelper
     #get colnames
     #TODO: do for more than '1'
     #TODO: colnames could be less than what each parse line is
-    colnames = CSV.parse_line(iterator.first["1"])
+    begin
+      colnames = CSV.parse_line(iterator.first["1"])
+    rescue
+      log_and_print "WARN: Couldn't parse document, may already be parsed"
+      return iterator
+    end
+
 
     for i in (1..iterator.count - 1)
       data_col_hash = {}
-      parsed_line_array = CSV.parse_line(iterator[i]["1"])
+      #begin
+        parsed_line_array = CSV.parse_line(iterator[i]["1"])
+      #rescue CSV::MalformedCSVError
+      #  log_and_print "WARN: CSV::MalformedCSVError in filter_data_columns_csv. Have to lose this line of data"
+      #  next
+      #end
 
       for j in (0..colnames.count - 1)
         colname = colnames[j]

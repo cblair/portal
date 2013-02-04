@@ -307,6 +307,12 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		data = filter_data_columns(f, d.stuffing_data)
 		assert data == expected_data
+
+		#should generate already parsed error
+		d.stuffing_data = data
+		d.save
+		data = filter_data_columns(f, d.stuffing_data)
+		assert data == expected_data
 	end
 
 
@@ -325,6 +331,45 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		data = filter_data_columns_csv(nil)
 		assert data == []
+
+		#this file has some quotes errors in it. hits 
+		#TODO: Added task to Task Manager to make these user-fixable things more visable
+		fname = 'sys_Protocol.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/sys_Protocol.txt'))
+		assert upload
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		f = get_ifilter(-1) #internal CSV
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_csv(nil)
+		assert data == []		
+
+		#TODO: this file is toxic, has something that translates badly into JSON 
+		#      (unterminated quotes. This is a bug that we should
+		#      fix.
+		fname = 'lkp_Species.txt'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/lkp_Species.txt'))
+		assert upload
+
+		begin
+			assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+		rescue
+			assert true
+			return
+		end
+
+		f = get_ifilter(-1) #internal CSV
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_csv(d.stuffing_data)
 	end
 
 

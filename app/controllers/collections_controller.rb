@@ -116,7 +116,8 @@ class CollectionsController < ApplicationController
     end
     
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
-      f = Ifilter.find(params[:post][:ifilter_id])
+      #f = Ifilter.find(params[:post][:ifilter_id])
+      f = get_ifilter(params[:post][:ifilter_id].to_i)
       validate_collection_helper(@collection, f)
     end
 
