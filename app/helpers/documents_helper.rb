@@ -228,6 +228,11 @@ module DocumentsHelper
       log_and_print "WARN: data iterator was nil"
       return []
     end
+
+    #CSV
+    if (f != nil and f['id'] == -1)
+      return filter_data_columns_csv(iterator)
+    end
     
     #TODO: cleanup
     #get the column names
@@ -265,6 +270,34 @@ module DocumentsHelper
 
     data_columns.reject! { |item| item.empty? }
     return data_columns
+  end
+
+
+  def filter_data_columns_csv(iterator)
+    retval = []
+
+    if iterator == nil
+      return []
+    end
+
+    #get colnames
+    #TODO: do for more than '1'
+    #TODO: colnames could be less than what each parse line is
+    colnames = CSV.parse_line(iterator.first["1"])
+
+    for i in (1..iterator.count - 1)
+      data_col_hash = {}
+      parsed_line_array = CSV.parse_line(iterator[i]["1"])
+
+      for j in (0..colnames.count - 1)
+        colname = colnames[j]
+        data_col_hash[colname] = parsed_line_array[j]
+      end
+
+      retval << data_col_hash
+    end
+
+    return retval
   end
   
 

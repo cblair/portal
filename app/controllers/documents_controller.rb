@@ -153,9 +153,15 @@ class DocumentsController < ApplicationController
   def update
     @document = Document.find(params[:id])
     
+    #Filter / Validate
     if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
-      f = Ifilter.find(params[:post][:ifilter_id])
-      validate_document_helper(@document, f)
+      #f = Ifilter.find(params[:post][:ifilter_id])
+      f = get_ifilter(params[:post][:ifilter_id].to_i)
+
+      #don't let validate auto-filter
+      if f != nil
+        validate_document_helper(@document, f)
+      end
     end    
 
     user = User.where(:id => params[:new_user_id]).first

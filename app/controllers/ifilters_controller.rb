@@ -1,3 +1,5 @@
+include IfiltersHelper
+
 class IfiltersController < ApplicationController
   before_filter :autologin_if_dev
   before_filter :authenticate_user!

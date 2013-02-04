@@ -44,7 +44,7 @@
   
   <div>
   	<p>Validate...</p>
-  	<%= select("post", "ifilter_id", Ifilter.all.collect {|ifilter| [ ifilter.name, ifilter.id ] }, {:prompt => '(select a filter)'}) %>
+  	<%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
  	<%= link_to "Filters...", ifilters_path %>
   </div>
 

@@ -283,6 +283,51 @@ class DocumentsHelperTest < ActionView::TestCase
 	end
 
 
+	test "filter_data_columns_csv - valid data" do
+		fname = 'test.csv'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/test.csv'))
+		assert upload
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		f = get_ifilter(-1) #internal CSV
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_csv(d.stuffing_data)
+		expected_data =	[
+							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"1"}, 
+							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"2"}, 
+							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"4"}, 
+							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"5"}
+						]
+		assert data == expected_data
+
+		data = filter_data_columns(f, d.stuffing_data)
+		assert data == expected_data
+	end
+
+
+	test "filter_data_columns_csv - invalid data" do
+		fname = 'test.csv'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/test.csv'))
+		assert upload
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		f = get_ifilter(-1) #internal CSV
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_csv(nil)
+		assert data == []
+	end
+
+
 	test "filter_metadata_columns - nil args" do
 		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
 		f = ifilters(:ifilter1)
