@@ -1,5 +1,5 @@
 <% documents.each do |doc| %>
-	<% if doc_is_viewable(doc) %>
+	<% if doc_is_viewable(doc, current_user) %>
 		<ul class="col-doc document row" id="<%= doc.id %>">
 			<li class="span4">
 				<i class="icon-list-alt icon-white"></i>

@@ -64,4 +64,50 @@ module IfiltersHelper
     
     return retval
   end
+
+
+  def get_internal_ifilters
+    retval = []
+
+    f = Ifilter.new( #new but don't save
+                    :name => "CSV (pre-defined)",
+                    :regex=> nil
+                  )
+      #TODO: id
+    f.id = -1 #we don't want to stomp on an valid id
+
+    retval.prepend(f)
+  end
+
+
+  #Gets internal and user defined ifilters
+  def get_ifilters
+    retval = Ifilter.all
+    get_internal_ifilters.each do |f|
+      retval.prepend(f)
+    end
+
+    return retval
+  end
+
+
+  def get_ifilter(id)
+    retval = Ifilter.where(:id => id).first
+
+    if (retval == nil or retval.empty?)
+      retval = nil
+      get_internal_ifilters.collect do |f|
+        if f.id == id 
+         retval = f
+        end
+      end
+    end
+
+    return retval
+  end
+
+
+  def ifilters_get_select_options
+    get_ifilters.collect {|ifilter| [ ifilter.name, ifilter.id ] }
+  end
 end

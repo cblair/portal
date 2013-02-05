@@ -90,7 +90,8 @@ module CollectionsHelper
   def get_collection_select_options(c, level=0)
     retval = []
     
-    if not collection_is_viewable(c)
+    #TODO: will have to pass in user instead of using current_user
+    if not collection_is_viewable(c, current_user)
       return retval
     end
     

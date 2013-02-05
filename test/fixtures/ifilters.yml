@@ -3,3 +3,7 @@
 ifilter1:
   name: ifilter1
   regex: ([0-9\/]{8} [0-9:]{8}) ([a-fA-F0-9.]+)
+
+ifilter_bad:
+  name: ifilter_bad
+  regex: ("this string better not exist")

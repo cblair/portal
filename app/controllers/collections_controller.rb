@@ -13,7 +13,7 @@ class CollectionsController < ApplicationController
     elsif ( params.include?("collections") and params.include?("id") )
       collection = Collection.find(params[:id])
       
-      if not collection_is_viewable(collection)
+      if not collection_is_viewable(collection, current_user)
         flash[:error] = "Collection not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
@@ -42,7 +42,7 @@ class CollectionsController < ApplicationController
 
     #filter for permission
     @all_collections.each do |c|
-      if collection_is_viewable(c)
+      if collection_is_viewable(c, current_user)
         @root_collections << c
       end
     end
