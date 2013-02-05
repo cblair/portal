@@ -32,6 +32,15 @@ module CollectionsHelper
     return suc_valid
   end
   
+  #Adds collection to selected project (from collections -> edit -> _form)
+  #NOTE: only adds documents at this time
+  def add_project_col(project, collection)
+    #adds each document in the collection to the selected project
+    #TODO: error checking
+    collection.documents.each do |doc|
+      doc.update_attributes(:project_id => project.id)
+    end
+  end
   
   def collection_is_validated(collection)
     suc_valid = true

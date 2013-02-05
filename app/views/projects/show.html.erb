@@ -9,11 +9,13 @@
   <b>Description:</b>
   <%= @project.pdesc %>
 </p>
-
+<!--
 <p>
   <b>Project ID</b>
-  <td><%= @project.id %></td> <!-- debug -->
+  <td><%= @project.id %></td> <!-- debug --> <!--
 </p>
+-->
+<hr>
 
 <h2>Listing documents</h2>
 <h4>Click a document to view details</h4>
@@ -33,4 +35,5 @@
 <br />
 
 <%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %>
+<%= link_to 'Back', projects_path %> |
+<td><%= link_to 'Groups', groups_path(@project) %></td>

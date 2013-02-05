@@ -31,7 +31,7 @@ class DataIoController < ApplicationController
     end
     
     #Project - find the project by id
-    p=Project.find(params[:dump][:project_id])
+    #p=Project.find(params[:dump][:project_id])
     #puts("*** project = #{p.name}") #debug, triggers on list selection
     #User
     c.user = current_user
@@ -55,8 +55,8 @@ class DataIoController < ApplicationController
         #save_zip_to_documents(fname, uploaded_file, c, f)
         save_zip_to_documents(fname, upload, c, f)
       else #hopefully is something like a "text/plain"
-        #save_file_to_document(fname, uploaded_file.tempfile, c, f)
-        save_file_to_document(fname, upload.upfile.path, c, f, p) 
+        save_file_to_document(fname, uploaded_file.tempfile, c, f)
+        #save_file_to_document(fname, upload.upfile.path, c, f, p) 
       end
     end
 

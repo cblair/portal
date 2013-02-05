@@ -21,6 +21,8 @@ Portal::Application.routes.draw do
   resources :projects
   match '/projects/groups/:id' => "projects#groups", :as => :groups
   match '/projects/owner' => "projects#owner", :as => :owner
+  match '/projects/add_menu/:id' => "projects#add_menu", :as => :add_menu
+  match '/projects/add' => "projects#add", :as => :add
   
   resources :posts
   

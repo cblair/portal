@@ -51,17 +51,43 @@ class ProjectsController < ApplicationController
     
   end
   
+  # PUT /projects/add_menu/1
+  # PUT /projects/add_menu/1.json
+  def add_menu 
+    @project = Project.find(params[:id])
+
+    respond_to do |format|
+      format.html # add.html.erb
+      format.json { render json: @project }
+    end
+  end
+  
+  # PUT /projects/add/1
+  # PUT /projects/add/1.json
+  def add 
+    #@project = Project.find(params[:id])
+
+    respond_to do |format|
+      format.html # add.html.erb
+      format.json { render json: @project }
+    end
+  end
+  
+  # PUT /projects/owner/1
+  # PUT /projects/owner/1.json
   def owner
     @project = Project.find(params[:proj_id])
+		#puts("*** project = #{@project.name}, id #{@project.id}")
+		#puts("*** currentuser = #{current_user.id}.") #debug
     
     if (params[:user_name][:id] == "")
       @user_id_err = true		#user selected "none"
     else
+      #TODO: move this to helper?
       @target_user = User.find(params[:user_name][:id]) #finds selected user
-      # puts("target user = #{@target_user.email}, id #{@target_user.id}") #debug (WORKS)
+		#puts("*** target user = #{@target_user.email}, id #{@target_user.id}") #debug
       # gets an array of documents with the given project ID
       @docs = Document.where("project_id = ?", @project.id)
-      
       # changes user ID of documents to target user    
       @docs.each do |d|
         d.update_attributes(:user_id => @target_user.id)
@@ -74,7 +100,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if (@user_id_err == true)
         format.html { redirect_to groups_path(@project), notice: 'Not an email, please try again.'}
-        # TODO: format JSON
+        # TODO: format JSON?
       else
         format.html { redirect_to projects_path, notice: 'Project ownership successfully changed.' }
         format.json { head :ok }
