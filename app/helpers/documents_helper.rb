@@ -487,11 +487,10 @@ module DocumentsHelper
   
   #Adds document to selected project (see view -> documents -> edit)
   def add_project_doc(project, document)
-    #p("*** doc help proj = ", project.name, project.id) #debug
-    #p("*** doc help = ", document.name, document.id) #debug
-    #TODO: error checking, check for nil etc.
+      #p("*** doc help proj = ", project.name, project.id) #debug
+      #p("*** doc help = ", document.name, document.id) #debug
     document.project_id = project.id
-    #p("*** dec help proj id = ", document.project_id)
+      #p("*** dec help proj id = ", document.project_id)
   end
   
   #Populate doc list hash with temp doc objects

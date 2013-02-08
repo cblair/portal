@@ -1,4 +1,6 @@
 class ProjectsController < ApplicationController
+  include ProjectsHelper
+  
   before_filter :authenticate_user!
 
   # GET /projects
@@ -53,7 +55,8 @@ class ProjectsController < ApplicationController
   
   # PUT /projects/add_menu/1
   # PUT /projects/add_menu/1.json
-  def add_menu 
+  def add_menu
+    #NOT USED:
     @project = Project.find(params[:id])
 
     respond_to do |format|
@@ -65,6 +68,7 @@ class ProjectsController < ApplicationController
   # PUT /projects/add/1
   # PUT /projects/add/1.json
   def add 
+    #NOT USED:
     #@project = Project.find(params[:id])
 
     respond_to do |format|
@@ -79,26 +83,13 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:proj_id])
 		#puts("*** project = #{@project.name}, id #{@project.id}")
 		#puts("*** currentuser = #{current_user.id}.") #debug
-    
-    if (params[:user_name][:id] == "")
-      @user_id_err = true		#user selected "none"
-    else
-      #TODO: move this to helper?
-      @target_user = User.find(params[:user_name][:id]) #finds selected user
-		#puts("*** target user = #{@target_user.email}, id #{@target_user.id}") #debug
-      # gets an array of documents with the given project ID
-      @docs = Document.where("project_id = ?", @project.id)
-      # changes user ID of documents to target user    
-      @docs.each do |d|
-        d.update_attributes(:user_id => @target_user.id)
-      end
-      # TODO: collections code here?
-      # changes current project's user ID to target user's ID    	    
-	  @project.update_attributes(:user_id => @target_user.id)
+	
+	if (params.include?("proj_id") and params[:proj_id] != "" and @project != nil)
+	  change_owner (@project) #calls project helper
     end
     
     respond_to do |format|
-      if (@user_id_err == true)
+      if (@user_id_err == true) #see helper
         format.html { redirect_to groups_path(@project), notice: 'Not an email, please try again.'}
         # TODO: format JSON?
       else

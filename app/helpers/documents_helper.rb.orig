@@ -4,9 +4,9 @@ module DocumentsHelper
   include IfiltersHelper
 
   #helpers for testing devise
-  if Rails.env.test?
-    include Devise::TestHelpers
-  end
+  #if Rails.env.test?
+  #  include Devise::TestHelpers
+  #end
 
 
   def is_json?(str)
@@ -230,15 +230,16 @@ module DocumentsHelper
       log_and_print "WARN: data iterator was nil"
       return []
     end
+
+    #CSV
+    if (f != nil and f['id'] == -1)
+      return filter_data_columns_csv(iterator)
+    end
     
     #TODO: cleanup
     #get the column names
-    colnames=[]
-    if false
-      colnames = iterator.first() #gets the next row, increments the iterator
-    else
-      colnames = [1]
-    end
+    #TODO: just setting to [1] for now
+    colnames = [1]
     
     data_columns=[]
     i = 0
@@ -272,6 +273,34 @@ module DocumentsHelper
     data_columns.reject! { |item| item.empty? }
     return data_columns
   end
+
+
+  def filter_data_columns_csv(iterator)
+    retval = []
+
+    if iterator == nil
+      return []
+    end
+
+    #get colnames
+    #TODO: do for more than '1'
+    #TODO: colnames could be less than what each parse line is
+    colnames = CSV.parse_line(iterator.first["1"])
+
+    for i in (1..iterator.count - 1)
+      data_col_hash = {}
+      parsed_line_array = CSV.parse_line(iterator[i]["1"])
+
+      for j in (0..colnames.count - 1)
+        colname = colnames[j]
+        data_col_hash[colname] = parsed_line_array[j]
+      end
+
+      retval << data_col_hash
+    end
+
+    return retval
+  end
   
 
   #Returns an Array of Hashes with only the key => value pairs where key == colname
@@ -302,6 +331,7 @@ module DocumentsHelper
     begin
       md = d.stuffing_metadata
     rescue
+      log_and_print "WARN: get_document_metadata threw an unknown exception"
        md = []
     end
     
@@ -309,26 +339,63 @@ module DocumentsHelper
   end
 
 
+  #Gets stuffing data, catching exception if doc metadata dne
+  def get_document_data(doc)
+    d = []
+    begin
+      d = doc.stuffing_data
+    rescue
+      log_and_print "WARN: get_document_data threw an unknown exception"
+      d = []
+    end
+    
+    return d
+  end
+
+
   def get_last_n_above_id(d, xname, yname, lastid, max)
       out = []
-      document = Document.find(d)
+
+      if ( (d == nil) or (xname == nil) or (yname == nil) )
+        log_and_print "WARN: Calling with Document, x or y name == nil"
+        return []
+      end
+
+      stuffing_data = get_document_data(d)
+
+      if stuffing_data.empty?
+        return []
+      end
+
       lid = lastid.to_i
       last = lid
-      document.stuffing_data.find_all do |item|
+      stuffing_data.find_all do |item|
           if item["id"] != nil && item["id"] > lid
               out << [item[xname], item[yname]]
               last = item["id"]
           end
       end
-      out = out.last(max.to_i)
+
+      if ((max != nil) and (max >= 0))
+        out = out.last(max.to_i)
+      else
+        out = []
+        last = -1
+      end
+
       return {"lastpt" => last, "points" => out}
   end
   
   #Gives the count of every value in a column
   def get_data_map(d, colname)
     data_columns = []
-    dc=get_data_column(d,colname)
-    dc = dc.group_by(&:capitalize).map {|k,v| {k => v.length}}
+    dc = get_data_column(d,colname)
+
+    begin
+      dc = dc.group_by(&:capitalize).map {|k,v| {k => v.length}}
+    rescue NoMethodError #one of the values wasn't a string, and the capitalize method dne
+      dc = dc.group_by(&:to_s).map {|k,v| {k => v.length}}
+    end
     
     dc.each do |row|
       data_col_hash = {}
@@ -342,36 +409,8 @@ module DocumentsHelper
     return data_columns
   end
   
-  
-  def document_search_data(search)
-    #view
-    retval = []
-    
-    Document.all().each do |doc|
-      #TODO: define search doc name globally
-      if doc.stuffing_data != [] and doc.name != "temp_search_doc"
-        matches = []
-        #matches = doc.stuffing_data.select {|row| row.values {|value| value =~ search } }
-        doc.stuffing_data.each do |row|
-            found = false 
-            row.values.each do |value|
-              if value =~ /#{search}/
-                found = true
-              end
-            end
-            if found == true
-              matches << row
-            end
-        end
-        
-        if matches != []
-          matches.each {|row| retval << row}
-        end
-      end
-    
-      end
-  end
 
+=begin #TODO: re-implement with search
   def document_search_data_couch(search, lucky_search = false)
     #Use any Document instance to access the Stuffing view method
     #If exact value searched for, call key view
@@ -390,24 +429,30 @@ module DocumentsHelper
     
     return retval
   end
+=end
   
+
   #If the collection has any viewable docs or sub-collections
-  def collection_is_viewable(col)
+  def collection_is_viewable(col, user)
     retval = false
+
+    if col == nil
+      return false
+    end
     
     if (col.collections.empty? and col.documents.empty?)
       return true
     end
     
     col.documents.each do |doc|
-      if doc_is_viewable(doc)
+      if doc_is_viewable(doc, user)
         retval = true
       end
     end
     
     #child collections
     col.collections.each do |child_col|
-      if collection_is_viewable(child_col)
+      if collection_is_viewable(child_col, user)
         retval = true
       end
     end
@@ -415,20 +460,25 @@ module DocumentsHelper
     return retval
   end
   
-  def doc_is_viewable(col_or_doc)
+
+  def doc_is_viewable(col_or_doc, user)
     retval = false
-    
+
+    if col_or_doc == nil
+      return false
+    end
+
     #Note: if both are nil, or actual user is record's user...
-    if (col_or_doc.user == nil) or (col_or_doc.user == current_user)
+    if ((col_or_doc.is_a? Document and col_or_doc.user == nil) or (col_or_doc.user == user))
       retval = true
     end
     
     #if the user is a collaborator
-    if current_user != nil and current_user.documents != nil and current_user.documents.include?(col_or_doc)
+    if (user != nil and user.documents != nil and user.documents.include?(col_or_doc))
       retval = true
     end
     
-    if col_or_doc.is_a? Document and col_or_doc.public
+    if (col_or_doc.is_a? Document and col_or_doc.public)
       retval = true
     end
     
@@ -437,16 +487,19 @@ module DocumentsHelper
   
   #Adds document to selected project (see view -> documents -> edit)
   def add_project_doc(project, document)
-    #p("*** doc help proj = ", project.name, project.id) #debug
-    #p("*** doc help = ", document.name, document.id) #debug
-    #TODO: error checking, check for nil etc.
+      #p("*** doc help proj = ", project.name, project.id) #debug
+      #p("*** doc help = ", document.name, document.id) #debug
     document.project_id = project.id
-    #p("*** dec help proj id = ", document.project_id)
+      #p("*** dec help proj id = ", document.project_id)
   end
   
   #Populate doc list hash with temp doc objects
   # returns a hash of {doc_name => temp_doc Tempfile}
   def pop_temp_docs_list(doc_list)
+    if doc_list == nil
+      return {}
+    end
+
     doc_list.each do |key, val|
       document = key
       @headings = document.stuffing_data.first.keys
@@ -482,6 +535,10 @@ module DocumentsHelper
   
   
   def zip_doc_list(parent_dirs, zipfile, doc_list)
+    if (parent_dirs == nil or zipfile == nil or doc_list == nil)
+      return false
+    end
+
     doc_list = pop_temp_docs_list(doc_list)
       
     #docs for current dir
@@ -490,10 +547,18 @@ module DocumentsHelper
       zipfile.print IO.read(temp_doc.path)
       temp_doc.close
     end
+
+    return true
   end
 
   
   def recursive_collection_zip(parent_dirs, zipfile, collection)
+    retval = true #true until a false happens
+
+    if (parent_dirs == nil or zipfile == nil or collection == nil)
+      return false
+    end
+
     doc_list = {}
     collection.documents.each do |key|
       doc_list[key] = nil
@@ -505,12 +570,15 @@ module DocumentsHelper
       collection_name = "(blank)"
     end
     
-    zip_doc_list(parent_dirs << collection_name, zipfile, doc_list)
+    retval = ( retval and zip_doc_list(parent_dirs << collection_name, zipfile, doc_list) )
     
     collection.collections.each do |sub_collection|
-      recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
-                              sub_collection)
+      retval =  ( retval and recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
+                                                      sub_collection)
+                )
     end
+
+    return retval
   end
   
   

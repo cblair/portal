@@ -169,9 +169,11 @@ class DocumentsController < ApplicationController
     #Add doc to project
     if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
       project = Project.find(params[:proj][:id])
-      #p("*** doc proj = ", project.name, project.id) #debug
-      #p("*** doc = ", @document.name, @document.id) #debug
-      add_project_doc(project, @document) #call to document helper, adds doc to project
+        #p("*** doc proj = ", project.name, project.id) #debug
+        #p("*** doc = ", @document.name, @document.id) #debug
+      if (project != nil)
+        add_project_doc(project, @document) #call to document helper, adds doc to project
+      end
     end
    
     #Add collaborator
