@@ -11,6 +11,10 @@
 //= require jquery-fileupload
 
 //= require jquery-ui
+
+//= require jquery-fileupload/basic
+//= require jquery-fileupload/vendor/tmpl
+
 //= require highcharts
 //= require twitter/bootstrap
 //= require dataTables/jquery.dataTables

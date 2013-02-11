@@ -22,11 +22,15 @@ group :assets do
   #gem 'therubyracer', '0.9.9'
   #gem 'libv8', '~> 3.3.10'
 
+  gem 'jquery-fileupload-rails'
   gem 'jquery-ui-rails'
   gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 
+  #this requires the command:
+  # rails g bootstrap:install
+  gem 'twitter-bootstrap-rails'
 end
 
 gem 'jquery-rails'
@@ -35,11 +39,9 @@ gem 'jquery-rails'
 
 #gem 'jquery-ui-rails'
 #gem 'jquery-rails'
-gem 'jquery-fileupload-rails'
 
 gem 'less'
 
-gem "therubyracer"
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 #this requires the command:
 # rails g bootstrap:install
