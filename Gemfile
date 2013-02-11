@@ -27,9 +27,9 @@ group :assets do
   gem 'twitter-bootstrap-rails'
 
   gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-  gem 'jquery-ui-rails'
 end
 
+gem 'jquery-ui-rails'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
 gem 'less'
