@@ -75,6 +75,22 @@
 	      </tr>
 	     </thead>
 	     <tbody>
+			<% @paged_sdata.each do |row| %>
+				<tr>
+					<td><!--place holder for axis labels--></td>
+					<% row.values.each do |val|%>
+					<td>
+						<!--TODO: re-implement with search-->
+						<!--
+						<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
+		    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
+		    			<% end %>
+		    			-->
+		    			<%= val %>
+					</td>
+					<% end %>
+				</tr>
+			<% end %>
 		 </tbody>
 		</table>
 	</div>
