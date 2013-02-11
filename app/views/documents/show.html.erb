@@ -77,7 +77,7 @@
 	     <tbody>
 			<% @paged_sdata.each do |row| %>
 				<tr>
-					<td><!--place holder for axis labels--></td>
+					
 					<% row.values.each do |val|%>
 					<td>
 						<!--TODO: re-implement with search-->
@@ -96,15 +96,9 @@
 	</div>
 	
 
-	<% 
-		#if @paged_sdata != [] 
-	%>
-		<%= 
-			#will_paginate @paged_sdata 
-		%>
-	<% 
-		#end 
-	%>
+	<% if @paged_sdata != [] %>
+		<%= will_paginate @paged_sdata %>
+	<% end %>
 	
 	
 	<%= 

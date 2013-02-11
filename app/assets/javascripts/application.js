@@ -6,17 +6,15 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
 
 //TODO: I don't know why application.js isn't including this, but this following doesn't work
 //= require jquery-fileupload
 
 //= require jquery-ui
 //= require highcharts
-//  require jquery.ui.core
-//  require jquery.ui.theme
-// require dataTables/jquery.dataTables
-// require dataTables/jquery.dataTables.bootstrap
+//= require twitter/bootstrap
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 //= require_tree .
 
 jQuery.ajaxSetup({ 

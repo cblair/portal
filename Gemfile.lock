@@ -211,7 +211,6 @@ DEPENDENCIES
   lazy_high_charts
   less
   less-rails
-  libv8 (~> 3.3.10)
   meta_request
   newrelic_rpm
   paperclip (~> 3.0)
@@ -224,7 +223,7 @@ DEPENDENCIES
   simplecov
   spawn!
   stuffing!
-  therubyracer (= 0.9.9)
+  therubyracer
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   will_paginate

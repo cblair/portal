@@ -6,7 +6,7 @@ jQuery(function($) {
 
 	$(document).ready(function () {	
 		$('#documents').dataTable({
-			"sPaginationType"	: "bootstrap",
+			//"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
 			"bServerSide"		: true,

@@ -19,28 +19,32 @@ group :assets do
   #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-  gem 'therubyracer', '0.9.9'
-  gem 'libv8', '~> 3.3.10'
-
-  #this requires the command:
-  # rails g bootstrap:install
-  gem 'twitter-bootstrap-rails'
+  #gem 'therubyracer', '0.9.9'
+  #gem 'libv8', '~> 3.3.10'
 
   gem 'jquery-ui-rails'
-  gem 'jquery-rails'
   gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 end
 
-gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-
-gem 'jquery-ui-rails'
 gem 'jquery-rails'
+
+#gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+
+#gem 'jquery-ui-rails'
+#gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
+
 gem 'less'
-gem 'less-rails'
+
+gem "therubyracer"
+gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 #this requires the command:
 # rails g bootstrap:install
 gem 'twitter-bootstrap-rails'
+
+#this requires the command:
+# rails g bootstrap:install
+#gem 'twitter-bootstrap-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
