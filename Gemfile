@@ -19,16 +19,14 @@ group :assets do
   #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-<<<<<<< HEAD
   #gem 'therubyracer', '0.9.9'
   #gem 'libv8', '~> 3.3.10'
 
   gem 'jquery-ui-rails'
   gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-=======
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
->>>>>>> parent of fb4a636... Updated and fixed bootstrap styling, was clashing with old bootswatch simplex.
+
 end
 
 gem 'jquery-rails'
