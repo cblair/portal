@@ -22,11 +22,10 @@ group :assets do
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 
+  #this requires the command:
+  # rails g bootstrap:install
+  gem 'twitter-bootstrap-rails'
 end
-
-#this requires the command:
-# rails g bootstrap:install
-gem 'twitter-bootstrap-rails'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 
