@@ -25,10 +25,12 @@ group :assets do
   #this requires the command:
   # rails g bootstrap:install
   gem 'twitter-bootstrap-rails'
+
+  gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+  gem 'jquery-ui-rails'
 end
 
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'jquery-fileupload-rails'
 gem 'less'
 gem 'less-rails'

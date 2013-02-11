@@ -103,7 +103,7 @@ class DocumentsController < ApplicationController
     @chart = chart || Chart.find(newchart({:document_id => @document}))
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @document }
+      format.json { render json: DocumentsDatatable.new(view_context) }
     end
   end
   

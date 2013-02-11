@@ -11,6 +11,13 @@ GIT
   specs:
     spawn (1.0.1)
 
+GIT
+  remote: git://github.com/rweng/jquery-datatables-rails.git
+  revision: 2024c99b26f94a036629ac04bd158c70d2f4f11b
+  specs:
+    jquery-datatables-rails (1.11.1)
+      jquery-rails
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -196,6 +203,7 @@ DEPENDENCIES
   couchrest
   debugger
   devise
+  jquery-datatables-rails!
   jquery-fileupload-rails
   jquery-rails
   jquery-ui-rails

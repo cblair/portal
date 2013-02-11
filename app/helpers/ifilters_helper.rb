@@ -94,7 +94,7 @@ module IfiltersHelper
   def get_ifilter(id)
     retval = Ifilter.where(:id => id).first
 
-    if (retval == nil or retval.empty?)
+    if (retval == nil)
       retval = nil
       get_internal_ifilters.collect do |f|
         if f.id == id 
