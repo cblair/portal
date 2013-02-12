@@ -293,12 +293,12 @@ module DocumentsHelper
 
     for i in (1..iterator.count - 1)
       data_col_hash = {}
-      #begin
+      begin
         parsed_line_array = CSV.parse_line(iterator[i]["1"])
-      #rescue CSV::MalformedCSVError
-      #  log_and_print "WARN: CSV::MalformedCSVError in filter_data_columns_csv. Have to lose this line of data"
-      #  next
-      #end
+      rescue CSV::MalformedCSVError
+        log_and_print "WARN: CSV::MalformedCSVError in filter_data_columns_csv. Have to lose this line of data"
+        next
+      end
 
       for j in (0..colnames.count - 1)
         colname = colnames[j]
