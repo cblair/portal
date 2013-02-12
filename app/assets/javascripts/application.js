@@ -8,7 +8,7 @@
 //= require jquery_ujs
 
 //TODO: I don't know why application.js isn't including this, but this following doesn't work
-// require jquery-fileupload
+//= require jquery-fileupload
 
 //= require jquery-ui
 
