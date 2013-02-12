@@ -30,7 +30,7 @@ group :assets do
 
   #this requires the command:
   # rails g bootstrap:install
-  gem 'twitter-bootstrap-rails'
+  #gem 'twitter-bootstrap-rails', '2.2.0'
 end
 
 gem 'jquery-rails'
@@ -45,7 +45,7 @@ gem 'less'
 gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 #this requires the command:
 # rails g bootstrap:install
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '2.2.0'
 
 #this requires the command:
 # rails g bootstrap:install

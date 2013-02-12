@@ -57,7 +57,7 @@
 		@colnames = get_data_colnames(@paged_sdata) 
 	%>
 	
-	<div class="container">
+	<div class="container-fluid">
 	    <h2>Data</h2>
 		<!--Display data-->
 		<!--TODO: make a partial-->
@@ -75,30 +75,9 @@
 	      </tr>
 	     </thead>
 	     <tbody>
-			<% @paged_sdata.each do |row| %>
-				<tr>
-					
-					<% row.values.each do |val|%>
-					<td>
-						<!--TODO: re-implement with search-->
-						<!--
-						<%= form_tag documents_path, :method => 'get', :id => "documents_search" do %>
-		    				<%= link_to val, :action => "index", :lucky_search => "lucky_search", :search => val %>
-		    			<% end %>
-		    			-->
-		    			<%= val %>
-					</td>
-					<% end %>
-				</tr>
-			<% end %>
 		 </tbody>
 		</table>
 	</div>
-	
-
-	<% if @paged_sdata != [] %>
-		<%= will_paginate @paged_sdata %>
-	<% end %>
 	
 	
 	<%= 
