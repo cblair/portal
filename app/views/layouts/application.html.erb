@@ -62,7 +62,9 @@
 		<div class="container-fluid well" style="background-color: #f5f5f5;">
 			<!--These flash notices are probably the old style, and neeed updated-->
 		    <% if notice || alert %>
-		        <%= javascript_include_tag "bootstrap-alert" %>
+		        <%= 
+		        #javascript_include_tag "bootstrap-alert" 
+		        %>
 		    <% end %>
 		    <% if notice %>
 		    <div id="notice" class="alert alert-info">
