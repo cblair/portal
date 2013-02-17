@@ -4,7 +4,7 @@ Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
-  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
+  config.mailer_sender = "ecodata.cnr.uidaho@gmail.com"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -94,6 +94,7 @@ Devise.setup do |config|
   # access will be blocked just in the third day. Default is 0.days, meaning
   # the user cannot access the website without confirming his account.
   # config.allow_unconfirmed_access_for = 2.days
+  config.allow_unconfirmed_access_for = 0.days
 
   # If true, requires any email changes to be confirmed (exctly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email

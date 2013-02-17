@@ -13,12 +13,6 @@ Portal::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
-
-  # localhost is default dev url
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -39,5 +33,22 @@ Portal::Application.configure do
                               'COUCHDB_PASSWORD'  => '',
                               'COUCHDB_HTTPS'     => false
                    }
-                 
+  # Don't care if the mailer can't send
+  config.action_mailer.raise_delivery_errors = false
+
+  # localhost is default dev url
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  config.action_mailer.delivery_method = :smtp
+  #config.action_mailer.default_charset = "utf-8"
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.smtp_settings = {
+       :authentication => :plain,
+       :address => "smtp.mailgun.org",
+       :port => 587,
+       :domain => "app10534904.mailgun.org",
+       :user_name => "postmaster@app10534904.mailgun.org",
+       :password => "2dlgq3hgb4w3"
+  }  
 end
