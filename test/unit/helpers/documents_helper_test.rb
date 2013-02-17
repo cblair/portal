@@ -658,6 +658,9 @@ class DocumentsHelperTest < ActionView::TestCase
 		d.stuffing_metadata = []
 		md = get_document_metadata(d)
 		assert md == [], md.to_s + " should == []"
+		d.stuffing_metadata = nil
+		md = get_document_metadata(d)
+		assert md == [], md.to_s + " should == []"
 
 		#cause rescue
 		d = nil
