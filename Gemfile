@@ -25,7 +25,7 @@ group :assets do
   #gem 'libv8', '~> 3.3.10'
 
   #gem 'jquery-fileupload-rails'
-  #gem 'jquery-ui-rails'
+  gem 'jquery-ui-rails'
   #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
@@ -37,7 +37,7 @@ gem 'jquery-rails'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 
-gem 'jquery-ui-rails'
+#gem 'jquery-ui-rails'
 gem 'jquery-rails'
 
 gem 'less'
