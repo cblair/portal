@@ -19,7 +19,21 @@
 //= require twitter/bootstrap
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
-//= require_tree .
+// require_tree .
+//= require charts
+//= require collections
+//= require data_io
+
+//Include for Documents only
+// require documents
+
+//= require exporting
+//= require feeds
+//= require ifilters
+//= require live_scaffolds
+//= require paging
+//= require uploads
+//= require viz
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 

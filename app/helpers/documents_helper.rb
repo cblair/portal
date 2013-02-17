@@ -343,6 +343,10 @@ module DocumentsHelper
       log_and_print "WARN: get_document_metadata threw an unknown exception"
        md = []
     end
+
+    if md == nil
+      md = []
+    end
     
     return md
   end

@@ -13,6 +13,8 @@ gem 'json'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
+  #don't put twitter-bootstrap-rails here - breaks on Heroku
+
   gem 'sass-rails'#,   '~> 3.1.5'
   #gem 'therubyracer'
   #gem 'therubyracer', '0.11.0beta5'
@@ -28,9 +30,7 @@ group :assets do
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 
-  #this requires the command:
-  # rails g bootstrap:install
-  #gem 'twitter-bootstrap-rails', '2.2.0'
+  gem 'lazy_high_charts'
 end
 
 gem 'jquery-rails'
@@ -59,8 +59,6 @@ gem 'twitter-bootstrap-rails', '2.2.0'
 
 # Deploy with Capistrano
 # gem 'capistrano'
-
-gem 'lazy_high_charts'
 
 gem 'couchrest'
 gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"

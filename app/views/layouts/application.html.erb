@@ -4,6 +4,7 @@
   <title>Hatch</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
+
   <!--jquery is include with jquery-fileupload, so no need for it here. Doing
   	both causes neither to load.-->
   <!--<%= javascript_include_tag 'jquery' %>-->
@@ -14,6 +15,10 @@
   	//for live_scaffold.js.erb
 	var CONTROLLER_NAME = "<%= params[:controller] %>";
   </script>
+
+  <% if params[:controller] == "documents"%>
+  	<%= javascript_include_tag 'documents' %>
+  <% end %>
   
   <%= yield :head %>
 </head>

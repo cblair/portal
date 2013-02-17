@@ -214,6 +214,8 @@ class DocumentsController < ApplicationController
                                 :stuffing_data => get_data_map(d, colname))
     
     @sdata = @document.stuffing_data
+    @msdata = get_document_metadata(@document)
+    
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
     @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})                            

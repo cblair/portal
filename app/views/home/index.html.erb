@@ -1,10 +1,124 @@
+<%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" 
+%>
+
+<%= 
+	javascript_include_tag :highcharts  
+%>
+<%= javascript_include_tag :exporting %>
+
+<%= 
+	javascript_include_tag "dataTables/jquery.dataTables" 
+%>
+
+<%= 
+	javascript_include_tag "dataTables/jquery.dataTables.bootstrap" 
+%>
+
+<%= 
+	javascript_include_tag "home_datatable_example" 
+%>
+
 <div class="hero-unit">
     <h1>Hatch</h1>
     <p>The EcoData Hatch project gives scientific data management a simple web-based interface and simplifies data analysis.</p>
-    <p><small><strong>Sponsored by</strong> Alex Fremier, College of Natural Resources, University of Idaho.
+
+	<h2>Problem Statement</h2>
+	<p>Modern science generates large amounts of data.  This data needs to be explored and visualized to find relationships.  It must then be
+	filtered and manipulated, all while being stored in a way that is fast, searchable, reliable, and remotely accessible.</p>
+
+	 <h3>Today’s scientific computation is too complicated</h3>
+	 <ul>
+	 	<li>the gap between data and analysis is broad</li>
+	 	<li>data assets become management liabilities</li>
+	 	<li>unnecessary computation and data redundancy is common</li>
+	 	<li>the research workspace is more fractured than it is unified</li>
+	 </ul>
+	 
+	 <h3>An interactive solution is needed</h3>
+	 <ul>
+	 	<li>requires no new training</li>
+	 	<li>maximizes use of existing standards and libraries</li>
+	 	<li>takes advantage of the existing use cases</li>
+	 	<li>answers the current administrative questions</li>
+	 	<li>doesn’t create new problems</li>
+	 </ul>
+
+	<hr>
+</div>
+
+<div class="hero-unit">
+	<h2>Documents</h2>
+	<p>Hatch uses its own document data store. Users can upload documents in multiple
+		formats, including:
+	</p>
+
+	<ul>
+		<li>CSV</li>
+		<li>text</li>
+		<li>SQL (future)</li>
+	</ul>
+
+	<p>The raw text from each format is stored in Hatch, and then the user runs filters
+		over the data to validate it. Hatch can try to automatically detect which filters
+		the data belongs to, or the user can specify which ones to use. Documents can be organized into Hatch Collections (like folders/directories).
+		Filters can then be applied over whole Collections, or just individual documents.
+	</p>
+
+	<p>Document data can then be easily sortable, searchable, and passed off to 
+		visualizations. Documents and Collections are private by default, but users
+		can then add individual user collaborators, share with other groups of users
+		within projects, or make the documents public to the world.
+	</p>
+
+	<%= render "home_datatable_example" %>
+</div>
+
+<div class="hero-unit">
+
+	<h2>Document based visualizations</h2>
+	<p>Visualizations are based on current data in documents. They can cover
+		multiple documents, and big datasets can be rendered leveraging the 
+		computational power of the cloud. Without the knowledged of the user.</p>
+	<p>Visualizations are quick, and can help researchers find relationships 
+		and trends they may not have realized.</p>
+	<%= 
+		high_chart("my_id", @h) do |c|
+  		end 
+  	%>
+
+  	<h3>Visualizing live data feeds</h3>
+  	<p>Feeds are data sources that Hatch 'polls' (or asks for based on timing). 
+  		Feed data is collected from a remote source, and put into a Hatch document.
+  		Visualizations will then detect when document data changes, and will update
+  		to show the new data.</p>
+  	<%= 
+  		high_chart('h2_chart', @h2) do |c|
+		end 
+	%>
+</div>
+
+<div class="hero-unit">
+	<h2>Hatch specific requirements</h2>
+	<p>The solution must:</p>
+	<ul>
+	<li>Provide:
+	<ul>
+	 <li>Reliable data storage</li>
+	 <li>Basic data manipulations</li>
+	 <li>Simple visualizations</li>
+	</ul>
+	<li>Have a gentle learning curve</li>
+	<li>Allow remote access</li>
+	<li>Allow local access</li>
+	<li>Support many data sets (i.e.,  not just PTAGIS data)</li>
+	</ul>
+</div>
+
+<div class="hero-unit">
+   <p><small><strong>Sponsored by</strong> Alex Fremier, College of Natural Resources, University of Idaho.
     <br>
     <strong>Developed by</strong> Shane Smith, Colby Blair, and Mike Solomon.</small></p>
-</div>
-<div class="well">
-      More information about Hatch is available at the <a href="http://seniordesign.engr.uidaho.edu/2011-2012/EcoData/">project website</a>.
+
+    <p> More information about Hatch is available at the <a href="http://seniordesign.engr.uidaho.edu/2011-2012/EcoData/">project website</a>.
+    </p>
 </div>

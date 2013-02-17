@@ -98,7 +98,7 @@ GEM
     jquery-ui-rails (4.0.1)
       jquery-rails
       railties (>= 3.1.0)
-    json (1.7.6)
+    json (1.7.7)
     lazy_high_charts (1.3.3)
       bundler (~> 1.0)
       hash-deep-merge
@@ -116,7 +116,7 @@ GEM
       rack-contrib
       rails
     mime-types (1.21)
-    multi_json (1.5.0)
+    multi_json (1.6.0)
     newrelic_rpm (3.5.6.46)
     orm_adapter (0.4.0)
     paperclip (3.4.0)
@@ -156,7 +156,7 @@ GEM
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    ruby-prof (0.12.1)
+    ruby-prof (0.12.2)
     rubyzip (0.9.9)
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)

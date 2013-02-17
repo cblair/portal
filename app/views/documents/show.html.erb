@@ -85,6 +85,7 @@
 	%>
 	<hr/>
 	
+	
 	<!--
 	<div id="hidden_form">
 	<h2>Data Manipulation</h2>
@@ -104,13 +105,15 @@
 		<br />
 		<%= select_tag(:manip_func, options_for_select([ ["categorize","categorize"] ]))%>
 		<br />
+
 	    <%= submit_tag("Manipulate")%>
 	<% end %>
 	</ul>
 	</div>
-	-->
-	<hr/>
 	
+	<hr/>
+	-->
+
 	<%= link_to 'Edit', edit_document_path(@document) %> |
 	<%= link_to 'Back', documents_path %>
 </div>
