@@ -1,5 +1,15 @@
-<p>Welcome <%= @resource.email %>!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hatch</title>
+  <%= stylesheet_link_tag    "application" %>
+</head>
+<body>
 
-<p>You can confirm your account email through the link below:</p>
+<h3>Welcome <%= @resource.email %>!</h3>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+	<p>You can confirm your account email through the link below:</p>
+
+	<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+</body>
+</html>

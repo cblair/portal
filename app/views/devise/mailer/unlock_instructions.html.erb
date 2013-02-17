@@ -1,7 +1,17 @@
-<p>Hello <%= @resource.email %>!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hatch</title>
+  <%= stylesheet_link_tag    "application" %>
+</head>
+<body>
 
-<p>Your account has been locked due to an excessive amount of unsuccessful sign in attempts.</p>
+	<h3>Hello <%= @resource.email %>!</h3>
 
-<p>Click the link below to unlock your account:</p>
+	<p>Your account has been locked due to an excessive amount of unsuccessful sign in attempts.</p>
 
-<p><%= link_to 'Unlock my account', unlock_url(@resource, :unlock_token => @resource.unlock_token) %></p>
+	<p>Click the link below to unlock your account:</p>
+
+	<p><%= link_to 'Unlock my account', unlock_url(@resource, :unlock_token => @resource.unlock_token) %></p>
+</body>
+</html>
