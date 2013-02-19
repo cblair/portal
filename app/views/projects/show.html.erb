@@ -22,14 +22,10 @@
 
 <br />
 
-<% Document.all.each do |doc| %>
-  <% if (doc.user == current_user) %>
-    <% if (doc.project == @project) %>
-      <ul>
-        <li> <%= link_to doc.name, doc %> </li>
-      </ul>
-    <% end %>
-  <% end %>
+<% Document.where("user_id = ? AND project_id = ?", current_user, @project.id).each do |doc| %>
+  <ul>
+    <li> <%= link_to doc.name, doc %> </li>
+  </ul>
 <% end %>
 
 <br />

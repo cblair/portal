@@ -1,5 +1,9 @@
 module ProjectsHelper
 
+  def add_users (project)
+  
+  end
+
   def change_owner (project)
     if (params[:user_name][:id] == "")
       @user_id_err = true		#user selected "none" or error
@@ -16,6 +20,6 @@ module ProjectsHelper
       # changes current project's user ID to target user's ID    	    
 	  project.update_attributes(:user_id => @target_user.id)
     end
-    
   end
+
 end

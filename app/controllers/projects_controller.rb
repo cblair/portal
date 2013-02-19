@@ -47,10 +47,10 @@ class ProjectsController < ApplicationController
     #puts("p = #{@project.name}") #debug (WORKS)
     u = User.all #get a list of users (for changing owner)
     
-    u.each do |x|
+    #u.each do |x|
       #puts ("user = #{x.email}")  #debug (WORKS)
-    end
-    
+    #end
+
   end
   
   # PUT /projects/add_menu/1
@@ -73,6 +73,29 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       format.html # add.html.erb
+      format.json { render json: @project }
+    end
+  end
+  
+  # PUT /projects/owner/1
+  # PUT /projects/owner/1.json
+  def user_man
+    @user_list = User.all
+    @project = Project.find(params[:id])
+    #@new_user = User.find(params[:new_user_id][:id])
+		puts("*** project = #{@project.name}, id #{@project.id}")
+		#puts("*** new tuser = #{@new_user.id}.") #debug
+=begin
+    @colab_users = []
+    User.all.each do |user|
+      if user.documents.include?(@document)
+        @colab_users << user
+      end
+    end
+=end
+
+  respond_to do |format|
+      format.html # show.html.erb
       format.json { render json: @project }
     end
   end

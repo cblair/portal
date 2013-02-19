@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  name: MyString
-  pdesc: MyText
+  name: Test 1
+  pdesc: This is unit test 1.
 
 two:
-  name: MyString
-  pdesc: MyText
+  name: test2
+  pdesc: This is unit test 2.

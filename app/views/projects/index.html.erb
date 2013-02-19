@@ -12,12 +12,13 @@
     </tr>
 
   <% @projects.each do |project| %>
-    <% if project.user == current_user %> <!-- Move out of loop? -->
+    <% if project.user == current_user %> <!-- Use select instead, move out of loop? -->
     <tr>
       <td><%= project.name %></td>
       <td><%= project.pdesc %></td>
       <td><%= link_to 'Show', project %></td>
       <td><%= link_to 'Add', collections_path %></td>
+      <td><%= link_to 'Users', user_man_path(project) %></td>
       <td><%= link_to 'Groups', groups_path(project) %></td>
       <td><%= link_to 'Edit', edit_project_path(project) %></td>
       <td><%= link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete %></td>
