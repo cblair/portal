@@ -23,9 +23,44 @@ jQuery(function($) {
 	    	updateDocColSubfields
 	    );
 	}
+
+	function updateScaffoldTableNode(node) {
+		var url_str = '/' + CONTROLLER_NAME + '.json';
+		
+		return;
+
+		if(typeof(CONTROLLER_WHERE) != "undefined") {
+			url_str += '?' + CONTROLLER_WHERE;
+		}
+		
+		$.ajax(url_str, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//$('div.scaffold table').hide();
+			},
+			success: function(result) {
+				//$('div.scaffold table').after('<p>test</p>');
+				if(result != SCAFFOLD_RESULTS) {
+					SCAFFOLD_RESULTS = result;
+					text = getScaffoldTableText(result);
+					
+					$('div.scaffold table').remove();
+					$('div.scaffold').append(text);
+				}
+				//TODO: renabled for continued updating, but we need to do long polling	
+				//setTimeout(updateScaffoldTable, 2000);
+			},
+			error: function(result) {
+				$('#error').show();
+			}
+		});
+	}
 	
 	
 	$(document).ready(function () {
 		$.initCollectionTree($);
+
+		$('').click;
 	});
 });
