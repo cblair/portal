@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130217183520) do
+ActiveRecord::Schema.define(:version => 20130220020310) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20130217183520) do
     t.string   "upfile_content_type"
     t.integer  "upfile_file_size"
     t.datetime "upfile_updated_at"
+    t.integer  "user_id"
   end
 
   create_table "users", :force => true do |t|

@@ -3,11 +3,25 @@ class UploadsController < ApplicationController
   require 'spawn'
   include DocumentsHelper
   include IfiltersHelper
+  before_filter :require_permissions
+  
+  
+  def require_permissions
+    if params.include?("id")
+      upload = Upload.find(params[:id])
+      
+      if upload.user != current_user
+        flash[:error] = "Upload not found, or you do not have permissions for this action."
+        redirect_to collections_path
+      end
+    end
+  end
+
   
   # GET /uploads
   # GET /uploads.json
   def index
-    @uploads = Upload.all
+    @uploads = Upload.where(:user_id => current_user.id)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -33,8 +47,6 @@ class UploadsController < ApplicationController
   def new
     @upload = Upload.new
 
-    
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @upload }
@@ -51,6 +63,8 @@ class UploadsController < ApplicationController
   def create
     #@upload = Upload.new(params[:upload])
     @upload = Upload.create(params[:upload])
+
+    @upload.user = current_user
     
     #start recording run time
     stime = Time.now() #start time
@@ -130,6 +144,8 @@ class UploadsController < ApplicationController
   # PUT /uploads/1.json
   def update
     @upload = Upload.find(params[:id])
+
+    @upload.user = current_user
 
     respond_to do |format|
       if @upload.update_attributes(params[:upload])

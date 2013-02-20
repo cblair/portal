@@ -1,6 +1,7 @@
 class Upload < ActiveRecord::Base
   attr_accessible :name, :upfile
   has_attached_file :upfile
+  belongs_to :user
   
   include Rails.application.routes.url_helpers
 
