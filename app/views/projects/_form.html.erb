@@ -15,11 +15,30 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </div>
+  
   <div class="field">
     <%= f.label :Description %><br />
-    <%= f.text_area :pdesc, :size => "40x7" %>
+    <%= f.text_area(:pdesc, :col => 1, :rows => 2) %>
   </div>
+  
+  <div class="field">
+    <h3>Collaborators</h3>
+    <p>Add or remove people to this project</p>
+    <%= select_tag("new_user_id", options_from_collection_for_select(User.all, "id", "email"), :include_blank => true) %>
+  </div>
+  
+  <p>Remove existing collaborators from this project</p>
+  <% if (@colab_list != nil) %>
+    <% @colab_list.each do |user| %>
+  	  <div class="field">
+	    <%= check_box_tag("colab_user_ids[]", user.id)%>
+	    <%= user.email %>
+	  </div>
+	<% end %>
+  <% end %>
+  
   <div class="actions">
-    <%= f.submit %>
+    </br>
+    <%= f.submit 'Submit' %>
   </div>
 <% end %>

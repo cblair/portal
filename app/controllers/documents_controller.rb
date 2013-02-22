@@ -162,9 +162,7 @@ class DocumentsController < ApplicationController
       if f != nil
         validate_document_helper(@document, f)
       end
-    end    
-
-    user = User.where(:id => params[:new_user_id]).first
+    end
     
     #Add doc to project
     if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
@@ -175,7 +173,9 @@ class DocumentsController < ApplicationController
         add_project_doc(project, @document) #call to document helper, adds doc to project
       end
     end
-   
+
+    user = User.where(:id => params[:new_user_id]).first
+    
     #Add collaborator
     if user != nil
       if not user.documents.include?(@document)

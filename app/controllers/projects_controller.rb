@@ -39,81 +39,62 @@ class ProjectsController < ApplicationController
   # GET /projects/1/edit
   def edit
     @project = Project.find(params[:id])
-  end
-  
-  # GET /projects/groups/1
-  def groups
-    @project = Project.find(params[:id])
-    #puts("p = #{@project.name}") #debug (WORKS)
-    u = User.all #get a list of users (for changing owner)
     
-    #u.each do |x|
-      #puts ("user = #{x.email}")  #debug (WORKS)
-    #end
-
+    #call to project helper (for removing collaborators)
+    @colab_list = colab_list_get(@project)
   end
   
-  # PUT /projects/add_menu/1
-  # PUT /projects/add_menu/1.json
-  def add_menu
-    #NOT USED:
-    @project = Project.find(params[:id])
+  # POST /projects
+  # POST /projects.json
+  def create
+    @project = Project.new(params[:project])
+    @project.user = current_user
 
     respond_to do |format|
-      format.html # add.html.erb
-      format.json { render json: @project }
-    end
-  end
-  
-  # PUT /projects/add/1
-  # PUT /projects/add/1.json
-  def add 
-    #NOT USED:
-    #@project = Project.find(params[:id])
-
-    respond_to do |format|
-      format.html # add.html.erb
-      format.json { render json: @project }
-    end
-  end
-  
-  # PUT /projects/owner/1
-  # PUT /projects/owner/1.json
-  def user_man
-    @user_list = User.all
-    @project = Project.find(params[:id])
-    #@new_user = User.find(params[:new_user_id][:id])
-		puts("*** project = #{@project.name}, id #{@project.id}")
-		#puts("*** new tuser = #{@new_user.id}.") #debug
-=begin
-    @colab_users = []
-    User.all.each do |user|
-      if user.documents.include?(@document)
-        @colab_users << user
+      if @project.save
+        format.html { redirect_to @project, notice: 'Project was successfully created.' }
+        format.json { render json: @project, status: :created, location: @project }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
-=end
+  end
 
-  respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @project }
+  # PUT /projects/1
+  # PUT /projects/1.json
+  def update
+    @project = Project.find(params[:id])    
+    user = User.where(:id => params[:new_user_id]).first
+	
+	colab_add(@project, user)
+	colab_remove(@project)
+	
+    respond_to do |format|
+      if @project.update_attributes(params[:project])
+        #format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+        #TODO: add message if selected user is blank?
+        format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @project.errors, status: :unprocessable_entity }
+      end
     end
   end
   
   # PUT /projects/owner/1
   # PUT /projects/owner/1.json
   def owner
-    @project = Project.find(params[:proj_id])
-		#puts("*** project = #{@project.name}, id #{@project.id}")
-		#puts("*** currentuser = #{current_user.id}.") #debug
+    @project = Project.find(params[:id])
 	
-	if (params.include?("proj_id") and params[:proj_id] != "" and @project != nil)
+	if (params.include?(:id) and params[:id] != "" and @project != nil)
 	  change_owner (@project) #calls project helper
     end
     
     respond_to do |format|
       if (@user_id_err == true) #see helper
-        format.html { redirect_to groups_path(@project), notice: 'Not an email, please try again.'}
+        format.html { redirect_to edit_project_path(@project), notice: 'Not an email, please try again.'}
         # TODO: format JSON?
       else
         format.html { redirect_to projects_path, notice: 'Project ownership successfully changed.' }
@@ -121,7 +102,19 @@ class ProjectsController < ApplicationController
       end
     end
   end
-  
+
+  # DELETE /projects/1
+  # DELETE /projects/1.json
+  def destroy
+    @project = Project.find(params[:id])
+    @project.destroy
+
+    respond_to do |format|
+      format.html { redirect_to projects_url }
+      format.json { head :ok }
+    end
+  end
+
   # GET /projects/owner/1
   def owner_OLD
   # this version of owner uses an input text field
@@ -158,51 +151,5 @@ class ProjectsController < ApplicationController
 	  end
     end
 =end
-  end
-  
-  # POST /projects
-  # POST /projects.json
-  def create
-    @project = Project.new(params[:project])
-    @project.user = current_user
-
-    respond_to do |format|
-      if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
-        format.json { render json: @project, status: :created, location: @project }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /projects/1
-  # PUT /projects/1.json
-  def update
-    #@project = Project.find(params[:project_id])
-    @project = Project.find(params[:id])
-
-    respond_to do |format|
-      if @project.update_attributes(params[:project])
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /projects/1
-  # DELETE /projects/1.json
-  def destroy
-    @project = Project.find(params[:id])
-    @project.destroy
-
-    respond_to do |format|
-      format.html { redirect_to projects_url }
-      format.json { head :ok }
-    end
   end
 end
