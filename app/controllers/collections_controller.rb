@@ -58,7 +58,15 @@ class CollectionsController < ApplicationController
   def show    
     @collection = Collection.find(params[:id])
 
-    @documents = Document.where(:collection_id => @collection.id).paginate(:per_page => 5, :page => params[:page])
+    #@documents = Document.where(:collection_id => @collection.id).paginate(:per_page => 5, :page => params[:page])
+    @documents_all = Document.where(:collection_id => @collection.id)
+
+    @documents = []
+    @documents_all.each do |doc|
+      if doc_is_viewable(doc, current_user)
+        @documents << doc
+      end
+    end
 
     respond_to do |format|
       format.html # show.html.erb

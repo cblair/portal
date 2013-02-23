@@ -38,13 +38,14 @@
 	    			<i class="icon-download icon-white"></i>
 	    			zip
 	  			</a>
+
+	  			<%= 
+	    			#render :partial => "collections/rec_collection_documents_render", :locals => {:collection => collection}
+	    		%>
+	    		<i class="icon-refresh icon-spin"></i>loading...
+	    		<%= link_to 'View documents', collection_path(collection) %>
 	  		</ul>
 	    </li>
-    
-	    <%= 
-	    	#render :partial => "collections/rec_collection_documents_render", :locals => {:collection => collection}
-	    %>
-	    <%= link_to 'View documents', collection_path(collection) %>
 	    
 	    <% Collection.where(:collection_id => collection.id).each do |child_collection| %>
 			<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection} %>

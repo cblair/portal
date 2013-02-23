@@ -17,12 +17,27 @@
 
 	<h3>Documents</h3>
 
+	<!--
 	<div>
 		<%= 
 			 render :partial => "collections/rec_collection_documents_render", :locals => {:documents => @documents}
 		%>
 	</div>
-	<%= will_paginate @documents %>
+	<%= 
+		#will_paginate @documents 
+	%>
+	-->
+	<table id="documents" class="display" data-source="<%= documents_url(format: "json") %>" data-collection-id="<%= @collection.id %>">
+	  <thead>
+	    <tr>
+	      <th>Document Name</th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
 
 	<%= link_to 'Edit', edit_collection_path(@collection) %> |
 	<%= link_to 'Back', collections_path %>

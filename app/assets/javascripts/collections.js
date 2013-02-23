@@ -61,6 +61,6 @@ jQuery(function($) {
 	$(document).ready(function () {
 		$.initCollectionTree($);
 
-		$('').click;
+		//$('').click;
 	});
 });

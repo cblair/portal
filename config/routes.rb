@@ -13,6 +13,7 @@ Portal::Application.routes.draw do
   resources :ifilters
 
   post '/documents/:id(.:format)', :to => 'documents#show'
+  post '/documents(.:format)', :to => 'documents#index'
   match '/documents_manip' => "documents#manip", :as => :document_manip
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   resources :documents

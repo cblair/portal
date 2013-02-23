@@ -25,13 +25,12 @@ class DocumentsController < ApplicationController
   # GET /documents
   # GET /documents.json
   def index
-    @documents = Document.all.paginate(:per_page => 5, :page => params[:page])
-    
-    redirect_to collections_path
-    #respond_to do |format|
+    respond_to do |format|
     #  format.html # index.html.erb
     #  format.json { render json: @documents }
-    #end
+    # This will die if not asekd by our dataTables, because we're using params[:collection_id]
+      format.json { render json: DocumentsMainDatatable.new(view_context, current_user)}
+    end
   end
   
   #TODO: re-implement with search
