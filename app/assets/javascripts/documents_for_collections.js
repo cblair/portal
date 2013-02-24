@@ -9,7 +9,7 @@ jQuery(function($) {
 	});
 
 	$(document).ready(function () {	
-		$('#documents').dataTable({
+		$('.documents_datatable').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
@@ -20,7 +20,7 @@ jQuery(function($) {
     			aoData.push( 
     						{ 
     							"name": "collection_id", 
-    							"value": $('#documents').data('collection-id') 
+    							"value": $(this).data('collection-id') 
     						} 
     						);
 			},
@@ -29,7 +29,9 @@ jQuery(function($) {
 			//Taking out search
 			//"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sAjaxSource"		: $('#documents').data('source'),
+
+			//Source for server-side data
+			"sAjaxSource"		: $('.documents_datatable').data('source'),
 
 			"aoColumns": [
 							/*name*/ 		null,

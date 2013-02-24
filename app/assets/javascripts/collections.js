@@ -9,6 +9,9 @@ jQuery(function($) {
 		//$(this).toggle();
 		$(this).parent().children('a.col-doc-plus-minus').toggle();
 		$(this).parent().parent().children('ul.col-doc-attr-form').toggle();
+
+		$(this).parent().children('span.col-doc-attrs').toggle();		
+
 		$(this).parent().parent().parent().children('ul.col-doc').toggle();
 	}
 	
@@ -17,6 +20,9 @@ jQuery(function($) {
 		var colUl = $('ul.col-doc');
 		colUl.children('li').children('ul').toggle();
 		colUl.children('li').children('span').children('a#col-doc-minus').toggle();
+
+		colUl.children('li').children('span').children('span.col-doc-attrs').toggle();
+
 		colUl.children('ul.col-doc').toggle();
 	    
 	    colUl.children('li').children('span').children('a.col-doc-plus-minus').click(
