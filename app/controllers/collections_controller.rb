@@ -113,7 +113,7 @@ class CollectionsController < ApplicationController
   def update
     @collection = Collection.find(params[:id])
     
-    #parent collection stuff
+    #Parent collection stuff
     parent_child_violation = false
     if params.include?("collection") and params[:collection].include?("collection_id") and params[:collection]["collection_id"] != ""
       parent_collection = Collection.find(params[:collection]["collection_id"])
@@ -124,6 +124,14 @@ class CollectionsController < ApplicationController
       end
     end
     
+    #Update
+    #do this now, so the spawn doesn't PG:Error b/c spawned code has locked @colllection
+    update_collection_attrs_suc = false
+    if not parent_child_violation
+      update_collection_attrs_suc = @collection.update_attributes(params[:collection])
+    end
+
+    #Validation
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
       #f = Ifilter.find(params[:post][:ifilter_id])
       f = get_ifilter(params[:post][:ifilter_id].to_i)
@@ -140,7 +148,7 @@ class CollectionsController < ApplicationController
       if parent_child_violation 
         flash[:error] =  "Warning: cannot set parent collection to a child."
         format.html { redirect_to @collection }
-      elsif @collection.update_attributes(params[:collection])
+      elsif update_collection_attrs_suc
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
         format.json { head :ok }
       else
