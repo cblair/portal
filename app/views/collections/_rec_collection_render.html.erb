@@ -22,12 +22,17 @@
 			    	<% if collection_is_validated(collection) %>
 			    		<a class="label label-success" href="#">
 							<i class="icon-check icon-white"></i>
+						</a>
 					<% else %>
-						<a class="label label-warning" data-confirm="Validations may take some time..." \
-	    						rel="nofollow" href="<%= validate_collection_path(collection) %>">
-							<i class="icon-check-empty icon-white"></i>
+						<%= 
+							link_to raw('<i class="icon-check-empty icon-white"></i>'), 
+									validate_collection_path(collection), 
+									:class => "label label-warning",
+									:remote => true,
+									:confirm => "Validations may take some time. Refresh page to see when validation is done, or cancel..."
+						%>
 					<% end %>
-					</a>
+
 		    		<a class="label label-important" href="<%= pub_priv_collection_path(collection, :public => "true") %>">
 						<i class="icon-eye-open icon-white"></i>
 					</a>

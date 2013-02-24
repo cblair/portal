@@ -1,5 +1,6 @@
 jQuery(function($) {
 
+	//dataTables
 	$.extend( $.fn.dataTableExt.oStdClasses, {
 		//Taking out for now - URI too long
 		//"sSortAsc": "header headerSortDown",
@@ -8,7 +9,9 @@ jQuery(function($) {
 		"sWrapper": "dataTables_wrapper form-inline"
 	});
 
-	$(document).ready(function () {	
+	$(document).ready(function () {
+
+		//dataTables
 		$('#documents').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,

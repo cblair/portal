@@ -3,6 +3,7 @@ class CollectionsController < ApplicationController
   include DocumentsHelper
 
   require 'will_paginate'
+  require 'spawn'
   
   #before_filter :authenticate_user!
   before_filter :require_permissions
@@ -126,7 +127,13 @@ class CollectionsController < ApplicationController
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
       #f = Ifilter.find(params[:post][:ifilter_id])
       f = get_ifilter(params[:post][:ifilter_id].to_i)
-      validate_collection_helper(@collection, f)
+
+      spawn_block do
+        puts "#########################################################################"
+        puts "Validation spawned"
+        puts "#########################################################################"
+        validate_collection_helper(@collection, f)
+      end
     end
 
     respond_to do |format|
@@ -170,7 +177,7 @@ class CollectionsController < ApplicationController
   # 
   def validate_collection
     @collection = Collection.find(params[:id])
-    
+
     suc_valid = validate_collection_helper(@collection)
     
     respond_to do |format|
