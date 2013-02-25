@@ -1,4 +1,7 @@
 Portal::Application.routes.draw do
+  resources :notifications
+  match '/notifications/send_notification/:id' => "notifications#send_notification", :as => :send_notification
+
   resources :uploads
 
   resources :charts

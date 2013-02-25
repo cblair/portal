@@ -6,4 +6,10 @@ class UserMailer < ActionMailer::Base
 	@url = "http://peaceful-lake-8763.herokuapp.com/users/sign_in"
 	mail(:to => user.email, :subject => "Welcome to Hatch")
   end
+
+  def send_notification(notification, user)
+  	@notification = notification
+
+ 	mail(:to => user.email, :subject => "New from Hatch - #{@notification.title}")
+  end
 end

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>News from Hatch - <%= @notification.title %></h1>
+    <% @notification.body.split(/\n/) do |chunk| %>
+    	<p><%= chunk %></p>
+    <% end %>
+  </body>
+</html>
