@@ -5,7 +5,6 @@
     	<li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
     </ul>
 <% else %>
-
     <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => "new_user navbar-form pull-right"} ) do |f| %>
 	  <%= f.email_field :email, {:class => "span2", :placeholder => "Email"} %>	
 	  <%= f.password_field :password, {:class => "span2", :placeholder => "Password"} %>
