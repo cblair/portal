@@ -17,10 +17,10 @@ class Document < ActiveRecord::Base
             :username => Portal::Application.config.couchdb['COUCHDB_USERNAME'],
             :password => Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
-  
 
   def create_default_couchdb()
-
+    return
+    
     if is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
@@ -47,7 +47,6 @@ class Document < ActiveRecord::Base
       end
     end
   end
-
 
   #Search for document names
   def self.search(search)
