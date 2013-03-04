@@ -12,6 +12,12 @@ Portal::Application.routes.draw do
   
   #Devise / Users
   devise_for :users
+
+  #Custom displaying of Devise users. Do each of these maunally, because we want to
+  # be especially careful what we route to
+  match '/users' => "users#index"
+  match '/users/:id(.:format)', :to => 'users#index', :as => :user
+  match '/users/:id/edit(.:format)', :to => 'users#edit', :as => :edit_user
   
   resources :ifilters
 

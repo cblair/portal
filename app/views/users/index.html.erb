@@ -1,0 +1,22 @@
+<div class="hero-unit">
+  <%- model_class = User -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:email) %></th>
+        <th>Joined on</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.email %></td>
+          <td><%=l user.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -18,10 +18,8 @@
   
   <div class="field">
     <%= f.label :collection_id %><br />
-  	<%= 
-	f.select(:collection_id, Collection.all.collect {|c| [ c.name, c.id ] }, 
-				{:selected => @document.collection_id} )
-  	%>
+    <%= f.select(:collection_id, get_all_collection_select_options, 
+      {:include_blank => '(none)'} ) %>
   </div>
   
   <p>Add new collaborator</p>
@@ -31,15 +29,20 @@
     		options_from_collection_for_select(User.all, "id", "email"), 
     		:include_blank => true)
   	%>
+    <%= link_to "Users...", users_path %>
   </div>
   
-  <p>Remove existing collaborators</p>
-  <% @colab_users.each do |user| %>
-  	  <div class="field">
-	  	<%= check_box_tag("colab_user_ids[]", user.id)%>
-	  	<%= user.email %>
-	  </div>
+  <p>Remove existing collaborators:</p>
+  <div class="field">
+  <% if @colab_users.empty? %>
+    <p>(none)</p>
+  <% else %> 
+    <% @colab_users.each do |user| %>
+  	  	<%= check_box_tag("colab_user_ids[]", user.id)%>
+  	  	<%= user.email %>
+    <% end %>
   <% end %>
+  </div>
   <br />
   
   <div>
