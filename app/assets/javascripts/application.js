@@ -6,20 +6,23 @@
 //
 //= require jquery
 //= require jquery_ujs
-
-//TODO: I don't know why application.js isn't including this, but this following doesn't work
-//= require jquery-fileupload
-
 //= require jquery-ui
 
-//= require jquery-fileupload/basic
-//= require jquery-fileupload/vendor/tmpl
+// require jquery-fileupload/basic
+// require jquery-fileupload/vendor/tmpl
+//= require jquery-fileupload
 
 //= require highcharts
 //= require twitter/bootstrap
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
+
+//Include only specific js files individually.
+// To see what is being loaded, use this parameter:
+// ?debug_assets=1
+//
 // require_tree .
+
 //= require charts
 //= require collections
 //= require data_io

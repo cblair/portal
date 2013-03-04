@@ -16,15 +16,10 @@ group :assets do
   #don't put twitter-bootstrap-rails here - breaks on Heroku
 
   gem 'sass-rails'#,   '~> 3.1.5'
-  #gem 'therubyracer'
-  #gem 'therubyracer', '0.11.0beta5'
-  #gem 'libv8', '~> 3.11.8'
   gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
-  #gem 'therubyracer', '0.9.9'
-  #gem 'libv8', '~> 3.3.10'
 
-  gem 'jquery-fileupload-rails'
+  gem 'jquery-fileupload-rails', '0.4.0'
   gem 'jquery-ui-rails'
   #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
   gem 'therubyracer', '0.9.9'
@@ -34,8 +29,6 @@ group :assets do
 end
 
 gem 'jquery-rails'
-#gem 'jquery-fileupload-rails'
-#gem 'jquery-ui-rails'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 

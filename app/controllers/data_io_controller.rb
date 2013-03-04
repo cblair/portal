@@ -27,7 +27,12 @@ class DataIoController < ApplicationController
       c=Collection.find(params[:dump][:collection_id])
     else
       #create a new collection at the root
-      c=Collection.new(:name => ctext)
+      #c=Collection.new(:name => ctext)
+
+      #if the ctext is a new collection, all the file will go under this collection
+      # But if a collection already exists, everything will go under there, which may
+      # not be exactly what the user wanted
+      c = Collection.find_or_create_by_name(:name => ctext)
     end
 
     #User

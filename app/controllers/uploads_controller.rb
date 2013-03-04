@@ -64,6 +64,36 @@ class UploadsController < ApplicationController
     #@upload = Upload.new(params[:upload])
     @upload = Upload.create(params[:upload])
 
+    #File stuff
+    #fname=params[:dump][:file].original_filename
+    fname=params[:upload][:upfile].original_filename
+
+    #20 MB max size
+    max_size = 20000000
+    file_size = params[:upload][:upfile].size
+    if file_size > max_size
+      respond_to do |format|
+        error_message = "File size #{file_size} > #{max_size}"
+        error_json = [  
+                       {
+                          :error => error_message,
+                          :name  => fname,
+                          :size  => file_size
+                        }
+                      ]
+        format.html {render action: "new", notice: error_message}
+
+        #We always return the 'created' status, or the client will overwrite our custom
+        # error message with the one for the error (i.e. 
+        # 422 "unprocessable due to semantic errors")
+
+        #format.json {render json: error_json, status: :created }
+        format.js   {render json: error_json, status: :created }
+      end
+
+      return
+    end
+
     @upload.user = current_user
     
     #start recording run time
@@ -87,17 +117,19 @@ class UploadsController < ApplicationController
       c.user = current_user
       c.save
     elsif c_text != ""
-      c=Collection.new(:name => c_text)
+      #c=Collection.new(:name => c_text)
+
+      #if the ctext is a new collection, all the file will go under this collection
+      # But if a collection already exists, everything will go under there, which may
+      # not be exactly what the user wanted
+      c = Collection.find_or_create_by_name(:name => c_text)
+
       #User
       c.user = current_user
       c.save
     else
       c = nil
     end
-    
-    #File stuff
-    #fname=params[:dump][:file].original_filename
-    fname=params[:upload][:upfile].original_filename
     
     #filter
     f=nil

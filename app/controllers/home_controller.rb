@@ -2,9 +2,6 @@ class HomeController < ApplicationController
 
 
   def index
-    #@hc = Home.init_global_demo_chart
-
-
     @streaming = true
     @liveurl = 'home_chart_demo'
     @numdraw = 15
