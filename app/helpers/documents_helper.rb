@@ -233,6 +233,11 @@ module DocumentsHelper
     if (f != nil and f['id'] == -1)
       return filter_data_columns_csv(iterator)
     end
+
+    #XML
+    if (f != nil and f['id'] == -2)
+      return filter_data_columns_xml(iterator)
+    end
     
     #TODO: cleanup
     #get the column names
@@ -309,6 +314,40 @@ module DocumentsHelper
     end
 
     return retval
+  end
+
+
+  def filter_data_columns_xml(iterator)
+    #re-join all the data. This is inefficient, but the user can be more efficient if
+    # they validate on upload
+
+    data_text = ""
+    iterator.each do |row|
+      data_text += row["1"]
+    end
+
+    #the hash of the entire xml tree
+    xml_hash = Hash.from_xml(data_text)
+
+    #the return data
+    data = []
+
+    #get the first thing that is a list in the xml "dataroot" element
+    if xml_hash.include?("dataroot")
+      table_data = []
+      xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
+      #the first element is usually named after the table. Get the next element (usually
+      # the second) that is a list
+      table_data.each {|datum| data = datum if datum.kind_of? Array }
+      if data.empty?
+        log_and_print "WARN: XML filtered data was empty. Reverting filter"
+      end
+    else
+      log_and_print "WARN: no dataroot in document as XML. Reverting filter"
+      data = iterator
+    end
+
+    data
   end
   
 

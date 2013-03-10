@@ -69,14 +69,25 @@ module IfiltersHelper
   def get_internal_ifilters
     retval = []
 
+    #CSV
     f = Ifilter.new( #new but don't save
                     :name => "CSV (pre-defined)",
                     :regex=> nil
                   )
       #TODO: id
     f.id = -1 #we don't want to stomp on an valid id
-
     retval.prepend(f)
+
+    #XML
+    f = Ifilter.new( #new but don't save
+                    :name => "XML (pre-defined)",
+                    :regex=> nil
+                  )
+      #TODO: id
+    f.id = -2 #we don't want to stomp on an valid id    
+    retval.prepend(f)
+
+    retval
   end
 
 

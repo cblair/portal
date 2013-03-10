@@ -1,5 +1,6 @@
 class DocumentsController < ApplicationController
   require 'will_paginate/array'
+  require 'spawn'
   
   include DocumentsHelper
   include VizHelper
@@ -151,18 +152,9 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @document = Document.find(params[:id])
+
+    suc_msg = 'Document was successfully updated. '
     
-    #Filter / Validate
-    if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
-      #f = Ifilter.find(params[:post][:ifilter_id])
-      f = get_ifilter(params[:post][:ifilter_id].to_i)
-
-      #don't let validate auto-filter
-      if f != nil
-        validate_document_helper(@document, f)
-      end
-    end    
-
     user = User.where(:id => params[:new_user_id]).first
    
     #Add collaborator
@@ -180,9 +172,27 @@ class DocumentsController < ApplicationController
       end
     end
 
+    #Update other attributes
+    update_suc = @document.update_attributes(params[:document])
+
+    #Filter / Validate
+    if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
+      #f = Ifilter.find(params[:post][:ifilter_id])
+      f = get_ifilter(params[:post][:ifilter_id].to_i)
+
+      #don't let validate auto-filter
+      if f != nil
+        suc_msg += 'Validation filter started; refresh your browser to check for completion. '
+
+        spawn_block do
+          validate_document_helper(@document, f)
+        end
+      end
+    end    
+
     respond_to do |format|
-      if @document.update_attributes(params[:document])
-        format.html { redirect_to @document, notice: 'Document was successfully updated.' }
+      if update_suc
+        format.html { redirect_to @document, notice: suc_msg }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

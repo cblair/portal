@@ -25,6 +25,7 @@ class DocumentsMainDatatable
 private
 
   def data
+    #TODO: add this when we figure out how to make datatables refresh on destroy: remote: :true)
     documents.map do |doc|
       [
         link_to(doc.name, doc),
