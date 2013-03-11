@@ -17,6 +17,10 @@
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 
+//= require d3
+//  require d3.layout
+//  require d3.v3.min.js // or, alternatively-named, d3.min.js
+
 //Include only specific js files individually.
 // To see what is being loaded, use this parameter:
 // ?debug_assets=1

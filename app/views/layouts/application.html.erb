@@ -41,6 +41,8 @@
             <li><%= link_to "Data Explorer", collections_path %></li>
             <!--TODO: someday-->
             <!--<li><%= link_to "Feeds", feeds_path %></li>-->
+            <li><%= link_to "Search", home_search_path %>
+            <li><%= link_to "Analyze", home_analyze_path %>
         </ul>
         <%= render 'layouts/login_items' %>
       </div><!--/.nav-collapse -->
@@ -62,7 +64,21 @@
 	end
 %>
 
-<% if !(params[:controller] == "documents") %>
+<%
+	#Allows no-bordered view for big layouts, i.e. datatables
+	expanded_view = false
+
+	if (params[:controller] == "documents")
+		expanded_view = true
+	elsif (params[:controller] == "home" and params[:action] == "search")
+		expanded_view = true
+	end
+
+%>
+
+<% if expanded_view %>
+	<%= yield %>
+<% else %>
 	<div class="container-fluid well" style="background-color: #dfdfdf;">
 		<div class="container-fluid well" style="background-color: #f5f5f5;">
 			<!--These flash notices are probably the old style, and neeed updated-->
@@ -93,10 +109,6 @@
 		    <%= yield %>
 		</div>
 	</div>
-<% end %>
-
-<% if (params[:controller] == "documents") %>
-	<%= yield %>
 <% end %>
 
 </body>

@@ -1,0 +1,35 @@
+<% content_for :head do %>
+	<!--style just for the d3 demo-->
+	<style type="text/css">
+	.node circle {
+	  cursor: pointer;
+	  fill: #fff;
+	  stroke: steelblue;
+	  stroke-width: 1.5px;
+	}
+
+	.node text {
+	  font-size: 11px;
+	}
+
+	path.link {
+	  fill: none;
+	  stroke: #ccc;
+	  stroke-width: 1.5px;
+	}
+	</style>
+<% end %>
+
+<div class="hero-unit">
+	<h1>Search</h1>
+	<p><span class="label label-warning">In Development</span></p>
+	<hr />
+
+	<p>Hatch chooses to associate data more dynamically than the typical relational database. When data is imported into Hatch, it looks for relationships that may be defined per the formats' standards. It then indexes these relationships. The result is relationships through search. Data values are indexed on a per-column basis, and are searchable locally (per document or collection of documents), or globally. This allows quick access to visualizations of data structures, through a simple interface.</p>
+
+	<p>In the following example, the 'Time', 'Tag', and 'Document Name' columns are all indices throughout the entire Hatch database. Since the Hatch users have identified these colums as important searchable columns, search tables are pre-built, and searches are quick.</p>
+
+	<%= render "search_datatables_demo", :controller => "home" %>
+
+	<%= render "d3_tree_demo", :controller => "home" %>
+</div>

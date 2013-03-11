@@ -71,4 +71,17 @@ class HomeController < ApplicationController
     end
   end
 
+  def search
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def analyze
+    respond_to do |format|
+      format.html
+    end
+  end
+
+
 end

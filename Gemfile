@@ -26,6 +26,8 @@ group :assets do
   gem 'libv8', '~> 3.3.10'
 
   gem 'lazy_high_charts'
+
+  gem 'd3_rails'
 end
 
 gem 'jquery-rails'

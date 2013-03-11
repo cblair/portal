@@ -1,0 +1,381 @@
+
+{
+ "name": "3D9.1BF11B4053",
+ "children": [
+  {
+   "name": "AB2",
+   "children": [
+    {
+     "name": "2000",
+     "children": [
+      {"name": "January", "size": 3938},
+      {"name": "February", "size": 3812},
+      {"name": "March", "size": 6714},
+      {"name": "April", "size": 743}
+     ]
+    },
+    {
+     "name": "2001",
+     "children": [
+      {"name": "BetweennessCentrality", "size": 3534},
+      {"name": "LinkDistance", "size": 5731},
+      {"name": "MaxFlowMinCut", "size": 7840},
+      {"name": "ShortestPaths", "size": 5914},
+      {"name": "SpanningTree", "size": 3416}
+     ]
+    },
+    {
+     "name": "2002",
+     "children": [
+      {"name": "AspectRatioBanker", "size": 7074}
+     ]
+    }
+   ]
+  },
+  {
+   "name": "AB3",
+   "children": [
+    {"name": "2000", "size": 17010},
+    {"name": "2001", "size": 5842},
+    {
+     "name": "2002",
+     "children": [
+      {"name": "January", "size": 1983},
+      {"name": "February", "size": 2047},
+      {"name": "March", "size": 1375},
+      {"name": "April", "size": 8746},
+      {"name": "May", "size": 2202},
+      {"name": "June", "size": 1382},
+      {"name": "July", "size": 1629},
+      {"name": "August", "size": 1675},
+      {"name": "September", "size": 2042}
+     ]
+    },
+    {"name": "2003", "size": 1041},
+    {"name": "2004", "size": 5176},
+    {"name": "2005", "size": 449},
+    {"name": "2006", "size": 5593},
+    {"name": "2007", "size": 5534},
+    {"name": "2008", "size": 9201},
+    {"name": "2009", "size": 19975},
+    {"name": "2010", "size": 1116},
+    {"name": "2011", "size": 6006}
+   ]
+  },
+  {
+   "name": "ACB",
+   "children": [
+    {
+     "name": "2000",
+     "children": [
+      {"name": "January", "size": 721},
+      {"name": "February", "size": 4294},
+      {"name": "March", "size": 9800},
+      {"name": "April", "size": 1314},
+      {"name": "May", "size": 2220}
+     ]
+    },
+    {"name": "2001", "size": 1759},
+    {"name": "2002", "size": 2165},
+    {"name": "2003", "size": 586},
+    {"name": "2004", "size": 3331},
+    {"name": "2005", "size": 772},
+    {"name": "2006", "size": 3322}
+   ]
+  },
+  {
+   "name": "ACM",
+   "children": [
+    {"name": "2000", "size": 8833},
+    {"name": "2001", "size": 1732},
+    {"name": "2002", "size": 3623},
+    {"name": "2003", "size": 10066}
+   ]
+  },
+  {
+   "name": "AFC",
+   "children": [
+    {"name": "2000", "size": 4116}
+   ]
+  },
+  {
+   "name": "ANT",
+   "children": [
+    {"name": "2000", "size": 1082},
+    {"name": "2001", "size": 1336},
+    {"name": "2002", "size": 319},
+    {"name": "2003", "size": 10498},
+    {"name": "2004", "size": 2822},
+    {"name": "2005", "size": 9983},
+    {"name": "2006", "size": 2213},
+    {"name": "2007", "size": 1681}
+   ]
+  },
+  {
+   "name": "BBT",
+   "children": [
+    {"name": "1990", "size": 1616},
+    {"name": "1991", "size": 1027},
+    {"name": "1992", "size": 3891},
+    {"name": "1993", "size": 891},
+    {"name": "1994", "size": 2893},
+    {"name": "1995", "size": 5103},
+    {"name": "1996", "size": 3677},
+    {"name": "1997", "size": 781},
+    {"name": "1998", "size": 4141},
+    {"name": "1999", "size": 933},
+    {"name": "2000", "size": 5130},
+    {"name": "2001", "size": 3617},
+    {"name": "2002", "size": 3240},
+    {"name": "2003", "size": 2732},
+    {"name": "2004", "size": 2039},
+    {"name": "2005", "size": 1214},
+    {"name": "2006", "size": 3748},
+    {"name": "2007", "size": 843},
+    {
+     "name": "2008: Tagged By",
+     "children": [
+      {"name": "CJB", "size": 593},
+      {"name": "AAP", "size": 330},
+      {"name": "OUS", "size": 287},
+      {"name": "CJA", "size": 277},
+      {"name": "SJC", "size": 292},
+      {"name": "FEP", "size": 595},
+      {"name": "IRS", "size": 594},
+      {"name": "LLP", "size": 460},
+      {"name": "QCP", "size": 603},
+      {"name": "TUE", "size": 625},
+      {"name": "ORS", "size": 748},
+      {"name": "KLG", "size": 461},
+      {"name": "GNM", "size": 597},
+      {"name": "LUS", "size": 619},
+      {"name": "FWQ", "size": 283},
+      {"name": "ARS", "size": 283},
+      {"name": "AKA", "size": 591},
+      {"name": "MUL", "size": 603},
+      {"name": "NEQ", "size": 599},
+      {"name": "NM", "size": 386},
+      {"name": "JMK", "size": 323},
+      {"name": "ALP", "size": 307},
+      {"name": "WER", "size": 772},
+      {"name": "SUR", "size": 296},
+      {"name": "MMN", "size": 363},
+      {"name": "LOC", "size": 600},
+      {"name": "TYU", "size": 280},
+      {"name": "UPD", "size": 307},
+      {"name": "VAR", "size": 335},
+      {"name": "WHE", "size": 299},
+      {"name": "XOR", "size": 354},
+      {"name": "LAD", "size": 264}
+     ]
+    },
+    {"name": "2009", "size": 843},
+    {"name": "2010", "size": 1554},
+    {"name": "2011", "size": 970},
+    {"name": "2012 Q1", "size": 13896},
+    {"name": "2012 Q2", "size": 1594},
+    {"name": "2012 Q3", "size": 4130},
+    {"name": "2012 Q4", "size": 791},
+    {"name": "2013 Q1", "size": 1124},
+    {"name": "2013 Q2", "size": 1876},
+    {"name": "2013 Q3", "size": 1101}
+   ]
+  },
+  {
+   "name": "BO1",
+   "children": [
+    {"name": "2000", "size": 2105},
+    {"name": "2001", "size": 1316},
+    {"name": "2002", "size": 3151},
+    {"name": "2003", "size": 3770},
+    {"name": "2004", "size": 2435},
+    {"name": "2005", "size": 4839},
+    {"name": "2006", "size": 1756},
+    {"name": "2007", "size": 4268},
+    {"name": "2008", "size": 1821},
+    {"name": "2009", "size": 5833}
+   ]
+  },
+  {
+   "name": "CAC",
+   "children": [
+    {"name": "1990", "size": 8258},
+    {"name": "1991", "size": 10001},
+    {"name": "1992", "size": 8217},
+    {"name": "1993", "size": 12555},
+    {"name": "1994", "size": 2324},
+    {"name": "1995", "size": 10993},
+    {
+     "name": "1996",
+     "children": [
+      {"name": "January", "size": 9354},
+      {"name": "February", "size": 1233}
+     ]
+    },
+    {"name": "1997", "size": 335},
+    {"name": "1998", "size": 383},
+    {"name": "1999", "size": 874},
+    {
+     "name": "2000",
+     "children": [
+      {"name": "January", "size": 3165},
+      {"name": "February", "size": 2815},
+      {"name": "March", "size": 3366}
+     ]
+    },
+    {"name": "2001", "size": 17705},
+    {"name": "2002", "size": 1486},
+    {
+     "name": "2003",
+     "children": [
+      {"name": "January", "size": 6367},
+      {"name": "February", "size": 1229},
+      {"name": "March", "size": 2059},
+      {"name": "April", "size": 2291}
+     ]
+    },
+    {"name": "2004", "size": 5559},
+    {"name": "2005", "size": 19118},
+    {"name": "2006", "size": 6887},
+    {"name": "2007", "size": 6557},
+    {"name": "2008", "size": 22026}
+   ]
+  },
+  {
+   "name": "CAL",
+   "children": [
+    {
+     "name": "2000",
+     "children": [
+      {"name": "January", "size": 1302},
+      {"name": "February", "size": 24593},
+      {"name": "March", "size": 652},
+      {"name": "April", "size": 636},
+      {"name": "May", "size": 6703}
+     ]
+    },
+    {
+     "name": "2001",
+     "children": [
+      {"name": "January", "size": 2138},
+      {"name": "February", "size": 3824},
+      {"name": "March", "size": 1353},
+      {"name": "April", "size": 4665},
+      {"name": "May", "size": 2649},
+      {"name": "June", "size": 2832},
+      {"name": "July", "size": 4896},
+      {"name": "August", "size": 763},
+      {"name": "September", "size": 5222},
+      {"name": "October", "size": 7862},
+      {"name": "November", "size": 8435}
+     ]
+    },
+    {
+     "name": "2002",
+     "children": [
+      {"name": "January", "size": 20544},
+      {"name": "February", "size": 19788},
+      {"name": "March", "size": 10349},
+      {"name": "April", "size": 3301},
+      {"name": "May", "size": 19382},
+      {
+       "name": "June: Tagged By",
+       "children": [
+        {"name": "CJB", "size": 698},
+        {"name": "IES", "size": 5569},
+        {"name": "IRE", "size": 353},
+        {"name": "SHA", "size": 2247}
+       ]
+      },
+      {"name": "July", "size": 11275},
+      {"name": "August", "size": 7147},
+      {"name": "September", "size": 9930}
+     ]
+    },
+    {
+     "name": "2003",
+     "children": [
+      {"name": "January", "size": 2313},
+      {"name": "February", "size": 1880},
+      {"name": "March", "size": 1701},
+      {"name": "April", "size": 1117}
+     ]
+    },
+    {
+     "name": "2004",
+     "children": [
+      {"name": "January", "size": 20859},
+      {"name": "February", "size": 4614},
+      {"name": "March", "size": 10530}
+     ]
+    },
+    {
+     "name": "2005",
+     "children": [
+      {
+       "name": "January: Tagged By",
+       "children": [
+        {"name": "ARP", "size": 4461},
+        {"name": "CLS", "size": 6314},
+        {"name": "CCP", "size": 3444}
+       ]
+      },
+      {
+       "name": "February: Tagged By",
+       "children": [
+        {"name": "ARP", "size": 3179},
+        {"name": "CLS", "size": 4060},
+        {"name": "ACP", "size": 4138},
+        {"name": "SHA", "size": 1690},
+        {"name": "SIZ", "size": 1830}
+       ]
+      },
+      {
+       "name": "March: Tagged By",
+       "children": [
+        {"name": "FIS", "size": 5219},
+        {"name": "GRA", "size": 3165},
+        {"name": "VIS", "size": 3509}
+       ]
+      },
+      {"name": "April", "size": 1286},
+      {
+       "name": "May: Tagged By",
+       "children": [
+        {"name": "LAB", "size": 9956},
+        {"name": "RAD", "size": 3899},
+        {"name": "STA", "size": 3202}
+       ]
+      },
+      {
+       "name": "June: Tagged By",
+       "children": [
+        {"name": "AXI", "size": 6725},
+        {"name": "BUN", "size": 3727},
+        {"name": "CIR", "size": 9317},
+        {"name": "DDP", "size": 12003},
+        {"name": "DEN", "size": 4853},
+        {"name": "FOR", "size": 8411},
+        {"name": "ICI", "size": 4864},
+        {"name": "IND", "size": 3174},
+        {"name": "JAL", "size": 7881},
+        {"name": "NOD", "size": 12870},
+        {"name": "PIE", "size": 2728},
+        {"name": "RAD", "size": 12348},
+        {"name": "RAN", "size": 870},
+        {"name": "STA", "size": 9121},
+        {"name": "TRE", "size": 9191}
+       ]
+      },
+      {"name": "July", "size": 2490},
+      {"name": "August", "size": 5248},
+      {"name": "September", "size": 4190},
+      {"name": "October", "size": 2581},
+      {"name": "November", "size": 2023}
+     ]
+    },
+    {"name": "2006", "size": 16540}
+   ]
+  }
+ ]
+}
