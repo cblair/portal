@@ -12,5 +12,15 @@
 
 user1: 
   id: 1
-  email: user1@test.eu
+  email: t1@test.com
+  encrypted_password: password
+  
+user2:
+  id: 2
+  email: t2@test.com
+  encrypted_password: password
+  
+user3:
+  id: 3
+  email: t3@test.com
   encrypted_password: password
