@@ -373,6 +373,46 @@ class DocumentsHelperTest < ActionView::TestCase
 	end
 
 
+	test "filter_data_columns_xml - valid data" do
+		fname = 'tbl_WaterQuality.xml'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/tbl_WaterQuality.xml'))
+		assert upload
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		f = get_ifilter(-2) #internal XML
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_xml(d.stuffing_data)
+		expected_data =	[
+						{"WaterQualityID"=>"4", "WaterQualityName"=>"TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-L-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
+						{"WaterQualityID"=>"5", "WaterQualityName"=>"TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-R-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
+						{"WaterQualityID"=>"6", "WaterQualityName"=>"TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300", "DceName"=>"TR2-A-L-dce-20080527-1300", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:00:00", "SampleDateTime"=>"2008-05-27T13:00:00", "WaterQualityValue"=>"11.6497330942593", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}
+						]
+		assert data == expected_data, data.to_s
+	end
+
+	test "filter_data_columns_xml - invalid data" do
+		fname = 'tbl_WaterQuality_bad1.xml'
+		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/tbl_WaterQuality_bad1.xml'))
+		assert upload
+
+		assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+		f = get_ifilter(-2) #internal XML
+
+		docs = Document.where(:name => fname)
+		assert docs.count == 1, Document.all.to_s
+		d = docs.first
+
+		data = filter_data_columns_xml(d.stuffing_data)
+		assert data == [], data.to_s
+	end
+
+
 	test "filter_metadata_columns - nil args" do
 		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')
 		f = ifilters(:ifilter1)
@@ -529,6 +569,90 @@ class DocumentsHelperTest < ActionView::TestCase
 		result_data = filter_data_columns(f, data)
 		assert result_data != []
 		assert result_data == expected_data
+
+		#XML tests
+		iterator = 	[
+						{"1" => '<?xml version="1.0" encoding="UTF-8"?>'},
+						{"1" => '<dataroot xmlns:od="urn:schemas-microsoft-com:officedata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="tbl_WaterQuality.xsd" generated="2013-03-05T10:43:17">'},
+						{"1" => '<tbl_WaterQuality>'},
+						{"1" => '<WaterQualityID>4</WaterQualityID>'},
+						{"1" => '<WaterQualityName>TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>'},
+						{"1" => '<DceName>TR1-A-L-dce-20080527-1345</DceName>'},
+						{"1" => '<MethodName>Ammonia</MethodName>'},
+						{"1" => '<SampleDate>2008-05-27T13:45:00</SampleDate>'},
+						{"1" => '<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>'},
+						{"1" => '<WaterQualityValue>-999</WaterQualityValue>'},
+						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
+						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
+						{"1" => '<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>'},
+						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
+						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
+						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
+						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
+						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
+						{"1" => '</tbl_WaterQuality>'},
+						{"1" => '<tbl_WaterQuality>'},
+						{"1" => '<WaterQualityID>5</WaterQualityID>'},
+						{"1" => '<WaterQualityName>TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>'},
+						{"1" => '<DceName>TR1-A-R-dce-20080527-1345</DceName>'},
+						{"1" => '<MethodName>Ammonia</MethodName>'},
+						{"1" => '<SampleDate>2008-05-27T13:45:00</SampleDate>'},
+						{"1" => '<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>'},
+						{"1" => '<WaterQualityValue>-999</WaterQualityValue>'},
+						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
+						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
+						{"1" => '<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>'},
+						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
+						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
+						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
+						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
+						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
+						{"1" => '</tbl_WaterQuality>'},
+						{"1" => '<tbl_WaterQuality>'},
+						{"1" => '<WaterQualityID>6</WaterQualityID>'},
+						{"1" => '<WaterQualityName>TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>'},
+						{"1" => '<DceName>TR2-A-L-dce-20080527-1300</DceName>'},
+						{"1" => '<MethodName>Ammonia</MethodName>'},
+						{"1" => '<SampleDate>2008-05-27T13:00:00</SampleDate>'},
+						{"1" => '<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>'},
+						{"1" => '<WaterQualityValue>11.6497330942593</WaterQualityValue>'},
+						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
+						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
+						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
+						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
+						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
+						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
+						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
+						{"1" => '</tbl_WaterQuality>'},
+						{"1" => '<tbl_WaterQuality>'},
+						{"1" => '<WaterQualityID>7</WaterQualityID>'},
+						{"1" => '<WaterQualityName>TR2-A-R-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>'},
+						{"1" => '<DceName>TR2-A-R-dce-20080527-1300</DceName>'},
+						{"1" => '<MethodName>Ammonia</MethodName>'},
+						{"1" => '<SampleDate>2008-05-27T13:00:00</SampleDate>'},
+						{"1" => '<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>'},
+						{"1" => '<WaterQualityValue>19.9847280999598</WaterQualityValue>'},
+						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
+						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
+						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
+						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
+						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
+						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
+						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
+						{"1" => '</tbl_WaterQuality>'},
+						{"1" => '</dataroot>'}
+						]
+
+		f = get_ifilter(-2) #internal XML
+		data = filter_data_columns(f, iterator)
+		expected_data = [
+							{"WaterQualityID"=>"4", "WaterQualityName"=>"TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-L-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
+							{"WaterQualityID"=>"5", "WaterQualityName"=>"TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-R-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
+							{"WaterQualityID"=>"6", "WaterQualityName"=>"TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300", "DceName"=>"TR2-A-L-dce-20080527-1300", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:00:00", "SampleDateTime"=>"2008-05-27T13:00:00", "WaterQualityValue"=>"11.6497330942593", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
+							{"WaterQualityID"=>"7", "WaterQualityName"=>"TR2-A-R-dce-20080527-1300-Ammonia-20080527-1300", "DceName"=>"TR2-A-R-dce-20080527-1300", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:00:00", "SampleDateTime"=>"2008-05-27T13:00:00", "WaterQualityValue"=>"19.9847280999598", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}
+						]
+		assert data != [], "#{data} == []"
+		assert data == expected_data
 	end
 
 

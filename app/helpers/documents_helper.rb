@@ -333,18 +333,13 @@ module DocumentsHelper
     data = []
 
     #get the first thing that is a list in the xml "dataroot" element
-    if xml_hash.include?("dataroot")
-      table_data = []
-      xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
-      #the first element is usually named after the table. Get the next element (usually
-      # the second) that is a list
-      table_data.each {|datum| data = datum if datum.kind_of? Array }
-      if data.empty?
-        log_and_print "WARN: XML filtered data was empty. Reverting filter"
-      end
-    else
-      log_and_print "WARN: no dataroot in document as XML. Reverting filter"
-      data = iterator
+    table_data = []
+    xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
+    #the first element is usually named after the table. Get the next element (usually
+    # the second) that is a list
+    table_data.each {|datum| data = datum if datum.kind_of? Array }
+    if data.empty?
+      log_and_print "WARN: XML filtered data was empty. Reverting filter"
     end
 
     data

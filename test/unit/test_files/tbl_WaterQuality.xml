@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataroot xmlns:od="urn:schemas-microsoft-com:officedata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="tbl_WaterQuality.xsd" generated="2013-03-05T10:43:17">
+<tbl_WaterQuality>
+<WaterQualityID>4</WaterQualityID>
+<WaterQualityName>TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>
+<DceName>TR1-A-L-dce-20080527-1345</DceName>
+<MethodName>Ammonia</MethodName>
+<SampleDate>2008-05-27T13:45:00</SampleDate>
+<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>
+<WaterQualityValue>-999</WaterQualityValue>
+<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+<DataQualityRank>not assigned</DataQualityRank>
+<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>
+<DateCreated>2012-05-31T10:59:03</DateCreated>
+<CreatedBy>Torre Stockard</CreatedBy>
+<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+<UpdatedBy>Torre Stockard</UpdatedBy>
+<WaterQualityAttribute>NH4</WaterQualityAttribute>
+</tbl_WaterQuality>
+<tbl_WaterQuality>
+<WaterQualityID>5</WaterQualityID>
+<WaterQualityName>TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>
+<DceName>TR1-A-R-dce-20080527-1345</DceName>
+<MethodName>Ammonia</MethodName>
+<SampleDate>2008-05-27T13:45:00</SampleDate>
+<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>
+<WaterQualityValue>-999</WaterQualityValue>
+<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+<DataQualityRank>not assigned</DataQualityRank>
+<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>
+<DateCreated>2012-05-31T10:59:03</DateCreated>
+<CreatedBy>Torre Stockard</CreatedBy>
+<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+<UpdatedBy>Torre Stockard</UpdatedBy>
+<WaterQualityAttribute>NH4</WaterQualityAttribute>
+</tbl_WaterQuality>
+<tbl_WaterQuality>
+<WaterQualityID>6</WaterQualityID>
+<WaterQualityName>TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>
+<DceName>TR2-A-L-dce-20080527-1300</DceName>
+<MethodName>Ammonia</MethodName>
+<SampleDate>2008-05-27T13:00:00</SampleDate>
+<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>
+<WaterQualityValue>11.6497330942593</WaterQualityValue>
+<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+<DataQualityRank>not assigned</DataQualityRank>
+<DateCreated>2012-05-31T10:59:03</DateCreated>
+<CreatedBy>Torre Stockard</CreatedBy>
+<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+<UpdatedBy>Torre Stockard</UpdatedBy>
+<WaterQualityAttribute>NH4</WaterQualityAttribute>
+</tbl_WaterQuality>
+</dataroot>
