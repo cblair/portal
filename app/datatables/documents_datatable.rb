@@ -54,7 +54,6 @@ private
 
     #return_data = return_data.paginate({:page => page, :per_page => per_page})
 
-    pp return_data
     return_data
 =begin
     documents = Document.order("#{sort_column} #{sort_direction}")
