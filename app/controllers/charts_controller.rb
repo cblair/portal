@@ -1,5 +1,6 @@
 class ChartsController < ApplicationController
-    include DocumentsHelper
+  include DocumentsHelper
+  
   # GET /charts
   # GET /charts.json
   def index

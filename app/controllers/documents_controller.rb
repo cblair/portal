@@ -103,7 +103,7 @@ class DocumentsController < ApplicationController
     @chart = chart || Chart.find(newchart({:document_id => @document}))
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: DocumentsDatatable.new(view_context) }
+      format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
   end
   
@@ -121,6 +121,8 @@ class DocumentsController < ApplicationController
   # GET /documents/1/edit
   def edit    
     @document = Document.find(params[:id])
+
+    @colnames = get_data_colnames(@document.stuffing_data)
     
     @colab_users = []
     User.all.each do |user|
@@ -172,6 +174,9 @@ class DocumentsController < ApplicationController
       end
     end
 
+    #Add primary keys
+    @document.stuffing_primary_keys = params[:primary_keys]
+
     #Update other attributes
     update_suc = @document.update_attributes(params[:document])
 
@@ -184,11 +189,14 @@ class DocumentsController < ApplicationController
       if f != nil
         suc_msg += 'Validation filter started; refresh your browser to check for completion. '
 
-        spawn_block do
+        #spawn_block do
           validate_document_helper(@document, f)
-        end
+        #end
       end
-    end    
+    end
+
+    #Indexes
+    #safsa
 
     respond_to do |format|
       if update_suc

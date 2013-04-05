@@ -19,7 +19,6 @@ class Document < ActiveRecord::Base
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
   def create_default_couchdb()
-    return
     
     if is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
@@ -30,20 +29,47 @@ class Document < ActiveRecord::Base
       )
       if !self.view_exists("all_data_values")
         self.create_simple_view("all_data_values", 
-        "function(doc) 
-          {
-            if (doc.data && !doc.is_search_doc)
-            {
-              for(row_key in doc.data)
-              {
-                row = doc.data[row_key];
-                for(col_key in row)
-                {
-                  emit(row[col_key], row);
-                }
-              }
-            }
-          }")
+                                "function(doc) {
+                                  if(doc.primary_keys) {
+                                    for(pi in doc.primary_keys) {
+                                      var pk = doc.primary_keys[pi];
+                                      for(row_i in doc.data) {
+                                        var row = doc.data[row_i];
+                                        if(row[pk]) {
+                                          emit([row[pk]], doc._id);
+                                        }
+                                      }
+                                    }
+                                  }
+                                }",
+                                "function(keys, values) {
+                                  retval = {};
+                                  for(val_i in values) {
+                                    var val = values[val_i];
+                                    if(retval[val]) {
+                                      retval[val] += 1;
+                                    } else {
+                                      retval[val] = 1;
+                                    }
+                                  }
+                                  return(retval);
+                                }")
+        self.create_simple_view("row_by_doc_and_data", 
+                                "function(doc) {
+                                  if(doc.primary_keys) {
+                                    for(pi in doc.primary_keys) {
+                                      var pk = doc.primary_keys[pi];
+                                      for(row_i in doc.data) {
+                                        var row = doc.data[row_i];
+                                        //emit([row[pk], pk, doc._id], 1);
+                                        //emit([row[pk], pk], 1);
+                                        if(row[pk]) {
+                                          emit([doc._id, row[pk]], row);
+                                        }
+                                      }
+                                    }
+                                  }
+                                }")
       end
     end
   end

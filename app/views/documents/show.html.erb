@@ -70,7 +70,12 @@
 			    	<% row_keys = @row.keys %>
 			    <% end %>
 			    <% row_keys.each do |name| %>
-			    	<th><%= name %></th>
+			    	<th>
+						<% if (@document.stuffing_primary_keys and @document.stuffing_primary_keys.include?(name)) %>
+							<i class="icon-search"></i>
+						<% end %>
+						<%= name %>
+			    	</th>
 			    <% end %>
 	      </tr>
 	     </thead>

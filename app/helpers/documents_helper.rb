@@ -1,7 +1,11 @@
 module DocumentsHelper
   require 'csv'
   require 'zip/zipfilesystem'
+  require 'open-uri'
+  require 'json'
+  require 'cgi'
   include IfiltersHelper
+  include CouchdbHelper
 
   #helpers for testing devise
   #if Rails.env.test?
@@ -455,28 +459,6 @@ module DocumentsHelper
 
     return data_columns
   end
-  
-
-=begin #TODO: re-implement with search
-  def document_search_data_couch(search, lucky_search = false)
-    #Use any Document instance to access the Stuffing view method
-    #If exact value searched for, call key view
-    if lucky_search == false
-      docs = Document.first().view("all_data_values/view1", {:startkey => search})["rows"]
-    #Otherwise, call startkey - endkey view
-    else
-      docs = Document.first().view("all_data_values/view1", {:key => search})["rows"]
-    end
-    
-    #Compile the resulting data back into a record-like array of hashes
-    retval = []
-    docs.each do |doc|
-      retval << doc["value"]
-    end
-    
-    return retval
-  end
-=end
   
 
   #If the collection has any viewable docs or sub-collections

@@ -1,7 +1,6 @@
 require 'test_helper'
 include CouchdbHelper
 
-
 class DocumentsHelperTest < ActionView::TestCase
    #Helper tests
 

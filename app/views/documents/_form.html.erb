@@ -51,6 +51,21 @@
  	<%= link_to "Filters...", ifilters_path %>
   </div>
 
+  <div>
+    <p>Index columns:<p>
+      <% @colnames.each do |colname| %>
+        <%=
+          if ( @document.stuffing_primary_keys && @document.stuffing_primary_keys.include?(colname) )
+            check_box_tag("primary_keys[]", colname, {:selected => true})
+          else
+            check_box_tag("primary_keys[]", colname)
+          end
+        %>
+        <%= colname %>
+        <br />
+      <% end %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

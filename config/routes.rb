@@ -1,4 +1,7 @@
 Portal::Application.routes.draw do
+  resources :searches
+
+
   resources :notifications
   match '/notifications/send_notification/:id' => "notifications#send_notification", :as => :send_notification
 
@@ -30,6 +33,10 @@ Portal::Application.routes.draw do
   resources :documents
 
   resources :collections
+  
+  resources :searches
+  match '/search/search_all' => "searches#search_all", :as => :search_all
+
   resources :posts
   
   #I did something wrong to have to imply all of these

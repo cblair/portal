@@ -15,7 +15,7 @@ module CouchdbHelper
       end
       
       conn_str += "#{host}:#{port}/"
-      
+
       CouchRest.get conn_str
       return true
     rescue
@@ -23,24 +23,31 @@ module CouchdbHelper
     end
   end
 
-  #TODO: not tested or used anywhere yet
-=begin
-  def get_couchrest_database(db_name, host = "127.0.0.1", port = "5984", username = nil, 
-                          password = nil, https = false
-                          )
+
+  def get_http_connection_string
+    host     = Portal::Application.config.couchdb['COUCHDB_HOST']
+    port     = Portal::Application.config.couchdb['COUCHDB_PORT']
+    username = Portal::Application.config.couchdb['COUCHDB_USERNAME']
+    password = Portal::Application.config.couchdb['COUCHDB_PASSWORD']
+    https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
+
     if https
       conn_str = "https://"
     else
       conn_str = "http://"
     end
     
-    if username != nil and password != nil
+    if (username and (!username.empty?) and password and (!password.empty?))
       conn_str += "#{username}:#{password}@"
     end
     
-    conn_str += "#{host}:#{port}/#{db_name}"
+    conn_str += "#{host}:#{port}/"
     
-    return CouchRest.database!(conn_str)
+    return conn_str
   end
-=end
+
+
+  def get_database_name
+    "#{File.basename(Rails.root)}_#{Rails.env}"
+  end
 end

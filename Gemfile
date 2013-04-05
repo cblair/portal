@@ -56,6 +56,7 @@ gem 'twitter-bootstrap-rails', '2.2.0'
 # gem 'capistrano'
 
 gem 'couchrest'
+gem 'couchrest_model'
 gem 'stuffing', :git => "git://github.com/cblair/stuffing.git", :branch => "integration"
 
 gem 'devise'#, '~> 2'
