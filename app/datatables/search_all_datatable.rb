@@ -50,7 +50,13 @@ private
         raw_data.each do |raw_datum|
           raw_datum["value"].collect do |doc_name, count|
             doc_id = doc_name.sub("Document-", "").to_i
-            doc = Document.find(doc_id)
+
+            begin
+              doc = Document.find(doc_id)
+            rescue ActiveRecord::RecordNotFound
+              log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
+              puts raw_datum
+            end
 
             if doc_is_viewable(doc, @current_user)
               row = {}
