@@ -24,26 +24,31 @@ module CouchdbHelper
   end
 
 
-  def get_http_connection_string
+  def get_http_connection_hash
     host     = Portal::Application.config.couchdb['COUCHDB_HOST']
     port     = Portal::Application.config.couchdb['COUCHDB_PORT']
     username = Portal::Application.config.couchdb['COUCHDB_USERNAME']
     password = Portal::Application.config.couchdb['COUCHDB_PASSWORD']
     https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
+    retval = {:username => false, :password => false}
+
     if https
-      conn_str = "https://"
+      retval[:https] = true
     else
-      conn_str = "http://"
+      retval[:https] = false
     end
     
     if (username and (!username.empty?) and password and (!password.empty?))
-      conn_str += "#{username}:#{password}@"
+      retval[:username] = username
+      retval[:password] = password
     end
     
-    conn_str += "#{host}:#{port}/"
-    
-    return conn_str
+    retval[:host] = host
+    retval[:password] = password
+    retval[:port] = port
+
+    return retval
   end
 
 

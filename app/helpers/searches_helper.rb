@@ -1,5 +1,6 @@
 module SearchesHelper
   include CouchdbHelper
+  require 'net/https'
 
   #TODO: doesn't know about logger. ?
   def log_and_print(str)
@@ -10,12 +11,10 @@ module SearchesHelper
   def couch_search_count_data_in_document(search, lucky_search = false)
     data = []
 
-    conn_str = get_http_connection_string + "#{get_database_name}/"
+    conn_hash = get_http_connection_hash
 
-    conn_str += "_design/all_data_values/_view/view1"
-
+    conn_str = "/#{get_database_name}/_design/all_data_values/_view/view1"
     conn_str += "?group=true"
-
     conn_str += "&limit=10"
 
     #Use any Document instance to access the Stuffing view method
@@ -34,13 +33,23 @@ module SearchesHelper
       conn_str += "&endkey=" + CGI.escape(endkey)
 	  #end
 
-    #TODO: might not need this anymore...
-    #begin
-      data = JSON.parse(open(conn_str).read)['rows']
-    #rescue OpenURI::HTTPError
-    #  log_and_print "WARN: User did a search with bad URI: "
-    #  log_and_print '-->' + conn_str
-    #end
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
+
 =begin
       #data = Document.first().view("all_data_values", "view1", {:group => true, :key => keys})#["rows"]
 
@@ -53,9 +62,9 @@ module SearchesHelper
     data = []
 
     doc_id = doc_id.to_i #verify the id is really an int
-    conn_str = get_http_connection_string + "#{get_database_name}/"
+    conn_hash = get_http_connection_hash
 
-    conn_str += "_design/row_by_doc_and_data/_view/view1"
+    conn_str = "/#{get_database_name}/_design/row_by_doc_and_data/_view/view1"
 
     #Use any Document instance to access the Stuffing view method
     #If exact value searched for, call key view
@@ -73,15 +82,22 @@ module SearchesHelper
       conn_str += "&endkey=" + CGI.escape(endkey)
     #end
 
-    #TODO: may not need this
-    #begin
-      puts "TS"
-      puts conn_str
-      data = JSON.parse(open(conn_str).read)['rows']
-    #rescue OpenURI::HTTPError
-    #  log_and_print "WARN: User did a search with bad URI: "
-    #  log_and_print '-->' + conn_str
-    #end
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
 
     return data
   end
