@@ -5,3 +5,14 @@ one:
 
 two:
   name: Collection 2
+
+#These collections are user for project testing
+col3:
+  id: 3
+  name: "Collection 3"
+  user_id: 1
+
+col4:
+  id: 4
+  name: "Collection 4"
+  user_id: 2

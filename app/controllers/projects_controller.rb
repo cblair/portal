@@ -67,9 +67,13 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])    
     user = User.where(:id => params[:new_user_id]).first
 	
-	colab_add(@project, user)
-	colab_remove(@project)
-	
+	if (@project != nil and user != nil)
+	  colab_add(@project, user)
+	end
+	if (@project != nil and params[:colab_user_ids] != nil and params[:colab_user_ids] != "")
+	  colab_remove(@project)
+	end
+	#TODO: different error condition?
     respond_to do |format|
       if @project.update_attributes(params[:project])
         #format.html { redirect_to @project, notice: 'Project was successfully updated.' }
@@ -87,9 +91,16 @@ class ProjectsController < ApplicationController
   # PUT /projects/owner/1.json
   def owner
     @project = Project.find(params[:id])
+    target_user_id = params[:user_name][:id]
 	
 	if (params.include?(:id) and params[:id] != "" and @project != nil)
-	  change_owner (@project) #calls project helper
+	  if (target_user_id != "" and target_user_id != nil)
+	    change_owner(@project, target_user_id) #calls project helper
+	  else
+	    @user_id_err = true
+	  end
+	else
+	  @user_id_err = true
     end
     
     respond_to do |format|
