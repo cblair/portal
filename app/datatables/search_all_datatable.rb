@@ -36,18 +36,19 @@ private
 
   def search_data
     #@documents ||= fetch_documents
-    fetch_search_data
+    #fetch_search_data_couchdb
+    fetch_search_data_elasticsearch
   end
 
 
-  def fetch_search_data
+  def fetch_search_data_couchdb
     @retval = []
 
     if params[:sSearch].present?
       raw_data = couch_search_count_data_in_document(params[:sSearch])
 
       if raw_data
-        raw_data.each do |raw_datum|
+        raw_data.each do |raw_datum|          
           raw_datum["value"].collect do |doc_name, count|
             doc_id = doc_name.sub("Document-", "").to_i
 
@@ -86,6 +87,39 @@ private
     end
     documents
 =end
+  end
+
+
+  def fetch_search_data_elasticsearch
+    @retval = []
+
+    if params[:sSearch].present?
+      raw_data = elastic_search_all_data(params[:sSearch])
+
+      if raw_data
+        raw_data.collect do |row|
+          doc_name = row[:doc_name]
+          score = row[:score]
+          doc_id = doc_name.sub("Document-", "").to_i
+
+          begin
+            doc = Document.find(doc_id)
+          rescue ActiveRecord::RecordNotFound
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
+            puts raw_data
+          end
+
+          if doc_is_viewable(doc, @current_user)
+            row = {}
+            row["0"] = link_to doc.name, doc
+            #count col
+            row["1"] = score
+            @retval << row
+          end
+        end
+      end
+    end
+    @retval
   end
 
 
