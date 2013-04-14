@@ -14,7 +14,7 @@ jQuery(function($) {
 
 	$(document).ready(function () {
 
-		//dataTables
+		//dataTable
 		var search_table = $('#search').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
@@ -29,7 +29,8 @@ jQuery(function($) {
 			"sAjaxSource"		: $('#search').data('source')
 		});
 
-		  $('.dataTables_filter input')
+		//only search once 
+		$('.dataTables_filter input')
     		.unbind('keypress keyup')
     		.bind('keypress keyup', function(e){
       			if (e.keyCode != 13) return;
