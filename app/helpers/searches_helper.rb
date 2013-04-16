@@ -118,6 +118,24 @@ module SearchesHelper
   end
 
 
+   def cloudant_search_all_data(search)
+    data = []
+
+    conn_hash = get_http_connection_hash
+
+    #TODO
+    conn_hash[:https] = true
+    conn_port[:port] = 443
+    
+
+    conn_str = "/#{get_database_name}/_design/all_data_values/_search/cols_and_rows?q=#{search}"
+
+    data = get_http_search_result(conn_hash, conn_str)
+
+    return data
+  end
+
+
   def get_http_search_result(conn_hash, conn_str)
     http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
 
