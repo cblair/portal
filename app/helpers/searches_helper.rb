@@ -112,27 +112,39 @@ module SearchesHelper
 
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
 
-    data = get_http_search_result(conn_hash, conn_str)
+    full_data = get_http_search_result(conn_hash, conn_str)
+    data = []
+
+    begin
+      hits = full_data["hits"]["hits"]
+      data = hits.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+    rescue NoMethodError
+      log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
+      log_and_print full_data.to_s
+    end
 
     return data
   end
 
 
+   #This is Lucene for the Hatch production on Heroku, via the Cloudant API
    def cloudant_search_all_data(search)
     data = []
 
     conn_hash = get_http_connection_hash
+    #conn_str = "/#{get_database_name}/_design/all_data_values/_search/cols_and_values?q=#{search}"
 
-    #TODO
+    #TODO - overwriting with our production stuff only
+    conn_hash[:host] = "app10534904.heroku.cloudant.com"
     conn_hash[:https] = true
-    conn_port[:port] = 443
-    
-
-    conn_str = "/#{get_database_name}/_design/all_data_values/_search/cols_and_rows?q=#{search}"
+    conn_hash[:port] = 443
+    conn_hash[:username] = "app10534904.heroku"
+    conn_hash[:password] = "QTRGjtDrQkATkjPuCGUAVUPh"
+    conn_str = "/app_production/_design/all_data_values/_search/cols_and_values?q=#{search}"
 
     data = get_http_search_result(conn_hash, conn_str)
 
-    return data
+    return data["rows"]
   end
 
 
@@ -151,8 +163,7 @@ module SearchesHelper
         req.basic_auth(conn_hash[:username], conn_hash[:password])
       end
 
-      hits = JSON.parse(http.request(req).body)["hits"]["hits"]
-      data = hits.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+      data = JSON.parse(http.request(req).body)
     end
 
     return data

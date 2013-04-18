@@ -40,7 +40,8 @@ class SearchesHelperTest < ActionView::TestCase
  	test "couch_search_count_data_in_document - valid data" do
  		#prefix
  		expected_data = [{"key"=>["test"], "value"=>{"Document-1"=>1}}]
- 		assert expected_data == couch_search_count_data_in_document("t")
+ 		actual_data = couch_search_count_data_in_document("t")
+ 		assert expected_data == actual_data, expected_data.to_s + " : " + actual_data.to_s
  		expected_data = [{"key"=>["test"], "value"=>{"Document-1"=>1}}]
  		assert expected_data == couch_search_count_data_in_document("te")
  		expected_data = [{"key"=>["test"], "value"=>{"Document-1"=>1}}]
@@ -59,5 +60,19 @@ class SearchesHelperTest < ActionView::TestCase
  		expected_data = [{"id"=>"Document-2", "key"=>["Document-2", "test"], "value"=>{"1"=>"test"}}]
  		actual_data = couch_search_row_by_doc_and_data(2, "test")
  		assert expected_data == actual_data, actual_data.to_s
+ 	end
+
+
+ 	#TODO: test fuller later, not required now since it is in development env only
+ 	test "elastic_search_all_data - valid data" do
+ 		expected_data = []
+ 		actual_data = elastic_search_all_data("id:D*")
+ 		assert false, actual_data.to_s
+ 	end
+
+
+ 	#TODO: will be harder to test, Huroku Clodant production only
+ 	test "cloudant_search_all_data - valid data" do
+
  	end
 end

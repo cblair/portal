@@ -36,8 +36,17 @@ private
 
   def search_data
     #@documents ||= fetch_documents
+
+    #Couchdb search sucks
     #fetch_search_data_couchdb
-    fetch_search_data_elasticsearch
+
+    if Rails.env.production?
+      fetch_search_data_cloudant
+    elsif Rails.env.development?
+      fetch_search_data_elasticsearch
+    else
+      log_and_print "WARN: datatable search could not determine RAILS_ENV"
+    end
   end
 
 
@@ -100,6 +109,39 @@ private
         raw_data.collect do |row|
           doc_name = row[:doc_name]
           score = row[:score]
+          doc_id = doc_name.sub("Document-", "").to_i
+
+          begin
+            doc = Document.find(doc_id)
+          rescue ActiveRecord::RecordNotFound
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
+            puts raw_data
+          end
+
+          if doc_is_viewable(doc, @current_user)
+            row = {}
+            row["0"] = link_to doc.name, doc
+            #count col
+            row["1"] = score
+            @retval << row
+          end
+        end
+      end
+    end
+    @retval
+  end
+
+
+  def fetch_search_data_cloudant
+    @retval = []
+
+    if params[:sSearch].present?
+      raw_data = cloudant_search_all_data(params[:sSearch])
+
+      if raw_data
+        raw_data.collect do |row|
+          doc_name = row["id"]
+          score = row["order"][0]
           doc_id = doc_name.sub("Document-", "").to_i
 
           begin
