@@ -100,8 +100,8 @@ module SearchesHelper
     end
 
     puts "TS 102"
-    pp conn_str
-    pp conn_hash
+    puts conn_str
+    puts conn_hash.to_s
     return data
   end
 
