@@ -99,6 +99,9 @@ module SearchesHelper
       data = JSON.parse(http.request(req).body)["rows"]
     end
 
+    puts "TS 102"
+    pp conn_str
+    pp conn_hash
     return data
   end
 

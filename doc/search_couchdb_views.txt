@@ -1,0 +1,23 @@
+#TODO: get these into the setup
+{
+   "_id": "_design/all_data_values",
+   "_rev": "190-bfea7af1d102492652d899c220aefd28",
+   "language": "javascript",
+   "views": {
+       "view1": {
+           "map": "function(doc) {\n\tif(doc.primary_keys) {\n\t\tfor(pi in doc.primary_keys) {\n\t\t\tvar pk = doc.primary_keys[pi];\n\t\t\t\n\t\t\tfor(row_i in doc.data) {\n\t\t\t\tvar row = doc.data[row_i];\n\t\t\t\tif(row[pk]) {\n\t\t\t\t\temit([row[pk]], doc._id);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}",
+           "reduce": "function(keys, values) {\n\tretval = [];\n\n\tfor(var val_i in values) {\n\t\tvar key = values[val_i];\n\n\t\tretval = retval.concat(key);\n\t\t/*\n\t\tif(key in retval) {\n\t\t\tretval[key] += 1;\n\t\t} else {\n\t\t\tretval[key] = 1;\n\t\t}*/\n\t}\n\n\treturn(retval);\n}"
+       },
+       "view2": {
+           "map": "function(doc) {if(doc.data) {for(pi in Object.keys(doc.data[0])) {var pk = Object.keys(doc.data[0])[pi]; for(row_i in doc.data) {var row = doc.data[row_i];if(row[pk]) {emit(pk, row[pk]);}}}}}"
+       }
+   },
+   "indexes": {
+       "docnames": {
+           "index": "function(doc){index('default', doc._id); index('docname2', doc._id); }"
+       },
+       "cols_and_values": {
+           "index": "function(doc) {if(doc.data) {for(pi in Object.keys(doc.data[0])) {var pk = Object.keys(doc.data[0])[pi]; for(row_i in doc.data) {var row = doc.data[row_i];if(row[pk]) {index(pk, row[pk]);}}}}}"
+       }
+   }
+}

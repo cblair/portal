@@ -1,3 +1,5 @@
+#This Document Datatable class is for searching document names
+
 class DocumentsMainDatatable
   require 'will_paginate/array'
 
