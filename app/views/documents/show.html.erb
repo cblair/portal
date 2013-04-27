@@ -72,7 +72,9 @@
 			    <% row_keys.each do |name| %>
 			    	<th>
 						<% if (@document.stuffing_primary_keys and @document.stuffing_primary_keys.include?(name)) %>
+							<!--Hide for now - all column names are added to primary keys
 							<i class="icon-search"></i>
+							-->
 						<% end %>
 						<%= name %>
 			    	</th>

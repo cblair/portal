@@ -139,6 +139,9 @@ class DocumentsController < ApplicationController
     @document.stuffing_data = []
     @document.user = current_user
 
+    #Hack for now - add all column keys to primary keys for search
+    @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
+
     respond_to do |format|
       if @document.save
         format.html { redirect_to @document, notice: 'Document was successfully created.' }
@@ -175,7 +178,9 @@ class DocumentsController < ApplicationController
     end
 
     #Add primary keys
-    @document.stuffing_primary_keys = params[:primary_keys]
+    #@document.stuffing_primary_keys = params[:primary_keys]
+    #Hack for now - add all column keys to primary keys for search
+    @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
 
     #Update other attributes
     update_suc = @document.update_attributes(params[:document])
