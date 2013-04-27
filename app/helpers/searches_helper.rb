@@ -96,15 +96,13 @@ module SearchesHelper
         req.basic_auth(conn_hash[:username], conn_hash[:password])
       end
 
-      data = JSON.parse(http.request(req).body)
-      puts "TS100"
-      puts data.to_s
-      data = data["rows"]
+      data = JSON.parse(http.request(req).body)["rows"]
     end
 
-    puts "TS 102"
-    puts conn_str
-    puts conn_hash.to_s
+    if data == nil
+      data = []
+    end
+
     return data
   end
 
