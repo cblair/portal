@@ -29,7 +29,7 @@ jQuery(function($) {
 			"sAjaxSource"		: $('#search').data('source')
 		});
 
-		//only search once 
+		//only search on enter keypress 
 		$('.dataTables_filter input')
     		.unbind('keypress keyup')
     		.bind('keypress keyup', function(e){

@@ -15,7 +15,7 @@ jQuery(function($) {
 	$(document).ready(function () {
 
 		//dataTables
-		$('#documents').dataTable({
+		var search_table = $('#documents').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
@@ -29,5 +29,13 @@ jQuery(function($) {
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sAjaxSource"		: $('#documents').data('source')
 		});
+
+		//only search on enter keypress 
+		$('.dataTables_filter input')
+    		.unbind('keypress keyup')
+    		.bind('keypress keyup', function(e){
+      			if (e.keyCode != 13) return;
+      			search_table.fnFilter($(this).val());
+    		});
 	});
 });

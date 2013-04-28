@@ -27,15 +27,15 @@
 
 	<p>Hatch chooses to associate data more dynamically than the typical relational database. When data is imported into Hatch, it looks for relationships that may be defined per the formats' standards. It then indexes these relationships. The result is relationships through search. Data values are indexed on a per-column basis, and are searchable locally (per document or collection of documents), or globally. This allows quick access to visualizations of data structures, through a simple interface.</p>
 
-	<p>To make a document column searchable, first select it in the Document Edit page:</p>
+	<p>For searching while looking at a document, simply type in the prefix of the value you want to search for and press enter:</p>
 
-	<%= image_tag("index_for_search.png") %>
+	<%= image_tag("demo_search_document.png") %>
 
-	<p>Then to search, enter the column name and value into the Search field:</p>
+	<p>When you search the entire database under the Search pages, enter the column name and value into the Search field:</p>
 
 	<%= image_tag("demo_search.png") %>
 
-	<p>Selecting only the columns you want searchable helps keep other columns values from cluttering your search results. The search query syntax follows the Lucene syntax (click <%= link_to "here", "http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html" %> for reference). </p>
+	<p>Selecting only the columns you want searchable helps keep other columns values from cluttering your search results. The search query syntax follows the Lucene syntax (click <%= link_to "here", "http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html" %> for reference).</p>
 
 	<p>In the future, Hatch will implement automated way to add columns to your documents.</p>
 
