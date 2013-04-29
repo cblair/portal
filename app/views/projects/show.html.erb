@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<h3>Project Information</h3>
 
 <p>
   <b>Name:</b>
@@ -9,12 +9,7 @@
   <b>Description:</b>
   <%= @project.pdesc %>
 </p>
-<!--
-<p>
-  <b>Project ID</b>
-  <td><%= @project.id %></td> <!-- debug --> <!--
-</p>
--->
+
 <hr>
 
 <h2>Listing documents</h2>
@@ -22,14 +17,41 @@
 
 <br />
 
-<% Document.where("user_id = ? AND project_id = ?", current_user, @project.id).each do |doc| %>
-  <ul>
-    <li> <%= link_to doc.name, doc %> </li>
-  </ul>
+<%= form_tag :controller => 'projects', :action => 'remove_project_doc' do %>
+  <table border="1" cellpadding="3">
+  <% Document.where("project_id = ?", @project.id).order("name").each do |doc| %>
+    <% if can? :read, @project %>
+    <tr>
+      <td><%= link_to doc.name, doc %></td>
+      <% if can? :manage, @project %>
+        <td><%= check_box_tag("doc_ids[]", doc.id) %><b>Remove</b></td>
+      <% end %>
+    </tr>
+    <% end %>
+  <% end %>
+  </table>
+  <%= hidden_field_tag 'project_id', @project.id %>
+  <br />
+  <% if can? :manage, @project %>
+    <%= submit_tag 'Update',  :confirm => 'Are you sure?' %>
+  <% end %>
+<% end %>
+
+<hr>
+
+<% if can? :manage, @project %>
+<%= form_tag :controller => 'projects', :action => 'add_project_doc' do %>
+<p>Add a document to this project</p>
+  <%= select("document", "document_id", 
+             Document.where(["user_id = ? AND project_id IS NULL", current_user.id]).order("name").collect {|d| [d.name, d.id]},
+             {:prompt => '(select a document)'} ) %>
+  <br />
+  <%= hidden_field_tag 'project_id', @project.id %>
+  <%= submit_tag 'Add document' %>
+<% end %>
 <% end %>
 
 <br />
 
-<%= link_to 'Add', collections_path %> |
 <%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back', projects_path %> |

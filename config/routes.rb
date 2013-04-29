@@ -20,6 +20,12 @@ Portal::Application.routes.draw do
   
   resources :projects
   match '/projects/owner/:id' => "projects#owner", :as => :owner
+  match '/projects/add_project_doc' => "projects#add_project_doc", :as => :add_project_doc
+  match '/projects/remove_project_doc' => "projects#remove_project_doc", :as => :remove_project_doc
+  
+  resources :roles
+  match '/roles/edit_each_user_role/:id' => "roles#edit_each_user_role", :as => :edit_each_user_role
+  match '/roles/update_each_user_role/:id' => "roles#update_each_user_role", :as => :update_each_user_role
   
   resources :posts
   

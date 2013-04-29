@@ -4,7 +4,9 @@ class Project < ActiveRecord::Base
   validates :name,		:presence => true, :length => { :minimum => 3 }
   validates :pdesc,		:presence => true, :length => { :minimum => 1 }
   
-  belongs_to :user
+  #belongs_to :user
+  has_many :collaborators
+  has_many :users, :through => :collaborators
   belongs_to :project
   has_many :documents
   has_many :collections

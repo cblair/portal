@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130118042326) do
+ActiveRecord::Schema.define(:version => 20130403162840) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -28,6 +28,15 @@ ActiveRecord::Schema.define(:version => 20130118042326) do
     t.boolean  "streaming"
     t.integer  "numdraw"
     t.integer  "source_doc"
+  end
+
+  create_table "collaborators", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "project_name"
+    t.integer  "user_id"
+    t.string   "user_email"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "collections", :force => true do |t|
@@ -93,6 +102,17 @@ ActiveRecord::Schema.define(:version => 20130118042326) do
     t.datetime "updated_at"
     t.integer  "project_id"
     t.integer  "user_id"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
   end
 
   create_table "uploads", :force => true do |t|

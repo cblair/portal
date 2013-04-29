@@ -14,7 +14,7 @@
 
 <%= form_tag :controller => 'projects', :action => 'owner' do %>
   <p>Select new owners email.</p>
-    <%= select(:user_name, :id, User.all.collect {|u| [ u.email, u.id ] }, :include_blank => true) %>
+    <%= select(:user_name, :id, User.order("email").all.collect {|u| [ u.email, u.id ] }, :include_blank => true) %>
     </br>
     <%= submit_tag 'Change Owner', :confirm => 'Are you sure?' %>
 <% end %>
