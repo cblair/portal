@@ -4,17 +4,28 @@
 	BLACKLIST_KEYS += ['collection_id', 'user_id', 'users_id', 'validated'];
 </script>
 
-<div class="hero-unit">
-	<h2>Listing collections</h2>
-	
-	<% @root_collections.each do |collection| %>
-		<%= 
-			render 	:partial => "rec_collection_render", 
-					:locals => {:collection => collection} 
-		%>
-	<% end %>
-	
-	<br />
-	
-	<%= link_to 'New Collection', new_collection_path %>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+    	<div class="well sidebar-nav collection-span">
+    	<h2>Collections</h2>
+		<% @root_collections.each do |collection| %>
+			<%= 
+				render 	:partial => "rec_collection_render", 
+						:locals => {:collection => collection} 
+			%>
+		<% end %>
+
+		<%= link_to "New Collection", new_collection_path %>
+		</div>
+    </div>
+    <div class="span9">
+    	<div class="hero-unit">
+    		<h2>Documents</h2>
+			<%= render :partial => "documents/documents_datatable", 
+						:locals => {:collection => @root_collections.first} %>
+    	</div>
+    </div>
+  </div>
 </div>

@@ -35,7 +35,6 @@ jQuery(function($) {
 
 			"aoColumns": [
 							/*name*/ 		null,
-							/*show path*/ 	{ "bSortable": false, "bSearchable" : false},
 							/*edit path*/	{ "bSortable": false, "bSearchable" : false}
 						]
 		});

@@ -1,3 +1,5 @@
+var SEARCH_TABLE = null;
+
 jQuery(function($) {
 
 	//disables warnings, TODO to fix
@@ -12,10 +14,9 @@ jQuery(function($) {
 		"sWrapper": "dataTables_wrapper form-inline"
 	});
 
-	$(document).ready(function () {
-
+	$.initDocumentDatatable = function () {
 		//dataTables
-		var search_table = $('#documents').dataTable({
+		SEARCH_TABLE = $('#documents').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
@@ -35,7 +36,19 @@ jQuery(function($) {
     		.unbind('keypress keyup')
     		.bind('keypress keyup', function(e){
       			if (e.keyCode != 13) return;
-      			search_table.fnFilter($(this).val());
-    		});
+      			SEARCH_TABLE.fnFilter($(this).val());
+    		}
+    	);
+	};
+
+	$.reloadDocumentDatatable = function () {
+		console.log(SEARCH_TABLE);
+		//SEARCH_TABLE.fnReloadAjax($('#documents').data('source'));
+		SEARCH_TABLE.fnDraw();
+	};
+
+	$(document).ready(function () {
+
+		$.initDocumentDatatable($);
 	});
 });

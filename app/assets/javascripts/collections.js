@@ -13,6 +13,13 @@ jQuery(function($) {
 		$(this).parent().children('span.col-doc-attrs').toggle();		
 
 		$(this).parent().parent().parent().children('ul.col-doc').toggle();
+
+		//update the datatable
+		var collectionid = $(this).parent().parent().parent().data('collectionid');
+		console.log(collectionid);
+
+		$('table.documents_datatable').data('collectionid',collectionid);
+		$.reloadDocumentDatatable($);
 	}
 	
 	
@@ -29,6 +36,7 @@ jQuery(function($) {
 	    	updateDocColSubfields
 	    );
 	}
+
 
 	function updateScaffoldTableNode(node) {
 		var url_str = '/' + CONTROLLER_NAME + '.json';
@@ -62,7 +70,6 @@ jQuery(function($) {
 			}
 		});
 	}
-	
 	
 
 	$(document).ready(function () {

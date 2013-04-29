@@ -31,8 +31,9 @@ private
     documents.map do |doc|
       [
         link_to(doc.name, doc),
-        link_to('Show', doc),
-        link_to('Destroy', doc, confirm: 'Are you sure?', method: :delete)
+        link_to('Destroy', doc, { :confirm => 'Are you sure?', 
+                                  :class => "label label-important", 
+                                  :method => :delete})
       ]
     end
   end

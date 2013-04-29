@@ -1,6 +1,6 @@
 <!--Start of collection section-->
   <% if collection_is_viewable(collection, current_user) %>
-  	<ul class="col-doc" data-collection-id="<%= collection%>">
+  	<ul class="col-doc" data-collectionid="<%= collection.id %>">
 	    <li>
 	    	<i class="icon-folder-close icon-white"></i>
 	    	<%= link_to collection.name, collection %>
@@ -54,7 +54,7 @@
 
 	    		<hr />
 
-	    		<%= render :partial => "documents/documents_datatable", 
+	    		<% render :partial => "documents/documents_datatable", 
 	    					:locals => {:collection => collection} %>
 	    		<hr />
 	  		</ul>
