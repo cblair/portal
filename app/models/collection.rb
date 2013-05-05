@@ -4,5 +4,5 @@ class Collection < ActiveRecord::Base
   has_many :documents
   has_many :collections
   
-  attr_accessible :name, :collection
+  attr_accessible :name, :collection, :collection_id
 end

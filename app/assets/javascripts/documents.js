@@ -1,4 +1,4 @@
-var SEARCH_TABLE = null;
+//var SEARCH_TABLE = null;
 
 jQuery(function($) {
 
@@ -14,13 +14,17 @@ jQuery(function($) {
 		"sWrapper": "dataTables_wrapper form-inline"
 	});
 
-	$.initDocumentDatatable = function () {
+	$.initDocumentDatatable = function ($, data_source) {
+		if(data_source == undefined) {
+			data_source = $('#documents').data('source');
+		}
+
 		//dataTables
 		SEARCH_TABLE = $('#documents').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
-			"bServerSide"		: true,
+			"bServerSide"		: false,
 			"bSort"				: false,
 			//Helps with long URIs
 			//"fnServerParams": "",
@@ -28,7 +32,7 @@ jQuery(function($) {
 			//Taking out search
 			//"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sAjaxSource"		: $('#documents').data('source')
+			"sAjaxSource"		: data_source
 		});
 
 		//only search on enter keypress 
@@ -41,14 +45,7 @@ jQuery(function($) {
     	);
 	};
 
-	$.reloadDocumentDatatable = function () {
-		console.log(SEARCH_TABLE);
-		//SEARCH_TABLE.fnReloadAjax($('#documents').data('source'));
-		SEARCH_TABLE.fnDraw();
-	};
-
 	$(document).ready(function () {
-
 		$.initDocumentDatatable($);
 	});
 });

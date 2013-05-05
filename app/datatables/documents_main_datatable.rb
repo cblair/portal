@@ -47,6 +47,7 @@ private
   def fetch_documents
     #@documents_all = Document.order("#{sort_column} #{sort_direction}")
 
+    puts "TS50: " + @collection_id.to_s
     if params[:sSearch].present?
       @documents_all = Document.where(
                                       "collection_id=:collection_id AND name like :search", 

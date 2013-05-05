@@ -12,39 +12,48 @@
 		    	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">
 		    		<i class="icon-minus icon-white"></i>
 		    	</a>
+		    	<br />
 
 		    	<span class="col-doc-attrs">
-			    	<a class="label label-inverse" href="<%= edit_collection_path(collection) %>">
-		    			<i class="icon-save icon-white"></i>
-		  			</a>
-			    	<%= link_to 'X', collection, confirm: 'Are you sure?', method: :delete,
-			    				class: "label label-important" %>
-			    	<% if collection_is_validated(collection) %>
-			    		<a class="label label-success" href="#">
-							<i class="icon-check icon-white"></i>
-						</a>
-					<% else %>
-						<%= 
-							link_to raw('<i class="icon-check-empty icon-white"></i>'), 
-									validate_collection_path(collection), 
-									:class => "label label-warning",
-									:remote => true,
-									:confirm => "Validations may take some time. Refresh page to see when validation is done, or cancel..."
-						%>
-					<% end %>
+					<div class="btn-group">
+					  <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+					    Action
+					    <span class="caret"></span>
+					  </a>
+					  <ul class="dropdown-menu">
+					  	<li>
+					  		<%= link_to "Edit", edit_collection_path(collection) %>
+					  	</li>
+					  	<li>
+						    <% if collection_is_validated(collection) %>
+									<i class="icon-check icon-white">Validated</i>
+								</a>
+							<% else %>
+								<%= 
+									#link_to raw('<i class="icon-check-empty icon-white">Validate</i>'),
+									link_to raw('Validate'),  
+											validate_collection_path(collection), 
+											#:class => "label label-warning",
+											:remote => true,
+											:confirm => "Validations may take some time. Refresh page to see when validation is done, or cancel..."
+								%>
+							<% end %>
+						</li>
+						<li>
+							<%= link_to "Make Public", pub_priv_collection_path(collection, :public => "true") %>
+						</li>						
+						<li>
+							<%= link_to "Make Private", pub_priv_collection_path(collection, :public => "false") %>
+						</li>
+						<li>
+							<%= link_to "Download", csv_export_path(collection, :format => 'zip', :stype => 'Collection') %>
+						</li>
 
-		    		<a class="label label-important" href="<%= pub_priv_collection_path(collection, :public => "true") %>">
-						<i class="icon-eye-open icon-white"></i>
-					</a>
-					<a class="label label-default" href="<%= pub_priv_collection_path(collection, :public => "false") %>">
-						<i class="icon-eye-close icon-white"></i>
-					</a>
-		  			<a class="label label-info" href="<%= csv_export_path(collection, :format => 'zip', :stype => 'Collection') %>">
-		    			<i class="icon-download icon-white"></i>
-		    			zip
-		  			</a>
+					  	<li class="divider"></li>
+					    <li><%= link_to 'Destroy', collection, confirm: 'Are you sure?', method: :delete %></li>
+					  </ul>
+					</div>
 		  		</span>
-
 		    </span>
 	    	
 	    	<ul class="col-doc-attr-form">
@@ -52,11 +61,8 @@
 					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection} %>
   				<% end %>
 
-	    		<hr />
-
 	    		<% render :partial => "documents/documents_datatable", 
 	    					:locals => {:collection => collection} %>
-	    		<hr />
 	  		</ul>
 	    </li>
 	  </ul>

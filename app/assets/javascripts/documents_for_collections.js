@@ -1,4 +1,14 @@
+var SEARCH_TABLE;
+
 jQuery(function($) {
+
+	$.reloadDocumentDatatable = function ($, collectionid) {
+		//change the collection id data in the DOM
+		$('.documents_datatable').data('collection-id', collectionid);
+
+		//get new data for the collection id
+		SEARCH_TABLE.fnReloadAjax();
+	};
 
 	$.extend( $.fn.dataTableExt.oStdClasses, {
 		//Taking out for now - URI too long
@@ -9,7 +19,7 @@ jQuery(function($) {
 	});
 
 	$(document).ready(function () {	
-		$('.documents_datatable').dataTable({
+		SEARCH_TABLE = $('.documents_datatable').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,

@@ -19,7 +19,9 @@ jQuery(function($) {
 		console.log(collectionid);
 
 		$('table.documents_datatable').data('collectionid',collectionid);
-		$.reloadDocumentDatatable($);
+		console.log("TS22");
+		console.log(SEARCH_TABLE);
+		$.reloadDocumentDatatable($, collectionid);
 	}
 	
 	
