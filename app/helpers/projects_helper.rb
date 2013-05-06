@@ -1,12 +1,12 @@
 module ProjectsHelper
   #creates a list of collaborators for a project collaborators table
-  def colab_list_get(project)
-    if (project == nil)
+  def colab_list_get()
+    if (@project == nil)
       return false
     end
     
-    #creates a list of collaborators with access to this project (TODO: better code?)
-    colab_list = Collaborator.order("user_email").where("project_id = ?", project.id)
+    #creates a list of collaborators with access to this project
+    colab_list = Collaborator.order("user_email").where("project_id = ?", @project.id)
     #colab_list.uniq! #removes extra users from list (so they only appear once)
     return colab_list
   end
@@ -35,11 +35,12 @@ module ProjectsHelper
   end
 =end  
   #adds a collaborator to documents (via user documents)
-  def colab_add_to_docs(project, user)
-    if (project == nil or user == nil)
+  #def colab_add_to_docs(project, user)
+  def colab_add_to_docs(user)
+    if (@project == nil or user == nil)
       return false
     end
-    docs = Document.where("project_id = ?", project.id) #gets all docs for the project
+    docs = Document.where("project_id = ?", @project.id) #gets all docs for the project
     
     #Add collaborator to project documents
     docs.each do |doc|
@@ -56,8 +57,8 @@ module ProjectsHelper
   end
   
   #adds a collaborator to a project and all its documents
-  def colab_add(project, user)
-    if (project == nil or user == nil)
+  def colab_add(user)
+    if (@project == nil or user == nil)
       return false
     end
     
@@ -66,15 +67,15 @@ module ProjectsHelper
     end
       
     colab = Collaborator.new
-    colab.update_attributes(:project_id => project.id, :project_name => project.name,
+    colab.update_attributes(:project_id => @project.id, :project_name => @project.name,
       :user_id => user.id, :user_email => user.email)
-    colab_add_to_docs(project, user)
+    colab_add_to_docs(user)
     return true    
   end
   
   #removes a collaborator from a project
-  def colab_remove_project(project, colab_user_ids)
-    if project == nil or colab_user_ids == nil or colab_user_ids.blank?
+  def colab_remove_project(colab_user_ids)
+    if @project == nil or colab_user_ids == nil or colab_user_ids.blank?
       return false
     end
     
@@ -83,11 +84,11 @@ module ProjectsHelper
   end
   
   #removes multiple collaborators from multiple documents (via user documents)
-  def colabs_remove_docs(project, colab_user_ids)
-    if (project == nil or colab_user_ids == nil or colab_user_ids.blank?)
+  def colabs_remove_docs(colab_user_ids)
+    if (@project == nil or colab_user_ids == nil or colab_user_ids.blank?)
       return false
     end
-    docs = Document.where("project_id = ?", project.id) #gets all documentss for the project
+    docs = Document.where("project_id = ?", @project.id) #gets all documentss for the project
 
     docs.each do |doc|
       if colab_user_ids
@@ -97,7 +98,7 @@ module ProjectsHelper
       end #end if colab_user_ids
     end #end docs.each do |doc|    
     return true
-  end    
+  end
 
   #removes collaborators from a single document
   def colabs_remove_doc(colab_user_ids, doc)
@@ -141,7 +142,7 @@ module ProjectsHelper
     end
     
     doc = Document.find(doc_id) #for adding documents
-    doc.update_attributes(:project_id => @project.id) #adds document to project
+    doc.update_attributes(:project_id => project.id) #adds document to project
     colab_check_doc(project, doc)
     @add_doc_err = false
     return true
@@ -154,7 +155,7 @@ module ProjectsHelper
       return false
     end
     
-    docs = Document.where(:project_id => params[:project_id]) #list of documents in the project
+    docs = Document.where("project_id = ?", project.id) #list of documents in the project
     #looks for checked documents and removes them
     colab_user_ids = Collaborator.where("project_id = ?", project.id).pluck(:user_id) #for removing collaborators
     
@@ -169,6 +170,25 @@ module ProjectsHelper
     return true
   end
 
+  #adds a collection to a project
+  def add_collection(project, collection_id)
+    if (project == nil or collection_id == nil or collection_id.blank?)
+      add_col_err = true
+      return false
+    end
+    
+    collection = Collection.find(collection_id)
+    #collection.update_attributes(:project_id => project.id) #is this code needed?
+    
+    collection.documents.each do |doc|
+      doc_id = doc.id
+      add_doc(project, doc_id)
+    end
+  
+    add_col_err = false
+    return true
+  end
+
   #checks to see if user is a collaborator
   def is_project_colab(user)
     if Collaborator.exists?(:user_id => user.id)
@@ -179,55 +199,54 @@ module ProjectsHelper
   end
 
   #changes the owner of a project and all of its documents
-  #def change_owner (project)
-  def change_owner(project, target_user_id)
-    if project == nil
+  def change_owner(target_user_id)
+    if (@project == nil or target_user_id == nil or target_user_id.blank?)
+      @user_id_err = true #user selected "none" or error
+      return false
+    end
+    if (target_user_id.blank? or target_user_id == nil)
+      @user_id_err = true #user selected "none" or error
       return false
     end
     
-    if (not target_user_id.blank? and target_user_id != nil)
-      target_user = User.find(target_user_id) #finds selected user
-      docs = Document.where("project_id = ?", project.id) #gets an array of documents with the given project ID
+    target_user = User.find(target_user_id) #finds selected user
+    docs = Document.where("project_id = ?", @project.id) #gets an array of documents with the given project ID
 
-      docs.each do |d|
-        d.update_attributes(:user_id => target_user.id) #changes user ID of documents to target user    
-      end
-      project.update_attributes(:user_id => target_user.id) #changes current project's user ID to target user's ID
+    docs.each do |d|
+      d.update_attributes(:user_id => target_user.id) #changes user ID of documents to target user    
+    end
+    @project.update_attributes(:user_id => target_user.id) #changes current project's user ID to target user's ID
       
-      if is_project_colab(target_user) #if target user is a collaborator
+    if is_project_colab(target_user) #if target user is a collaborator
       user_ids = Array.new(1, target_user.id)
-      colab_remove_project(project, user_ids)
+      colab_remove_project(user_ids)
     end
     
     @user_id_err = false
     return true
-    else
-      @user_id_err = true #user selected "none" or error
-      return false
-    end
   end
   
   #performs cleanup when destroying a project
-  def project_clean(project)
-    if project == nil
+  def project_clean()
+    if @project == nil
       return false
     end
     
     #gets list of collaborators for removal
-    colab_user_ids = Collaborator.where("project_id = ?", project.id).pluck(:user_id)
-    colabs_remove_docs(project, colab_user_ids) 	#removes collaborators from documents
-    colab_remove_project(project, colab_user_ids) 	#removes collaborators from a project
-    project_docs_clean(project) 					#removes documents from a project
+    colab_user_ids = Collaborator.where("project_id = ?", @project.id).pluck(:user_id)
+    colabs_remove_docs(colab_user_ids) 				#removes collaborators from documents
+    colab_remove_project(colab_user_ids) 			#removes collaborators from a project
+    project_docs_clean()		 					#removes documents from a project
     return true
   end
   
   #removes docs from a project on destroy
-  def project_docs_clean(project)
-    if project == nil
+  def project_docs_clean()
+    if @project == nil
       return false
     end
     
-    docs = Document.where("project_id = ?", project.id) #list of documents in the project
+    docs = Document.where("project_id = ?", @project.id) #list of documents in the project
     
     docs.each do |doc|
       doc.update_attributes(:project_id => nil)

@@ -20,6 +20,7 @@ Portal::Application.routes.draw do
   
   resources :projects
   match '/projects/owner/:id' => "projects#owner", :as => :owner
+  match '/projects/add_project_collection/:id' => "projects#add_project_collection", :as => :add_project_collection
   match '/projects/add_project_doc' => "projects#add_project_doc", :as => :add_project_doc
   match '/projects/remove_project_doc' => "projects#remove_project_doc", :as => :remove_project_doc
   

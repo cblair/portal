@@ -17,10 +17,10 @@
 
 <br />
 
-<%= form_tag :controller => 'projects', :action => 'remove_project_doc' do %>
-  <table border="1" cellpadding="3">
-  <% Document.where("project_id = ?", @project.id).order("name").each do |doc| %>
-    <% if can? :read, @project %>
+<% if can? :read, @project %>
+  <%= form_tag :controller => 'projects', :action => 'remove_project_doc' do %>
+    <table border="1" cellpadding="3">
+    <% Document.where("project_id = ?", @project.id).order("name").each do |doc| %>
     <tr>
       <td><%= link_to doc.name, doc %></td>
       <% if can? :manage, @project %>
@@ -28,27 +28,39 @@
       <% end %>
     </tr>
     <% end %>
-  <% end %>
-  </table>
-  <%= hidden_field_tag 'project_id', @project.id %>
-  <br />
-  <% if can? :manage, @project %>
-    <%= submit_tag 'Update',  :confirm => 'Are you sure?' %>
+    </table>
+    <%= hidden_field_tag 'project_id', @project.id %>
+    <br />
+    <% if can? :manage, @project %>
+      <%= submit_tag 'Update',  :confirm => 'Are you sure?' %>
+    <% end %>
   <% end %>
 <% end %>
 
 <hr>
 
 <% if can? :manage, @project %>
-<%= form_tag :controller => 'projects', :action => 'add_project_doc' do %>
-<p>Add a document to this project</p>
+  <%= form_tag :controller => 'projects', :action => 'add_project_doc' do %>
+  <p>Add a document to this project</p>
   <%= select("document", "document_id", 
              Document.where(["user_id = ? AND project_id IS NULL", current_user.id]).order("name").collect {|d| [d.name, d.id]},
              {:prompt => '(select a document)'} ) %>
   <br />
   <%= hidden_field_tag 'project_id', @project.id %>
   <%= submit_tag 'Add document' %>
+  <% end %>
 <% end %>
+
+<% if can? :manage, @project %>
+  <%= form_tag :controller => 'projects', :action => 'add_project_collection' do %>
+  <p>Add a collection's documents to this project</p>
+  <%= select("collection", "collection_id", 
+             Collection.where(["user_id = ? AND project_id IS NULL", current_user.id]).order("name").collect {|d| [d.name, d.id]},
+             {:prompt => '(select a collection)'} ) %>
+  <br />
+  <%= hidden_field_tag 'project_id', @project.id %>
+  <%= submit_tag 'Add collection' %>
+  <% end %>
 <% end %>
 
 <br />

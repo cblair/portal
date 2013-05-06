@@ -30,5 +30,5 @@ proj4.save()
 proj5 = Project.new(:name => 'Test3.1', :pdesc => 'test 3.1', :user_id => 3)
 proj5.save()
 
-col1 = Collection.new(:name => 'ATM', :user_id => 1)
-col1.save()
+collection1 = Collection.new(:name => 'ATM', :user_id => 1)
+collection1.save()
