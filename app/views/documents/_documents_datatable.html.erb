@@ -1,5 +1,5 @@
 <div class="datatable_container">
-	<table class="documents_datatable" class="display" data-source="<%= documents_url(format: "json") %>" data-collection-id="<%= collection.id %>">
+	<table class="documents_datatable" class="display" data-source="<%= documents_url(format: "json") %>" data-collection-id="<%= unless collection.nil? ; collection.id ; end %>">
 	  <thead>
 	    <tr>
 	      <th>Document Name</th>
