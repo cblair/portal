@@ -1,4 +1,4 @@
-//var SEARCH_TABLE = null;
+var SEARCH_TABLE = null;
 
 jQuery(function($) {
 
@@ -24,7 +24,7 @@ jQuery(function($) {
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
-			"bServerSide"		: false,
+			"bServerSide"		: true,
 			"bSort"				: false,
 			//Helps with long URIs
 			//"fnServerParams": "",

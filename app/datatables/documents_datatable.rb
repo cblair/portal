@@ -9,8 +9,6 @@ class DocumentsDatatable
   def initialize(view, document)
     @view = view
     @document = document
-
-
   end
 
 
