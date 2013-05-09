@@ -18,15 +18,16 @@ class Document < ActiveRecord::Base
             :password => Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
-  def create_default_couchdb()
-    
-    if is_couchdb_running?(
+
+  def create_default_couchdb(called_by_init=false)
+    if (called_by_init == true and is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
               username = Portal::Application.config.couchdb['COUCHDB_USERNAME'],
               password = Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
               https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
-      )
+        )
+    )
       if !self.view_exists("all_data_values")
         self.create_simple_view("all_data_values", 
                                 "function(doc) {

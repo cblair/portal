@@ -1,0 +1,8 @@
+Topics:
+	*Projects status
+	*TODO this week:
+		*Finish ATM import
+			*collection_is_public? performance
+				*Stuffing lib now
+				*db function, hopefully later
+	*Timeline
