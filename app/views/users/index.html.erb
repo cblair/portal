@@ -8,6 +8,7 @@
       <tr>
         <th><%= model_class.human_attribute_name(:email) %></th>
         <th>Joined on</th>
+        <th>Last logged in</th>
       </tr>
     </thead>
     <tbody>
@@ -15,6 +16,13 @@
         <tr>
           <td><%= user.email %></td>
           <td><%=l user.created_at %></td>
+          <td>
+            <% if user.last_sign_in_at %>
+              <%= l user.last_sign_in_at %>
+            <% else %>
+              (never)
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
