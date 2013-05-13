@@ -177,11 +177,6 @@ class DocumentsController < ApplicationController
       end
     end
 
-    #Add primary keys
-    #@document.stuffing_primary_keys = params[:primary_keys]
-    #Hack for now - add all column keys to primary keys for search
-    @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
-
     #Update other attributes
     update_suc = @document.update_attributes(params[:document])
 
@@ -199,6 +194,11 @@ class DocumentsController < ApplicationController
         #end
       end
     end
+
+    #Add primary keys
+    #@document.stuffing_primary_keys = params[:primary_keys]
+    #Hack for now - add all column keys to primary keys for search
+    @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
 
     #Indexes
     #safsa

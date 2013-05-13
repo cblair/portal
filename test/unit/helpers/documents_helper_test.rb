@@ -10,6 +10,35 @@ class DocumentsHelperTest < ActionView::TestCase
 		@request.env["devise.mapping"] = Devise.mappings[:admin]
 		@user = users(:user1)
 		sign_in @user
+
+		@raw_file_text = "    FILE TYPE                      : INTERROGATION
+    FILE TITLE                     : TMJ06001.A91
+    FILE CREATED                   : 01 JANUARY 2006 AT 00:00
+
+! This file contains all detections for 2006 from the juvenile bypass outfall.
+! The tags were detected using an FS-2001F portable transceiver and flat-plate
+! antenna.  These data were compiled from the original files by Dave Marvin,
+! PTAGIS.  The original data files are listed in the data stream below, 
+! followed by their contents.
+
+! TMJ06032.A1
+| 01 02/16/06 18:34:51 ::q
+:q.t. XX 91
+
+1a 2a
+| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91
+| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91
+| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91
+| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91
+| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91
+| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91
+| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91
+
+    FILE CLOSED                    : 28 JUNE 2006 AT 08:13
+"
 	end
 
 
@@ -154,7 +183,8 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert d.collection == nil
 		assert d.validated == nil, "#{d.validated} != nil"
 
-		assert d.stuffing_data, "Document doesn't have any data: " + d.stuffing_data.to_s
+		assert d.stuffing_data == nil
+		assert d.stuffing_text != nil
 	end
 
 	test "save_file_to_document - valid upload file, ifilter" do
@@ -213,8 +243,10 @@ class DocumentsHelperTest < ActionView::TestCase
       	db = CouchRest.database(conn_str)
 
       	#jump ahead of stuffing and our ActiveRecord ids...
+      	puts "TS216"
       	response = db.save_doc({"_id" => "Document-#{d.id + 1}"})
       	assert response["ok"] == true
+      	puts "TS219"
 
 		fname = 'TMJ06001.A91_2.txt'
 		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TMJ06001.A91_2.txt'))
@@ -295,22 +327,17 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert docs.count == 1, Document.all.to_s
 		d = docs.first
 
-		data = filter_data_columns_csv(d.stuffing_data)
-		expected_data =	[
-							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"1"}, 
-							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"2"}, 
-							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"4"}, 
-							{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"5"}
-						]
-		assert data == expected_data
+		data = filter_data_columns_csv(d.stuffing_text)
+		expected_data =	[{"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"2"}, {"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"4"}, {"site"=>"AAA", "Fish"=>"3d9.xxx", "time"=>"5"}]
+		assert data == expected_data, data.to_s + " != " + expected_data.to_s		
 
-		data = filter_data_columns(f, d.stuffing_data)
+		data = filter_data_columns(f, d.stuffing_text)
 		assert data == expected_data
 
 		#should generate already parsed error
 		d.stuffing_data = data
 		d.save
-		data = filter_data_columns(f, d.stuffing_data)
+		data = filter_data_columns(f, d.stuffing_text)
 		assert data == expected_data
 	end
 
@@ -355,20 +382,12 @@ class DocumentsHelperTest < ActionView::TestCase
 		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/lkp_Species.txt'))
 		assert upload
 
-		begin
-			assert save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
-		rescue
-			assert true
-			return
-		end
+		assert !save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
 
 		f = get_ifilter(-1) #internal CSV
 
 		docs = Document.where(:name => fname)
-		assert docs.count == 1, Document.all.to_s
-		d = docs.first
-
-		data = filter_data_columns_csv(d.stuffing_data)
+		assert docs.count == 0, docs.count.to_s
 	end
 
 
@@ -385,7 +404,7 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert docs.count == 1, Document.all.to_s
 		d = docs.first
 
-		data = filter_data_columns_xml(d.stuffing_data)
+		data = filter_data_columns_xml(d.stuffing_text)
 		expected_data =	[
 						{"WaterQualityID"=>"4", "WaterQualityName"=>"TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-L-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
 						{"WaterQualityID"=>"5", "WaterQualityName"=>"TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345", "DceName"=>"TR1-A-R-dce-20080527-1345", "MethodName"=>"Ammonia", "SampleDate"=>"2008-05-27T13:45:00", "SampleDateTime"=>"2008-05-27T13:45:00", "WaterQualityValue"=>"-999", "WaterQualityUnits"=>"micrograms/Liter", "DataQualityRank"=>"not assigned", "WaterQualityMeasurementNotes"=>"-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter", "DateCreated"=>"2012-05-31T10:59:03", "CreatedBy"=>"Torre Stockard", "LastUpdated"=>"2012-05-31T10:59:03", "UpdatedBy"=>"Torre Stockard", "WaterQualityAttribute"=>"NH4"}, 
@@ -517,12 +536,10 @@ class DocumentsHelperTest < ActionView::TestCase
 		f = ifilters(:ifilter1)
 		f.save
 		#iterator = fp.each_line.each.map {|l| l}
-		iterator = 	[
-						"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91", 
-						"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91", 
-						"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91", 
-						"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91"
-					]
+		iterator = 	"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91 
+					 | 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91
+					 | 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91 
+					 | 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91"
 		data = filter_data_columns(f, iterator)
 		expected_data = [
 							{1=>"02/16/06 19:08:15", 2=>"3D9.1BF1E7919A"}, 
@@ -551,13 +568,11 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		fp.close
 
-		#Hash check - data is array of hashes, not some file pointer
-		data =	[
-					{1=>"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n"}, 
-					{1=>"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n"}, 
-					{1=>"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n"}, 
-					{1=>"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n"},
-				]
+		#String check
+		data =	"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91
+					| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91
+					| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91
+					| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91"
 		expected_data = 	
 				[
 					{1=>"02/16/06 19:08:15", 2=>"3D9.1BF1E7919A"}, 
@@ -570,77 +585,75 @@ class DocumentsHelperTest < ActionView::TestCase
 		assert result_data == expected_data
 
 		#XML tests
-		iterator = 	[
-						{"1" => '<?xml version="1.0" encoding="UTF-8"?>'},
-						{"1" => '<dataroot xmlns:od="urn:schemas-microsoft-com:officedata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="tbl_WaterQuality.xsd" generated="2013-03-05T10:43:17">'},
-						{"1" => '<tbl_WaterQuality>'},
-						{"1" => '<WaterQualityID>4</WaterQualityID>'},
-						{"1" => '<WaterQualityName>TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>'},
-						{"1" => '<DceName>TR1-A-L-dce-20080527-1345</DceName>'},
-						{"1" => '<MethodName>Ammonia</MethodName>'},
-						{"1" => '<SampleDate>2008-05-27T13:45:00</SampleDate>'},
-						{"1" => '<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>'},
-						{"1" => '<WaterQualityValue>-999</WaterQualityValue>'},
-						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
-						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
-						{"1" => '<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>'},
-						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
-						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
-						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
-						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
-						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
-						{"1" => '</tbl_WaterQuality>'},
-						{"1" => '<tbl_WaterQuality>'},
-						{"1" => '<WaterQualityID>5</WaterQualityID>'},
-						{"1" => '<WaterQualityName>TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>'},
-						{"1" => '<DceName>TR1-A-R-dce-20080527-1345</DceName>'},
-						{"1" => '<MethodName>Ammonia</MethodName>'},
-						{"1" => '<SampleDate>2008-05-27T13:45:00</SampleDate>'},
-						{"1" => '<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>'},
-						{"1" => '<WaterQualityValue>-999</WaterQualityValue>'},
-						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
-						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
-						{"1" => '<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>'},
-						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
-						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
-						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
-						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
-						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
-						{"1" => '</tbl_WaterQuality>'},
-						{"1" => '<tbl_WaterQuality>'},
-						{"1" => '<WaterQualityID>6</WaterQualityID>'},
-						{"1" => '<WaterQualityName>TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>'},
-						{"1" => '<DceName>TR2-A-L-dce-20080527-1300</DceName>'},
-						{"1" => '<MethodName>Ammonia</MethodName>'},
-						{"1" => '<SampleDate>2008-05-27T13:00:00</SampleDate>'},
-						{"1" => '<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>'},
-						{"1" => '<WaterQualityValue>11.6497330942593</WaterQualityValue>'},
-						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
-						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
-						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
-						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
-						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
-						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
-						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
-						{"1" => '</tbl_WaterQuality>'},
-						{"1" => '<tbl_WaterQuality>'},
-						{"1" => '<WaterQualityID>7</WaterQualityID>'},
-						{"1" => '<WaterQualityName>TR2-A-R-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>'},
-						{"1" => '<DceName>TR2-A-R-dce-20080527-1300</DceName>'},
-						{"1" => '<MethodName>Ammonia</MethodName>'},
-						{"1" => '<SampleDate>2008-05-27T13:00:00</SampleDate>'},
-						{"1" => '<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>'},
-						{"1" => '<WaterQualityValue>19.9847280999598</WaterQualityValue>'},
-						{"1" => '<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>'},
-						{"1" => '<DataQualityRank>not assigned</DataQualityRank>'},
-						{"1" => '<DateCreated>2012-05-31T10:59:03</DateCreated>'},
-						{"1" => '<CreatedBy>Torre Stockard</CreatedBy>'},
-						{"1" => '<LastUpdated>2012-05-31T10:59:03</LastUpdated>'},
-						{"1" => '<UpdatedBy>Torre Stockard</UpdatedBy>'},
-						{"1" => '<WaterQualityAttribute>NH4</WaterQualityAttribute>'},
-						{"1" => '</tbl_WaterQuality>'},
-						{"1" => '</dataroot>'}
-						]
+		iterator = 	'<?xml version="1.0" encoding="UTF-8"?>
+						<dataroot xmlns:od="urn:schemas-microsoft-com:officedata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="tbl_WaterQuality.xsd" generated="2013-03-05T10:43:17">
+						<tbl_WaterQuality>
+						<WaterQualityID>4</WaterQualityID>
+						<WaterQualityName>TR1-A-L-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>
+						<DceName>TR1-A-L-dce-20080527-1345</DceName>
+						<MethodName>Ammonia</MethodName>
+						<SampleDate>2008-05-27T13:45:00</SampleDate>
+						<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>
+						<WaterQualityValue>-999</WaterQualityValue>
+						<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+						<DataQualityRank>not assigned</DataQualityRank>
+						<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>
+						<DateCreated>2012-05-31T10:59:03</DateCreated>
+						<CreatedBy>Torre Stockard</CreatedBy>
+						<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+						<UpdatedBy>Torre Stockard</UpdatedBy>
+						<WaterQualityAttribute>NH4</WaterQualityAttribute>
+						</tbl_WaterQuality>
+						<tbl_WaterQuality>
+						<WaterQualityID>5</WaterQualityID>
+						<WaterQualityName>TR1-A-R-dce-20080527-1345-Ammonia-20080527-1345</WaterQualityName>
+						<DceName>TR1-A-R-dce-20080527-1345</DceName>
+						<MethodName>Ammonia</MethodName>
+						<SampleDate>2008-05-27T13:45:00</SampleDate>
+						<SampleDateTime>2008-05-27T13:45:00</SampleDateTime>
+						<WaterQualityValue>-999</WaterQualityValue>
+						<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+						<DataQualityRank>not assigned</DataQualityRank>
+						<WaterQualityMeasurementNotes>-999 indicates that sample ammonia level was below the assay detection limit of 10 micrograms/Liter</WaterQualityMeasurementNotes>
+						<DateCreated>2012-05-31T10:59:03</DateCreated>
+						<CreatedBy>Torre Stockard</CreatedBy>
+						<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+						<UpdatedBy>Torre Stockard</UpdatedBy>
+						<WaterQualityAttribute>NH4</WaterQualityAttribute>
+						</tbl_WaterQuality>
+						<tbl_WaterQuality>
+						<WaterQualityID>6</WaterQualityID>
+						<WaterQualityName>TR2-A-L-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>
+						<DceName>TR2-A-L-dce-20080527-1300</DceName>
+						<MethodName>Ammonia</MethodName>
+						<SampleDate>2008-05-27T13:00:00</SampleDate>
+						<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>
+						<WaterQualityValue>11.6497330942593</WaterQualityValue>
+						<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+						<DataQualityRank>not assigned</DataQualityRank>
+						<DateCreated>2012-05-31T10:59:03</DateCreated>
+						<CreatedBy>Torre Stockard</CreatedBy>
+						<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+						<UpdatedBy>Torre Stockard</UpdatedBy>
+						<WaterQualityAttribute>NH4</WaterQualityAttribute>
+						</tbl_WaterQuality>
+						<tbl_WaterQuality>
+						<WaterQualityID>7</WaterQualityID>
+						<WaterQualityName>TR2-A-R-dce-20080527-1300-Ammonia-20080527-1300</WaterQualityName>
+						<DceName>TR2-A-R-dce-20080527-1300</DceName>
+						<MethodName>Ammonia</MethodName>
+						<SampleDate>2008-05-27T13:00:00</SampleDate>
+						<SampleDateTime>2008-05-27T13:00:00</SampleDateTime>
+						<WaterQualityValue>19.9847280999598</WaterQualityValue>
+						<WaterQualityUnits>micrograms/Liter</WaterQualityUnits>
+						<DataQualityRank>not assigned</DataQualityRank>
+						<DateCreated>2012-05-31T10:59:03</DateCreated>
+						<CreatedBy>Torre Stockard</CreatedBy>
+						<LastUpdated>2012-05-31T10:59:03</LastUpdated>
+						<UpdatedBy>Torre Stockard</UpdatedBy>
+						<WaterQualityAttribute>NH4</WaterQualityAttribute>
+						</tbl_WaterQuality>
+						</dataroot>'
 
 		f = get_ifilter(-2) #internal XML
 		data = filter_data_columns(f, iterator)
@@ -664,38 +677,11 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		d = Document.where(:name => fname).first
 
-		expected_data = [
-			"    FILE TYPE                      : INTERROGATION\n", 
-			"    FILE TITLE                     : TMJ06001.A91\n", 
-			"    FILE CREATED                   : 01 JANUARY 2006 AT 00:00\n", 
-			"\n", 
-			"! This file contains all detections for 2006 from the juvenile bypass outfall.\n", 
-			"! The tags were detected using an FS-2001F portable transceiver and flat-plate\n", 
-			"! antenna.  These data were compiled from the original files by Dave Marvin,\n", 
-			"! PTAGIS.  The original data files are listed in the data stream below, \n", 
-			"! followed by their contents.\n", 
-			"\n", 
-			"! TMJ06032.A1\n", 
-			"| 01 02/16/06 18:34:51 ::q\n", 
-			":q.t. XX 91\n", 
-			"\n", 
-			"1a 2a\n", 
-			"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n", 
-			"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n", 
-			"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n", 
-			"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n", 
-			"| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91\n", 
-			"| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91\n", 
-			"| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91\n", 
-			"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n", 
-			"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n", 
-			"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n", 
-			"\n", 
-			"    FILE CLOSED                    : 28 JUNE 2006 AT 08:13\n"
-		]
+		expected_data = ["row1", "row2"]
+		d.stuffing_data = [{"1" => "row1"}, {"1" => "row2"}]
 		data = get_data_column(d, '1') 
 		assert data != []
-		assert data == expected_data
+		assert data == expected_data, data.to_s + " != " + expected_data.to_s
 
 		#empty data back
 		data = get_data_column(d, '2') 
@@ -849,33 +835,8 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		#no filter, get unfiltered doc data
 		data = get_document_data(d)
-		assert data ==	[
-							{"1"=>"    FILE TYPE                      : INTERROGATION\n"}, 
-							{"1"=>"    FILE TITLE                     : TMJ06001.A91\n"}, 
-							{"1"=>"    FILE CREATED                   : 01 JANUARY 2006 AT 00:00\n"}, 
-							{"1"=>"\n"}, 
-							{"1"=>"! This file contains all detections for 2006 from the juvenile bypass outfall.\n"}, 
-							{"1"=>"! The tags were detected using an FS-2001F portable transceiver and flat-plate\n"}, 
-							{"1"=>"! antenna.  These data were compiled from the original files by Dave Marvin,\n"}, 
-							{"1"=>"! PTAGIS.  The original data files are listed in the data stream below, \n"}, 
-							{"1"=>"! followed by their contents.\n"}, {"1"=>"\n"}, {"1"=>"! TMJ06032.A1\n"}, 
-							{"1"=>"| 01 02/16/06 18:34:51 ::q\n"}, 
-							{"1"=>":q.t. XX 91\n"}, 
-							{"1"=>"\n"}, 
-							{"1"=>"1a 2a\n"}, 
-							{"1"=>"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n"}, 
-							{"1"=>"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n"}, 
-							{"1"=>"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n"}, 
-							{"1"=>"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-							{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-							{"1"=>"\n"}, 
-							{"1"=>"    FILE CLOSED                    : 28 JUNE 2006 AT 08:13\n"}
-						]
+		assert data == nil
+		assert d.stuffing_text != nil
 
 		#if its empty, get empty
 		d.stuffing_data = []
@@ -1572,35 +1533,9 @@ class DocumentsHelperTest < ActionView::TestCase
 		#should have found the right one
 		assert md == [], md.to_s + " should == []"
 
-		expected_data =
-			[
-				{"1"=>"    FILE TYPE                      : INTERROGATION\n"}, 
-				{"1"=>"    FILE TITLE                     : TMJ06001.A91\n"}, 
-				{"1"=>"    FILE CREATED                   : 01 JANUARY 2006 AT 00:00\n"}, 
-				{"1"=>"\n"}, 
-				{"1"=>"! This file contains all detections for 2006 from the juvenile bypass outfall.\n"}, 
-				{"1"=>"! The tags were detected using an FS-2001F portable transceiver and flat-plate\n"}, 
-				{"1"=>"! antenna.  These data were compiled from the original files by Dave Marvin,\n"}, 
-				{"1"=>"! PTAGIS.  The original data files are listed in the data stream below, \n"}, 
-				{"1"=>"! followed by their contents.\n"}, {"1"=>"\n"}, {"1"=>"! TMJ06032.A1\n"}, 
-				{"1"=>"| 01 02/16/06 18:34:51 ::q\n"}, 
-				{"1"=>":q.t. XX 91\n"}, 
-				{"1"=>"\n"}, 
-				{"1"=>"1a 2a\n"}, 
-				{"1"=>"| 01 02/16/06 19:08:15 3D9.1BF1E7919A XX 91\n"}, 
-				{"1"=>"| 01 02/16/06 19:18:36 3D9.1BF1A998FA XX 91\n"}, 
-				{"1"=>"| 01 02/17/06 18:21:03 3D9.1BF20E8FE2 XX 91\n"}, 
-				{"1"=>"| 01 02/20/06 18:27:01 3D9.1BF11BFFF5 XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 01:56:38 3D9.1BF23F62D4 XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 03:56:10 3D9.1BF234346C XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 17:59:11 3D9.1BF2342E83 XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-				{"1"=>"| 01 02/22/06 19:03:37 3D9.1BF23435A4 XX 91\n"}, 
-				{"1"=>"\n"}, 
-				{"1"=>"    FILE CLOSED                    : 28 JUNE 2006 AT 08:13\n"}
-			]
-		data = get_document_data(d)
+		expected_data = @raw_file_text
+
+		data = d.stuffing_text
 		assert data == expected_data, data.to_s
 	end
 end

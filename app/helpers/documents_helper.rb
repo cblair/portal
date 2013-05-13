@@ -46,7 +46,7 @@ module DocumentsHelper
       return false
     end
 
-    #TODO: replace all back slagshes with forward slashes
+    #TODO: replace all back slashes with forward slashes
     
     #a dictionary of dircetories, than point to collections 
     zip_collections = {}
@@ -111,35 +111,7 @@ module DocumentsHelper
       return false
     end
 
-    stime = Time.now()
-
-    #csv import. Each call on @parsed_file.<method> increments the cursor
-    #begin
-      #@opened_file=CSV::CSV.open(file)
-      @opened_file = File.open file
-    #rescue
-    #  return false #unsupported file type
-    #end
-    
-    #get filtered headers, put them in metadata
-    metadata_columns = filter_metadata_columns(f, @opened_file)
-        
-    data_columns= filter_data_columns(f,@opened_file)
-
-    etime = Time.now()
-    
-    log_and_print "Filtered document #{fname} in #{etime - stime} seconds."
-    
-    stime = Time.now()
-    
-    #Transform all values to native ruby types
-    #TODO: do we really need this with the CouchDB storage?
-    #      also, optimize before enabling
-    #data_columns=convert_data_to_native_types(data_columns)
-    
-    etime = Time.now()
-    
-    #logger.info "Converted document #{fname} data in #{etime - stime} seconds."
+    @opened_file = File.open file
     
     stime = Time.now()
     
@@ -147,9 +119,7 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-
-    @document.stuffing_data=data_columns
-    @document.stuffing_metadata=metadata_columns
+    @document.stuffing_text = @opened_file.read()
     @document.user = user
 
     begin
@@ -159,15 +129,14 @@ module DocumentsHelper
     rescue RestClient::Conflict
       log_and_print "ERROR: 409 Conflict, couldn't save document. ActiveRecord and CouchDB databases may be out of sync."
       return false
+    rescue RestClient::ResourceNotFound
+      log_and_print "ERROR: 404, couldn't save document. ActiveRecord and CouchDB databases may be out of sync."
+      return false
     rescue RestClient::BadRequest
       log_and_print "ERROR: Couldn't save document #{fname}, probably because of a parse error."
 
-      dc_is_valid_json = is_json?(data_columns.to_s)
-      mdc_is_valid_json = is_json?(metadata_columns.to_s)
-
       log_and_print "ERROR: More parse information: "
-      log_and_print "ERROR:  is data json?: #{dc_is_valid_json}"
-      log_and_print "ERROR:  is metadata json?: #{mdc_is_valid_json}"
+      log_and_print @document.stuffing_text
       return false
     end
 
@@ -186,6 +155,13 @@ module DocumentsHelper
   
   
   def filter_metadata_columns(f, iterator)
+
+    if iterator.class == String
+      #spilt the iterator text by endlines
+      iterator = iterator.split(/$/)
+    #else if iterator.class == File (or anything else), do nothing
+    end
+
     metadata_columns = []
     if f != nil and iterator != nil
       i = 0
@@ -222,7 +198,7 @@ module DocumentsHelper
     else
       metadata_columns = []
     end
-    
+
     return metadata_columns
   end
   
@@ -247,10 +223,17 @@ module DocumentsHelper
     #get the column names
     #TODO: just setting to [1] for now
     colnames = [1]
-    
+
+    rows = []
+    if iterator.class == String
+      rows = iterator.split(/$/)
+    elsif iterator.class == File
+      rows = iterator
+    end
+
     data_columns=[]
     i = 0
-    iterator.each do |row|
+    rows.each do |row|
       data_col_hash = {}
       
       #apply input filters
@@ -289,32 +272,13 @@ module DocumentsHelper
       return []
     end
 
-    #get colnames
-    #TODO: do for more than '1'
-    #TODO: colnames could be less than what each parse line is
-    begin
-      colnames = CSV.parse_line(iterator.first["1"])
-    rescue
-      log_and_print "WARN: Couldn't parse document, may already be parsed"
-      return iterator
-    end
+    rows = CSV.parse(iterator)
 
+    colnames = rows.first
 
-    for i in (1..iterator.count - 1)
-      data_col_hash = {}
-      begin
-        parsed_line_array = CSV.parse_line(iterator[i]["1"])
-      rescue CSV::MalformedCSVError
-        log_and_print "WARN: CSV::MalformedCSVError in filter_data_columns_csv. Have to lose this line of data"
-        next
-      end
-
-      for j in (0..colnames.count - 1)
-        colname = colnames[j]
-        data_col_hash[colname] = parsed_line_array[j]
-      end
-
-      retval << data_col_hash
+    (2..rows.length - 1).each do |i|
+      row = Hash[[colnames, rows[i]].transpose]
+      retval << row
     end
 
     return retval
@@ -322,13 +286,7 @@ module DocumentsHelper
 
 
   def filter_data_columns_xml(iterator)
-    #re-join all the data. This is inefficient, but the user can be more efficient if
-    # they validate on upload
-
-    data_text = ""
-    iterator.each do |row|
-      data_text += row["1"]
-    end
+    data_text = iterator
 
     #the hash of the entire xml tree
     xml_hash = Hash.from_xml(data_text)
@@ -336,14 +294,16 @@ module DocumentsHelper
     #the return data
     data = []
 
-    #get the first thing that is a list in the xml "dataroot" element
-    table_data = []
-    xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
-    #the first element is usually named after the table. Get the next element (usually
-    # the second) that is a list
-    table_data.each {|datum| data = datum if datum.kind_of? Array }
-    if data.empty?
-      log_and_print "WARN: XML filtered data was empty. Reverting filter"
+    if xml_hash != nil
+      #get the first thing that is a list in the xml "dataroot" element
+      table_data = []
+      xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
+      #the first element is usually named after the table. Get the next element (usually
+      # the second) that is a list
+      table_data.each {|datum| data = datum if datum.kind_of? Array }
+      if data.empty?
+        log_and_print "WARN: XML filtered data was empty. Reverting filter"
+      end
     end
 
     data
@@ -524,27 +484,32 @@ module DocumentsHelper
 
     doc_list.each do |key, val|
       document = key
-      @headings = document.stuffing_data.first.keys
-  
-      csv_data = CSV.generate do |csv|
-          #Metadata
-          document.stuffing_metadata.each do |row|
-            csv << row.values
-          end
-          
-          #Data headings
-          # if there is only one column named "1", its the default column for
-          # a unfiltered document. Ignore the column.
-          if !(@headings.length == 1 and @headings[0] == "1")
-            csv << @headings
-          end
-          
-          #Data
-          document.stuffing_data.each do |row|
+
+      csv_data = []
+
+      if (document.stuffing_metadata != nil and document.stuffing_data)
+        @headings = document.stuffing_data.first.keys
+    
+        csv_data = CSV.generate do |csv|
+            #Metadata
+            document.stuffing_metadata.each do |row|
               csv << row.values
-          end
+            end
+            
+            #Data headings
+            # if there is only one column named "1", its the default column for
+            # a unfiltered document. Ignore the column.
+            if !(@headings.length == 1 and @headings[0] == "1")
+              csv << @headings
+            end
+            
+            #Data
+            document.stuffing_data.each do |row|
+                csv << row.values
+            end
+        end
       end
-  
+
       temp_doc = Tempfile.new(document.name)
       temp_doc.write(csv_data)
       temp_doc.rewind #rewind data for zip reading?
@@ -628,8 +593,8 @@ module DocumentsHelper
       f = ifilters[i]
       
       #Attempt filter
-      stuffing_metadata = filter_metadata_columns(f, stuffing_data)
-      stuffing_data = filter_data_columns(f, stuffing_data)
+      stuffing_metadata = filter_metadata_columns(f, document.stuffing_text)
+      stuffing_data = filter_data_columns(f, document.stuffing_text)
 
       #Check if filter was successfu=l
       if stuffing_data != nil and not stuffing_data.empty?
@@ -641,6 +606,8 @@ module DocumentsHelper
           document.stuffing_metadata = stuffing_metadata
           document.stuffing_data = stuffing_data
           document.validated = true
+          #clear out data_text
+          document.stuffing_text = nil
           suc_valid = document.save
         end
       end

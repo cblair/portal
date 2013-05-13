@@ -31,59 +31,72 @@
 	
 	<hr/>
 	
-	<h2>Metadata</h2>
-	<table class="table table-striped table-bordered table-condensed" style="width:0;">
-		<% @mcolnames = get_data_colnames(@msdata) %>
-		<tbody>
-		<% @msdata.each do |msdata_row| %>
-		<tr>
-			<% msdata_row.values.each do |val| %>
-				<td>
-					<%= val %>
-				</td>
-			<% end %>
-		</tr>
-		<% end %>
-		</tbody>
-	</table>
-	
-	<% 
-		#Get row data
-		@row = @paged_sdata.first()
-		#if there is no first row, set to empty instead of nil
-		if @row == nil
-			@row = {}
-		end 
-		@colnames = get_data_colnames(@paged_sdata) 
-	%>
-	
 	<div class="container-fluid">
+
+		<h2>Metadata</h2>
+		<% if @msdata != nil  and !@msdata.empty? %>
+			<table class="table table-striped table-bordered table-condensed" style="width:0;">
+				<% @mcolnames = get_data_colnames(@msdata) %>
+				<tbody>
+				<% @msdata.each do |msdata_row| %>
+				<tr>
+					<% msdata_row.values.each do |val| %>
+						<td>
+							<%= val %>
+						</td>
+					<% end %>
+				</tr>
+				<% end %>
+				</tbody>
+			</table>
+		<% else %>
+			<p>(none)</p>
+		<% end %>
+		<hr />
+
+		<% 
+			#Get row data
+			@row = @paged_sdata.first()
+			#if there is no first row, set to empty instead of nil
+			if @row == nil
+				@row = {}
+			end 
+			@colnames = get_data_colnames(@paged_sdata) 
+		%>
+	
 	    <h2>Data</h2>
 		<!--Display data-->
-		<!--TODO: make a partial-->
-	    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="documents"
-	    	data-source="<%= document_path(:id => @document.id, :format => :json) %>">
-	     <thead>
-	      <tr>
-			    <% row_keys = [] %>
-			    <% if !@row.empty? %>
-			    	<% row_keys = @row.keys %>
-			    <% end %>
-			    <% row_keys.each do |name| %>
-			    	<th>
-						<% if (@document.stuffing_primary_keys and @document.stuffing_primary_keys.include?(name)) %>
-							<!--Hide for now - all column names are added to primary keys
-							<i class="icon-search"></i>
-							-->
-						<% end %>
-						<%= name %>
-			    	</th>
-			    <% end %>
-	      </tr>
-	     </thead>
-	     <tbody>
-		 </tbody>
-		</table>
+		<% if @document.stuffing_data != nil %>
+		    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="documents"
+		    	data-source="<%= document_path(:id => @document.id, :format => :json) %>">
+		     <thead>
+		      <tr>
+				    <% row_keys = [] %>
+				    <% if !@row.empty? %>
+				    	<% row_keys = @row.keys %>
+				    <% end %>
+				    <% row_keys.each do |name| %>
+				    	<th>
+							<% if (@document.stuffing_primary_keys and @document.stuffing_primary_keys.include?(name)) %>
+								<!--Hide for now - all column names are added to primary keys
+								<i class="icon-search"></i>
+								-->
+							<% end %>
+							<%= name %>
+				    	</th>
+				    <% end %>
+		      </tr>
+		     </thead>
+		     <tbody>
+			 </tbody>
+			</table>
+		<% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
+			<p>Raw unvalidated text: </p>
+			<p><%= @document.stuffing_text[1..1000] %>...</p>
+			<p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
+		<% else %>
+			<p>(none)</p>
+		<% end %>
 	</div>
 	
 	
