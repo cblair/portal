@@ -1,0 +1,12 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+role1:
+  id: 1
+  name: "admin"
+  
+role2:
+  id: 2
+  name: "role2"
+
+#two:
+#  name: MyString

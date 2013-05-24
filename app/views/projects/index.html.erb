@@ -1,0 +1,31 @@
+<h1>Project Manager</h1>
+
+<br />
+
+<h2>Listing my projects</h2>
+
+<table border="0" cellpadding="5"> <!--<table border="1" cellpadding="5">-->
+  <tr>
+    <th><!-- Name --></th>
+    <th><!-- Description --></th>
+    <th colspan="5"><!-- Options --></th>
+  </tr>
+
+  <% @projects.each do |project| %>
+    <tr>
+      <% if can? :read, project %>
+        <td><%= project.name %></td>
+        <td><%= project.pdesc %></td>
+        <td><%= link_to 'Show', project %></td>
+      <% end %>
+      <% if can? :manage, project %>
+        <td><%= link_to 'Edit', edit_project_path(project) %></td>
+        <td><%= link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Project', new_project_path %>

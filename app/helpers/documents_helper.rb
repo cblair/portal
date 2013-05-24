@@ -103,6 +103,8 @@ module DocumentsHelper
   # @param fname A string of the file name
   # @param c A Collection object
   # @param f A IFilter object
+  # @param p A project object
+  #def save_file_to_document(fname, file, c, f, p)
   def save_file_to_document(fname, file, c, f, user=current_user)
     status = false
 
@@ -147,7 +149,7 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-
+    #@document.project=p		#links document to project
     @document.stuffing_data=data_columns
     @document.stuffing_metadata=metadata_columns
     @document.user = user
@@ -514,6 +516,10 @@ module DocumentsHelper
     return retval
   end
   
+  #Adds document to selected project (see view -> documents -> edit)
+  def add_project_doc(project, document)
+    document.project_id = project.id
+  end
   
   #Populate doc list hash with temp doc objects
   # returns a hash of {doc_name => temp_doc Tempfile}

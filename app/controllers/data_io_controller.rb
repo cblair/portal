@@ -34,7 +34,10 @@ class DataIoController < ApplicationController
       # not be exactly what the user wanted
       c = Collection.find_or_create_by_name(:name => ctext)
     end
-
+    
+    #Project - find the project by id
+    #p=Project.find(params[:dump][:project_id])
+    #puts("*** project = #{p.name}") #debug, triggers on list selection
     #User
     c.user = current_user
     c.save

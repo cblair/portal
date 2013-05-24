@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+proj1:
+  id: 1
+  name: "Project 1"
+  pdesc: "This is unit test 1."
+  user_id: 1
+
+proj2:
+  id: 2
+  name: "Project 2"
+  pdesc: "This is unit test 2."
+  user_id: 2

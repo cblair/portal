@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Editing User Roles</h1>
+
+<h3>User Information</h3>
+<p>
+  <b>Username:</b>
+  <%= @user.email %>
+</p>
+
+<h3>Roles</h3>
+
+<%= form_tag :controller => 'roles', :action => 'update_each_user_role' do  %>  
+  <% @roles.each do |role| %>
+    <div class="field">
+      <% if can? :manage, @user %>
+        <%= check_box_tag "user[role_ids][]", role.id, @user.roles.include?(role) %>
+        <%= role.name %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="actions">
+    </br>
+    <%= submit_tag 'Update', :confirm => 'Are you sure?' %>
+  </div>
+<% end %>
+
+<br />
+<%= link_to 'Back', roles_path %>
+

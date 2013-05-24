@@ -37,6 +37,16 @@ Portal::Application.routes.draw do
   resources :searches
   match '/search/search_all' => "searches#search_all", :as => :search_all
 
+  resources :projects
+  match '/projects/owner/:id' => "projects#owner", :as => :owner
+  match '/projects/add_project_collection/:id' => "projects#add_project_collection", :as => :add_project_collection
+  match '/projects/add_project_doc' => "projects#add_project_doc", :as => :add_project_doc
+  match '/projects/remove_project_doc' => "projects#remove_project_doc", :as => :remove_project_doc
+  
+  resources :roles
+  match '/roles/edit_each_user_role/:id' => "roles#edit_each_user_role", :as => :edit_each_user_role
+  match '/roles/update_each_user_role/:id' => "roles#update_each_user_role", :as => :update_each_user_role
+  
   resources :posts
   
   #I did something wrong to have to imply all of these
