@@ -219,7 +219,7 @@ DEPENDENCIES
   couchrest_model
   d3_rails
   debugger
-  devise (~> 2)
+  devise
   jquery-datatables-rails!
   jquery-fileupload-rails (= 0.4.0)
   jquery-rails
