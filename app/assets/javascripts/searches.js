@@ -13,7 +13,6 @@ jQuery(function($) {
 	});
 
 	$(document).ready(function () {
-
 		//dataTable
 		var search_table = $('#search').dataTable({
 			"sPaginationType"	: "bootstrap",
@@ -28,6 +27,13 @@ jQuery(function($) {
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
 			"sAjaxSource"		: $('#search').data('source')
 		});
+
+		//Do a default search if the data attr is set (probably originally from
+		// an HTML param)
+		var default_search = $('#search').data('default-search');
+		if((default_search != undefined) && (default_search != "")) {
+			search_table.fnFilter(default_search);
+		}
 
 		//only search on enter keypress 
 		$('.dataTables_filter input')

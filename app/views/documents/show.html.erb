@@ -64,6 +64,7 @@
 			@colnames = get_data_colnames(@paged_sdata) 
 		%>
 	
+
 	    <h2>Data</h2>
 		<!--Display data-->
 		<% if @document.stuffing_data != nil %>
@@ -77,11 +78,6 @@
 				    <% end %>
 				    <% row_keys.each do |name| %>
 				    	<th>
-							<% if (@document.stuffing_primary_keys and @document.stuffing_primary_keys.include?(name)) %>
-								<!--Hide for now - all column names are added to primary keys
-								<i class="icon-search"></i>
-								-->
-							<% end %>
 							<%= name %>
 				    	</th>
 				    <% end %>

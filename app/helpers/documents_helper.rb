@@ -294,7 +294,7 @@ module DocumentsHelper
     #the return data
     data = []
 
-    if xml_hash != nil
+    if (xml_hash != nil and xml_hash["dataroot"] != nil)
       #get the first thing that is a list in the xml "dataroot" element
       table_data = []
       xml_hash["dataroot"].each {|datum| table_data = datum if datum.kind_of? Array }
@@ -307,6 +307,39 @@ module DocumentsHelper
     end
 
     data
+  end
+
+
+  # Gets index columns from the corresponding .xsd file.
+  def get_foreign_keys(doc, f)
+    doc_name_prefix = doc.name.split('.').first
+
+    xsd_doc = Document.where(:name => doc_name_prefix + '.xsd').first
+
+    foreign_keys = []
+
+    if xsd_doc
+      xml_hash = Hash.from_xml(xsd_doc.stuffing_text)
+
+      #get all the xml elements that may hold foreign keys
+      xsd_prop_elements = xml_hash["schema"]["element"].each {|row| row if row["name"] == doc_name_prefix }
+
+      #with all the xml elements, find the foreigh keys
+      xsd_prop_elements.each do |prop|
+        begin
+          foreign_keys = prop["annotation"]["appinfo"]["index"].collect {|prop| prop["index_name"]}
+        rescue
+          #do nothing
+        end
+      end
+    end
+
+    #if we found foreign keys, get rid of xsd file
+    if !foreign_keys.empty?
+      xsd_doc.destroy
+    end
+
+    foreign_keys
   end
   
 

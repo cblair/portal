@@ -63,7 +63,6 @@ private
       end
     end
 
-    #debugger
     documents = documents.paginate({:page => page, :per_page => per_page})
     #page).per_page(per_page)
 

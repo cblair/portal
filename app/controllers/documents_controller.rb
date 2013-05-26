@@ -191,6 +191,9 @@ class DocumentsController < ApplicationController
 
         #spawn_block do
           validate_document_helper(@document, f)
+          @document.stuffing_foreign_keys = \
+            get_foreign_keys(@document, f)
+          @document.save
         #end
       end
     end
@@ -200,8 +203,7 @@ class DocumentsController < ApplicationController
     #Hack for now - add all column keys to primary keys for search
     @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
 
-    #Indexes
-    #safsa
+    update_suc = (update_suc and @document.save)
 
     respond_to do |format|
       if update_suc

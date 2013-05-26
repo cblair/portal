@@ -25,6 +25,8 @@ module CollectionsHelper
     
     collection.documents.each do |document|
       suc_valid = suc_valid & validate_document_helper(document, ifilter)
+      document.stuffing_foreign_keys = get_foreign_keys(document, ifilter)
+      document.save
     end
     
     suc_valid = suc_valid & collection.save

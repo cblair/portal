@@ -2,7 +2,7 @@ class Document < ActiveRecord::Base
   include CouchdbHelper
   require 'stuffing'
 
-  attr_accessible :name, :stuffing_data, :stuffing_search, :collection_id
+  attr_accessible :name, :stuffing_data, :stuffing_search, :stuffing_primary_keys, :stuffing_foreign_keys, :collection_id
 
   after_initialize :create_default_couchdb
     

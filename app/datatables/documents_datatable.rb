@@ -50,7 +50,22 @@ private
       return_data = @document.stuffing_data
     end
 
-    return_data = return_data.map {|row| row.values << nil}
+    return_data = return_data.map do |row| 
+      values = []
+      row.each do |key, val|
+        #if the value is in the foreign keys, add links and icons for search
+        if @document.stuffing_foreign_keys.include?(key)
+          #set the default search value to "column:value" for Lucene format
+          default_search = "#{key}:#{val}"
+          text = "<a href=\"/searches/new?default_search=#{default_search}\"><i class=\"icon-cloud\"></i></a> "
+          text += "#{val}"
+          values << text
+        else
+          values << val
+        end
+      end
+      values
+    end
 
     #return_data = return_data.paginate({:page => page, :per_page => per_page})
 

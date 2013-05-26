@@ -16,11 +16,8 @@ jQuery(function($) {
 
 		//update the datatable
 		var collectionid = $(this).parent().parent().parent().data('collectionid');
-		console.log(collectionid);
 
 		$('table.documents_datatable').data('collectionid',collectionid);
-		console.log("TS22");
-		console.log(SEARCH_TABLE);
 		$.reloadDocumentDatatable($, collectionid);
 	}
 	
@@ -64,7 +61,7 @@ jQuery(function($) {
 					$('div.scaffold table').remove();
 					$('div.scaffold').append(text);
 				}
-				//TODO: renabled for continued updating, but we need to do long polling	
+				//TODO: need to do long polling	
 				//setTimeout(updateScaffoldTable, 2000);
 			},
 			error: function(result) {
