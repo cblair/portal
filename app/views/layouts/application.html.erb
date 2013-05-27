@@ -82,28 +82,23 @@
 	<div class="container-fluid well" style="background-color: #dfdfdf;">
 		<div class="container-fluid well" style="background-color: #f5f5f5;">
 			<!--These flash notices are probably the old style, and neeed updated-->
-		    <% if notice || alert %>
-		        <%= 
-		        #javascript_include_tag "bootstrap-alert" 
-		        %>
-		    <% end %>
 		    <% if notice %>
-		    <div id="notice" class="alert alert-info">
-		        <a class="close" data-dismiss="alert" href="#">&times;</a>
-		        <%= notice %>
-		    </div>
+			    <div id="notice" class="alert alert-info">
+			        <a class="close" data-dismiss="alert" href="#">&times;</a>
+			        <%= notice %>
+			    </div>
 		    <% end %>
 		    <% if alert %>
-		    <div id="alert" class="alert">
-		        <a class="close" data-dismiss="alert" href="#">&times;</a>
-		        <%= alert %>
-		    </div>
+			    <div id="alert" class="alert">
+			        <a class="close" data-dismiss="alert" href="#">&times;</a>
+			        <%= alert %>
+			    </div>
 		    <% end %>
 			<% if flash[:error] %>
-		    <div id="alert" class="alert alert-error">
-		        <a class="close" data-dismiss="alert" href="#">&times;</a>
-		        <%= flash[:error] %>
-		    </div>
+			    <div id="alert" class="alert alert-error">
+			        <a class="close" data-dismiss="alert" href="#">&times;</a>
+			        <%= flash[:error] %>
+			    </div>
 		    <% end %>
 
 		    <%= yield %>

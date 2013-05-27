@@ -1,6 +1,7 @@
 class Document < ActiveRecord::Base
   include CouchdbHelper
   require 'stuffing'
+  require 'spawn'
 
   attr_accessible :name, :stuffing_data, :stuffing_search, :stuffing_primary_keys, :stuffing_foreign_keys, :collection_id
 
@@ -82,5 +83,74 @@ class Document < ActiveRecord::Base
     else
       scoped
     end
+  end
+
+
+  def submit_validation_job(ifilter=nil)
+    spawn_block do 
+      puts "########################################################"
+      puts "Validating doc"
+      self.validate(ifilter)
+    
+      sleep 60
+    end
+  end
+
+
+  def validate(ifilter=nil)
+    document = self
+
+    #Try to filter until successful or 
+    # either successfully filtered or are out of filters
+    validation_finished = false
+    suc_valid = false
+    
+    if ifilter == nil
+      ifilters = Ifilter.all
+      ifilters_count = ifilters.count
+    else
+      ifilters = [ifilter]
+      ifilters_count = 1
+    end
+
+    #filter index
+    i = 0
+    while validation_finished == false
+      #copy these so filter attempts don't overwrite the original data
+      stuffing_metadata = document.stuffing_metadata
+      stuffing_data = document.stuffing_data
+      
+      f = ifilters[i]
+      
+      #Attempt filter
+      stuffing_metadata = filter_metadata_columns(f, document.stuffing_text)
+      stuffing_data = filter_data_columns(f, document.stuffing_text)
+
+      #Check if filter was successfu=l
+      if stuffing_data != nil and not stuffing_data.empty?
+        if  (f.stuffing_headers != nil \
+             and stuffing_metadata.count == f.stuffing_headers.count)\
+            or \
+            (f.stuffing_headers == nil and stuffing_metadata.empty?)
+          validation_finished = true
+          document.stuffing_metadata = stuffing_metadata
+          document.stuffing_data = stuffing_data
+          document.validated = true
+          #clear out data_text
+          document.stuffing_text = nil
+          suc_valid = document.save
+        end
+      end
+      
+      i = i + 1
+      if i >= (ifilters_count)
+        validation_finished = true
+      end
+    end
+
+    document.stuffing_foreign_keys = get_foreign_keys(document, ifilter)
+    document.save
+    
+    return suc_valid
   end
 end

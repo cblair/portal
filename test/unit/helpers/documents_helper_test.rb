@@ -1047,12 +1047,14 @@ class DocumentsHelperTest < ActionView::TestCase
 
 		fname = 'TUC2.zip'
 		upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/TUC2.zip'))
+		upload.user = @user
+		assert @user.save
 		assert upload
 
 		assert save_zip_to_documents(fname, upload, c, nil, @user)
 
-		#this user uploaded the file, s the collection should be viewable
-		assert collection_is_viewable(c, @user)
+		#this user uploaded the file, so the collection should be viewable
+		assert collection_is_viewable(c, @user), c.user_id.to_s + ":" + @user.id.to_s
 
 		#test zip file collections
 		c = Collection.where(:name => "TUC2").first

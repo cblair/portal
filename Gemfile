@@ -88,3 +88,6 @@ gem "spawn", :git => 'git://github.com/rfc2822/spawn'
 #New Relic
 gem 'newrelic_rpm'
 
+gem 'ancestry'
+
+gem 'delayed_job_active_record'

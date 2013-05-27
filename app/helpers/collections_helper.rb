@@ -1,9 +1,10 @@
 module CollectionsHelper
   include DocumentsHelper
+
   
   #Deletes all ancestor collections
   def collection_recursive_destroy(c)
-    c.collections.each do |child_c|
+    c.children.each do |child_c|
       collection_recursive_destroy(child_c)
     end
     
@@ -19,12 +20,12 @@ module CollectionsHelper
   def validate_collection_helper(collection, ifilter=nil)
     suc_valid = true
     
-    collection.collections.each do |sub_collection|
+    collection.children.each do |sub_collection|
       suc_valid = suc_valid & (validate_collection_helper(sub_collection, ifilter) == true)
     end
     
     collection.documents.each do |document|
-      suc_valid = suc_valid & validate_document_helper(document, ifilter)
+      suc_valid = suc_valid & document.submit_validation_job(ifilter)
       document.stuffing_foreign_keys = get_foreign_keys(document, ifilter)
       document.save
     end
@@ -38,7 +39,7 @@ module CollectionsHelper
   def collection_is_validated(collection)
     suc_valid = true
     
-    collection.collections.each do |sub_collection|
+    collection.children.each do |sub_collection|
       suc_valid = suc_valid & (collection_is_validated(sub_collection) == true)
     end
     
@@ -48,6 +49,7 @@ module CollectionsHelper
     
     return suc_valid
   end
+
     
   #recursively sets all (sub) documents 
   def set_pub_priv_collection_helper(collection, public)
@@ -56,16 +58,17 @@ module CollectionsHelper
       doc.save
     end
     
-    collection.collections.each do |sub_collection|
+    collection.children.each do |sub_collection|
       set_pub_priv_collection_helper(sub_collection, public)
     end
   end
+
   
   #Get all category options, with indentation  
   def get_all_collection_select_options()
     o = []
     
-    collections = Collection.where(:collection_id => nil)
+    collections = Collection.roots
     
     if collections == nil
       return o
@@ -76,8 +79,10 @@ module CollectionsHelper
         o << c_option
       end
     end
+    
     return o
   end
+
   
   #Makes form select_options, indenting the children
   def get_collection_select_options(c, level=0)
@@ -89,7 +94,7 @@ module CollectionsHelper
     end
     
     retval << [('-' * level) + c.name, c.id]
-    c.collections.each do |child_c|
+    c.children.each do |child_c|
       get_collection_select_options(child_c, level + 1).each do |child_c|
         retval << child_c
       end
@@ -107,14 +112,12 @@ module CollectionsHelper
       return false
     end
     
+    #TODO: ancestry
     if collection.collection == potential_parent_collection
       retval = true
     end
     
     retval = (retval or collection_is_parent(potential_parent_collection, collection.collection))
-    
-    puts "TS" + collection.name
-    puts retval
     
     return retval
   end

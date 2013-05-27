@@ -48,6 +48,8 @@ GEM
     activesupport (3.2.11)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    ancestry (2.0.0)
+      activerecord (>= 3.0.0)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     better_errors (0.8.0)
@@ -89,6 +91,11 @@ GEM
       debugger-ruby_core_source (~> 1.2.0)
     debugger-linecache (1.2.0)
     debugger-ruby_core_source (1.2.0)
+    delayed_job (3.0.5)
+      activesupport (~> 3.0)
+    delayed_job_active_record (0.4.4)
+      activerecord (>= 2.1.0, < 4)
+      delayed_job (~> 3.0)
     devise (2.2.4)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -212,6 +219,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ancestry
   better_errors
   binding_of_caller
   coffee-rails
@@ -219,6 +227,7 @@ DEPENDENCIES
   couchrest_model
   d3_rails
   debugger
+  delayed_job_active_record
   devise
   jquery-datatables-rails!
   jquery-fileupload-rails (= 0.4.0)

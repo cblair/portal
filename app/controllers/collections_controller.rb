@@ -30,10 +30,13 @@ class CollectionsController < ApplicationController
     
     #filter by parent collection id if requested
     if params.include?('parent_id')
-      @all_collections = Collection.where(:collection_id => params['parent_id'].to_i)
+      #@all_collections = Collection.where(:collection_id => params['parent_id'].to_i)
+      #TODO: ancestry?
     else
       #only root collections
-      @all_collections = Collection.where(:collection_id => nil).order('name')
+      #TODO
+      #@all_collections = Collection.where(:collection_id => nil).order('name')
+      @all_collections = Collection.roots.order('name')
     end
     
     #add additional data, mostly for json requests
@@ -78,7 +81,7 @@ class CollectionsController < ApplicationController
   # GET /collections/new
   # GET /collections/new.json
   def new
-    @collection = Collection.new
+    @collection = Collection.new(:parent_id => params[:parent_id])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -115,10 +118,12 @@ class CollectionsController < ApplicationController
     
     #Parent collection stuff
     parent_child_violation = false
-    if params.include?("collection") and params[:collection].include?("collection_id") and params[:collection]["collection_id"] != ""
-      parent_collection = Collection.find(params[:collection]["collection_id"])
-      if !collection_is_parent(@collection, parent_collection)
-        @collection.collection = parent_collection
+    if params.include?("collection") and params[:collection].include?("parent_id") and params[:collection]["parent_id"] != ""
+      parent_collection = Collection.find(params[:collection]["parent_id"])
+
+      #if !collection_is_parent(@collection, parent_collection)
+      if !parent_collection.ancestors.include?(@collection)
+        @collection.parent_id = parent_collection.id
       else
         parent_child_violation = true
       end
@@ -136,18 +141,14 @@ class CollectionsController < ApplicationController
       #f = Ifilter.find(params[:post][:ifilter_id])
       f = get_ifilter(params[:post][:ifilter_id].to_i)
 
-      spawn_block do
-        puts "#########################################################################"
-        puts "Validation spawned"
-        puts "#########################################################################"
-        validate_collection_helper(@collection, f)
-      end
+      validate_collection_helper(@collection, f)
     end
 
     respond_to do |format|
       if parent_child_violation 
-        flash[:error] =  "Warning: cannot set parent collection to a child."
-        format.html { redirect_to @collection }
+        #flash[:error] =  "Warning: cannot set parent collection to a child."
+        @collection.errors.add(:base, "Cannot set parent collection to a child.")
+        format.html { render action: "edit" }
       elsif update_collection_attrs_suc
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
         format.json { head :ok }
@@ -205,7 +206,7 @@ class CollectionsController < ApplicationController
   def validate_doc
     @document = Document.find(params[:id])
     
-    suc_valid = validate_document_helper(@document)
+    suc_valid = @document.submit_validation_job
     
     respond_to do |format|
       if suc_valid

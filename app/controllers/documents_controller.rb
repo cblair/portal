@@ -189,12 +189,7 @@ class DocumentsController < ApplicationController
       if f != nil
         suc_msg += 'Validation filter started; refresh your browser to check for completion. '
 
-        #spawn_block do
-          validate_document_helper(@document, f)
-          @document.stuffing_foreign_keys = \
-            get_foreign_keys(@document, f)
-          @document.save
-        #end
+        @document.submit_validation_job(f)
       end
     end
 

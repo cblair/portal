@@ -63,8 +63,13 @@ module DocumentsHelper
             fname = fname[0..fname.length-2]
           end
           
-          c = Collection.new( :name => basename, 
-                              :collection => zip_collections[File.dirname(fname)])
+          c = Collection.new( :name => basename)#, 
+                              #:collection => zip_collections[File.dirname(fname)])
+          parent_id = nil
+          if zip_collections[File.dirname(fname)] != nil
+            parent_id = zip_collections[File.dirname(fname)].id
+          end
+          c.parent_id = parent_id
           c.user = user
           c.save
           
@@ -165,7 +170,8 @@ module DocumentsHelper
     metadata_columns = []
     if f != nil and iterator != nil
       i = 0
-      get_ifilter_headers(f).each do |h|
+
+      f.get_ifilter_headers.each do |h|
         metadata_col_hash = {}
         
         begin
@@ -245,10 +251,10 @@ module DocumentsHelper
        end
         
        #overwrite row with filtered row
-       row = get_ifiltered_row(f, row)
+       row = f.get_ifiltered_row(row)
        #overwrite col names with numbered colnames
        
-       colnames = get_ifiltered_colnames(row)
+       colnames = IfiltersHelper::get_ifiltered_colnames(row)
       else
         row = [row]
       end
@@ -473,7 +479,8 @@ module DocumentsHelper
     end
     
     #child collections
-    col.collections.each do |child_col|
+    #col.collections.each do |child_col|
+    col.children.each do |child_col|
       if collection_is_viewable(child_col, user)
         retval = true
       end
@@ -541,6 +548,8 @@ module DocumentsHelper
                 csv << row.values
             end
         end
+      elsif document.stuffing_text != nil
+        csv_data = document.stuffing_text
       end
 
       temp_doc = Tempfile.new(document.name)
@@ -592,65 +601,12 @@ module DocumentsHelper
     
     retval = ( retval and zip_doc_list(parent_dirs << collection_name, zipfile, doc_list) )
     
-    collection.collections.each do |sub_collection|
+    collection.children.each do |sub_collection|
       retval =  ( retval and recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
                                                       sub_collection)
                 )
     end
 
     return retval
-  end
-  
-  
-  def validate_document_helper(document, ifilter=nil)
-    #Try to filter until successful or 
-    # either successfully filtered or are out of filters
-    validation_finished = false
-    suc_valid = false
-    
-    if ifilter == nil
-      ifilters = Ifilter.all
-      ifilters_count = ifilters.count
-    else
-      ifilters = [ifilter]
-      ifilters_count = 1
-    end
-
-    #filter index
-    i = 0
-    while validation_finished == false
-      #copy these so filter attempts don't overwrite the original data
-      stuffing_metadata = document.stuffing_metadata
-      stuffing_data = document.stuffing_data
-      
-      f = ifilters[i]
-      
-      #Attempt filter
-      stuffing_metadata = filter_metadata_columns(f, document.stuffing_text)
-      stuffing_data = filter_data_columns(f, document.stuffing_text)
-
-      #Check if filter was successfu=l
-      if stuffing_data != nil and not stuffing_data.empty?
-        if  (f.stuffing_headers != nil \
-             and stuffing_metadata.count == f.stuffing_headers.count)\
-            or \
-            (f.stuffing_headers == nil and stuffing_metadata.empty?)
-          validation_finished = true
-          document.stuffing_metadata = stuffing_metadata
-          document.stuffing_data = stuffing_data
-          document.validated = true
-          #clear out data_text
-          document.stuffing_text = nil
-          suc_valid = document.save
-        end
-      end
-      
-      i = i + 1
-      if i >= (ifilters_count)
-        validation_finished = true
-      end
-    end
-    
-    return suc_valid
   end
 end

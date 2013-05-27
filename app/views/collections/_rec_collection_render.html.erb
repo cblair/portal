@@ -57,7 +57,7 @@
 		    </span>
 	    	
 	    	<ul class="col-doc-attr-form">
-	  			<% Collection.where(:collection_id => collection.id).each do |child_collection| %>
+	  			<% collection.children.each do |child_collection| %>
 					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection} %>
   				<% end %>
 
