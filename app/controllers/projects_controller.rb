@@ -97,8 +97,55 @@ class ProjectsController < ApplicationController
     end
   end
   
-  # PUT /projects/add_project_doc/1
-  # PUT /projects/add_project_doc/1.json
+  # PUT /projects/add_project_collection/1
+  # PUT /projects/add_project_collection/1.json
+  def add_project_collection
+    project = Project.find(params[:project_id]) #needed for "respond_to"
+    collection_id = params[:collection][:collection_id]
+    
+    if (params.include?(:project_id) and project != nil and collection_id != nil and not collection_id.blank?)
+      add_collection(project, collection_id) #adds a collection to a project
+    else
+      add_col_err = true
+    end
+    
+    respond_to do |format|
+      if (add_col_err == true)
+        format.html { redirect_to project, notice: 'Error adding collection.'}
+        # TODO: format JSON?
+      else
+        format.html { redirect_to project, notice: 'Collection added successfully.' }
+        format.json { head :ok }
+      end
+    end
+  end
+  
+  # PUT /projects/remove_project_collections/1
+  # PUT /projects/remove_project_collections/1.json
+  def remove_project_collections
+    project = Project.find(params[:project_id]) #needed for "respond_to"
+    col_checked = params[:col_ids] #list of collection ids to be removed
+    
+    if (params.include?(:project_id) and project != nil and not col_checked.blank?)
+      remove_collection_checked(project, col_checked)
+    else
+      @remove_col_err = true
+    end
+    
+    #TODO: different error messages for error and nothting selected?
+    respond_to do |format|
+      if (@remove_col_err == true)
+        format.html { redirect_to project, notice: 'Error, please try again.'}
+        # TODO: format JSON?
+      else
+        format.html { redirect_to project, notice: 'Project updated successfully.' }
+        format.json { head :ok }
+      end
+    end
+  end
+  
+  # PUT /projects/add_project_doc
+  # PUT /projects/add_project_doc
   def add_project_doc
     project = Project.find(params[:project_id]) #needed for "respond_to"
     doc_id = params[:document][:document_id]
@@ -121,37 +168,14 @@ class ProjectsController < ApplicationController
     end
   end
   
-  # PUT /projects/add_project_doc/1
-  # PUT /projects/add_project_doc/1.json
-  def add_project_collection
+  # PUT /projects/remove_project_doc
+  # PUT /projects/remove_project_doc
+  def remove_project_docs
     project = Project.find(params[:project_id]) #needed for "respond_to"
-    collection_id = params[:collection][:collection_id]
+    docs_checked = params[:doc_ids] #list of document ids to be removed
     
-    if (params.include?(:project_id) and project != nil and collection_id != nil and not collection_id.blank?)
-      add_collection(project, collection_id) #adds a collection to a project
-    else
-      add_col_err = true
-    end
-    
-    respond_to do |format|
-      if (add_col_err == true)
-        format.html { redirect_to project, notice: 'Error adding collection.'}
-        # TODO: format JSON?
-      else
-        format.html { redirect_to project, notice: 'Collection added successfully.' }
-        format.json { head :ok }
-      end
-    end
-  end
-  
-  # PUT /projects/remove_project_doc/1
-  # PUT /projects/remove_project_doc/1.json
-  def remove_project_doc
-    project = Project.find(params[:project_id]) #needed for "respond_to"
-    checked = params[:doc_ids] #list of ids of documents to be removed
-    
-    if (params.include?(:project_id) and not params[:project_id].blank? and project != nil)
-      remove_docs_checked(project, checked)
+    if (params.include?(:project_id) and project != nil and not docs_checked.blank?)
+      remove_docs_checked(project, docs_checked)
     else
       @remove_doc_err = true
     end

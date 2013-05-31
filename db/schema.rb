@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130324145711) do
+ActiveRecord::Schema.define(:version => 20130403162840) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -21,13 +21,13 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
     t.string   "ylab"
     t.string   "chart_type"
     t.text     "options"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "source_doc"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "document_id"
     t.string   "share_token"
     t.boolean  "streaming"
     t.integer  "numdraw"
-    t.integer  "source_doc"
   end
 
   create_table "collaborators", :force => true do |t|
@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "users_id"
     t.integer  "collection_id"
     t.integer  "user_id"
@@ -53,8 +53,8 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
   create_table "documents", :force => true do |t|
     t.string   "name"
     t.integer  "collection_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "user_id"
     t.integer  "project_id"
     t.boolean  "validated"
@@ -72,22 +72,22 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
     t.integer  "interval_val"
     t.string   "interval_unit"
     t.integer  "document_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "jid"
   end
 
   create_table "ifilters", :force => true do |t|
     t.string   "name"
     t.string   "regex"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "metadata", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "notifications", :force => true do |t|
@@ -98,16 +98,11 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "posts", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.text     "pdesc"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
     t.integer  "project_id"
     t.integer  "user_id"
   end
@@ -130,8 +125,8 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
 
   create_table "uploads", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.string   "upfile_file_name"
     t.string   "upfile_content_type"
     t.integer  "upfile_file_size"
@@ -150,8 +145,8 @@ ActiveRecord::Schema.define(:version => 20130324145711) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"

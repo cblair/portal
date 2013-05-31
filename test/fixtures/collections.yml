@@ -11,8 +11,16 @@ col3:
   id: 3
   name: "Collection 3"
   user_id: 1
-
+  project_id: 1
+  
 col4:
   id: 4
   name: "Collection 4"
+  user_id: 1
+  project_id: 1
+
+col5:
+  id: 5
+  name: "Collection 5"
   user_id: 2
+  project_id: 2

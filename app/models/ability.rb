@@ -39,7 +39,10 @@ class Ability
     
     #list of of owner access permissions
     can :manage, Project, :user_id => user.id #owner of project
+    #can :manage, Collection, :user_id => user.id #owner of document
     can :manage, Document, :user_id => user.id #owner of document
+    
+    #list of collaborator access permissions
     can :read, Project, :collaborators => { :user_id => user.id }
   end
 end

@@ -8,7 +8,7 @@ class CreateCharts < ActiveRecord::Migration
       t.string :ylab
       t.string :chart_type
       t.text :options
-
+      t.integer :source_doc
       t.timestamps
     end
   end

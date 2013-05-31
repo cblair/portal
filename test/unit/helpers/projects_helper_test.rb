@@ -37,7 +37,6 @@ class ProjectsHelperTest < ActionView::TestCase
  		assert !is_json?(nil)
  	end
 
-
 	test "is_couchdb_running" do
 	    #Make sure CouchDB is running; even though it is not in projects_helper.rb
 	    result = is_couchdb_running?(
@@ -48,7 +47,8 @@ class ProjectsHelperTest < ActionView::TestCase
 	              https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
 	            )
 	    assert result
- 	end
+	end
+
   #---------------------------------------------------------------------
   ### Test adding collaborators to user documents ###
   #test adding a collaborator to a project (via user docs)
@@ -326,9 +326,23 @@ class ProjectsHelperTest < ActionView::TestCase
     doc = nil
     assert colab_check_doc(proj, doc) == false, "Document is not nil."
   end
+  
+  #---------------------------------------------------------------------
+  ### Test "is_project_colab" method ###
+  #Test user is a collaborator for "is_project_colab"
+  test "test_is_project_colab_user_is_colab" do
+    user2 = users(:user2)
+    assert is_project_colab(user2) == true, "User not a collaborator."
+  end
+
+  #Test user is not a collaborator for "is_project_colab"
+  test "test_is_project_colab_user_not_colab" do
+    user1 = users(:user1)
+    assert is_project_colab(user1) == false, "User is a collaborator."
+  end
+  
   #---------------------------------------------------------------------
   ### Test "add_doc" method ###
-
   #Test good arguments to "add_doc"
   test "test_add_doc_good_arg" do
     proj = projects(:proj1)
@@ -358,7 +372,6 @@ class ProjectsHelperTest < ActionView::TestCase
   end
   #---------------------------------------------------------------------
   ### Test "remove_docs_checked" method ###
-
   #Test good arguments to "remove_docs_checked"
   test "test_remove_docs_checked_good_args" do
     proj = projects(:proj1)
@@ -381,7 +394,8 @@ class ProjectsHelperTest < ActionView::TestCase
   end
   
   #---------------------------------------------------------------------
-  #Test good arguments to "add_collation"
+  ### Test "add_collection" method ###
+  #Test good arguments to "add_collection"
   test "test_add_collection_good_args" do
     proj = projects(:proj1)
     collection_id = 3
@@ -408,20 +422,37 @@ class ProjectsHelperTest < ActionView::TestCase
     collection_id = ""
     assert add_collection(proj, collection_id) == false, "Collection is not blank."
   end
-  
+
   #---------------------------------------------------------------------
-  ### Test "is_project_colab" method ###
-  #Test user is a collaborator for "is_project_colab"
-  test "test_is_project_colab_user_is_colab" do
-    user2 = users(:user2)
-    assert is_project_colab(user2) == true, "User not a collaborator."
+  ### Test "remove_project_collections" method
+  #Test good arguments to "remove_project_collections"
+  test "test_remove_collection_checked_good_args" do
+    proj = projects(:proj1)
+    checked = [3,4] #ids of collections to be removed from project
+    assert remove_collection_checked(proj, checked) == true, "Collection or ids is bad."
+  end
+  
+  #Test nil project argument, good checked to "remove_project_collections"
+  test "test_remove_collection_checked_nil_proj_arg" do
+    proj = nil
+    checked = [3,4] #ids of collections to be removed from project
+    assert remove_collection_checked(proj, checked) == false, "Project is not nil."
+  end
+  
+  #Test good project, nil checked arguments to "remove_project_collections"
+  test "test_remove_collection_checked_nil_checked_arg" do
+    proj = projects(:proj1)
+    checked = nil #ids of collections to be removed from project
+    assert remove_collection_checked(proj, checked) == false, "Collection id list is not nil."
+  end
+  
+  #Test good project, empty checked arguments to "remove_project_collections"
+  test "test_remove_collection_checked_empty_checked_arg" do
+    proj = projects(:proj1)
+    checked = [] #ids of collections to be removed from project
+    assert remove_collection_checked(proj, checked) == false, "Collection id list is not empty."
   end
 
-  #Test user is not a collaborator for "is_project_colab"
-  test "test_is_project_colab_user_not_colab" do
-    user1 = users(:user1)
-    assert is_project_colab(user1) == false, "User is a collaborator."
-  end
   #---------------------------------------------------------------------
   ### Test change owner methods ###
   #test change owner, change project's user id
@@ -491,16 +522,30 @@ class ProjectsHelperTest < ActionView::TestCase
     assert project_clean() == false, "Project is not nil."
   end
   
-  #Test good arguemnts to "project_docs_clean"
-  test "test_project_docs_clean_good_arg" do
+  #Test successful "project_docs_clean"
+  test "test_project_docs_clean_good" do
     #proj = projects(:proj1)
     @project = projects(:proj1)
     assert project_docs_clean() == true, "Project is nil."
   end
   
   #Test nil project arguemnt to "project_docs_clean"
-  test "test_project_docs_clean_nil_proj_arg" do
+  test "test_project_docs_clean_nil_proj" do
     #proj = nil
+    @project = nil
+    assert project_docs_clean() == false, "Project is not nil."
+  end
+  
+  #Test successful "project_collections_clean"
+  test "test_project_collections_clean_good" do
+    #proj = projects(:proj1)
+    @project = projects(:proj1)
+    assert project_docs_clean() == true, "Project is nil."
+  end
+  
+  #Test fail "project_collections_clean"
+  test "test_project_collections_clean_bad" do
+    #proj = projects(:proj1)
     @project = nil
     assert project_docs_clean() == false, "Project is not nil."
   end
