@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130526212624) do
+ActiveRecord::Schema.define(:version => 20130527220509) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -74,6 +74,14 @@ ActiveRecord::Schema.define(:version => 20130526212624) do
     t.string   "regex"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "jobs", :force => true do |t|
+    t.text     "description"
+    t.integer  "user_id"
+    t.boolean  "finished"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "metadata", :force => true do |t|

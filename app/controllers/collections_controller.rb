@@ -3,7 +3,6 @@ class CollectionsController < ApplicationController
   include DocumentsHelper
 
   require 'will_paginate'
-  require 'spawn'
   
   #before_filter :authenticate_user!
   before_filter :require_permissions
@@ -205,9 +204,14 @@ class CollectionsController < ApplicationController
   # 
   def validate_doc
     @document = Document.find(params[:id])
-    
-    suc_valid = @document.submit_validation_job
-    
+
+    job = Job.new(:description => "Document #{@document.name} validation")
+    job.user = current_user
+    job.save
+    job.submit_job(@document, {:ifilter => nil})
+
+    suc_valid = true
+
     respond_to do |format|
       if suc_valid
         format.html { redirect_to @document, notice: 'Document successfully validated.' }

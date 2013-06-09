@@ -1,7 +1,6 @@
 class Document < ActiveRecord::Base
   include CouchdbHelper
   require 'stuffing'
-  require 'spawn'
 
   attr_accessible :name, :stuffing_data, :stuffing_search, :stuffing_primary_keys, :stuffing_foreign_keys, :collection_id
 
@@ -86,20 +85,7 @@ class Document < ActiveRecord::Base
   end
 
 
-  def submit_validation_job(ifilter=nil)
-    spawn_block do 
-      puts "########################################################"
-      puts "Validating doc"
-      self.validate(ifilter)
-    
-      sleep 60
-    end
-  end
-
-
   def validate(ifilter=nil)
-    document = self
-
     #Try to filter until successful or 
     # either successfully filtered or are out of filters
     validation_finished = false
@@ -117,14 +103,14 @@ class Document < ActiveRecord::Base
     i = 0
     while validation_finished == false
       #copy these so filter attempts don't overwrite the original data
-      stuffing_metadata = document.stuffing_metadata
-      stuffing_data = document.stuffing_data
+      stuffing_metadata = self.stuffing_metadata
+      stuffing_data = self.stuffing_data
       
       f = ifilters[i]
       
       #Attempt filter
-      stuffing_metadata = filter_metadata_columns(f, document.stuffing_text)
-      stuffing_data = filter_data_columns(f, document.stuffing_text)
+      stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
+      stuffing_data = filter_data_columns(f, self.stuffing_text)
 
       #Check if filter was successfu=l
       if stuffing_data != nil and not stuffing_data.empty?
@@ -133,12 +119,12 @@ class Document < ActiveRecord::Base
             or \
             (f.stuffing_headers == nil and stuffing_metadata.empty?)
           validation_finished = true
-          document.stuffing_metadata = stuffing_metadata
-          document.stuffing_data = stuffing_data
-          document.validated = true
+          self.stuffing_metadata = stuffing_metadata
+          self.stuffing_data = stuffing_data
+          self.validated = true
           #clear out data_text
-          document.stuffing_text = nil
-          suc_valid = document.save
+          self.stuffing_text = nil
+          suc_valid = self.save
         end
       end
       
@@ -148,9 +134,30 @@ class Document < ActiveRecord::Base
       end
     end
 
-    document.stuffing_foreign_keys = get_foreign_keys(document, ifilter)
-    document.save
+    self.stuffing_foreign_keys = get_foreign_keys(self, ifilter)
+
+    #Add primary keys
+    #@document.stuffing_primary_keys = params[:primary_keys]
+    #Hack for now - add all column keys to primary keys for search
+    self.stuffing_primary_keys = get_data_colnames(self.stuffing_data)
+
+    self.save
     
     return suc_valid
+  end
+
+
+  def submit_job(job, options)
+    ifilter = options[:ifilter] or nil
+    
+    puts "########################################################"
+    puts "Validating doc #{self.name}..."
+    self.validate(ifilter)
+    
+    sleep 60
+    puts "Validating doc #{self.name} complete!"
+    puts "########################################################"
+    job.finished = true
+    job.save
   end
 end

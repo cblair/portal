@@ -29,8 +29,14 @@ private
   def data
     #TODO: add this when we figure out how to make datatables refresh on destroy: remote: :true)
     documents.map do |doc|
+      validation_text = "<i class=\"label label-important\">Unvalidated</i>"
+      if doc.validated 
+        validation_text = "<i class=\"label label-info\">Validated</i>"
+      end
+
       [
         link_to(doc.name, doc),
+        validation_text,
         link_to('Destroy', doc, { :confirm => 'Are you sure?', 
                                   :class => "label label-important", 
                                   :method => :delete})
@@ -45,9 +51,6 @@ private
 
 
   def fetch_documents
-    #@documents_all = Document.order("#{sort_column} #{sort_direction}")
-
-    puts "TS50: " + @collection_id.to_s
     if params[:sSearch].present?
       @documents_all = Document.where(
                                       "collection_id=:collection_id AND name like :search", 

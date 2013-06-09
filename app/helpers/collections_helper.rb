@@ -23,14 +23,23 @@ module CollectionsHelper
     collection.children.each do |sub_collection|
       suc_valid = suc_valid & (validate_collection_helper(sub_collection, ifilter) == true)
     end
-    
+
+    #build our jobs list
+    jobs = []   
     collection.documents.each do |document|
-      suc_valid = suc_valid & document.submit_validation_job(ifilter)
-      document.stuffing_foreign_keys = get_foreign_keys(document, ifilter)
-      document.save
+      job = Job.new(:description => "Document #{document.name} validation from collection #{collection.name}")
+      job.user = current_user
+      job.save
+      jobs << job
     end
-    
+
+    #save now
     suc_valid = suc_valid & collection.save
+
+    #submit now, should be safe to avoid PG errors due to submit_job
+    jobs.each do |job|
+      job.submit_job(@document, {:ifilter => ifilter})
+    end
     
     return suc_valid
   end

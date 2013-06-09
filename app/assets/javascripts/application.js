@@ -42,6 +42,7 @@
 //= require paging
 //= require uploads
 //= require viz
+//= require jobs
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 

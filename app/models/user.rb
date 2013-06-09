@@ -10,4 +10,5 @@ class User < ActiveRecord::Base
   has_many :documents                 #as owner
   has_many :uploads
   has_and_belongs_to_many :documents  #as collaborators
+  has_many :jobs
 end

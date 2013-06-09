@@ -187,9 +187,9 @@ module DocumentsHelper
           row = row.map {|k,v| v}.join
         end
         
-        row = get_ifiltered_header(h, row)
+        row = IfiltersHelper::get_ifiltered_header(h, row)
         
-        colnames = get_ifiltered_colnames(row)
+        colnames = IfiltersHelper::get_ifiltered_colnames(row)
         
         for j in (0..row.count-1)
           metadata_col_hash[ colnames[j] ] = row[j]

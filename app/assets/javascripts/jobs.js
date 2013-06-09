@@ -1,7 +1,4 @@
-var SEARCH_TABLE = null;
-
 jQuery(function($) {
-
 	//disables warnings, TODO to fix
 	$.fn.dataTableExt.sErrMode = "throw";
 
@@ -14,32 +11,26 @@ jQuery(function($) {
 		"sWrapper": "dataTables_wrapper form-inline"
 	});
 
-	$.initDocumentDatatable = function ($, data_source) {
-		if(data_source == undefined) {
-			data_source = $('#documents').data('source');
-		}
-
-		//dataTables
-		SEARCH_TABLE = $('#documents').dataTable({
+	$(document).ready(function () {
+		//dataTable
+		var search_table = $('#jobs').dataTable({
 			"sPaginationType"	: "bootstrap",
 			"bJQueryUI"			: true,
 			"bProcessing"		: true,
 			"bServerSide"		: true,
-			"bSort"				: false,
+			"bSort"				: true,
 			//Helps with long URIs
 			//"fnServerParams": "",
-			"sServerMethod"		: "POST",
-			//Taking out search
-			//"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+			//"sServerMethod"		: "POST",
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sAjaxSource"		: data_source
+			"sAjaxSource"		: $('#jobs').data('source')
 		});
 
 		//Do a default search if the data attr is set (probably originally from
 		// an HTML param)
-		var default_search = $('#documents').data('default-search');
+		var default_search = $('#jobs').data('default-search');
 		if((default_search != undefined) && (default_search != "")) {
-			SEARCH_TABLE.fnFilter(default_search);
+			search_table.fnFilter(default_search);
 		}
 
 		//only search on enter keypress 
@@ -47,12 +38,7 @@ jQuery(function($) {
     		.unbind('keypress keyup')
     		.bind('keypress keyup', function(e){
       			if (e.keyCode != 13) return;
-      			SEARCH_TABLE.fnFilter($(this).val());
-    		}
-    	);
-	};
-
-	$(document).ready(function () {
-		$.initDocumentDatatable($);
+      			search_table.fnFilter($(this).val());
+    		});
 	});
 });

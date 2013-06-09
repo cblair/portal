@@ -1,6 +1,5 @@
 class UploadsController < ApplicationController
   require 'csv'
-  require 'spawn'
   include DocumentsHelper
   include IfiltersHelper
   before_filter :require_permissions
@@ -137,16 +136,14 @@ class UploadsController < ApplicationController
       f=Ifilter.find(params[:post][:ifilter_id])
     end
     
-    #spawn_block do
-      #Parse file into db
-      if @upload.upfile.content_type == "application/zip"
-        #save_zip_to_documents(fname, uploaded_file, c, f)
-        save_zip_to_documents(fname, @upload, c, f)
-      else #hopefully is something like a "text/plain"
-        #save_file_to_document(fname, uploaded_file.tempfile, c, f)
-        save_file_to_document(fname, @upload.upfile.path, c, f) 
-      end
-    #end
+    #Parse file into db
+    if @upload.upfile.content_type == "application/zip"
+      #save_zip_to_documents(fname, uploaded_file, c, f)
+      save_zip_to_documents(fname, @upload, c, f)
+    else #hopefully is something like a "text/plain"
+      #save_file_to_document(fname, uploaded_file.tempfile, c, f)
+      save_file_to_document(fname, @upload.upfile.path, c, f) 
+    end
 
     etime = Time.now() #end time
     ttime = etime - stime #total time

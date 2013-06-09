@@ -54,10 +54,10 @@ private
       values = []
       row.each do |key, val|
         #if the value is in the foreign keys, add links and icons for search
-        if @document.stuffing_foreign_keys.include?(key)
+        if (@document.stuffing_foreign_keys and @document.stuffing_foreign_keys.include?(key))
           #set the default search value to "column:value" for Lucene format
           default_search = "#{key}:#{val}"
-          text = "<a href=\"/searches/new?default_search=#{default_search}\"><i class=\"icon-cloud\"></i></a> "
+          text = "<a href=\"/searches/new?default_search=#{default_search}\"><i class=\"icon-sitemap\"></i></a> "
           text += "#{val}"
           values << text
         else

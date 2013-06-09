@@ -1,6 +1,8 @@
 Portal::Application.routes.draw do
-  resources :searches
+  match '/jobs/jobs_clear_finished' => "jobs#jobs_clear_finished", :as => :jobs_clear_finished
+  resources :jobs
 
+  resources :searches
 
   resources :notifications
   match '/notifications/send_notification/:id' => "notifications#send_notification", :as => :send_notification

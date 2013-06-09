@@ -54,7 +54,8 @@ private
     @retval = []
 
     if params[:sSearch].present?
-      raw_data = couch_search_count_data_in_document(params[:sSearch])
+      search = params[:sSearch]
+      raw_data = couch_search_count_data_in_document(search)
 
       if raw_data
         raw_data.each do |raw_datum|          
@@ -103,7 +104,8 @@ private
     @retval = []
 
     if params[:sSearch].present?
-      raw_data = elastic_search_all_data(params[:sSearch])
+      search = params[:sSearch]
+      raw_data = elastic_search_all_data(search)
 
       if raw_data
         raw_data.collect do |row|
@@ -118,9 +120,13 @@ private
             puts raw_data
           end
 
+          #if we got a Lucene key:value, strip off the <col>: in the string. 
+          # Document datatables only takes the value
+          search_value = search.split(':').last
           if doc_is_viewable(doc, @current_user)
             row = {}
-            row["0"] = link_to doc.name, doc
+            #row["0"] = link_to doc.name, doc
+            row["0"] = "<a href=\"/documents/#{doc.id}?default_search=#{search_value}\">#{doc.name}</a>"
             #count col
             row["1"] = score
             @retval << row

@@ -52,7 +52,7 @@ module IfiltersHelper
 
 
   #Gets internal and user defined ifilters
-  def self.get_ifilters
+  def get_ifilters
     retval = Ifilter.all
     get_internal_ifilters.each do |f|
       retval.prepend(f)
@@ -62,7 +62,7 @@ module IfiltersHelper
   end
 
 
-  def self.get_ifilter(id)
+  def get_ifilter(id)
     retval = Ifilter.where(:id => id).first
 
     if (retval == nil)
@@ -78,7 +78,7 @@ module IfiltersHelper
   end
 
 
-  def self.ifilters_get_select_options
+  def ifilters_get_select_options
     get_ifilters.collect {|ifilter| [ ifilter.name, ifilter.id ] }
   end
 end

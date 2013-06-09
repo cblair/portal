@@ -1,6 +1,5 @@
 class DocumentsController < ApplicationController
   require 'will_paginate/array'
-  require 'spawn'
   
   include DocumentsHelper
   include VizHelper
@@ -189,16 +188,12 @@ class DocumentsController < ApplicationController
       if f != nil
         suc_msg += 'Validation filter started; refresh your browser to check for completion. '
 
-        @document.submit_validation_job(f)
+        job = Job.new(:description => "Document #{@document.name} validation")
+        job.user = current_user
+        job.save
+        job.submit_job(@document, {:ifilter => f})
       end
     end
-
-    #Add primary keys
-    #@document.stuffing_primary_keys = params[:primary_keys]
-    #Hack for now - add all column keys to primary keys for search
-    @document.stuffing_primary_keys = get_data_colnames(@document.stuffing_data)
-
-    update_suc = (update_suc and @document.save)
 
     respond_to do |format|
       if update_suc

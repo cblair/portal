@@ -44,8 +44,9 @@ jQuery(function($) {
 			"sAjaxSource"		: $('.documents_datatable').data('source'),
 
 			"aoColumns": [
-							/*name*/ 		null,
-							/*edit path*/	{ "bSortable": false, "bSearchable" : false}
+							/*name*/ 			null,
+							/*validated*/		{ "bSortable": false, "bSearchable" : false},
+							/*destroy path*/	{ "bSortable": false, "bSearchable" : false}
 						]
 		});
 	});
