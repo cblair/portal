@@ -142,6 +142,12 @@ class CollectionsController < ApplicationController
 
       validate_collection_helper(@collection, f)
     end
+    
+    if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
+      project = Project.find(params[:proj][:id])
+      #p("*** col proj = ", project.name, project.id) #debug
+      add_project_col(project, @collection) #call to collection helper, adds collection to project
+    end
 
     respond_to do |format|
       if parent_child_violation 

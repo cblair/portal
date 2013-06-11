@@ -7,3 +7,39 @@
 #two:
 #  name: MyString
 #  collection_id: 1
+
+#These documetns are used for project testing
+doc1:
+  id: 1
+  name: "Document 1"
+  collection_id: 3
+  user_id: 1
+  project_id: 1
+
+doc2:
+  id: 2
+  name: "Document 2"
+  user_id: 1
+  collection_id: 3
+  project_id: 1
+
+doc3:
+  id: 3
+  name: "Document 3"
+  user_id: 2
+  collection_id: 5
+  project_id: 2
+
+doc4:
+  id: 4
+  name: "Document 4"
+  user_id: 2
+  collection_id: 5
+  project_id: 2
+
+doc5:
+  id: 5
+  name: "Document 5"
+  user_id: 2
+  collection_id: 5
+  project_id:

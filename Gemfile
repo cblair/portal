@@ -65,6 +65,8 @@ gem 'will_paginate'#, '3.0.pre2'
 
 gem 'rufus-scheduler'
 
+gem 'cancan'
+
 #Only for development
 group :development do
   gem 'debugger'

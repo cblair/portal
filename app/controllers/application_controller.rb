@@ -3,6 +3,12 @@ class ApplicationController < ActionController::Base
 
   include CouchdbHelper
   
+  rescue_from CanCan::AccessDenied do |exception|
+    #redirect_to root_url, :alert => exception.message
+    flash[:error] = "Access denied, you do not have authorization."
+    redirect_to root_url
+  end
+  
 =begin
   before_filter :miniprofiler
 

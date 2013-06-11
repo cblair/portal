@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+colab1:
+  id: 1
+  project_id: 1
+  project_name: "Project 1"
+  user_id: 2
+  user_email: "t2@test.com"
+
+colab2:
+  id: 2
+  project_id: 1
+  project_name: "Project 1"
+  user_id: 3
+  user_email: "t3@test.com"
