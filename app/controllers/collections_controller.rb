@@ -137,10 +137,13 @@ class CollectionsController < ApplicationController
 
     #Validation
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
-      #f = Ifilter.find(params[:post][:ifilter_id])
       f = get_ifilter(params[:post][:ifilter_id].to_i)
 
       validate_collection_helper(@collection, f)
+    end
+
+    Job.where(:waiting => true).each do |job|
+      job.submit_job({:ifilter => f})
     end
 
     respond_to do |format|

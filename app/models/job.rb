@@ -5,9 +5,16 @@ class Job < ActiveRecord::Base
 
   belongs_to :user
 
-  def submit_job(ar_module, options)
-  	spawn_block do
-  		ar_module.submit_job(self, options)
+  def submit_job(options)
+  	if (self.ar_name == nil or self.ar_id == nil)
+  		return false
   	end
+
+  	ar_module = eval(self.ar_name).find(self.ar_id)
+  	#spawn_block do
+  		ar_module.submit_job(self, options)
+  	#end
+
+  	return true
   end
 end

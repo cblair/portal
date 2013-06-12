@@ -190,8 +190,11 @@ class DocumentsController < ApplicationController
 
         job = Job.new(:description => "Document #{@document.name} validation")
         job.user = current_user
+        job.ar_name = "Document"
+        job.ar_id = @document.id
+        job.waiting = true
         job.save
-        job.submit_job(@document, {:ifilter => f})
+        job.submit_job({:ifilter => f})
       end
     end
 
