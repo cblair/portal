@@ -22,8 +22,7 @@ module CollectionsHelper
       validate_collection_helper(sub_collection, ifilter)
     end
 
-    #build our jobs list
-    jobs = {} 
+    #just build up jobs for now
     collection.documents.each do |document|
       job = Job.new(:description => "Document #{document.name} validation from collection #{collection.name}")
       job.user = current_user
@@ -31,15 +30,9 @@ module CollectionsHelper
       job.ar_id = document.id
       job.waiting = true
       job.save
-      jobs[job] = document
     end
 
-    #submit now, should be safe to avoid PG errors due to submit_job
-=begin
-    jobs.each do |job, document|
-      job.submit_job(document, {:ifilter => ifilter})
-    end
-=end
+    #the caller will need to now submit jobs with :waiting => true
   end
   
   

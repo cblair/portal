@@ -142,10 +142,6 @@ class CollectionsController < ApplicationController
       validate_collection_helper(@collection, f)
     end
 
-    Job.where(:waiting => true).each do |job|
-      job.submit_job({:ifilter => f})
-    end
-
     respond_to do |format|
       if parent_child_violation 
         #flash[:error] =  "Warning: cannot set parent collection to a child."
@@ -158,6 +154,14 @@ class CollectionsController < ApplicationController
         format.html { render action: "edit" }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
+    end
+
+    begin
+      Job.where(:waiting => true).each do |job|
+        job.submit_job({:ifilter => f})
+      end
+    rescue ActiveRecord::ConnectionTimeoutError
+      retry
     end
   end
 
@@ -201,6 +205,14 @@ class CollectionsController < ApplicationController
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
+
+    begin
+      Job.where(:waiting => true).each do |job|
+        job.submit_job({:ifilter => nil})
+      end
+    rescue ActiveRecord::ConnectionTimeoutError
+      retry
+    end
   end
   
   
@@ -210,8 +222,11 @@ class CollectionsController < ApplicationController
 
     job = Job.new(:description => "Document #{@document.name} validation")
     job.user = current_user
+    job.ar_name = "Document"
+    job.ar_id = @document.id
+    job.waiting = true    
     job.save
-    job.submit_job(@document, {:ifilter => nil})
+    job.submit_job({:ifilter => nil})
 
     suc_valid = true
 
