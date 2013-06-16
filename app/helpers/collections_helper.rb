@@ -18,30 +18,21 @@ module CollectionsHelper
   
   
   def validate_collection_helper(collection, ifilter=nil)
-    suc_valid = true
-    
     collection.children.each do |sub_collection|
-      suc_valid = suc_valid & (validate_collection_helper(sub_collection, ifilter) == true)
+      validate_collection_helper(sub_collection, ifilter)
     end
 
-    #build our jobs list
-    jobs = []   
+    #just build up jobs for now
     collection.documents.each do |document|
       job = Job.new(:description => "Document #{document.name} validation from collection #{collection.name}")
       job.user = current_user
+      job.ar_name = "Document"
+      job.ar_id = document.id
+      job.waiting = true
       job.save
-      jobs << job
     end
 
-    #save now
-    suc_valid = suc_valid & collection.save
-
-    #submit now, should be safe to avoid PG errors due to submit_job
-    jobs.each do |job|
-      job.submit_job(@document, {:ifilter => ifilter})
-    end
-    
-    return suc_valid
+    #the caller will need to now submit jobs with :waiting => true
   end
   
   

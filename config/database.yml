@@ -11,16 +11,18 @@ development:
   adapter: postgresql
   encoding: unicode
   database: portal_development
-  pool: 5
+  pool: 100
   username: portal_std
   password:
   host: 127.0.0.1
+  reconnect: true
 
 test:
   adapter: postgresql
   encoding: unicode
   database: portal_test
-  pool: 5
+  pool: 100
   username: portal_std
   password:
   host: 127.0.0.1
+  reconnect: true

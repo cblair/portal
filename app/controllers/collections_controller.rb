@@ -137,7 +137,6 @@ class CollectionsController < ApplicationController
 
     #Validation
     if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
-      #f = Ifilter.find(params[:post][:ifilter_id])
       f = get_ifilter(params[:post][:ifilter_id].to_i)
 
       validate_collection_helper(@collection, f)
@@ -155,6 +154,14 @@ class CollectionsController < ApplicationController
         format.html { render action: "edit" }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
+    end
+
+    begin
+      Job.where(:waiting => true).each do |job|
+        job.submit_job({:ifilter => f})
+      end
+    rescue ActiveRecord::ConnectionTimeoutError
+      retry
     end
   end
 
@@ -198,6 +205,14 @@ class CollectionsController < ApplicationController
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
+
+    begin
+      Job.where(:waiting => true).each do |job|
+        job.submit_job({:ifilter => nil})
+      end
+    rescue ActiveRecord::ConnectionTimeoutError
+      retry
+    end
   end
   
   
@@ -207,8 +222,11 @@ class CollectionsController < ApplicationController
 
     job = Job.new(:description => "Document #{@document.name} validation")
     job.user = current_user
+    job.ar_name = "Document"
+    job.ar_id = @document.id
+    job.waiting = true    
     job.save
-    job.submit_job(@document, {:ifilter => nil})
+    job.submit_job({:ifilter => nil})
 
     suc_valid = true
 
