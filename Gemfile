@@ -19,9 +19,10 @@ group :assets do
   gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
 
-  gem 'jquery-fileupload-rails', '0.4.0'
+  gem 'jquery-rails'
   gem 'jquery-ui-rails'
-  #gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
+  gem 'jquery-fileupload-rails', '0.4.0'
+
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'
 
@@ -31,6 +32,10 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
+gem 'jquery-fileupload-rails', '0.4.0'
+gem 'd3_rails'
+gem 'lazy_high_charts'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 

@@ -6,7 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui
+// require jquery-ui
 
 // require jquery-fileupload/basic
 // require jquery-fileupload/vendor/tmpl
@@ -43,6 +43,9 @@
 //= require uploads
 //= require viz
 //= require jobs
+//= require home_datatable_example
+//= require documents_for_collections
+//= require searches
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 

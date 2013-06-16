@@ -15,11 +15,15 @@
   </script>
 
   <% if params[:controller] == "documents" %>
-  	<%= javascript_include_tag 'documents' %>
+  	<% 
+	#javascript_include_tag 'documents' 
+	%>
   <% end %>
 
   <% if params[:controller] == "collections" %>
-  	<%= javascript_include_tag 'documents_for_collections' %>
+  	<%= 
+	#javascript_include_tag 'documents_for_collections'
+	%>
   <% end %>
   
   <%= yield :head %>

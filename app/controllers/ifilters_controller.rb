@@ -33,7 +33,7 @@ class IfiltersController < ApplicationController
   def new
     @ifilter = Ifilter.new
     
-    @ifilter_headers = get_ifilter_headers(@ifilter)
+    @ifilter_headers = @ifilter.get_ifilter_headers
 
     respond_to do |format|
       format.html # new.html.erb
@@ -44,7 +44,7 @@ class IfiltersController < ApplicationController
   # GET /ifilters/1/edit
   def edit
     @ifilter = Ifilter.find(params[:id])
-    @ifilter_headers = get_ifilter_headers(@ifilter)
+    @ifilter_headers = @ifilter.get_ifilter_headers
   end
 
   # POST /ifilters
