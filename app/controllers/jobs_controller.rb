@@ -94,11 +94,23 @@ class JobsController < ApplicationController
     end
   end
 
-  def jobs_clear_finished
-    @jobs = Job.where(:user_id => current_user.id, :finished => true)
+  def clear_jobs
+    doc_ids = params["doc_ids"] or []
 
-    @jobs.each do |job|
-      job.destroy
+    doc_ids.each do |doc_id|
+      job = Job.find(doc_id.to_i)
+
+      if job != nil
+        #destroy delayed_job first
+        d_jobs = Delayed::Job.where(:job_id => job.id)
+
+        #should only be one, but iterate anyway
+        d_jobs.each do |dj|
+          dj.destroy
+        end
+
+        job.destroy
+      end
     end
 
     respond_to do |format|

@@ -72,8 +72,19 @@ private
         jobs = jobs.where("id=:search_lit or description like :search", 
           search: "%#{search}%", search_lit: search)
       rescue ArgumentError
-        jobs = jobs.where("description like :search", 
-          search: "%#{search}%", search_lit: search)
+        #if this is some string like 'processed' or 'finished', translate that
+        # to the values in our table
+        search_downcase = search.downcase
+        if ("processing".start_with? search_downcase)
+          jobs = jobs.where("description like :search or finished IS NULL or finished=false", 
+            search: "%#{search}%", search_lit: search)
+        elsif ("finished".start_with? search_downcase)
+          jobs = jobs.where("description like :search or finished=true", 
+            search: "%#{search}%", search_lit: search)
+        else
+          jobs = jobs.where("description like :search", 
+            search: "%#{search}%", search_lit: search)
+        end
       end
 
     end

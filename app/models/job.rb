@@ -4,15 +4,46 @@ class Job < ActiveRecord::Base
   attr_accessible :description, :finished, :user_id
 
   belongs_to :user
+  has_one :delayed_job
 
-  def submit_job(options)
-  	if (self.ar_name == nil or self.ar_id == nil)
-  		return false
-  	end
+=begin
+  def perform
+    #? ar_module.submit_job(self, options)
 
-  	ar_module = eval(self.ar_name).find(self.ar_id)
- 
- 	self.started = true
+    self.finished = true
+    self.save
+  end
+=end
+
+  def submit_job(current_user, ar_module, options)
+    self.user = current_user
+    self.waiting = true
+
+    job_type = Portal::Application.config.job_type
+
+    if job_type == "threads"
+      self.submit_job_threads(ar_module, options)
+    elsif job_type == "delayed_job"
+      self.submit_job_delayed_job(ar_module, options)
+    end
+  end
+
+
+  def submit_job_delayed_job(ar_module, options)
+    self.started = true
+    self.save
+
+    #Submit job to delayed_job
+    delayed_job_object = ar_module.delay.submit_job(self, options)
+    #delayed_job_object = Delayed::Job.enqueue self
+    delayed_job_object.job_id = self.id
+    delayed_job_object.save
+  end
+
+
+  def submit_job_threads(ar_module, options)
+ 	  self.started = true
+    self.save
 
   	#spawn_block do
   	Thread.new do
@@ -24,14 +55,15 @@ class Job < ActiveRecord::Base
 		  		sleep 5
 		  		ar_module.submit_job(self, options)
 		  	end
-		rescue ActiveRecord::ConnectionTimeoutError
-			puts "WARN: Job #{self.id} waiting to start job on DB connection, sleeping 10 seconds..."
-			sleep 10
-			retry
-		end
+		  rescue ActiveRecord::ConnectionTimeoutError
+			 puts "WARN: Job #{self.id} waiting to start job on DB connection, sleeping 10 seconds..."
+			 sleep 10
+			 retry
+		  end
   	end
 
   	self.finished = true
+    self.save
 
   	return true
   end

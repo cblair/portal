@@ -189,12 +189,8 @@ class DocumentsController < ApplicationController
         suc_msg += 'Validation filter started; refresh your browser to check for completion. '
 
         job = Job.new(:description => "Document #{@document.name} validation")
-        job.user = current_user
-        job.ar_name = "Document"
-        job.ar_id = @document.id
-        job.waiting = true
         job.save
-        job.submit_job({:ifilter => f})
+        job.submit_job(current_user, @document, {:ifilter => f})
       end
     end
 

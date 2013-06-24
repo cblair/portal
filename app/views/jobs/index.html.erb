@@ -4,8 +4,9 @@
     <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
   </div>
 
-  <div>
-    <%= link_to "Clear all finished jobs", jobs_clear_finished_path, :class => "btn btn-warning" %>
+  <div class="clear-jobs" data-clear-jobs-source="<%= clear_jobs_path(format: "json") %>">
+    <!--Gets binded an event by jobs.js.-->
+    <%= link_to "Clear selected jobs", "#", :class => "btn btn-warning clear-jobs" %>
   </div>
   <br />
 

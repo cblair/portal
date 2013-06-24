@@ -24,15 +24,15 @@ module CollectionsHelper
 
     #just build up jobs for now
     collection.documents.each do |document|
-      job = Job.new(:description => "Document #{document.name} validation from collection #{collection.name}")
-      job.user = current_user
-      job.ar_name = "Document"
-      job.ar_id = document.id
-      job.waiting = true
+      job = Job.new(
+        :description => "Document #{document.name} " + 
+        "validation from collection #{collection.name}"
+      )
       job.save
+      #TODO: submit_job will likely die if Portal::Application.config.job_type == "threads",
+      # because the jobs lock up the PG pool
+      job.submit_job(current_user, document, {:ifilter => ifilter})
     end
-
-    #the caller will need to now submit jobs with :waiting => true
   end
   
   

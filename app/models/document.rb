@@ -1,5 +1,6 @@
 class Document < ActiveRecord::Base
   include CouchdbHelper
+  include DocumentsHelper
   require 'stuffing'
 
   attr_accessible :name, :stuffing_data, :stuffing_search, :stuffing_primary_keys, :stuffing_foreign_keys, :collection_id
@@ -154,6 +155,8 @@ class Document < ActiveRecord::Base
     puts "Validating doc #{self.name}..."
     self.validate(ifilter)
     
+    sleep 300
+
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"
     job.finished = true

@@ -155,14 +155,6 @@ class CollectionsController < ApplicationController
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
-
-    begin
-      Job.where(:waiting => true).each do |job|
-        job.submit_job({:ifilter => f})
-      end
-    rescue ActiveRecord::ConnectionTimeoutError
-      retry
-    end
   end
 
   # DELETE /collections/1
@@ -205,14 +197,6 @@ class CollectionsController < ApplicationController
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
-
-    begin
-      Job.where(:waiting => true).each do |job|
-        job.submit_job({:ifilter => nil})
-      end
-    rescue ActiveRecord::ConnectionTimeoutError
-      retry
-    end
   end
   
   
@@ -221,12 +205,8 @@ class CollectionsController < ApplicationController
     @document = Document.find(params[:id])
 
     job = Job.new(:description => "Document #{@document.name} validation")
-    job.user = current_user
-    job.ar_name = "Document"
-    job.ar_id = @document.id
-    job.waiting = true    
     job.save
-    job.submit_job({:ifilter => nil})
+    job.submit_job(current_user, @document, {:ifilter => nil})
 
     suc_valid = true
 

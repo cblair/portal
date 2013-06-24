@@ -50,5 +50,8 @@ Portal::Application.configure do
        :domain => "app10534904.mailgun.org",
        :user_name => "postmaster@app10534904.mailgun.org",
        :password => "2dlgq3hgb4w3"
-  }  
+  }
+
+  #Jobs stuff
+  config.job_type = "delayed_job"
 end

@@ -45,4 +45,7 @@ Portal::Application.configure do
                               'COUCHDB_PASSWORD'  => '',
                               'COUCHDB_HTTPS'     => false
                    }
+
+  #Jobs stuff
+  config.job_type = "delayed_job"
 end
