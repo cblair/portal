@@ -62,12 +62,19 @@ Portal::Application.configure do
   config.active_support.deprecation = :notify
   
   #CouchDB stuff
+  #config.couchdb = {
+  #                            'COUCHDB_HOST'      => 'app10534904.heroku.cloudant.com',
+  #                            'COUCHDB_PORT'      => '443',
+  #                            'COUCHDB_USERNAME'  => 'app10534904.heroku',
+  #                            'COUCHDB_PASSWORD'  => 'QTRGjtDrQkATkjPuCGUAVUPh',
+  #                            'COUCHDB_HTTPS'     => true
+  #                 }
   config.couchdb = {
-                              'COUCHDB_HOST'      => 'app10534904.heroku.cloudant.com',
-                              'COUCHDB_PORT'      => '443',
-                              'COUCHDB_USERNAME'  => 'app10534904.heroku',
-                              'COUCHDB_PASSWORD'  => 'QTRGjtDrQkATkjPuCGUAVUPh',
-                              'COUCHDB_HTTPS'     => true
+                              'COUCHDB_HOST'      => '127.0.0.1',
+                              'COUCHDB_PORT'      => '5984',
+                              'COUCHDB_USERNAME'  => '',
+                              'COUCHDB_PASSWORD'  => '',
+                              'COUCHDB_HTTPS'     => false
                    }
 
   # localhost is default dev url

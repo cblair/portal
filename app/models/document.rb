@@ -155,8 +155,6 @@ class Document < ActiveRecord::Base
     puts "Validating doc #{self.name}..."
     self.validate(ifilter)
     
-    sleep 300
-
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"
     job.finished = true
