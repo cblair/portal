@@ -113,6 +113,7 @@ class Document < ActiveRecord::Base
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
       stuffing_data = filter_data_columns(f, self.stuffing_text)
 
+      debugger
       #Check if filter was successfu=l
       if stuffing_data != nil and not stuffing_data.empty?
         if  (f.stuffing_headers != nil \

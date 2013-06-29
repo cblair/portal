@@ -10,8 +10,9 @@
   <%= csrf_meta_tags %>
   
   <script>
-  	//for live_scaffold.js.erb
+  	//for our assets/javascripts
 	var CONTROLLER_NAME = "<%= params[:controller] %>";
+	var ACTION_NAME = "<%= params[:action] %>";
   </script>
 
   <% if params[:controller] == "documents" %>

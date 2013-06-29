@@ -1,4 +1,4 @@
-#This Document Datatable class is for searching data in the datatable
+#This Document Datatable class is for searching data in the document
 
 class DocumentsDatatable
   include DocumentsHelper

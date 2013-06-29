@@ -32,9 +32,6 @@
 //= require collections
 //= require data_io
 
-//Include for Documents only
-// require documents
-
 //= require exporting
 //= require feeds
 //= require ifilters
@@ -44,6 +41,7 @@
 //= require viz
 //= require jobs
 //= require home_datatable_example
+//= require documents
 //= require documents_for_collections
 //= require searches
 
