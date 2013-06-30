@@ -3,7 +3,7 @@ class UserMailer < ActionMailer::Base
 
   def welcome_email(user)
 	@user = user
-	@url = "http://peaceful-lake-8763.herokuapp.com/users/sign_in"
+	@url = "http://www.datahatch.org/users/sign_in"
 	mail(:to => user.email, :subject => "Welcome to Hatch")
   end
 
