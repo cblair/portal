@@ -39,14 +39,7 @@ private
 
     #Couchdb search sucks
     #fetch_search_data_couchdb
-
-    if Rails.env.production?
-      fetch_search_data_cloudant
-    elsif Rails.env.development?
-      fetch_search_data_elasticsearch
-    else
-      log_and_print "WARN: datatable search could not determine RAILS_ENV"
-    end
+    fetch_search_data_elasticsearch
   end
 
 

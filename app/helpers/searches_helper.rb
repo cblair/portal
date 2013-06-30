@@ -116,6 +116,9 @@ module SearchesHelper
 
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
 
+    puts "Elasticsearch query: #{conn_str}, with connection:"
+    puts conn_hash.inspect
+
     full_data = get_http_search_result(conn_hash, conn_str)
     data = []
 
