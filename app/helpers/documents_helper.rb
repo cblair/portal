@@ -493,28 +493,36 @@ module DocumentsHelper
   end
   
 
-  def doc_is_viewable(col_or_doc, user)
+  def doc_is_viewable(doc, user)
     retval = false
 
-    if col_or_doc == nil
+    if doc == nil
       return false
     end
 
+    if doc.public
+      return true
+    end
+
+    #Cache the list of all Documents involved with this user, in case this gets called recursively / a lot
+    @document_list_cache ||= Document.where(:user_id => user.id)
+
+    #If the doc belongs to the user (because it is in the user doc cache list)
+    if @document_list_cache.include?(doc)
+      return true
+    end
+
     #Note: if both are nil, or actual user is record's user...
-    if ((col_or_doc.is_a? Document and col_or_doc.user == nil) or (col_or_doc.user == user))
-      retval = true
+    if doc.user == nil
+      return true
     end
-    
+
     #if the user is a collaborator
-    if (user != nil and user.documents != nil and user.documents.include?(col_or_doc))
-      retval = true
+    if (user != nil and user.documents != nil and user.documents.include?(doc))
+      return true
     end
-    
-    if (col_or_doc.is_a? Document and col_or_doc.public)
-      retval = true
-    end
-    
-    return retval
+        
+    return false
   end
   
   #Adds document to selected project (see view -> documents -> edit)
