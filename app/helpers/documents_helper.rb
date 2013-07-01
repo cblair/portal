@@ -505,10 +505,10 @@ module DocumentsHelper
     end
 
     #Cache the list of all Documents involved with this user, in case this gets called recursively / a lot
-    @document_list_cache ||= Document.where(:user_id => user.id)
+    @document_id_list_cache ||= Document.where(:user_id => user.id).collect {|d| d.id}
 
     #If the doc belongs to the user (because it is in the user doc cache list)
-    if @document_list_cache.include?(doc)
+    if @document_id_list_cache.include?(doc.id)
       return true
     end
 
