@@ -7,10 +7,13 @@ class Document < ActiveRecord::Base
 
   after_initialize :create_default_couchdb
     
+  attr_accessible :user_id, :project_id # needed for projects?
+  
   belongs_to :collection
   #TODO: not working, server startup. dump?
   #has_and_belongs_to_many :users  #collaborators
   belongs_to :user                #owner
+  belongs_to :project
   has_many :charts, :dependent => :destroy
   
   stuffing  :host     => Portal::Application.config.couchdb['COUCHDB_HOST'], 

@@ -30,6 +30,15 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
     t.integer  "source_doc"
   end
 
+  create_table "collaborators", :force => true do |t|
+    t.integer  "project_id"
+    t.string   "project_name"
+    t.integer  "user_id"
+    t.string   "user_email"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "collections", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -39,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
     t.integer  "user_id"
     t.boolean  "validated"
     t.string   "ancestry"
+    t.integer  "project_id"
   end
 
   add_index "collections", ["ancestry"], :name => "index_collections_on_ancestry"
@@ -68,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
     t.integer  "user_id"
     t.boolean  "validated"
     t.boolean  "public"
+    t.integer  "project_id"
   end
 
   create_table "documents_users", :id => false, :force => true do |t|
@@ -122,6 +133,26 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
   create_table "posts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "projects", :force => true do |t|
+    t.string   "name"
+    t.text     "pdesc"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "project_id"
+    t.integer  "user_id"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
   end
 
   create_table "searches", :force => true do |t|

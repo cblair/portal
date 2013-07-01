@@ -22,6 +22,12 @@
       {:include_blank => '(none)'} ) %>
   </div>
   
+  <div class="field">
+    <%= f.label :project_id %><br />
+    <%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
+ 	<%= link_to "Projects...", projects_path %>
+  </div>
+  
   <p>Add new collaborator</p>
   <div class="field">
   	<%= 
