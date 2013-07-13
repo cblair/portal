@@ -465,8 +465,6 @@ module DocumentsHelper
 
   #If the collection has any viewable docs or sub-collections
   def collection_is_viewable(col, user)
-    retval = false
-
     if col == nil
       return false
     end
@@ -477,7 +475,7 @@ module DocumentsHelper
     
     col.documents.each do |doc|
       if doc_is_viewable(doc, user)
-        retval = true
+        return true
       end
     end
     
@@ -485,17 +483,15 @@ module DocumentsHelper
     #col.collections.each do |child_col|
     col.children.each do |child_col|
       if collection_is_viewable(child_col, user)
-        retval = true
+        return true
       end
     end
     
-    return retval
+    return false
   end
   
 
   def doc_is_viewable(doc, user)
-    retval = false
-
     if doc == nil
       return false
     end
@@ -505,10 +501,10 @@ module DocumentsHelper
     end
 
     #Cache the list of all Documents involved with this user, in case this gets called recursively / a lot
-    @document_list_cache ||= Document.where(:user_id => user.id)
+    @document_id_list_cache ||= Document.where(:user_id => user.id).collect {|d| d.id}
 
     #If the doc belongs to the user (because it is in the user doc cache list)
-    if @document_list_cache.include?(doc)
+    if @document_id_list_cache.include?(doc.id)
       return true
     end
 
