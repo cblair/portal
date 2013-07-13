@@ -7,6 +7,12 @@
 			{:include_blank => '(none)'} ) %>
         <%= text_field "post", "collection_text" %>
 
+        <div>
+          <p>What kind of data is this?</p>
+          <%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
+          <%= link_to "Filters...", ifilters_path %>
+        </div>
+
         <hr />
 
         <!-- The fileinput-button span is used to style the file input field as button -->

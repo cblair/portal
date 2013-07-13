@@ -1,6 +1,7 @@
 class UploadsController < ApplicationController
   require 'csv'
   include DocumentsHelper
+  include CollectionsHelper
   include IfiltersHelper
   before_filter :require_permissions
   
@@ -95,6 +96,9 @@ class UploadsController < ApplicationController
 
     @upload.user = current_user
     
+    #filter
+    f=nil
+
     #start recording run time
     stime = Time.now() #start time
     
@@ -118,7 +122,7 @@ class UploadsController < ApplicationController
     elsif c_text != ""
       #c=Collection.new(:name => c_text)
 
-      #if the ctext is a new collection, all the file will go under this collection
+      #if the ctext is a new collection, all the files will go under this collection
       # But if a collection already exists, everything will go under there, which may
       # not be exactly what the user wanted
       c = Collection.find_or_create_by_name(:name => c_text)
@@ -130,19 +134,19 @@ class UploadsController < ApplicationController
       c = nil
     end
     
-    #filter
-    f=nil
-    if ( params.include?("post") and params[:post].include?("ifilter_id") )
-      f=Ifilter.find(params[:post][:ifilter_id])
-    end
-    
-    #Parse file into db
+    #Parse file into db - these ignore the f filter
     if @upload.upfile.content_type == "application/zip"
-      #save_zip_to_documents(fname, uploaded_file, c, f)
       save_zip_to_documents(fname, @upload, c, f)
     else #hopefully is something like a "text/plain"
-      #save_file_to_document(fname, uploaded_file.tempfile, c, f)
       save_file_to_document(fname, @upload.upfile.path, c, f) 
+    end
+
+    debugger
+    #Filter - now, if we got a filter, start validation jobs
+    if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i > 0))
+      f=Ifilter.find(params[:post]["ifilter_id"].to_i)
+
+      validate_collection_helper(c, ifilter=f)
     end
 
     etime = Time.now() #end time
