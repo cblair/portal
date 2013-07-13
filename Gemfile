@@ -22,6 +22,7 @@ group :assets do
   gem 'jquery-rails'
   gem 'jquery-ui-rails'
   gem 'jquery-fileupload-rails', '0.4.0'
+  gem 'jquery-modal-rails'
 
   gem 'therubyracer', '0.9.9'
   gem 'libv8', '~> 3.3.10'

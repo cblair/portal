@@ -1,5 +1,3 @@
-<div class="hero-unit">
-  <h2>Data Import</h2>
   <%= form_for Upload.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
@@ -46,7 +44,6 @@
     </table>
   <% end %>
 
-</div>
 <script>
   var fileUploadErrors = {
   maxFileSize: 'File is too big',
