@@ -5,11 +5,11 @@
 	    	<i class="icon-folder-close icon-white"></i>
 	    	<%= link_to collection.name, collection %>
 	    	<span>
-		    	<a class="col-doc-plus-minus" id="col-doc-plus" href="#">
+		    	<a class="col-doc-plus-minus" id="col-doc-plus" href="#" data-treedepth="<%= tree_depth %>" data-col-doc-type="plus" data-parent-collection-id="<%= parent_collection_id%>">
 		    		<i class="icon-plus icon-white"></i>
 		    	</a>
 
-		    	<a class="col-doc-plus-minus" id="col-doc-minus" href="#">
+		    	<a class="col-doc-plus-minus" id="col-doc-minus" href="#" data-treedepth="<%= tree_depth %>" data-col-doc-type="minus" data-parent-collection-id="<%= parent_collection_id%>">
 		    		<i class="icon-minus icon-white"></i>
 		    	</a>
 		    	<br />
@@ -57,8 +57,8 @@
 		    </span>
 	    	
 	    	<ul class="col-doc-attr-form">
-	  			<% collection.children.each do |child_collection| %>
-					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection} %>
+	  			<% collection.children.order('name').each do |child_collection| %>
+					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection, :tree_depth => tree_depth + 1, :parent_collection_id => parent_collection_id} %>
   				<% end %>
 
 	    		<% render :partial => "documents/documents_datatable", 

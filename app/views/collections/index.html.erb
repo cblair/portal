@@ -4,26 +4,29 @@
 	BLACKLIST_KEYS += ['collection_id', 'user_id', 'users_id', 'validated'];
 </script>
 
-<div class="hero-unit">
-	<h2>Collection</h2>
-	<% @root_collections.each do |collection| %>
-		<%= 
-			render 	:partial => "rec_collection_render", 
-					:locals => {:collection => collection} 
-		%>
-	<% end %>
+<div class="modal" style="display:none; min-width: 800px;">
+	<%= link_to "X", collections_path, :class => "btn btn-danger" %>
+	<%= render "js_upload", :controller => "data_io" %>
+</div>
 
-	<%= link_to "New Collection", new_collection_path %>
+<% tree_depth = 0 %>
 
+<div class="hero-unit" style="font-size: 14px;">
+	<h2>Collections</h2>
+
+	<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
+	<%= link_to "Upload new data", js_upload_path, :remote => true, :class => "btn btn-info", :id => "new-collection-upload" %>
+	<hr />
+	<div style="width: 400px; float: left;">
+		<% @root_collections.each do |collection| %>
+			<%= 
+				render 	:partial => "rec_collection_render", 
+						:locals => {:collection => collection, :tree_depth => tree_depth, :parent_collection_id => collection.id} 
+			%>
+		<% end %>
+	</div>
+	<div style="width: 700px; float: left">
+		<%= render :partial => "documents/documents_datatable", 
+					:locals => {:collection => @root_collections.first} %>
+	</div>
 </div>
-<div class="hero-unit">
-	<h2>Collection Documents</h2>
-	<%= render :partial => "documents/documents_datatable", 
-				:locals => {:collection => @root_collections.first} %>
-</div>
-<!--
-    	</div>
-    </div>
-  </div>
-</div>
--->

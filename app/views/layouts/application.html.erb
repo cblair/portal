@@ -42,8 +42,7 @@
       <%= link_to "Hatch", root_path, {:class => "brand", :style => "color: #ffffff"} %>
       <div class="nav-collapse collapse">
         <ul class="nav">
-            <li><%= link_to "Data Import", csv_import_path %></li>
-            <li><%= link_to "Data Explorer", collections_path %></li>
+            <li><%= link_to "Data", collections_path %></li>
             <li><%= link_to "Projects", projects_path %></li>
             <!--<li><%= link_to "Roles", roles_path %></li> -->
             <!--TODO: someday-->
@@ -80,6 +79,8 @@
 	if (params[:controller] == "documents")
 		expanded_view = true
 	elsif (params[:controller] == "home" and params[:action] == "search")
+		expanded_view = true
+	elsif (params[:controller] == "collections" and params[:action] == "index")
 		expanded_view = true
 	end
 
