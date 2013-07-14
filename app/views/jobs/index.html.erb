@@ -5,8 +5,13 @@
   </div>
 
   <div class="clear-jobs" data-clear-jobs-source="<%= clear_jobs_path(format: "json") %>">
+  <div class="clear-finished-jobs">
+  <div class="clear-selected-jobs">
+  <div class="clear-all-jobs">
     <!--Gets binded an event by jobs.js.-->
-    <%= link_to "Clear selected jobs", "#", :class => "btn btn-warning clear-jobs" %>
+    <%= link_to "Clear finished jobs", "#", :class => "btn btn-success clear-finished-jobs" %>
+    <%= link_to "Clear selected jobs", "#", :class => "btn btn-warning clear-selected-jobs" %>
+    <%= link_to "Clear all jobs", "#", :class => "btn btn-danger clear-all-jobs" %>
   </div>
   <br />
 

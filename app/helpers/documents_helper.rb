@@ -90,7 +90,6 @@ module DocumentsHelper
     end
     
     #put all parentless zip collections under the user_c
-    debugger
     zip_collections.keys.each do |k|
       c = zip_collections[k]
       if c.parent == nil

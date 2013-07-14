@@ -1,5 +1,5 @@
 Portal::Application.routes.draw do
-  match '/jobs/clear_jobs' => "jobs#clear_jobs", :as => :clear_jobs
+  match '/jobs/clear_jobs' => "jobs#clear_jobs", :as => :clear_jobs 
   resources :jobs
 
   match "/delayed_job" => DelayedJobWeb, :anchor => false

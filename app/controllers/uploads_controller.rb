@@ -141,7 +141,6 @@ class UploadsController < ApplicationController
       save_file_to_document(fname, @upload.upfile.path, c, f) 
     end
 
-    debugger
     #Filter - now, if we got a filter, start validation jobs
     if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i > 0))
       f=Ifilter.find(params[:post]["ifilter_id"].to_i)

@@ -95,22 +95,29 @@ class JobsController < ApplicationController
   end
 
   def clear_jobs
-    doc_ids = params["doc_ids"] or []
+    clear_type = params[:type] or nil
 
-    doc_ids.each do |doc_id|
-      job = Job.find(doc_id.to_i)
+    if clear_type == "selected"
+      doc_ids = params["doc_ids"] or []
+      doc_ids.each do |doc_id|
+        job = Job.find(doc_id.to_i)
 
-      if job != nil
-        #destroy delayed_job first
-        d_jobs = Delayed::Job.where(:job_id => job.id)
+        if job != nil
+          #destroy delayed_job first
+          d_jobs = Delayed::Job.where(:job_id => job.id)
 
-        #should only be one, but iterate anyway
-        d_jobs.each do |dj|
-          dj.destroy
+          #should only be one, but iterate anyway
+          d_jobs.each do |dj|
+            dj.destroy
+          end
+
+          job.destroy
         end
-
-        job.destroy
       end
+    elsif clear_type == "finished"
+      Job.destroy_all(:finished => true)
+    elsif clear_type == "all"
+      Job.destroy_all
     end
 
     respond_to do |format|
