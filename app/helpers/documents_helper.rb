@@ -146,6 +146,9 @@ module DocumentsHelper
       log_and_print "ERROR: More parse information: "
       log_and_print @document.stuffing_text
       return false
+    rescue RestClient::InternalServerError
+      log_and_print "ERROR: some other saving problem happend with document #{fname}."
+      return false
     end
 
     @opened_file.close

@@ -102,6 +102,8 @@ class JobsController < ApplicationController
       doc_ids.each do |doc_id|
         job = Job.find(doc_id.to_i)
 
+	#TODO: check if user_id == current_user.id
+
         if job != nil
           #destroy delayed_job first
           d_jobs = Delayed::Job.where(:job_id => job.id)
@@ -115,9 +117,9 @@ class JobsController < ApplicationController
         end
       end
     elsif clear_type == "finished"
-      Job.destroy_all(:finished => true)
+      Job.destroy_all(:user_id => current_user.id, :finished => true)
     elsif clear_type == "all"
-      Job.destroy_all
+      Job.destroy_all(:user_id => current_user.id)
     end
 
     respond_to do |format|
