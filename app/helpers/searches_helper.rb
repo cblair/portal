@@ -106,7 +106,7 @@ module SearchesHelper
     return data
   end
 
-
+#=begin
   def elastic_search_all_data(search)
     data = []
 
@@ -120,6 +120,45 @@ module SearchesHelper
     puts conn_hash.inspect
 
     full_data = get_http_search_result(conn_hash, conn_str)
+    data = []
+
+    begin
+      hits = full_data["hits"]["hits"]
+      data = hits.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+    rescue NoMethodError
+      log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
+      log_and_print full_data.to_s
+    end
+
+    return data
+  end
+#=end
+
+  #Fails on JSON parse in "get_http_search_result"
+  def elastic_search_facet_match_all(search)
+  #def elastic_search_all_data(search)
+    data = []
+    sfield = "Survey_Year"
+
+    conn_hash = get_http_connection_hash
+    #override with elasticsearch's port
+    conn_hash[:port] = 9200
+
+    #conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d "
+    query_str = "'{\"query\" : { \"match\" : { \"#{sfield}\" : \"#{search}\" } } }'"
+    
+    #puts("query_str ***************************************", query_str)
+    conn_str = conn_str + query_str
+    #puts("conn_str *****************************************", conn_str)
+    
+    puts "Elasticsearch query: #{conn_str}, with connection:"
+    puts conn_hash.inspect
+
+    #Fails on JSON parse
+    #puts("getting full_data ******************************************")
+    full_data = get_http_search_result(conn_hash, conn_str)
+    #puts("full_data ***************************************", full_data)
     data = []
 
     begin
@@ -157,6 +196,9 @@ module SearchesHelper
 
   def get_http_search_result(conn_hash, conn_str)
     http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+    p("http ****************************************************", http)
+    p("conn_str ********************************************", conn_str)
+    puts("conn_str puts ************************************", conn_str)
 
     if conn_hash[:https] == true
       http.use_ssl = true
@@ -165,12 +207,15 @@ module SearchesHelper
     data = []
     http.start do |http|
       req = Net::HTTP::Get.new(conn_str)
+      p("req ****************************************************", req)
 
       if conn_hash[:https] == true
         req.basic_auth(conn_hash[:username], conn_hash[:password])
       end
-
+      puts("start JSON parse *****************************************")
       data = JSON.parse(http.request(req).body)
+      #p("data **************************************************", data)
+      #puts("data ***********************************************", data)
     end
 
     return data

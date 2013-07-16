@@ -201,6 +201,8 @@ class DocumentsController < ApplicationController
         job = Job.new(:description => "Document #{@document.name} validation")
         job.save
         job.submit_job(current_user, @document, {:ifilter => f})
+        #puts("@document ***************************** ", @document.name)
+        #@document.submit_job(job, f) #SAS needed for validations?
       end
     end
 
