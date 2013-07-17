@@ -36,16 +36,15 @@
 		<h2>Metadata</h2>
 		<% if @msdata != nil  and !@msdata.empty? %>
 			<table class="table table-striped table-bordered table-condensed" style="width:0;">
-				<% @mcolnames = get_data_colnames(@msdata) %>
 				<tbody>
 				<% @msdata.each do |msdata_row| %>
-				<tr>
-					<% msdata_row.values.each do |val| %>
-						<td>
-							<%= val %>
-						</td>
-					<% end %>
-				</tr>
+					<!--If the row is a Hash, display values only-->
+					<tr>
+						<% msdata_row.each do |key, val| %>
+							<td><%= key %></td>
+							<td><%= val %></td>
+						<% end %>
+					</tr>
 				<% end %>
 				</tbody>
 			</table>
@@ -89,7 +88,7 @@
 			</table>
 		<% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
 			<p>Raw unvalidated text: </p>
-			<p><%= @document.stuffing_text[1..1000] %>...</p>
+			<p><%= simple_format @document.stuffing_text[1..100000] %>...</p>
 			<p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
 		<% else %>
 			<p>(none)</p>

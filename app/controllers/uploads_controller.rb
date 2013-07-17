@@ -116,9 +116,6 @@ class UploadsController < ApplicationController
     
     if c_id != nil
       c = Collection.find(c_id)
-      #User
-      c.user = current_user
-      c.save
     elsif c_text != ""
       #c=Collection.new(:name => c_text)
 
@@ -126,14 +123,15 @@ class UploadsController < ApplicationController
       # But if a collection already exists, everything will go under there, which may
       # not be exactly what the user wanted
       c = Collection.find_or_create_by_name(:name => c_text)
-
-      #User
-      c.user = current_user
-      c.save
     else
-      c = nil
+      c = Collection.find_or_create_by_name(:name => "(blank)")
     end
     
+    #User
+    c.user = current_user
+    
+    c.save
+
     #Parse file into db - these ignore the f filter
     if @upload.upfile.content_type == "application/zip"
       save_zip_to_documents(fname, @upload, c, f)

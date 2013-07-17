@@ -195,14 +195,19 @@ module DocumentsHelper
         
         row = IfiltersHelper::get_ifiltered_header(h, row)
         
-        colnames = IfiltersHelper::get_ifiltered_colnames(row)
-        
-        for j in (0..row.count-1)
-          metadata_col_hash[ colnames[j] ] = row[j]
-        end
-        
-        if not metadata_col_hash.empty?
-          metadata_columns << metadata_col_hash
+        #If row is length of two, then we want to make a key => val pair out 
+        # of the row. Else, the user has matches an unknown amout of values,
+        # and we can only number the keys.
+        if row.count == 2
+          metadata_columns << {row[0] => row[1]}
+        else
+          colnames = IfiltersHelper::get_ifiltered_colnames(row)
+          for j in (0..row.count-1)
+            metadata_col_hash[ colnames[j] ] = row[j]
+            if not metadata_col_hash.empty?
+              metadata_columns << metadata_col_hash
+            end
+          end
         end
 
         i = i + 1 
@@ -246,6 +251,8 @@ module DocumentsHelper
     data_columns=[]
     i = 0
     rows.each do |row|
+      #save the original for error reporting
+      orig_row = row
       data_col_hash = {}
       
       #apply input filters
@@ -269,9 +276,15 @@ module DocumentsHelper
         data_col_hash[ colnames[j] ] = row[j]
       end
 
+      if data_col_hash.empty?
+        log_and_print "WARN: the following document row will be filtered out: #{orig_row.to_s}"
+        log_and_print "\n"
+      end
+
       data_columns << data_col_hash  
     end
 
+    #filter out empty data columns
     data_columns.reject! { |item| item.empty? }
     return data_columns
   end
