@@ -98,7 +98,10 @@ private
 
     if params[:sSearch].present?
       search = params[:sSearch]
-      raw_data = elastic_search_all_data(search)
+      sfield = "Survey_Year" #SAS TODO: get field name from user?
+      
+      raw_data = elastic_search_all_data(search) #SAS makes ES query
+      #raw_data = elastic_search_facet_match_all(search, sfield) #SAS makes ES query
 
       if raw_data
         raw_data.collect do |row|

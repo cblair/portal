@@ -111,14 +111,11 @@ class Document < ActiveRecord::Base
       stuffing_data = self.stuffing_data
       
       f = ifilters[i]
-      #puts("ifilter f ***********************************************")
-      #p(f)
       
       #Attempt filter
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
       stuffing_data = filter_data_columns(f, self.stuffing_text)
 
-      #stuffing_headers = 1 #SAS needed for validation?
       #Check if filter was successfu=l
       if stuffing_data != nil and not stuffing_data.empty?
         if  (f.stuffing_headers != nil \
@@ -155,14 +152,7 @@ class Document < ActiveRecord::Base
 
 
   def submit_job(job, options)
-    #puts("doc mod submit_job *****************************************")
-    #puts("doc mod submit_job options *********************************")
-    #p(options)
-    
     ifilter = options[:ifilter] or nil
-    #ifilter = options or nil #SAS needed for validations?
-    #puts("doc mod submit_job ifilter *********************************")
-    #p(ifilter)
     
     puts "########################################################"
     puts "Validating doc #{self.name}..."
