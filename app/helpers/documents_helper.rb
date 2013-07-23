@@ -511,9 +511,11 @@ module DocumentsHelper
       return true
     end
 
-    #For now, any document belonging to a collection, who is in a project, is viewable
-    if !doc.collection.projects.empty?
-      return true
+    #If document is part of a project
+    doc.collection.projects.each do |project|
+      if (doc.collection.projects.include?(project) && project.users.include?(user))
+        return true
+      end
     end
 
     #if the user is a collaborator
