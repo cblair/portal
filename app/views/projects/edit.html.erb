@@ -1,23 +1,8 @@
-<h1>Editing project</h1>
-
-<%= render 'form' %>
-
-<hr>
-
-<h3>Owner Managment</h3>
-<p>
-  Change owner of this project.  Type the username (email) of the person 
-  you would like to transfer ownership of this project to.  <b>WARNING!
-  Changing a project's owner will make this project and all of it's
-  documents unaccessable by the current owner!</b>
-</p>
-
-<%= form_tag :controller => 'projects', :action => 'owner' do %>
-  <p>Select new owners email.</p>
-    <%= select(:user_name, :id, User.order("email").all.collect {|u| [ u.email, u.id ] }, :include_blank => true) %>
-    </br>
-    <%= submit_tag 'Change Owner', :confirm => 'Are you sure?' %>
-<% end %>
-
-<%= link_to 'Show', @project %> |
-<%= link_to 'Back', projects_path %>
+<div class="hero-unit">
+	<%- model_class = Project -%>
+	<div class="page-header">
+	  <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
+	                                   :default => "Edit #{model_class.model_name.human}") %></h1>
+	</div>
+	<%= render :partial => 'form' %>
+</div>

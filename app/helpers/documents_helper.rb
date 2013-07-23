@@ -480,29 +480,20 @@ module DocumentsHelper
   
 
   #If the collection has any viewable docs or sub-collections
-  def collection_is_viewable(col, user)
-    if col == nil
+  def collection_is_viewable(collection, user, project=nil)
+    if collection == nil
       return false
     end
-    
-    if (col.collections.empty? and col.documents.empty?)
+
+    if collection.user == user
       return true
     end
     
-    col.documents.each do |doc|
-      if doc_is_viewable(doc, user)
-        return true
-      end
+    #If collection is part of a project
+    if project != nil && collection.projects.include?(project)
+      return true
     end
-    
-    #child collections
-    #col.collections.each do |child_col|
-    col.children.each do |child_col|
-      if collection_is_viewable(child_col, user)
-        return true
-      end
-    end
-    
+  
     return false
   end
   
@@ -510,10 +501,6 @@ module DocumentsHelper
   def doc_is_viewable(doc, user)
     if doc == nil
       return false
-    end
-
-    if doc.public
-      return true
     end
 
     #Cache the list of all Documents involved with this user, in case this gets called recursively / a lot
@@ -524,8 +511,8 @@ module DocumentsHelper
       return true
     end
 
-    #Note: if both are nil, or actual user is record's user...
-    if doc.user == nil
+    #For now, any document belonging to a collection, who is in a project, is viewable
+    if !doc.collection.projects.empty?
       return true
     end
 

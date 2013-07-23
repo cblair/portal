@@ -9,7 +9,6 @@ class Project < ActiveRecord::Base
   has_many :users, :through => :collaborators
   belongs_to :project
   has_many :documents
-  has_many :collections
-  has_many :projects
+  has_and_belongs_to_many :collections
 
 end

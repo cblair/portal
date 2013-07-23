@@ -1,5 +1,5 @@
 <!--Start of collection section-->
-  <% if collection_is_viewable(collection, current_user) %>
+  <% if collection_is_viewable(collection, current_user, project) %>
   	<ul class="col-doc" data-collectionid="<%= collection.id %>">
 	    <li>
 	    	<i class="icon-folder-close icon-white"></i>
@@ -40,12 +40,6 @@
 							<% end %>
 						</li>
 						<li>
-							<%= link_to "Make Public", pub_priv_collection_path(collection, :public => "true") %>
-						</li>						
-						<li>
-							<%= link_to "Make Private", pub_priv_collection_path(collection, :public => "false") %>
-						</li>
-						<li>
 							<%= link_to "Download", csv_export_path(collection, :format => 'zip', :stype => 'Collection') %>
 						</li>
 
@@ -58,7 +52,7 @@
 	    	
 	    	<ul class="col-doc-attr-form">
 	  			<% collection.children.order('name').each do |child_collection| %>
-					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection, :tree_depth => tree_depth + 1, :parent_collection_id => parent_collection_id} %>
+					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection, :tree_depth => tree_depth + 1, :parent_collection_id => parent_collection_id, :project => project} %>
   				<% end %>
 
 	    		<% render :partial => "documents/documents_datatable", 

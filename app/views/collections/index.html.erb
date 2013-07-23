@@ -30,16 +30,6 @@
 	<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>
 
 	<hr />
-	<div style="width: 400px; float: left;">
-		<% @root_collections.each do |collection| %>
-			<%= 
-				render 	:partial => "rec_collection_render", 
-						:locals => {:collection => collection, :tree_depth => tree_depth, :parent_collection_id => collection.id} 
-			%>
-		<% end %>
-	</div>
-	<div style="width: 700px; float: left">
-		<%= render :partial => "documents/documents_datatable", 
-					:locals => {:collection => @root_collections.first} %>
-	</div>
+	<%= render :partial => "collections/rec_collection_documents_render", 
+				:locals => {:root_collections => @root_collections, :tree_depth => tree_depth, :project => @project} %>
 </div>

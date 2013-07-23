@@ -53,7 +53,7 @@ jQuery(function($) {
 		});
 	} //end runDocumentsForCollectionsControllers
 
-	if(CONTROLLER_NAME == "collections") {
+	if(CONTROLLER_NAME == "collections" || CONTROLLER_NAME == "projects") {
 		runDocumentsForCollectionsControllers();
 	} 
 });
