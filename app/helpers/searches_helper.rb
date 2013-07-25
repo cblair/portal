@@ -1,6 +1,5 @@
 module SearchesHelper
   include CouchdbHelper
-  require 'uri'
   require 'net/https'
 
   #TODO: doesn't know about logger. ?
@@ -133,37 +132,6 @@ module SearchesHelper
     return data
   end
 
-  #SAS elastic search functions
-  def elastic_search_facet_match_all(qstr, sfield)
-    data = []
-
-    conn_hash = get_http_connection_hash
-    #override with elasticsearch's port
-    conn_hash[:port] = 9200
-
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search? -d "
-    query_str = "{\"query\":{\"match\":{\"#{sfield}\":\"#{qstr}\"}}}"
-    
-    conn_str = conn_str + query_str
-    
-    puts "Elasticsearch query: #{conn_str}, with connection:"
-    puts conn_hash.inspect
-
-    full_data = get_http_search_result(conn_hash, conn_str)
-    data = []
-
-    begin
-      hits = full_data["hits"]["hits"]
-      data = hits.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
-    rescue NoMethodError
-      log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
-      log_and_print full_data.to_s
-    end
-
-    return data
-  end
-
-
    #This is Lucene for the Hatch production on Heroku, via the Cloudant API
    def cloudant_search_all_data(search)
     data = []
@@ -183,37 +151,11 @@ module SearchesHelper
 
     return data["rows"]
   end
-  
+
+  #SAS Old version, will not parse more advanced ES queries.
+  #See "elasticsearch_helper" for newer version.
   def get_http_search_result(conn_hash, conn_str)
     http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
-
-    if conn_hash[:https] == true
-      http.use_ssl = true
-    end
-
-    data = []
-    http.start do |http|
-      uricode = URI.encode(conn_str) #SAS nedded for corerct query parseing
-      req = Net::HTTP::Get.new(uricode)
-
-      if conn_hash[:https] == true
-        req.basic_auth(conn_hash[:username], conn_hash[:password])
-      end
-      response_data = http.request(req).body #Needs to be seperate from JSON parse?
-      data = JSON.parse(response_data)
-    end
-
-    return data
-  end
-
-=begin
-  #Old version, will not parse more advanced ES queries.
-  def get_http_search_result(conn_hash, conn_str)
-    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
-    puts("\nget_http_search_result *********************************\n")
-    #p("http ****************************************************", http)
-    p("conn_str ********************************************", conn_str)
-    #puts("conn_str puts ************************************", conn_str)
 
     if conn_hash[:https] == true
       http.use_ssl = true
@@ -222,22 +164,16 @@ module SearchesHelper
     data = []
     http.start do |http|
       req = Net::HTTP::Get.new(conn_str)
-      p("req ****************************************************", req)
 
       if conn_hash[:https] == true
         req.basic_auth(conn_hash[:username], conn_hash[:password])
       end
       temp = http.request(req).body
-      puts("temp ***********************************************", temp)
       
-      puts("start JSON parse *****************************************")
-      #data = JSON.parse(http.request(req).body)
-      data = JSON.parse(temp)
-      #p("data **************************************************", data)
-      #puts("data ***********************************************", data)
+      data = JSON.parse(http.request(req).body)
     end
 
     return data
   end
-=end
+
 end

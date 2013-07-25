@@ -1,5 +1,6 @@
 class SearchAllDatatable
   include SearchesHelper
+  include ElasticsearchHelper
   require 'will_paginate/array'
 
   delegate :params, :h, :link_to, to: :@view
@@ -98,10 +99,33 @@ private
 
     if params[:sSearch].present?
       search = params[:sSearch]
-      sfield = "Survey_Year" #SAS TODO: get field name from user?
       
-      raw_data = elastic_search_all_data(search) #SAS makes ES query
-      #raw_data = elastic_search_facet_match_all(search, sfield) #SAS makes ES query
+      #raw_data = elastic_search_all_data(search) #Orignal
+      #raw_data = elastic_search_url(search)
+      
+      #sfield = "Survey_Year" #SAS TODO: get field name from user?
+      #raw_data = es_terms_facet(search, sfield) #SAS makes ES query
+      
+      #SAS ES range any
+      #qfrom = 984.682  #exmaple only
+      #qto = 1762.803  #exmaple only
+      #sfield = "Map_Segment_Length_M "  #exmaple only
+      #raw_data = es_range_facet(qfrom, qto, sfield)
+
+      #SAS ES date format yyyy/mm/dd, ATM mm/dd/yyyy ex: 7/6/2004
+      #qfrom = "2004/7/6"  #exmaple only
+      #qto = "2004/7/7"  #exmaple only
+      #sfield = "Survey_Start_Date"  #exmaple only
+      #raw_data = es_date_range_facet(qfrom, qto, sfield)
+      
+      #SAS ES date histogram, interval -> "day", "month", etc.
+      #sfield = "Survey_Start_Date"  #exmaple only
+      #myinterval = "day"
+      #raw_data = es_date_histogram_facet(sfield, myinterval)
+      
+      #SAS Test function only
+      sfield = "Survey_Year" #SAS TODO: get field name from user?
+      raw_data = es_test(search, sfield) #SAS makes ES query
 
       if raw_data
         raw_data.collect do |row|

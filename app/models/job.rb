@@ -20,6 +20,7 @@ class Job < ActiveRecord::Base
     self.waiting = true
 
     job_type = Portal::Application.config.job_type
+    #job_type = "threads" #SAS need to make validations work?
 
     if job_type == "threads"
       self.submit_job_threads(ar_module, options)
