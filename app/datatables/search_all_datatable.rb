@@ -100,7 +100,7 @@ private
     if params[:sSearch].present?
       search = params[:sSearch]
       
-      #raw_data = elastic_search_all_data(search) #Orignal
+      raw_data = elastic_search_all_data(search) #Orignal
       #raw_data = elastic_search_url(search)
       
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
@@ -124,8 +124,11 @@ private
       #raw_data = es_date_histogram_facet(sfield, myinterval)
       
       #SAS Test function only
-      sfield = "Survey_Year" #SAS TODO: get field name from user?
-      raw_data = es_test(search, sfield) #SAS makes ES query
+      #sfield = "Survey_Year" #SAS TODO: get field name from user?
+      #raw_data = es_test(search, sfield) #SAS makes ES query
+      
+      #SAS Test function only
+      #raw_data = elastic_search_url(search)
 
       if raw_data
         raw_data.collect do |row|
