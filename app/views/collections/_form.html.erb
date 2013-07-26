@@ -29,9 +29,16 @@
   </div>
   
   <div>
-  	<p>Projects:</p>
+  	<p>Add to project:</p>
   	<%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
- 	<%= link_to "Projects...", projects_path %>
+    <p>Remove from project:</p>
+    <% if @collection.projects.empty? %>
+      <p>(none)</p>
+    <% end %>
+
+    <% @collection.projects.each do |p| %>
+      <p><%= check_box "remove_project", p.id %> <%= p.name %></p>
+    <% end %>
   </div>
    
   <div class="actions">

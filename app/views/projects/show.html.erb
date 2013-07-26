@@ -1,96 +1,33 @@
-<h3>Project Information</h3>
+<div class="hero-unit">
+  <%- model_class = Project -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+  </div>
 
-<p>
-  <b>Name:</b>
-  <%= @project.name %>
-</p>
+  <dl class="dl-horizontal">
+    <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+    <dd><%= @project.name %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+    <dd><%= @project.pdesc %></dd>
 
-<p>
-  <b>Description:</b>
-  <%= @project.pdesc %>
-</p>
+  <div class="form-actions">
+    <%= link_to t('.back', :default => t("helpers.links.back")),
+                projects_path, :class => 'btn'  %>
+    <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                edit_project_path(@project), :class => 'btn' %>
+    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                project_path(@project),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                :class => 'btn btn-danger' %>
+  </div>
 
-<hr>
-
-<h3>Listing collections</h3>
-<h4>Click a collection to view details</h4>
-
-<br />
-
-<% if can? :read, @project %>
-  <%= form_tag :controller => 'projects', :action => 'remove_project_collections' do %>
-    <table border="1" cellpadding="3">
-    <% Collection.where("project_id = ?", @project.id).order("name").each do |col| %>
-    <tr>
-      <td><%= link_to col.name, col %></td>
-      <% if can? :manage, @project %>
-        <td><%= check_box_tag("col_ids[]", col.id) %><b>Remove</b></td>
-      <% end %>
-    </tr>
-    <% end %>
-    </table>
-    <%= hidden_field_tag 'project_id', @project.id %>
-    <br />
-    <% if can? :manage, @project %>
-      <%= submit_tag 'Update',  :confirm => 'Are you sure?' %>
-    <% end %>
-  <% end %>
-<% end %>
-
-<% if can? :manage, @project %>
-  <%= form_tag :controller => 'projects', :action => 'add_project_collection' do %>
-  <p>Add a collection's documents to this project</p>
-  <%= select("collection", "collection_id", 
-             Collection.where(["user_id = ? AND project_id IS NULL", current_user.id]).order("name").collect {|d| [d.name, d.id]},
-             {:prompt => '(select a collection)'} ) %>
-  <br />
-  <%= hidden_field_tag 'project_id', @project.id %>
-  <%= submit_tag 'Add collection' %>
-  <% end %>
-<% end %>
-
-<hr>
-
-<h3>Listing documents</h3>
-<h4>Click a document to view details</h4>
-
-<br />
-
-<% if can? :read, @project %>
-  <%= form_tag :controller => 'projects', :action => 'remove_project_docs' do %>
-    <table border="1" cellpadding="3">
-    <% Document.where("project_id = ?", @project.id).order("name").each do |doc| %>
-    <tr>
-      <td><%= link_to doc.name, doc %></td>
-      <% if can? :manage, @project %>
-        <td><%= check_box_tag("doc_ids[]", doc.id) %><b>Remove</b></td>
-      <% end %>
-    </tr>
-    <% end %>
-    </table>
-    <%= hidden_field_tag 'project_id', @project.id %>
-    <br />
-    <% if can? :manage, @project %>
-      <%= submit_tag 'Update',  :confirm => 'Are you sure?' %>
-    <% end %>
-  <% end %>
-<% end %>
-
-<hr>
-
-<% if can? :manage, @project %>
-  <%= form_tag :controller => 'projects', :action => 'add_project_doc' do %>
-  <p>Add a document to this project</p>
-  <%= select("document", "document_id", 
-             Document.where(["user_id = ? AND project_id IS NULL", current_user.id]).order("name").collect {|d| [d.name, d.id]},
-             {:prompt => '(select a document)'} ) %>
-  <br />
-  <%= hidden_field_tag 'project_id', @project.id %>
-  <%= submit_tag 'Add document' %>
-  <% end %>
-<% end %>
-
-<br />
-
-<%= link_to 'Edit', edit_project_path(@project) %> |
-<%= link_to 'Back', projects_path %> |
+  <hr />
+  <h2>Project collections</h2>
+  <hr />
+  <div>
+  <%= render :partial => "collections/rec_collection_documents_render", 
+        :locals => {:root_collections => @root_collections, :tree_depth => 0, :project => @project} %>
+  </div>
+  </dl>
+</div>

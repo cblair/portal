@@ -1,45 +1,38 @@
-<%= form_for(@project) do |f| %>
-  <% if @project.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-      <ul>
-      <% @project.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<%= form_for @project, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field' %>
     </div>
-  <% end %>
+  </div>
+  <div class="control-group">
+    <%= f.label :project_description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :pdesc, :class => 'text_area' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <p>Add a collaborator to this project</p>
+      <%= select_tag("new_user_id", options_from_collection_for_select(User.order("email").all, "id", "email"), :include_blank => true) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :remove_existing_collaborators_from_this_project, :class => "control-label" %>
+    <% if (@colab_list != nil) %>
+      <% @colab_list.each do |colab| %>
+        <div class="field">
+        <%= check_box_tag("colab_user_ids[]", colab.user_id)%>
+        <%= colab.user_email %>
+      </div>
+      <% end %>
+    <% end %>
+  </div>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  
-  <div class="field">
-    <%= f.label :Description %><br />
-    <%= f.text_area(:pdesc, :col => 1, :rows => 2) %>
-  </div>
-  
-  <div class="field">
-    <h3>Collaborators</h3>
-    <p>Add or remove people to this project</p>
-    <p>Add a collaborator to this project</p>
-    <%= select_tag("new_user_id", options_from_collection_for_select(User.order("email").all, "id", "email"), :include_blank => true) %>
-  </div>
-  
-  <p>Remove existing collaborators from this project</p>
-  <% if (@colab_list != nil) %>
-    <% @colab_list.each do |colab| %>
-  	  <div class="field">
-	    <%= check_box_tag("colab_user_ids[]", colab.user_id)%>
-	    <%= colab.user_email %>
-	  </div>
-	<% end %>
-  <% end %>
-  
-  <div class="actions">
-    </br>
-    <%= f.submit 'Submit' %>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                projects_path, :class => 'btn' %>
   </div>
 <% end %>

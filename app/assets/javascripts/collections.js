@@ -1,3 +1,58 @@
+var PARENT_COLLECTION_ID_HASH = {};
+var COLLECTION_ELEMENT_WIDTH = undefined;
+
+function get_hash_keys(hash) {
+	var keys = new Array();
+	for(var i in hash) {
+		if (hash.hasOwnProperty(i)) {
+			keys.push(i);
+		}
+	}
+	return keys;
+}
+
+function get_max_hash_value(hash) {
+	var keys = get_hash_keys(hash);
+	var max = hash[keys[0]];
+
+	for(var i in keys) {
+		key = keys[i];
+		if(hash[key] > max) {
+			max = hash[key];
+		}
+	}
+
+	return(max);
+}
+
+function get_min_hash_value(hash) {
+	var keys = get_hash_keys(hash);
+	var min = hash[keys[0]];
+
+	for(var i in keys) {
+		key = keys[i];
+		if(hash[key] < min) {
+			min = hash[key];
+		}
+	}
+
+	return(min);
+}
+
+function count_matching_hash_values(hash, match_val) {
+	var count = 0;
+	var keys = get_hash_keys(hash);
+
+	for(var i in keys) {
+		key = keys[i];
+		if(hash[key] == match_val) {
+			count += 1;
+		}
+	}
+
+	return(count);
+}
+
 jQuery(function($) {
 	///////////////////////////////////////////////////////////////////////////////
 	// Tree Nodes showing/hiding
@@ -5,8 +60,7 @@ jQuery(function($) {
 	
 	function updateDocColSubfields(e) {
 		e.preventDefault();
-		
-		//$(this).toggle();
+
 		$(this).parent().children('a.col-doc-plus-minus').toggle();
 		$(this).parent().parent().children('ul.col-doc-attr-form').toggle();
 
@@ -69,9 +123,16 @@ jQuery(function($) {
 			}
 		});
 	}
-	
+
 
 	$(document).ready(function () {
 		$.initCollectionTree($);
+
+		//Bind upload button
+		$("a#new-collection-upload").click(function(e) {
+			e.preventDefault();
+
+			$('.modal').show();
+		});
 	});
 });

@@ -72,7 +72,7 @@ jQuery(function($) {
 	    		});
 
 	    	//Clear selected jobs
-	    	$("a.clear-jobs").bind("click", function(e) {
+	    	$("a.clear-selected-jobs").bind("click", function(e) {
 	    		//This gets currently filtered data
 	    		var linkTextArray = JOBS_SEARCH_TABLE._($('tr td.sorting_1'), {"filter":"applied"});
 	    		//This is as far as we can go for nodes; we now have
@@ -80,6 +80,9 @@ jQuery(function($) {
 
 	    		//Get clear job url
 	    		var clearJobUrl = $('div.clear-jobs').data('clear-jobs-source');
+	    		//Add type param
+	    		clearJobUrl += "?";
+	    		clearJobUrl += "type=selected";
 
 	    		//Match doc id in link text with regex
 	    		//var docIdsStr = "?";
@@ -98,6 +101,34 @@ jQuery(function($) {
 				}
 
 				clearJobs(clearJobUrl, docIds);
+
+				//get new data for the job table
+				JOBS_SEARCH_TABLE.fnReloadAjax();
+	    	});
+
+	    	//Clear finished jobs
+	    	$("a.clear-finished-jobs").bind("click", function(e) {
+	    		//Get clear job url
+	    		var clearJobUrl = $('div.clear-jobs').data('clear-jobs-source');
+	    		//Add type param
+	    		clearJobUrl += "?";
+	    		clearJobUrl += "type=finished";
+
+	    		clearJobs(clearJobUrl, null);
+
+				//get new data for the job table
+				JOBS_SEARCH_TABLE.fnReloadAjax();
+	    	});
+
+	    	//Clear all jobs
+	    	$("a.clear-all-jobs").bind("click", function(e) {
+	    		//Get clear job url
+	    		var clearJobUrl = $('div.clear-jobs').data('clear-jobs-source');
+	    		//Add type param
+	    		clearJobUrl += "?";
+	    		clearJobUrl += "type=all";
+
+	    		clearJobs(clearJobUrl, null);
 
 				//get new data for the job table
 				JOBS_SEARCH_TABLE.fnReloadAjax();

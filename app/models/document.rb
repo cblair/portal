@@ -121,14 +121,28 @@ class Document < ActiveRecord::Base
         if  (f.stuffing_headers != nil \
              and stuffing_metadata.count == f.stuffing_headers.count)\
             or \
-            (f.stuffing_headers == nil and stuffing_metadata.empty?)
+            (f.stuffing_headers == nil)
           validation_finished = true
-          self.stuffing_metadata = stuffing_metadata
           self.stuffing_data = stuffing_data
           self.validated = true
           #clear out data_text
           self.stuffing_text = nil
+
+          #Add HatchFilter key => val to metadata
+          filter_name = f.name or "none"
+
+          if stuffing_metadata.empty?
+            stuffing_metadata = [{"HatchFilter" => filter_name}]
+          else
+            stuffing_metadata << {"HatchFilter" => filter_name}
+          end
+
+          self.stuffing_metadata = stuffing_metadata
           suc_valid = self.save
+          
+          if suc_valid 
+            puts "Document #{self.name} fitering success!"
+          end
         end
       end
       
@@ -136,6 +150,15 @@ class Document < ActiveRecord::Base
       if i >= (ifilters_count)
         validation_finished = true
       end
+    end
+
+    if !suc_valid
+      puts "Document filtering failed. One of these is not right:"
+      puts "####metadata:"
+      puts "stuffing_metadata.count #{stuffing_metadata.count.to_s} ?= f.stuffing_headers.count #{f.stuffing_headers.count}"
+      puts stuffing_metadata.to_s
+      puts "####data:####"
+      puts stuffing_data.to_s
     end
 
     self.stuffing_foreign_keys = get_foreign_keys(self, ifilter)

@@ -9,8 +9,14 @@ class DataIoController < ApplicationController
   before_filter :authenticate_user!
 
   def index
+
   end
-  
+
+  def js_upload
+    respond_to do |format|
+      format.js
+    end
+  end
   
   #Note - this method is no longer used; the jQuery upload form uses the 
   #       new upload controller  

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130616230222) do
+ActiveRecord::Schema.define(:version => 20130721210534) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -52,6 +52,11 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
   end
 
   add_index "collections", ["ancestry"], :name => "index_collections_on_ancestry"
+
+  create_table "collections_projects", :id => false, :force => true do |t|
+    t.integer "collection_id"
+    t.integer "project_id"
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -138,10 +143,11 @@ ActiveRecord::Schema.define(:version => 20130616230222) do
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.text     "pdesc"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.integer  "project_id"
     t.integer  "user_id"
+    t.integer  "collection_id"
   end
 
   create_table "roles", :force => true do |t|

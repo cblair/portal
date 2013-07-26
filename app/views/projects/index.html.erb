@@ -1,31 +1,36 @@
-<h1>Project Manager</h1>
-
-<br />
-
-<h2>Listing my projects</h2>
-
-<table border="0" cellpadding="5"> <!--<table border="1" cellpadding="5">-->
-  <tr>
-    <th><!-- Name --></th>
-    <th><!-- Description --></th>
-    <th colspan="5"><!-- Options --></th>
-  </tr>
-
-  <% @projects.each do |project| %>
-    <tr>
-      <% if can? :read, project %>
-        <td><%= project.name %></td>
-        <td><%= project.pdesc %></td>
-        <td><%= link_to 'Show', project %></td>
+<div class="hero-unit">
+  <%- model_class = Project -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:name) %></th>
+        <th><%= model_class.human_attribute_name(:pdesc) %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projects.each do |project| %>
+        <tr>
+          <td><%= link_to project.name, project_path(project) %></td>
+          <td><%= project.pdesc %></td>
+          <td>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_project_path(project), :class => 'btn btn-mini' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        project_path(project),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+          </td>
+        </tr>
       <% end %>
-      <% if can? :manage, project %>
-        <td><%= link_to 'Edit', edit_project_path(project) %></td>
-        <td><%= link_to 'Destroy', project, confirm: 'Are you sure?', method: :delete %></td>
-      <% end %>
-    </tr>
-  <% end %>
-</table>
+    </tbody>
+  </table>
 
-<br />
-
-<%= link_to 'New Project', new_project_path %>
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_project_path,
+              :class => 'btn btn-primary' %>
+</div>

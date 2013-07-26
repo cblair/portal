@@ -36,13 +36,20 @@ module CollectionsHelper
   end
   
   #Adds collection to selected project (from collections -> edit -> _form)
-  #NOTE: only adds documents at this time
   def add_project_col(project, collection)
-    #adds each document in the collection to the selected project
-    #TODO: error checking
-    collection.documents.each do |doc|
-      doc.update_attributes(:project_id => project.id)
+    #Add this collection to the project
+    if !project.collections.collect {|pc| pc.id}.include?(collection.id)
+      project.collections << collection
     end
+
+    #Add this collection's descendants to the project
+    collection.descendants.each do |c|
+      if !project.collections.collect {|pc| pc.id}.include?(c.id)
+        project.collections << c
+      end
+    end
+
+    project.save
   end
   
   def collection_is_validated(collection)
@@ -57,19 +64,6 @@ module CollectionsHelper
     end
     
     return suc_valid
-  end
-
-    
-  #recursively sets all (sub) documents 
-  def set_pub_priv_collection_helper(collection, public)
-    collection.documents.each do |doc|
-      doc.public = public
-      doc.save
-    end
-    
-    collection.children.each do |sub_collection|
-      set_pub_priv_collection_helper(sub_collection, public)
-    end
   end
 
   

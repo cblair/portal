@@ -1,5 +1,5 @@
 Portal::Application.routes.draw do
-  match '/jobs/clear_jobs' => "jobs#clear_jobs", :as => :clear_jobs
+  match '/jobs/clear_jobs' => "jobs#clear_jobs", :as => :clear_jobs 
   resources :jobs
 
   match "/delayed_job" => DelayedJobWeb, :anchor => false
@@ -59,6 +59,7 @@ Portal::Application.routes.draw do
   match '/DataIO/csv_import'  =>  "DataIO#csv_import", :as => :csv_import
   match '/DataIO/csv_export/:id'  =>  "DataIO#csv_export", :as => :csv_export, :formats => 'zip'
   match '/DataIO/index'  =>  "DataIO#index", :as => :csv_import
+  match '/DataIO/js_upload'  =>  "DataIO#js_upload", :as => :js_upload
   match '/DataIO/jsu_index'  =>  "DataIO#jsu_index", :as => :jsu_csv_import
   
   match '/visualizations' => 'viz#index', :as => 'visualizations'

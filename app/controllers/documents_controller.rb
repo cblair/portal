@@ -284,27 +284,4 @@ class DocumentsController < ApplicationController
       format.json { render json: @document.stuffing_data }
     end
   end
-  
-  
-  def pub_priv_doc
-    @document = Document.find(params[:id])
-    
-    if params.include?("public")
-      if params[:public] == "true"
-        @document.public = true
-      else
-        @document.public = false
-      end
-    end
-
-    respond_to do |format|
-      if @document.save
-        format.html { redirect_to @document, notice: 'Document permissions were successfully changed.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @document.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 end

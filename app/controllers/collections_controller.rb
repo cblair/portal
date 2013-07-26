@@ -141,11 +141,27 @@ class CollectionsController < ApplicationController
 
       validate_collection_helper(@collection, f)
     end
-    
+
+    #Add to project
     if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
       project = Project.find(params[:proj][:id])
       #p("*** col proj = ", project.name, project.id) #debug
       add_project_col(project, @collection) #call to collection helper, adds collection to project
+    end
+
+    #Recursive remove from project
+    if params.include?("remove_project")
+      params["remove_project"].each do |k,v|
+        if v.to_i == 1
+          project = Project.find(k.to_i)
+          @collection.projects.delete project
+          @collection.descendants.each do |c|
+            if !c.projects.empty?
+              c.projects.delete project
+            end
+          end
+        end
+      end
     end
 
     respond_to do |format|
@@ -223,31 +239,6 @@ class CollectionsController < ApplicationController
       else
         flash[:error] = 'Document FAILED to validate.'
         format.html { redirect_to @document }
-        format.json { render json: @document.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-  
-  
-  def pub_priv_collection
-    @collection = Collection.find(params[:id])
-    
-    if params.include?("public")
-      if params[:public] == "true"
-        public = true
-      else
-        public = false
-      end
-      
-      set_pub_priv_collection_helper(@collection, public)
-    end
-
-    respond_to do |format|
-      if @collection.save
-        format.html { redirect_to @collection, notice: 'Collection permissions were successfully changed.' }
-        format.json { head :ok }
-      else
-        format.html { render action: "edit" }
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end
     end

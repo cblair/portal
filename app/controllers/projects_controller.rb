@@ -23,6 +23,18 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
       #gets all docs for the project
     @proj_docs = Document.where("project_id = ?", @project.id).order("name")
+
+    @root_collections = []
+    project_collections_ids = []
+    @project.collections.each do |collection|
+      if collection.ancestors.empty?
+        @root_collections << collection
+        next
+      end
+      if !collection.ancestors.collect {|c| c.projects.include?(@project)}.all?
+        @root_collections << collection
+      end
+    end
     
     respond_to do |format|
       format.html # show.html.erb

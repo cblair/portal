@@ -92,8 +92,8 @@ module DocumentsHelper
     #put all parentless zip collections under the user_c
     zip_collections.keys.each do |k|
       c = zip_collections[k]
-      if c.collection == nil
-        c.collection = user_c
+      if c.parent == nil
+        c.parent = user_c
 
         status = (c.save and status)
       end
@@ -146,6 +146,9 @@ module DocumentsHelper
       log_and_print "ERROR: More parse information: "
       log_and_print @document.stuffing_text
       return false
+    rescue RestClient::InternalServerError
+      log_and_print "ERROR: some other saving problem happend with document #{fname}."
+      return false
     end
 
     @opened_file.close
@@ -192,14 +195,19 @@ module DocumentsHelper
         
         row = IfiltersHelper::get_ifiltered_header(h, row)
         
-        colnames = IfiltersHelper::get_ifiltered_colnames(row)
-        
-        for j in (0..row.count-1)
-          metadata_col_hash[ colnames[j] ] = row[j]
-        end
-        
-        if not metadata_col_hash.empty?
-          metadata_columns << metadata_col_hash
+        #If row is length of two, then we want to make a key => val pair out 
+        # of the row. Else, the user has matches an unknown amout of values,
+        # and we can only number the keys.
+        if row.count == 2
+          metadata_columns << {row[0] => row[1]}
+        else
+          colnames = IfiltersHelper::get_ifiltered_colnames(row)
+          for j in (0..row.count-1)
+            metadata_col_hash[ colnames[j] ] = row[j]
+            if not metadata_col_hash.empty?
+              metadata_columns << metadata_col_hash
+            end
+          end
         end
 
         i = i + 1 
@@ -243,6 +251,8 @@ module DocumentsHelper
     data_columns=[]
     i = 0
     rows.each do |row|
+      #save the original for error reporting
+      orig_row = row
       data_col_hash = {}
       
       #apply input filters
@@ -266,9 +276,15 @@ module DocumentsHelper
         data_col_hash[ colnames[j] ] = row[j]
       end
 
+      if data_col_hash.empty?
+        log_and_print "WARN: the following document row will be filtered out: #{orig_row.to_s}"
+        log_and_print "\n"
+      end
+
       data_columns << data_col_hash  
     end
 
+    #filter out empty data columns
     data_columns.reject! { |item| item.empty? }
     return data_columns
   end
@@ -464,57 +480,50 @@ module DocumentsHelper
   
 
   #If the collection has any viewable docs or sub-collections
-  def collection_is_viewable(col, user)
-    retval = false
-
-    if col == nil
+  def collection_is_viewable(collection, user, project=nil)
+    if collection == nil
       return false
     end
-    
-    if (col.collections.empty? and col.documents.empty?)
+
+    if collection.user == user
       return true
     end
     
-    col.documents.each do |doc|
-      if doc_is_viewable(doc, user)
-        retval = true
-      end
+    #If collection is part of a project
+    if project != nil && collection.projects.include?(project)
+      return true
     end
-    
-    #child collections
-    #col.collections.each do |child_col|
-    col.children.each do |child_col|
-      if collection_is_viewable(child_col, user)
-        retval = true
-      end
-    end
-    
-    return retval
+  
+    return false
   end
   
 
-  def doc_is_viewable(col_or_doc, user)
-    retval = false
-
-    if col_or_doc == nil
+  def doc_is_viewable(doc, user)
+    if doc == nil
       return false
     end
 
-    #Note: if both are nil, or actual user is record's user...
-    if ((col_or_doc.is_a? Document and col_or_doc.user == nil) or (col_or_doc.user == user))
-      retval = true
+    #Cache the list of all Documents involved with this user, in case this gets called recursively / a lot
+    @document_id_list_cache ||= Document.where(:user_id => user.id).collect {|d| d.id}
+
+    #If the doc belongs to the user (because it is in the user doc cache list)
+    if @document_id_list_cache.include?(doc.id)
+      return true
     end
-    
+
+    #If document is part of a project
+    doc.collection.projects.each do |project|
+      if (doc.collection.projects.include?(project) && project.users.include?(user))
+        return true
+      end
+    end
+
     #if the user is a collaborator
-    if (user != nil and user.documents != nil and user.documents.include?(col_or_doc))
-      retval = true
+    if (user != nil and user.documents != nil and user.documents.include?(doc))
+      return true
     end
-    
-    if (col_or_doc.is_a? Document and col_or_doc.public)
-      retval = true
-    end
-    
-    return retval
+        
+    return false
   end
   
   #Adds document to selected project (see view -> documents -> edit)
