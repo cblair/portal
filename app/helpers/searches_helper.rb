@@ -152,6 +152,35 @@ module SearchesHelper
     return data["rows"]
   end
 
+  def elastic_search_all_and_return_doc_ids(search)
+    raw_data = elastic_search_all_data(search)
+
+    retval = []
+
+    raw_data.collect do |row|
+      doc_name = row[:doc_name]
+      score = row[:score]
+      doc_id = doc_name.sub("Document-", "").to_i
+
+      begin
+        doc = Document.find(doc_id)
+      rescue ActiveRecord::RecordNotFound
+        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found in search. Skipping. Raw search return data:"
+        puts raw_data
+
+        next
+      end
+
+      if doc == nil
+        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found"
+      elsif doc_is_viewable(doc, current_user)
+        retval << doc.id
+      end
+    end
+
+    retval
+  end
+
   #SAS Old version, will not parse more advanced ES queries.
   #See "elasticsearch_helper" for newer version.
   def get_http_search_result(conn_hash, conn_str)

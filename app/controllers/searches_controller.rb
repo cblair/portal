@@ -1,5 +1,8 @@
+
 class SearchesController < ApplicationController
   include SearchesHelper
+
+  delegate :link_to, to: :@view
 
   # GET /searches
   # GET /searches.json
@@ -83,6 +86,44 @@ class SearchesController < ApplicationController
     end
   end
 
+  #Does an initial search, and returns the common columns names for all matching documents
+  def search_init
+    search_val = ""
+    doc_list = []
+    colnames = []
+
+    if params.include?("searchval")
+      search_val = params["searchval"]
+    end
+    
+    if search_val != ""
+      results = elastic_search_all_and_return_doc_ids(search_val)
+
+      doc_list = results.collect {|id| Document.find(id)}
+
+      if !doc_list.empty?
+        #Colnames is all the column names they have in common
+        colnames = get_data_colnames(doc_list[0].stuffing_data)
+
+        doc_list.each do |doc| 
+          colnames = get_data_colnames(doc.stuffing_data) & colnames
+        end
+      end
+    end
+
+    search_data = {
+      "documents" => doc_list.collect {|doc| doc.name}, 
+      "colnames" => colnames,
+      "doc_links" => doc_list.collect {|doc| view_context.link_to(doc.name, doc)}
+    }
+
+    respond_to do |format|
+      #  format.html # index.html.erb
+      #  format.json { render json: @documents }
+      #TODO
+      format.json { render json: search_data }
+    end
+  end
 
   #Searches all documents for indexed keys
   def search_all
