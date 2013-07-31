@@ -140,8 +140,8 @@ class UploadsController < ApplicationController
     end
 
     #Filter - now, if we got a filter, start validation jobs
-    if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i > 0))
-      f=Ifilter.find(params[:post]["ifilter_id"].to_i)
+    if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i != 0))
+      f = get_ifilter(params[:post]["ifilter_id"].to_i)
 
       validate_collection_helper(c, ifilter=f)
     end
