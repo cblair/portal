@@ -222,7 +222,7 @@ class DocumentsController < ApplicationController
     @document.destroy
 
     respond_to do |format|
-      format.html { redirect_to documents_url }
+      format.html { redirect_to collections_path }
       format.json { head :ok }
     end
   end
