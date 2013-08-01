@@ -31,7 +31,7 @@ module CollectionsHelper
       job.save
       #TODO: submit_job will likely die if Portal::Application.config.job_type == "threads",
       # because the jobs lock up the PG pool
-      job.submit_job(current_user, document, {:ifilter => ifilter})
+      job.submit_job(current_user, document, {:ifilter_id => ifilter.id})
     end
   end
   

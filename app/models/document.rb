@@ -175,8 +175,8 @@ class Document < ActiveRecord::Base
 
 
   def submit_job(job, options)
-    ifilter = options[:ifilter] or nil
-    
+    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
+
     puts "########################################################"
     puts "Validating doc #{self.name}..."
     self.validate(ifilter)
