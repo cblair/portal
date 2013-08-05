@@ -13,7 +13,7 @@ jQuery(function($) {
 	////////////////////////////////////////////////////////////////////////////
 	// Datatable stuff
 	////////////////////////////////////////////////////////////////////////////
-	function updateSearchDatatables() {
+	function updateSearchDatatables(searchVal) {
 		//disables warnings, TODO to fix
 		$.fn.dataTableExt.sErrMode = "throw";
 
@@ -26,6 +26,11 @@ jQuery(function($) {
 			"sWrapper": "dataTables_wrapper form-inline"
 		});
 
+		var sourceUrl = $('#search').data('source');
+		if(searchVal != undefined) {
+			sourceUrl += "?search_val=" + searchVal;
+		}
+
 		//dataTable
 		var search_table = $('#search').dataTable({
 			"sPaginationType"	: "bootstrap",
@@ -34,21 +39,14 @@ jQuery(function($) {
 			"bServerSide"		: true,
 			"bSort"				: false,
 			//Hides search box
-			bFilter				: false,
+			"bFilter"			: false,
 			//Helps with long URIs
 			//"fnServerParams": "",
 			"sServerMethod"		: "POST",
 			//Taking out search
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sAjaxSource"		: $('#search').data('source')
+			"sAjaxSource"		: sourceUrl
 		});
-
-		//Do a default search if the data attr is set (probably originally from
-		// an HTML param)
-		var default_search = $('#search').data('default-search');
-		if((default_search != undefined) && (default_search != "")) {
-			search_table.fnFilter(default_search);
-		}
 
 		//only search on enter keypress 
 		$('.dataTables_filter input')
@@ -57,6 +55,12 @@ jQuery(function($) {
       			if (e.keyCode != 13) return;
       			search_table.fnFilter($(this).val());
     		});
+
+    	if(searchVal != undefined) {
+    		console.log("TS57");
+	    	//Call search to filter from our initial search val
+    		search_table.fnFilter(searchVal);
+    	}
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -70,9 +74,6 @@ jQuery(function($) {
 
 	function updateMainSearch(e) {
 		e.preventDefault();
-
-		console.log('TS: running main search');
-		console.log(e.data);
 
 		//Get our search result container
 		var mainSearchResults = $('#main-search-results');
@@ -95,7 +96,7 @@ jQuery(function($) {
 				//$('div.scaffold table').hide();
 			},
 			success: function(result) {
-				populateInitialSearch(result);
+				populateInitialSearch(result, searchVal);
 			},
 			error: function(result) {
 				$('#error').show();
@@ -103,7 +104,7 @@ jQuery(function($) {
 		});
 	}
 
-	function populateInitialSearch(initSearchResults) {
+	function populateInitialSearch(initSearchResults, searchVal) {
 		//Get our search result container
 		var mainSearchResults = $('#main-search-results');
 
@@ -136,7 +137,7 @@ jQuery(function($) {
 		//TODO: if search criteria empty, hide
 		mainSearchResults.fadeIn();
 
-		updateSearchDatatables();
+		updateSearchDatatables(searchVal);
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -144,7 +145,7 @@ jQuery(function($) {
 	////////////////////////////////////////////////////////////////////////////
 	function runSearchesControllerJS() {
 		//init / update DataTables
-		updateSearchDatatables();
+		updateSearchDatatables(undefined);
 
 		//init other stuff
 		initMainSearch();

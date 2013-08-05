@@ -106,7 +106,7 @@ module SearchesHelper
     return data
   end
 
-  def elastic_search_all_data(search)
+  def elastic_search_all_data(search, mode="doc_names")
     data = []
 
     conn_hash = get_http_connection_hash
@@ -121,12 +121,19 @@ module SearchesHelper
     full_data = get_http_search_result(conn_hash, conn_str)
     data = []
 
+    hits = nil
     begin
-      hits = full_data["hits"]["hits"]
-      data = hits.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+      hits = full_data
     rescue NoMethodError
       log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
       log_and_print full_data.to_s
+    end
+
+    if hits
+      data = hits["hits"]["hits"]
+      if mode == "doc_names"
+        data = data.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+      end
     end
 
     return data
@@ -152,7 +159,7 @@ module SearchesHelper
     return data["rows"]
   end
 
-  def elastic_search_all_and_return_doc_ids(search)
+  def elastic_search_all_and_return_doc_ids(search, current_user)
     raw_data = elastic_search_all_data(search)
 
     retval = []
@@ -203,6 +210,18 @@ module SearchesHelper
     end
 
     return data
+  end
+
+
+  def get_colnames_in_common(doc_list)
+    #Colnames is all the column names they have in common
+    colnames = get_data_colnames(doc_list[0].stuffing_data)
+
+    doc_list.each do |doc| 
+      colnames = get_data_colnames(doc.stuffing_data) & colnames
+    end
+
+    colnames
   end
 
 end

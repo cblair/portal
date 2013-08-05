@@ -22,7 +22,7 @@ class SearchAllDatatable
         #    ["test","",nil],
         #    ["test","",nil]
         #  ]
-        data
+        data.paginate({:page => page, :per_page => per_page})
     }
   end
 
@@ -97,11 +97,24 @@ private
   def fetch_search_data_elasticsearch
     @retval = []
 
-    if params[:sSearch].present?
-      search = params[:sSearch]
+    #We are overriding the Datatable search box with our own, so we don't get a
+    # params[:sSearch]. We have to use the one we set manually
+    if params[:search_val].present?
+      search = params[:search_val]
       
-      raw_data = elastic_search_all_data(search) #Orignal
+      #TODO: do one search instead of two
+      #Get doc list, so we can get colnames in common
+      results = elastic_search_all_and_return_doc_ids(search, @current_user)
+      doc_list = results.collect {|id| Document.find(id)}
+      colnames = []
+      if !doc_list.empty?
+        colnames = get_colnames_in_common(doc_list)
+      end
+
+      #Get data results
+      #raw_data = elastic_search_all_data(search) #Orignal
       #raw_data = elastic_search_url(search)
+      raw_data = elastic_search_all_data(search, mode="full")
       
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
       #raw_data = es_terms_facet(search, sfield) #SAS makes ES query
@@ -132,8 +145,8 @@ private
 
       if raw_data
         raw_data.collect do |row|
-          doc_name = row[:doc_name]
-          score = row[:score]
+          doc_name = row["_source"]["_id"]
+          score = row["_score"]
           doc_id = doc_name.sub("Document-", "").to_i
 
           begin
@@ -141,22 +154,26 @@ private
           rescue ActiveRecord::RecordNotFound
             log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
             puts raw_data
+            next
           end
 
-          #if we got a Lucene key:value, strip off the <col>: in the string. 
-          # Document datatables only takes the value
-          search_value = search.split(':').last
           if doc_is_viewable(doc, @current_user)
-            row = {}
-            #row["0"] = link_to doc.name, doc
-            row["0"] = "<a href=\"/documents/#{doc.id}?default_search=#{search_value}\">#{doc.name}</a>"
-            #count col
-            row["1"] = score
-            @retval << row
-          end
-        end
-      end
-    end
+            row["_source"]["data"].map do |data_row| 
+              values = []
+=begin
+              data_row.each do |key, val|
+                values << val
+              end
+=end
+              colnames.each do |colname|
+                values << data_row[colname]
+              end
+              @retval << values
+            end
+          end #end if doc_is_viewable
+        end #end raw_data.collect
+      end #end raw_data
+    end #if params[:sSearch].present?
     @retval
   end
 
