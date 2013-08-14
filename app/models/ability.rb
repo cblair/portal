@@ -32,17 +32,21 @@ class Ability
     
     #can :read, :all #example
     #can :manage, :all #FOR TESTING ONLY, GRANTS "ROOT" ACCESS!!!
-    #list of admin access permissions
+    
+    #Admin access permissions
     can :manage, User if is_admin(user) #see Ability helper
     can :manage, Role if is_admin(user)
     can :manage, Project if is_admin(user)
     
-    #list of of owner access permissions
+    #Owner access permissions
     can :manage, Project, :user_id => user.id #owner of project
-    #can :manage, Collection, :user_id => user.id #owner of document
-    can :manage, Document, :user_id => user.id #owner of document
+    can :manage, Collection, :user_id => user.id #owner of document
+    #can :manage, Document, :user_id => user.id #owner of document
     
-    #list of collaborator access permissions
+    #Collaborator access permissions
     can :read, Project, :collaborators => { :user_id => user.id }
+    #can :read, Collection, :collaborators => { :user_id => user.id }
+    #can :read, Document, :collaborators => { :user_id => user.id }
+
   end
 end

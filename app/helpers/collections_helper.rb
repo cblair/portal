@@ -90,12 +90,12 @@ module CollectionsHelper
   #Makes form select_options, indenting the children
   def get_collection_select_options(c, level=0)
     retval = []
-    
+#=begin
     #TODO: will have to pass in user instead of using current_user
     if not collection_is_viewable(c, current_user)
       return retval
     end
-    
+#=end
     retval << [('-' * level) + c.name, c.id]
     c.children.each do |child_c|
       get_collection_select_options(child_c, level + 1).each do |child_c|

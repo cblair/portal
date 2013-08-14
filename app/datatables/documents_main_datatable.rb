@@ -58,14 +58,14 @@ private
                                       search: "%#{params[:sSearch]}%"
                                       )
     end
-
+#=begin
     documents = []
     @documents_all.each do |doc|
       if doc_is_viewable(doc, @current_user)
         documents << doc
       end
     end
-
+#=end
     documents = documents.paginate({:page => page, :per_page => per_page})
     #page).per_page(per_page)
 
