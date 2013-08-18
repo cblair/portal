@@ -96,4 +96,5 @@ Portal::Application.configure do
 
   #Jobs stuff
   config.job_type = "delayed_job"
+
 end
