@@ -107,8 +107,11 @@ private
       results = elastic_search_all_and_return_doc_ids(search, @current_user)
       doc_list = results.collect {|id| Document.find(id)}
       colnames = []
-      if !doc_list.empty?
-        colnames = get_colnames_in_common(doc_list)
+
+      #Don't let unvalidated docs screw up the search results
+      validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      if !validated_doc_list.empty?
+        colnames = get_colnames_in_common(validated_doc_list)
       end
 
       #Get data results
