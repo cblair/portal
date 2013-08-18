@@ -102,8 +102,10 @@ class SearchesController < ApplicationController
 
       doc_list = results.collect {|id| Document.find(id)}
 
-      if !doc_list.empty?
-        colnames = get_colnames_in_common(doc_list)
+      #Don't let unvalidated docs screw up the search results
+      validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      if !validated_doc_list.empty?
+        colnames = get_colnames_in_common(validated_doc_list)
       end
     end
 
