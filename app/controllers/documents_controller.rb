@@ -8,16 +8,17 @@ class DocumentsController < ApplicationController
   before_filter :autologin_if_dev
   before_filter :authenticate_user!
   before_filter :require_permissions
-  
+  #load_and_authorize_resource
   
   def require_permissions
     if params.include?("id")
       document = Document.find(params[:id])
-      
+#=begin
       if not doc_is_viewable(document, current_user)
         flash[:error] = "Document not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
+#=end
     end
   end
   

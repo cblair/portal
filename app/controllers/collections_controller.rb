@@ -6,17 +6,19 @@ class CollectionsController < ApplicationController
   
   #before_filter :authenticate_user!
   before_filter :require_permissions
+  load_and_authorize_resource
   
   def require_permissions
     if not authenticate_user!
       redirect_to home_path
     elsif ( params.include?("collections") and params.include?("id") )
       collection = Collection.find(params[:id])
-      
+#=begin
       if not collection_is_viewable(collection, current_user)
         flash[:error] = "Collection not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
+#=end
     end
   end
   
@@ -42,14 +44,14 @@ class CollectionsController < ApplicationController
     @all_collections.each do |c|
       c.validated = collection_is_validated(c)
     end
-
+#=begin
     #filter for permission
     @all_collections.each do |c|
       if collection_is_viewable(c, current_user)
         @root_collections << c
       end
     end
-
+#=end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @root_collections }
@@ -63,14 +65,14 @@ class CollectionsController < ApplicationController
 
     #@documents = Document.where(:collection_id => @collection.id).paginate(:per_page => 5, :page => params[:page])
     @documents_all = Document.where(:collection_id => @collection.id)
-
+#=begin
     @documents = []
     @documents_all.each do |doc|
       if doc_is_viewable(doc, current_user)
         @documents << doc
       end
     end
-
+#=end
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @collection }

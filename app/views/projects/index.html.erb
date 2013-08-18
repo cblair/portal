@@ -14,9 +14,11 @@
     <tbody>
       <% @projects.each do |project| %>
         <tr>
+          <% if can? :read, project %>
           <td><%= link_to project.name, project_path(project) %></td>
           <td><%= project.pdesc %></td>
           <td>
+            <% if can? :manage, project %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                         edit_project_path(project), :class => 'btn btn-mini' %>
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -24,7 +26,9 @@
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                         :class => 'btn btn-mini btn-danger' %>
+            <% end %>
           </td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
