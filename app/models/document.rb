@@ -179,6 +179,7 @@ class Document < ActiveRecord::Base
 
     puts "########################################################"
     puts "Validating doc #{self.name}..."
+    self.job_id = job.id
     self.validate(ifilter)
     
     puts "Validating doc #{self.name} complete!"
