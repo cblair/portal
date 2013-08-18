@@ -1,0 +1,7 @@
+<% if @job != nil %>
+	<% if @job.finished == true %>
+			<a href="<%= job_path(@job) %>" class="label label-success"><i class="icon-check icon-white"></i> Job finished</a>
+	<% else %>
+		<a href="<%= job_path(@job) %>" class="label label-warning"><i class="icon-refresh icon-spin icon-white"></i> Job processing...</a>
+	<% end %>
+<% end %>

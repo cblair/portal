@@ -1,0 +1,18 @@
+07/01/13 Hatch Dev meeting
+
+TODOs from Alex
+	*ATP filter w/ data type mapping
+	*Document search / validation?
+	*Add filtered by in metadata
+
+TODOs From Colby:
+	*Doc public update fix
+	*Project add collections
+	*Make Import path better
+	*Data Explorer layout
+	*Set Jobs to nice
+	*Jobs delete all finished / processing
+	*Document poll for in Job
+	*Filter on Import page
+	*Upload in web thread, import on Job
+	*Make list of ES DSL types we want
