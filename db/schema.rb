@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20130814203840) do
     t.boolean  "validated"
     t.boolean  "public"
     t.integer  "project_id"
+    t.integer  "job_id"
   end
 
   create_table "documents_users", :id => false, :force => true do |t|

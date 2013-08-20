@@ -512,9 +512,11 @@ module DocumentsHelper
     end
 
     #If document is part of a project
-    doc.collection.projects.each do |project|
-      if (doc.collection.projects.include?(project) && project.users.include?(user))
-        return true
+    if doc.collection
+      doc.collection.projects.each do |project|
+        if (doc.collection.projects.include?(project) && project.users.include?(user))
+          return true
+        end
       end
     end
 

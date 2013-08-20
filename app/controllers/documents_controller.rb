@@ -91,6 +91,11 @@ class DocumentsController < ApplicationController
     @sdata = @document.stuffing_data
     @msdata = get_document_metadata(@document)
     
+    @job = nil
+    if @document.job_id != nil
+      @job = Job.find(@document.job_id)
+    end
+
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
     
