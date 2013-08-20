@@ -6,7 +6,9 @@
   </tr>
   <% for document in @documents %>
     <tr>
-      <td><%= document.name %></td>
+      <% if can? :read, document %>
+        <td><%= document.name %></td>
+      <% end %>
     </tr>
   <% end %>
 </table>

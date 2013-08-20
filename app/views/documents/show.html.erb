@@ -130,6 +130,8 @@
 	<hr/>
 	-->
 
-	<%= link_to 'Edit', edit_document_path(@document) %> |
+	<% if can? :manage, @document %>
+	  <%= link_to 'Edit', edit_document_path(@document) %> |
+	<% end %>
 	<%= link_to 'Back', documents_path %>
 </div>

@@ -83,12 +83,32 @@ class ProjectTest < ActiveSupport::TestCase
     proj.update_attributes(:name => "")
     assert proj.invalid?, "Description may be too short."
   end
+
+  #test good public field of project when public
+  test "test_good_public_project" do
+    proj = Project.new({:name => "Public Project", :pdesc => "Public project pdesc.",
+                        :public => true})
+    assert_equal true, proj.public, "Project should be public"
+  end
   
+  #test good public field of project when private
+  test "test_good_private_project" do
+    proj = Project.new({:name => "Public Project", :pdesc => "Public project pdesc.",
+                        :public => false})
+    assert_equal false, proj.public, "Project should be private"
+  end
+  
+  #test nil public field of project
+  test "test_nil_public_project" do
+    proj = Project.new({:name => "Public Project", :pdesc => "Public project pdesc.",
+                        :public => nil})
+    assert_equal nil, proj.public, "Project should be nil"
+  end
+
   #test destroy project
   test "test_project_destroy" do
     proj = Project.new({:name => "Destroy Project", :pdesc => "Destroy project pdesc."})
     proj.destroy
     assert_nil proj.id, "Project deleted successfully."
   end
-
 end

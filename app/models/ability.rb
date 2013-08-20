@@ -37,16 +37,25 @@ class Ability
     can :manage, User if is_admin(user) #see Ability helper
     can :manage, Role if is_admin(user)
     can :manage, Project if is_admin(user)
+    can :manage, Collection if is_admin(user)
+    can :manage, Document if is_admin(user)
     
     #Owner access permissions
-    can :manage, Project, :user_id => user.id #owner of project
-    can :manage, Collection, :user_id => user.id #owner of document
-    #can :manage, Document, :user_id => user.id #owner of document
+    can :manage, Project, :user_id => user.id #user/currrent ID is owner ID
+    can :manage, Collection, :user_id => user.id
+    can :manage, Document, :user_id => user.id
     
     #Collaborator access permissions
     can :read, Project, :collaborators => { :user_id => user.id }
-    #can :read, Collection, :collaborators => { :user_id => user.id }
-    #can :read, Document, :collaborators => { :user_id => user.id }
-
+    can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
+    can :read, Document do |doc|
+      doc.collection.projects.each do |proj|
+        doc.collection.projects.include?(proj) && proj.users.include?(user)
+      end
+    end
+    
+    #Public access permissions
+    can :read, Project, :public => true
+    can :read, Collection, :projects => { :public => true }
   end
 end

@@ -522,6 +522,13 @@ module DocumentsHelper
     if (user != nil and user.documents != nil and user.documents.include?(doc))
       return true
     end
+    
+    #If document is part of a public project
+    doc.collection.projects.each do |project|
+      if (doc.collection.projects[0].public == true)
+        return true
+      end
+    end
         
     return false
   end

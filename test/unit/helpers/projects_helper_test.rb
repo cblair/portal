@@ -50,6 +50,29 @@ class ProjectsHelperTest < ActionView::TestCase
 	end
 
   #---------------------------------------------------------------------
+  #Test setting public project to private
+  test "test_set_project_public" do
+    project = projects(:proj1)
+    is_public = proj_public_set(project)
+    assert is_public == true, "Project should be set to private."
+  end
+
+  #Test setting private project to public
+  test "test_set_project_private" do
+    project = projects(:proj2)
+    is_public = proj_public_set(project)
+    assert is_public == false, "Project should be set to public."
+  end
+
+  #Test for bad (nil) public field in a project
+  test "test_nil_public_project" do
+    project = projects(:proj1)
+    project.public = nil
+    is_public = proj_public_set(project)
+    assert is_public == nil, "Project public field not nil."
+  end
+
+  #---------------------------------------------------------------------
   ### Test adding collaborators to user documents ###
   #test adding a collaborator to a project (via user docs)
   test "test_add_collaborator_project" do

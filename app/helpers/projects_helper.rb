@@ -1,4 +1,24 @@
 module ProjectsHelper
+  #Toggles a project to public or private
+  def proj_public_set(project)
+    if (project == nil)
+      return nil
+    end
+    is_public = nil
+    
+    if (project.public == true)
+      project.update_attributes(:public => false) #Toggle to private
+      is_public = false
+    elsif (project.public == false)
+      project.update_attributes(:public => true) #Toggle to public
+      is_public = true
+    else
+      is_public = nil
+    end
+    
+    return is_public
+  end
+
   #creates a list of collaborators for a project collaborators table
   def colab_list_get()
     if (@project == nil)
