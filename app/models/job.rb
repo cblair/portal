@@ -16,6 +16,12 @@ class Job < ActiveRecord::Base
 =end
 
   def submit_job(current_user, ar_module, options)
+    jobs = Job.where(:user_id => current_user.id)
+    if jobs.count > 1000
+      puts "WARN: user #{current_user.email} has exceeded maximum jobs"
+      return false
+    end
+
     self.user = current_user
     self.waiting = true
 
