@@ -126,7 +126,12 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    @document.stuffing_text = @opened_file.read()
+    
+    file_text = @opened_file.read()
+    #Make sure we have valid UTF-8 encoding
+    file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
+
+    @document.stuffing_text = file_text
     #@document.project=p		#links document to project
     @document.user = user
 
@@ -270,7 +275,7 @@ module DocumentsHelper
        colnames = IfiltersHelper::get_ifiltered_colnames(row)
       else
         row = [row]
-      end
+      end 
       
       for j in (0..row.count() - 1)
         data_col_hash[ colnames[j] ] = row[j]
