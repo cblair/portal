@@ -21,13 +21,16 @@
     <%= f.select(:collection_id, get_all_collection_select_options, 
       {:include_blank => '(none)'} ) %>
   </div>
-  
+
+<!-- <div>
   <div class="field">
     <%= f.label :project_id %><br />
     <%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
  	<%= link_to "Projects...", projects_path %>
   </div>
-  
+</div> -->
+
+<!-- <div>
   <p>Add new collaborator</p>
   <div class="field">
   	<%= 
@@ -50,7 +53,8 @@
   <% end %>
   </div>
   <br />
-  
+</div> -->
+
   <div>
   	<p>Validate...</p>
   	<%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>

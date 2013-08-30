@@ -23,6 +23,15 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
       #gets all docs for the project
     @proj_docs = Document.where("project_id = ?", @project.id).order("name")
+    
+    @public = ""
+    if (@project.public == true)
+      @public = "Yes"
+    elsif (@project.public == false)
+      @public = "No"
+    else
+      @public = ""
+    end
 
     @root_collections = []
     project_collections_ids = []
