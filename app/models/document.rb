@@ -155,7 +155,9 @@ class Document < ActiveRecord::Base
     if !suc_valid
       puts "Document filtering failed. One of these is not right:"
       puts "####metadata:"
-      puts "stuffing_metadata.count #{stuffing_metadata.count.to_s} ?= f.stuffing_headers.count #{f.stuffing_headers.count}"
+      mcount = stuffing_metadata.count or 0
+      hcount = f.stuffing_headers.count or 0
+      puts "stuffing_metadata.count #{mcount.to_s} ?= f.stuffing_headers.count #{hcount}"
       puts stuffing_metadata.to_s
       puts "####data:####"
       puts stuffing_data.to_s

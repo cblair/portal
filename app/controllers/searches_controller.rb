@@ -109,6 +109,11 @@ class SearchesController < ApplicationController
       end
     end
 
+    #if colnames is empty, then just have one columns named "Documents"
+    if colnames.empty?
+      colnames = ["Documents"]
+    end
+
     search_data = {
       "documents" => doc_list.collect {|doc| doc.name}, 
       "colnames" => colnames,

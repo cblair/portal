@@ -57,7 +57,6 @@ jQuery(function($) {
     		});
 
     	if(searchVal != undefined) {
-    		console.log("TS57");
 	    	//Call search to filter from our initial search val
     		search_table.fnFilter(searchVal);
     	}
@@ -67,6 +66,9 @@ jQuery(function($) {
 	// Main Search stuff
 	////////////////////////////////////////////////////////////////////////////	
 	function initMainSearch() {
+		//Hide our "Document results only" alert for now
+		$('div.document-name-results-only').hide();
+
 		//Override the search submit with our own function that will do
 		// Datatable stuff
 		$('form#main-search').submit(updateMainSearch);
@@ -96,6 +98,20 @@ jQuery(function($) {
 				//$('div.scaffold table').hide();
 			},
 			success: function(result) {
+				//Fade out the doc-name only alert by default
+				$('div.document-name-results-only').fadeOut();
+
+				//If the colnames are only "Documents", display our doc-name only alert
+				console.log(result["colnames"]);
+				console.log(result["colnames"] === ["Documents"]);
+				if(
+					(result["colnames"].length === 1)
+					&&
+					(result["colnames"][0] === "Documents")
+				) {
+					$('div.document-name-results-only').fadeIn();
+				}
+
 				populateInitialSearch(result, searchVal);
 			},
 			error: function(result) {

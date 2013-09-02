@@ -156,23 +156,24 @@ private
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
             log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-            puts raw_data
+            puts raw_data[1..1000]
             next
           end
 
           if doc_is_viewable(doc, @current_user)
-            row["_source"]["data"].map do |data_row| 
-              values = []
-=begin
-              data_row.each do |key, val|
-                values << val
-              end
-=end
-              colnames.each do |colname|
-                values << data_row[colname]
-              end
-              @retval << values
-            end
+            #If there are no colnames in common, just return a list of document links
+            if colnames.empty?
+              @retval << [link_to(doc.name, doc)]
+            #Don't let unvalidated docs screw up the search results
+            elsif doc.validated
+              row["_source"]["data"].map do |data_row| 
+                values = []
+                colnames.each do |colname|
+                  values << data_row[colname]
+                end
+                @retval << values
+              end #end row...map
+            end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect
       end #end raw_data
