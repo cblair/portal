@@ -483,7 +483,7 @@ module DocumentsHelper
     return data_columns
   end
   
-#=begin
+
   #If the collection has any viewable docs or sub-collections
   def collection_is_viewable(collection, user, project=nil)
     if collection == nil
@@ -501,8 +501,8 @@ module DocumentsHelper
   
     return false
   end
-#=end
-#=begin
+
+
   def doc_is_viewable(doc, user)
     if doc == nil
       return false

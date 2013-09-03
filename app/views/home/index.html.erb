@@ -84,10 +84,13 @@
 		computational power of the cloud. Without the knowledged of the user.</p>
 	<p>Visualizations are quick, and can help researchers find relationships 
 		and trends they may not have realized.</p>
+
+	<!--These are failing. Diabling until we do Viz again and we can fix it.
 	<%= 
-		high_chart("my_id", @h) do |c|
-  		end 
+		#high_chart("my_id", @h) do |c|
+  		#end 
   	%>
+  	-->
 
   	<h3>Visualizing live data feeds</h3>
   	<p><span class="label label-warning">In Development</span></p>
@@ -95,10 +98,12 @@
   		Feed data is collected from a remote source, and put into a Hatch document.
   		Visualizations will then detect when document data changes, and will update
   		to show the new data.</p>
+  	<!--Failing (see above)
   	<%= 
-  		high_chart('h2_chart', @h2) do |c|
-		end 
+  		#high_chart('h2_chart', @h2) do |c|
+		#end 
 	%>
+	-->
 </div>
 
 <%= render "search_demo" %>
