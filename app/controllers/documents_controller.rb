@@ -93,7 +93,11 @@ class DocumentsController < ApplicationController
     
     @job = nil
     if @document.job_id != nil
-      @job = Job.find(@document.job_id)
+      begin ActiveRecord::RecordNotFound
+        @job = Job.find(@document.job_id)
+      rescue 
+	puts "INFO: Job for Document #{@document.name} no longer exists." 
+      end
     end
 
     current_page = params[:page]
