@@ -19,15 +19,15 @@ user4.roles << role_list[0]
 #role_list = Role.create([{:name => 'admin'}, {:name => 'owner'}, {:name => 'collaborator'}, {:name => 'group'}])
 
 
-proj1 = Project.new(:name => 'Test1.1', :pdesc => 'test 1.1', :user_id => 1)
+proj1 = Project.new(:name => 'Test1.1', :pdesc => 'test 1.1', :user_id => 1, :public => false)
 proj1.save()
-proj2 = Project.new(:name => 'Test1.2', :pdesc => 'test 1.2', :user_id => 1)
+proj2 = Project.new(:name => 'Test1.2', :pdesc => 'test 1.2', :user_id => 1, :public => false)
 proj2.save()
-proj3 = Project.new(:name => 'Test1.3', :pdesc => 'test 1.3', :user_id => 1)
+proj3 = Project.new(:name => 'Test1.3', :pdesc => 'test 1.3', :user_id => 1, :public => false)
 proj3.save()
-proj4 = Project.new(:name => 'Test2.1', :pdesc => 'test 2.1', :user_id => 2)
+proj4 = Project.new(:name => 'Test2.1', :pdesc => 'test 2.1', :user_id => 2, :public => false)
 proj4.save()
-proj5 = Project.new(:name => 'Test3.1', :pdesc => 'test 3.1', :user_id => 3)
+proj5 = Project.new(:name => 'Test3.1', :pdesc => 'test 3.1', :user_id => 3, :public => false)
 proj5.save()
 
 collection1 = Collection.new(:name => 'ATM', :user_id => 1)

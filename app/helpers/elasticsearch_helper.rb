@@ -2,10 +2,13 @@ module ElasticsearchHelper
 
   #Facet Searches ------------------------------------------------------
   #Takes a query and field string, returns terms facet information
-  def es_terms_facet(qstr, sfield)
+  #Returns metadata only
+  def es_terms_facet(qstr, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {\"query\": 
+    {#{str}
+     \"query\": 
       {\"query_string\": {\"query\":\"#{qstr}\"} },
        \"facets\": 
          {\"#{sfield}\": 
@@ -16,22 +19,28 @@ module ElasticsearchHelper
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
-    
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
+
     return data
   end
   
   #Takes a starting and ending value plus a field, returns a range facet
   #NOTE: it is unclear how this is working
-  def es_range_facet(qfrom, qto, sfield)
+  def es_range_facet(qfrom, qto, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
-    \"query\" : {
-      \"range\" : {
-        \"#{sfield}\" : { \"from\" : #{qfrom}, \"to\" : #{qto} }
-       }
-     },
+    {#{str}
+     \"query\" : {
+       \"range\" : {
+         \"#{sfield}\" : { \"from\" : #{qfrom}, \"to\" : #{qto} }
+        }
+      },
        \"facets\" : {
          \"myrange\" : {
            \"range\" : {
@@ -45,19 +54,25 @@ module ElasticsearchHelper
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
   
   #Takes a staring and ending date plus a date field, returns a date range facet
-  def es_date_range_facet(qfrom, qto, sfield)
+  def es_date_range_facet(qfrom, qto, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"range\" : {
-         \"#{sfield}\" : { \"from\" : #{qfrom}, \"to\" : #{qto} }
+         \"#{sfield}\" : { \"from\" : \"#{qfrom}\", \"to\" : \"#{qto}\" }
         }
       },
       \"facets\" : {
@@ -73,7 +88,12 @@ module ElasticsearchHelper
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
@@ -81,10 +101,11 @@ module ElasticsearchHelper
   #Takes an interval (e.g. "day", "month") plus a date field,
   #returns a date range histogram
   #TODO: input needs date range?
-  def es_date_histogram_facet(sfield, myinterval, qfrom, qto)
+  def es_date_histogram_facet(sfield, myinterval, qfrom, qto, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"range\" : {
          \"#{sfield}\" : { \"from\" : \"#{qfrom}\", \"to\" : \"#{qto}\" }
@@ -101,7 +122,12 @@ module ElasticsearchHelper
     }'"
         
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
@@ -109,17 +135,23 @@ module ElasticsearchHelper
   #Basic Searches ------------------------------------------------------
   #Match: accept text/numerics/dates, analyzes it, and constructs a query
   #Input: query string, field
-  def es_match_search(qstr, sfield)
+  def es_match_search(qstr, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"match\" : { \"#{sfield}\" : \"#{qstr}\" }
        }
     }'"
 
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
@@ -128,10 +160,11 @@ module ElasticsearchHelper
   
   #Filtered: applies a filter to the results of another query
   #Input: query, search field, range field, staring and ending value
-  def es_filtered_search(qstr, sfield, rfield, qfrom, qto)
+  def es_filtered_search(qstr, sfield, rfield, qfrom, qto, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"filtered\" : {
          \"query\" : { \"term\" : { \"#{sfield}\" : \"#{qstr}\" } },
@@ -145,7 +178,12 @@ module ElasticsearchHelper
     }'"
 
     data = []
-    data = es_connect(conn_str, qbody)
+   case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
@@ -153,10 +191,11 @@ module ElasticsearchHelper
   #Fuzzy Like This: find documents that are “like” provided text by
   # running it against a single field
   #Input: text, field name, max query terms
-  def es_flt_field_search(qtext, sfield, max)
+  def es_flt_field_search(qtext, sfield, max, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"fuzzy_like_this_field\" : {
          \"#{sfield}\" : {
@@ -168,7 +207,12 @@ module ElasticsearchHelper
     }'"
 
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
@@ -178,27 +222,34 @@ module ElasticsearchHelper
   #Prefix Query: Matches documents that have fields containing terms
   # with a specified prefix (not analyzed)
   #Input: query and field strings
-  def es_prefix_search(qstr, sfield)
+  def es_prefix_search(qstr, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"prefix\" : { \"#{sfield}\" : \"#{qstr}\" }
       }
     }'"
 
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
 
     return data
   end
   
   #Query String: uses a query parser in order to parse its content
   #Input: query string
-  def es_query_string_search(qstr)
+  def es_query_string_search(qstr, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"query_string\" : {
          \"query\" : \"#{qstr}\"
@@ -207,17 +258,23 @@ module ElasticsearchHelper
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
     
     return data
   end
   
   #Range: Matches documents with fields that have terms within a certain range
   #Input: field string, starting and ending value
-  def es_range_search(sfield, qfrom, qto)
+  def es_range_search(sfield, qfrom, qto, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"range\" : {
          \"#{sfield}\" : { \"from\" : #{qfrom}, \"to\" : #{qto} }
@@ -226,7 +283,12 @@ module ElasticsearchHelper
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
     
     return data
   end
@@ -235,17 +297,23 @@ module ElasticsearchHelper
   
   #Term: Matches documents that have fields that contain a term (not analyzed)
   #Input: query and field string (query -> lower case, field -> uppercase?)
-  def es_term_search(qstr, sfield)
+  def es_term_search(qstr, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"term\" : { \"#{sfield}\" : \"#{qstr}\" }
       }
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
     
     return data
   end
@@ -255,28 +323,39 @@ module ElasticsearchHelper
   #Wildcard: Matches documents that have fields matching a wildcard
   # expression (not analyzed)
   #Input: query and field string (query -> lower case, field -> uppercase?)
-  def es_wildcard_search(qstr, sfield)
+  def es_wildcard_search(qstr, sfield, flag)
+    str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
-    {
+    {#{str}
      \"query\" : {
        \"wildcard\" : { \"#{sfield}\" : \"#{qstr}\" }
       }
     }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    case
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
     
     return data
   end
   
   #SAS for testing and debuging ONLY!
-  def es_test(qstr, sfield)
+  def es_test(qstr, sfield, flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
-    qbody = "{\"query\":{\"match\":{\"#{sfield}\":\"#{qstr}\"}}}'"
+    qbody = "
+    {#{str}
+     \"query\":{
+       \"match\":{ \"#{sfield}\" : \"#{qstr}\" }
+      }
+    }'"
     
     data = []
-    data = es_connect(conn_str, qbody)
+    data = es_connect_md(conn_str, qbody) #metadata
     
     return data
   end
@@ -285,13 +364,38 @@ module ElasticsearchHelper
   def elastic_search_url(search)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
     #data = []
-    data = es_connect(conn_str, qbody)
+    data = es_connect_md(conn_str, qbody)
     
+    return data
+  end
+  
+  #Takes ES connection string, calls http, performs some post processing,
+  # returns document metadata, not the full doc.
+  def es_connect_md(conn_str, qbody)
+    conn_hash = get_http_connection_hash
+    #override with elasticsearch's port
+    conn_hash[:port] = 9200
+    
+    puts "Elasticsearch query: #{conn_str} #{qbody}, with connection:"
+    puts conn_hash.inspect
+
+    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
+    data = []
+
+    begin
+      hits = full_data["hits"]["hits"]
+      
+      data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
+    rescue NoMethodError
+      log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
+      log_and_print full_data.to_s
+    end
+
     return data
   end
 
   #Takes ES connection string, calls http, performs some post processing,
-  # returns raw queried data
+  # returns raw queried data, full documents.
   def es_connect(conn_str, qbody)
     conn_hash = get_http_connection_hash
     #override with elasticsearch's port
@@ -340,6 +444,23 @@ module ElasticsearchHelper
     end
 
     return data
+  end
+  
+  #---------------------------------------------------------------------
+  #Other helper functions
+  
+  #Determines if the search should return document metadata only or the
+  # full document
+  def search_type(flag)
+    str = ""
+    
+    if (flag == "m")
+      str = "\"fields\" : []," #ES command for document metadata only
+    elsif (flag == "f")
+      str = ""
+    end
+    
+    return str
   end
 
 end

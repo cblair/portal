@@ -15,7 +15,8 @@
 
 	<%= render :partial => "documents/documents_datatable", 
 				:locals => {:collection => @collection} %>
-
-	<%= link_to 'Edit', edit_collection_path(@collection) %> |
+	<% if can? :manage, @collection %>
+	  <%= link_to 'Edit', edit_collection_path(@collection) %> |
+	<% end %>
 	<%= link_to 'Back', collections_path %>
 </div>

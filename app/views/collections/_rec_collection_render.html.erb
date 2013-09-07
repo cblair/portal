@@ -5,6 +5,7 @@
 	    	<i class="icon-folder-close icon-white"></i>
 	    	<%= link_to collection.name, collection %>
 	    	<span>
+	    	  <% if can? :read, collection %>
 		    	<a class="col-doc-plus-minus" id="col-doc-plus" href="#" data-treedepth="<%= tree_depth %>" data-col-doc-type="plus" data-parent-collection-id="<%= parent_collection_id%>">
 		    		<i class="icon-plus icon-white"></i>
 		    	</a>
@@ -13,7 +14,7 @@
 		    		<i class="icon-minus icon-white"></i>
 		    	</a>
 		    	<br />
-
+		    	<% if can? :manage, collection %>
 		    	<span class="col-doc-attrs">
 					<div class="btn-group">
 					  <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
@@ -47,9 +48,10 @@
 					    <li><%= link_to 'Destroy', collection, confirm: 'Are you sure?', method: :delete %></li>
 					  </ul>
 					</div>
+				<% end %> <!-- if can? :manage, collection -->
 		  		</span>
+		  	  <% end %> <!-- if can? :read, collection -->
 		    </span>
-	    	
 	    	<ul class="col-doc-attr-form">
 	  			<% collection.children.order('name').each do |child_collection| %>
 					<%= render :partial => "collections/rec_collection_render", :locals => {:collection => child_collection, :tree_depth => tree_depth + 1, :parent_collection_id => parent_collection_id, :project => project} %>

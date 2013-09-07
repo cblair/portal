@@ -34,11 +34,15 @@
 	</div>
 
 	<% if @document.validated %>
-		<%= link_to 'Edit', edit_document_path(@document) %> |
+	        <% if can? :manage, @document %>
+	           <%= link_to 'Edit', edit_document_path(@document) %> |
+                <% end %>
 		<%= link_to 'Back', documents_path %>
 	<% else %>
-		<%= link_to 'Edit Properties', edit_document_path(@document) %> |
-		<%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+         	<% if can? :manage, @document %>
+		   <%= link_to 'Edit Properties', edit_document_path(@document) %> |
+		   <%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+		<% end %>
 		<%= link_to 'Back', documents_path %>
 	<% end %>
 
@@ -142,4 +146,5 @@
 	
 	<hr/>
 	-->
+
 </div>

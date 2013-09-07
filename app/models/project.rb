@@ -1,5 +1,5 @@
 class Project < ActiveRecord::Base
-  attr_accessible :name, :pdesc, :user_id
+  attr_accessible :name, :pdesc, :user_id, :public
   
   validates :name,		:presence => true, :length => { :minimum => 3 }
   validates :pdesc,		:presence => true, :length => { :minimum => 1 }

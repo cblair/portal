@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130811220124) do
+ActiveRecord::Schema.define(:version => 20130814203840) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -149,6 +149,7 @@ ActiveRecord::Schema.define(:version => 20130811220124) do
     t.integer  "project_id"
     t.integer  "user_id"
     t.integer  "collection_id"
+    t.boolean  "public"
   end
 
   create_table "roles", :force => true do |t|

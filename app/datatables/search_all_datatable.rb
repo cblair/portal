@@ -104,8 +104,9 @@ private
       
       #TODO: do one search instead of two
       #Get doc list, so we can get colnames in common
-      results = elastic_search_all_and_return_doc_ids(search, @current_user)
-      doc_list = results.collect {|id| Document.find(id)}
+      results = es_query_string_search(search)
+
+      doc_list = get_docs_from_raw_es_data(results, @current_user)
       colnames = []
 
       #Don't let unvalidated docs screw up the search results
@@ -118,6 +119,8 @@ private
       #raw_data = elastic_search_all_data(search) #Orignal
       #raw_data = elastic_search_url(search)
       raw_data = elastic_search_all_data(search, mode="full")
+
+      debugger
       
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
       #raw_data = es_terms_facet(search, sfield) #SAS makes ES query

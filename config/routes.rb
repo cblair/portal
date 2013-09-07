@@ -45,6 +45,7 @@ Portal::Application.routes.draw do
   match '/search/new' => "searches#new", :as => :new_search
 
   resources :projects
+  match '/projects/project_public_set/:id' => "projects#project_public_set", :as => :project_public_set
   match '/projects/owner/:id' => "projects#owner", :as => :owner
   match '/projects/add_project_collection/:id' => "projects#add_project_collection", :as => :add_project_collection
   match '/projects/remove_project_collections/:id' => "projects#remove_project_collections", :as => :remove_project_collections

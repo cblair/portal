@@ -23,6 +23,15 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
       #gets all docs for the project
     @proj_docs = Document.where("project_id = ?", @project.id).order("name")
+    
+    @public = ""
+    if (@project.public == true)
+      @public = "Yes"
+    elsif (@project.public == false)
+      @public = "No"
+    else
+      @public = ""
+    end
 
     @root_collections = []
     project_collections_ids = []
@@ -66,6 +75,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(params[:project])
     @project.user_id = current_user.id
+    @project.public = false
     user = User.where(:id => params[:new_user_id]).first #for adding a collaborator
     
     respond_to do |format|
@@ -109,6 +119,29 @@ class ProjectsController < ApplicationController
     end
   end
   
+  # PUT /projects/1
+  # PUT /projects/1.json
+  def project_public_set
+    project = Project.find(params[:id]) #needed for "respond_to"
+    
+    if (params.include?(:id) and project != nil)
+      is_public = proj_public_set(project)
+    end
+    
+    respond_to do |format|
+      if (is_public == true)
+        format.html { redirect_to project, notice: 'Project is now public.'}
+        format.json { head :ok }
+      elsif (is_public == false)
+        format.html { redirect_to project, notice: 'Project is now private.'}
+        format.json { head :ok }
+      else
+        format.html { redirect_to project, notice: 'ERROR: access control unknown.'}
+        format.json { head :ok }
+      end
+    end
+  end
+
   # PUT /projects/add_project_collection/1
   # PUT /projects/add_project_collection/1.json
   def add_project_collection
