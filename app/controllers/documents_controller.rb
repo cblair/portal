@@ -141,6 +141,12 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def edit_text
+    @document = Document.find(params[:id])
+
+
+  end
+
   # POST /documents
   # POST /documents.json
   def create
@@ -168,51 +174,71 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
 
     suc_msg = 'Document was successfully updated. '
-    
-    #Add doc to project
-    if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
-      project = Project.find(params[:proj][:id])
-        #p("*** doc proj = ", project.name, project.id) #debug
-        #p("*** doc = ", @document.name, @document.id) #debug
-      if (project != nil)
-        add_project_doc(project, @document) #call to document helper, adds doc to project
+      
+    #if we're in document text edit mode
+    if (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_text")
+      @document.stuffing_text = params["document"]["stuffing_text"]
+      update_suc = @document.save
+    else
+      #Add doc to project
+      if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
+        project = Project.find(params[:proj][:id])
+          #p("*** doc proj = ", project.name, project.id) #debug
+          #p("*** doc = ", @document.name, @document.id) #debug
+        if (project != nil)
+          add_project_doc(project, @document) #call to document helper, adds doc to project
+        end
+      end
+
+      user = User.where(:id => params[:new_user_id]).first
+     
+      #Add collaborator
+      if user != nil
+        if not user.documents.include?(@document)
+          user.documents << @document
+          user.save
+        end
+      end
+      
+      #Remove collaborators
+      if params[:colab_user_ids]
+        User.find(params[:colab_user_ids]).each do |user|
+          user.documents.delete(@document)
+        end
+      end
+
+      #Update other attributes
+      update_suc = @document.update_attributes(params[:document])
+
+      #Filter / Validate
+      if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
+        #f = Ifilter.find(params[:post][:ifilter_id])
+        f = get_ifilter(params[:post][:ifilter_id].to_i)
+
+        #don't let validate auto-filter
+        if f != nil
+          suc_msg += 'Validation filter started; refresh your browser to check for completion. '
+
+          job = Job.new(:description => "Document #{@document.name} validation")
+          job.save
+          job.submit_job(current_user, @document, {:ifilter => f})
+        end
+      end
+    end #end if in text edit mode, else...
+
+    respond_to do |format|
+      if update_suc
+        format.html { redirect_to @document, notice: suc_msg }
+        format.json { head :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
       end
     end
+  end
 
-    user = User.where(:id => params[:new_user_id]).first
-   
-    #Add collaborator
-    if user != nil
-      if not user.documents.include?(@document)
-        user.documents << @document
-        user.save
-      end
-    end
-    
-    #Remove collaborators
-    if params[:colab_user_ids]
-      User.find(params[:colab_user_ids]).each do |user|
-        user.documents.delete(@document)
-      end
-    end
-
-    #Update other attributes
-    update_suc = @document.update_attributes(params[:document])
-
-    #Filter / Validate
-    if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
-      #f = Ifilter.find(params[:post][:ifilter_id])
-      f = get_ifilter(params[:post][:ifilter_id].to_i)
-
-      #don't let validate auto-filter
-      if f != nil
-        suc_msg += 'Validation filter started; refresh your browser to check for completion. '
-
-        job = Job.new(:description => "Document #{@document.name} validation")
-        job.save
-        job.submit_job(current_user, @document, {:ifilter => f})
-      end
-    end
+  #Does the update for unvalidated/unfiltered documents with changes to text.
+  def update_text
 
     respond_to do |format|
       if update_suc

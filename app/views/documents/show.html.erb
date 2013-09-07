@@ -33,6 +33,15 @@
 		<%= render 'doc_job_status' %>
 	</div>
 
+	<% if @document.validated %>
+		<%= link_to 'Edit', edit_document_path(@document) %> |
+		<%= link_to 'Back', documents_path %>
+	<% else %>
+		<%= link_to 'Edit Properties', edit_document_path(@document) %> |
+		<%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+		<%= link_to 'Back', documents_path %>
+	<% end %>
+
 	<hr/>
 	
 	<div class="container-fluid">
@@ -133,7 +142,4 @@
 	
 	<hr/>
 	-->
-
-	<%= link_to 'Edit', edit_document_path(@document) %> |
-	<%= link_to 'Back', documents_path %>
 </div>
