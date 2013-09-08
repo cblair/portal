@@ -168,9 +168,14 @@ jQuery(function($) {
 
 	} //end runSearchesControllerJS
 
+
 	$(document).ready(function () {
 		if(CONTROLLER_NAME == "searches") {
 			runSearchesControllerJS();
 		}
+
+		//other page decorations
+		$('#search-help').tooltip();
+
 	}); 
 });

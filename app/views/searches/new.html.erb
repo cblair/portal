@@ -35,6 +35,13 @@
 	  <button type="submit" class="btn">
 	  	<i class="icon-search"></i>
 	  </button>
+
+	  	<%
+	  		search_help_text = "Click for search syntax information."
+	  	%>
+	  	<a href="http://lucene.apache.org/core/3_4_0/queryparsersyntax.html" data-toggle="tooltip" title="<%= search_help_text %>" id="search-help" data-placement="right">
+		  	<i class="icon-question-sign"></i>
+	  	</a>
 	</form>
 
 	<br />
