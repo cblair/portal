@@ -440,7 +440,6 @@ module ElasticsearchHelper
       response_data = http.request(req)
       data = JSON.parse(response_data.body)
       
-      puts data
     end
 
     return data
