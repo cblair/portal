@@ -59,8 +59,7 @@ private
             begin
               doc = Document.find(doc_id)
             rescue ActiveRecord::RecordNotFound
-              log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-              puts raw_datum
+              log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
             end
 
             if doc_is_viewable(doc, @current_user)
@@ -154,8 +153,7 @@ private
           begin
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
-            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-            puts raw_data[1..1000]
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
             next
           end
 
@@ -220,8 +218,7 @@ private
           begin
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
-            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-            puts raw_data
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
           end
 
           if doc_is_viewable(doc, @current_user)

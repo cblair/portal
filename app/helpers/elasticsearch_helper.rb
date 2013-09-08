@@ -387,8 +387,9 @@ module ElasticsearchHelper
       
       data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
     rescue NoMethodError
-      log_and_print "WARN: elastic_search_all_data missing data in reponse. Full response:"
-      log_and_print full_data.to_s
+      log_and_print "WARN: elastic_search_all_data missing data in reponse."
+      #Leaving this reporting data out, as its too slow.
+      #log_and_print full_data.to_s
     end
 
     return data
@@ -409,8 +410,9 @@ module ElasticsearchHelper
     begin
       data = full_data["hits"]["hits"]
     rescue
-      log_and_print "WARN: search had not results. Data:"
-      log_and_print full_data.inspect
+      log_and_print "WARN: search had not results."
+      #Leaving this reporting data out, as its too slow.
+      #log_and_print full_data.inspect
     end
 
     return data
