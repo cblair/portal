@@ -105,7 +105,7 @@
 			</table>
 		<% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
 			<p>Raw unvalidated text: </p>
-			<p><%= simple_format @document.stuffing_text[1..100000] %>...</p>
+			<p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
 			<p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
 		<% else %>
 			<p>(none)</p>

@@ -112,7 +112,7 @@ class SearchesController < ApplicationController
 
     #if colnames is empty, then just have one columns named "Documents"
     if colnames.empty?
-      colnames = ["Documents"]
+      colnames = ["Documents", "More Information"]
     end
 
     search_data = {

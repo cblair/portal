@@ -3,7 +3,7 @@ class SearchAllDatatable
   include ElasticsearchHelper
   require 'will_paginate/array'
 
-  delegate :params, :h, :link_to, to: :@view
+  delegate :params, :h, :link_to, :document_path, to: :@view
 
   def initialize(view, current_user)
     @view = view
@@ -162,7 +162,31 @@ private
           if doc_is_viewable(doc, @current_user)
             #If there are no colnames in common, just return a list of document links
             if colnames.empty?
-              @retval << [link_to(doc.name, doc)]
+              #Make Popover content
+              # Metadata
+              popover_content = "(no metadata)"
+              if doc.stuffing_metadata
+                key_values_list = doc.stuffing_metadata.collect do |md|
+                  "<tr><td>" + md.keys.first + "</td><td>" + md.values.first + "</td></tr>"
+                end
+                popover_content = "<table>"
+                popover_content += key_values_list.join
+                popover_content += "</table>"
+              end
+
+              #Colnames
+              doc_colnames = get_data_colnames(doc.stuffing_data)
+              if doc_colnames
+                popover_content += "<b>Column names:</b>"
+                popover_content += '<table>'
+                popover_content += doc_colnames.collect {|doc_colname| "<tr><td>" + doc_colname + "</td></tr>" }.join
+                popover_content += "</table>"
+              end
+
+              popover_html = '<a href="' + document_path(doc) + '" class="btn btn-lg btn-info doc-popover" data-toggle="popover" title="" data-content="' + popover_content + '" data-original-title="Metadata">Metadata</a>'
+              popover_html = '<div style="font-size:x-small">' + popover_html.html_safe + '</div>'
+
+              @retval << [link_to(doc.name, doc), popover_html]
             #Don't let unvalidated docs screw up the search results
             elsif doc.validated
               row["_source"]["data"].map do |data_row| 

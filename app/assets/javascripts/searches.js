@@ -101,9 +101,6 @@ jQuery(function($) {
 				//Fade out the doc-name only alert by default
 				$('div.document-name-results-only').fadeOut();
 
-				//If the colnames are only "Documents", display our doc-name only alert
-				console.log(result["colnames"]);
-				console.log(result["colnames"] === ["Documents"]);
 				if(
 					(result["colnames"].length === 1)
 					&&
@@ -157,6 +154,13 @@ jQuery(function($) {
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+	// Other Search decoration stuff
+	////////////////////////////////////////////////////////////////////////////
+	function decorateDocPopovers() {
+		$('.doc-popover').popover({html : true, trigger : 'hover'});
+	}
+
+	////////////////////////////////////////////////////////////////////////////
 	// Search Controller stuff
 	////////////////////////////////////////////////////////////////////////////
 	function runSearchesControllerJS() {
@@ -177,5 +181,9 @@ jQuery(function($) {
 		//other page decorations
 		$('#search-help').tooltip();
 
+	    //decorate popovers on search results
+		//We won't know from Datatable's AJAX call when new data is displayed, 
+		//so call popover every once in a while.
+		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
 	}); 
 });
