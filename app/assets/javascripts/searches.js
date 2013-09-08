@@ -102,7 +102,7 @@ jQuery(function($) {
 				$('div.document-name-results-only').fadeOut();
 
 				if(
-					(result["colnames"].length === 1)
+					(result["colnames"].length === 2)
 					&&
 					(result["colnames"][0] === "Documents")
 				) {
