@@ -26,7 +26,8 @@ module ProjectsHelper
     end
     
     #creates a list of collaborators with access to this project
-    colab_list = Collaborator.order("user_email").where("project_id = ?", @project.id)
+    colab_list = Collaborator.order("user_email").where(project_id: @project.id, editor: false)
+    #colab_list = Collaborator.order("user_email").where("project_id = ?", @project.id)
     #colab_list.uniq! #removes extra users from list (so they only appear once)
     return colab_list
   end
@@ -84,14 +85,18 @@ module ProjectsHelper
     end
     
     if Collaborator.exists?(:user_id => user.id, :project_id => @project.id) #avoids duplicate collaborators
+      colab = Collaborator.where(user_id: user.id).first
+      if (colab.editor == true)
+        colab.update_attributes(:editor => false)
+      end
       return true
     end
-      
+    
     colab = Collaborator.new
     colab.update_attributes(:project_id => @project.id, :project_name => @project.name,
-      :user_id => user.id, :user_email => user.email)
+      :user_id => user.id, :user_email => user.email, :editor => false)
     colab_add_to_docs(user)
-    return true    
+    return true
   end
   
   #removes a collaborator from a project
@@ -162,6 +167,47 @@ module ProjectsHelper
     else
       return false
     end
+  end
+  
+  # Editor helpers -----------------------------------------------------
+  #Creates a list of editors
+  def editor_list_get()
+    if (@project == nil)
+      return false
+    end
+    
+    #creates a list of editors with access to this project
+    editor_list = Collaborator.order("user_email").where(project_id: @project.id, editor: true)
+    return editor_list
+  end
+  
+  #Adds an editor to a project
+  def editor_add(editor_new)
+    if (@project == nil or editor_new == nil)
+      return false
+    end
+    
+    if Collaborator.exists?(:user_id => editor_new.id, :project_id => @project.id) #avoids duplicate editors
+      user = Collaborator.where(user_id: editor_new.id).first
+      user.update_attributes(:editor => true)
+      return true
+    end
+      
+    colab = Collaborator.new
+    colab.update_attributes(:project_id => @project.id, :project_name => @project.name,
+      :user_id => editor_new.id, :user_email => editor_new.email, :editor => true)
+    colab_add_to_docs(editor_new)
+    return true
+  end
+  
+  #removes a editor(s) from a project
+  def editor_remove_project(editor_user_ids)
+    if @project == nil or editor_user_ids == nil or editor_user_ids.blank?
+      return false
+    end
+    
+    Collaborator.where(:user_id => editor_user_ids, :project_id => @project.id).destroy_all
+    return true
   end
   
   # Document helpers ---------------------------------------------------
@@ -241,7 +287,7 @@ module ProjectsHelper
   end
 
   # Change owner, and cleanup-------------------------------------------
-  ###  ###
+  ###Extra functions  ###
   #changes the owner of a project and all of its documents
   def change_owner(target_user_id)
     if (@project == nil or target_user_id == nil or target_user_id.blank?)

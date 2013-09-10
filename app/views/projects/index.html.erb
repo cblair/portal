@@ -18,9 +18,11 @@
           <td><%= link_to project.name, project_path(project) %></td>
           <td><%= project.pdesc %></td>
           <td>
-            <% if can? :manage, project %>
+          <% if can? :manage, project %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                         edit_project_path(project), :class => 'btn btn-mini' %>
+          <% end %> <!-- can-can -->
+          <% if can? :manage, project %>
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                         project_path(project),
                         :method => :delete,
@@ -28,9 +30,9 @@
                         :class => 'btn btn-mini btn-danger' %>
             <% end %>
           </td>
-          <% end %>
+          <% end %> <!-- can-can -->
         </tr>
-      <% end %>
+      <% end %> <!-- can-can -->
     </tbody>
   </table>
 

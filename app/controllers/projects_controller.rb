@@ -68,6 +68,7 @@ class ProjectsController < ApplicationController
     
     #call to project helper (for removing collaborators)
     @colab_list = colab_list_get()
+    @editor_list = editor_list_get()
   end
   
   # POST /projects
@@ -95,16 +96,26 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])    
     user = User.where(:id => params[:new_user_id]).first #collaborator
-    colab_user_ids = params[:colab_user_ids]
+    colab_user_ids = params[:colab_user_ids] #removing collaborators
+    editor_new = User.where(:id => params[:new_editor_id]).first #editor
+    editor_user_ids = params[:editor_user_ids] #removing editors
 
     if (@project != nil and user != nil)
-      colab_add(user)
+      colab_add(user) #Adds a new collaborator
+    end
+    
+    if (@project != nil and editor_new != nil)
+      editor_add(editor_new) #Adds a new editor
     end
     
     if (@project != nil and colab_user_ids != nil and not colab_user_ids.blank?)
       colab_remove_project(colab_user_ids) #removes collaborators from a project
-      colabs_remove_docs(colab_user_ids) #removes collaborators from documents
-    end	
+      colabs_remove_docs(editor_user_ids) #removes collaborators from documents
+    end
+    
+    if (@project != nil and editor_user_ids != nil and not editor_user_ids.blank?)
+      editor_remove_project(editor_user_ids) #removes collaborators from a project
+    end
 
     #TODO: add new error message, use different error flag?
     respond_to do |format|

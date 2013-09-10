@@ -22,12 +22,14 @@
                 project_public_set_path(@project),
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                 :class => 'btn' %>
+    <% end %> <!-- can-can -->
+    <% if can? :manage, @project %>
     <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                 project_path(@project),
                 :method => 'delete',
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                 :class => 'btn btn-danger' %>
-    <% end %>
+    <% end %> <!-- can-can -->
   </div>
 
   <hr />

@@ -29,6 +29,24 @@
       <% end %>
     <% end %>
   </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <p>Add an editor to this project</p>
+      <%= select_tag("new_editor_id", options_from_collection_for_select(User.order("email").all, "id", "email"), :include_blank => true) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :remove_existing_editors_from_this_project, :class => "control-label" %>
+    <% if (@editor_list != nil) %>
+      <% @editor_list.each do |editor| %>
+        <div class="field">
+        <%= check_box_tag("editor_user_ids[]", editor.user_id)%>
+        <%= editor.user_email %>
+      </div>
+      <% end %>
+    <% end %>
+  </div>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

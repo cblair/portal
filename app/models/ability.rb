@@ -45,14 +45,22 @@ class Ability
     can :manage, Collection, :user_id => user.id
     can :manage, Document, :user_id => user.id
     
+    #Editor access permissions
+    can :manage, Project, :collaborators => { :user_id => user.id, :editor => true }
+    can :manage, Collection, :projects => { :collaborators => { :user_id => user.id, :editor => true }}
+    can :manage, Document, :collection => { :projects => { :collaborators => { :user_id => user.id, :editor => true }}}
+    
     #Collaborator access permissions
     can :read, Project, :collaborators => { :user_id => user.id }
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
-    can :read, Document do |doc|
-      doc.collection.projects.each do |proj|
-        doc.collection.projects.include?(proj) && proj.users.include?(user)
-      end
-    end
+    can :read, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
+    
+    #SAS: This rule version should be depricated but keep it for now
+    #can :read, Document do |doc|
+    #  doc.collection.projects.each do |proj|
+    #    doc.collection.projects.include?(proj) && proj.users.include?(user)
+    #  end
+    #end
     
     #Public access permissions
     can :read, Project, :public => true
