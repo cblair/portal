@@ -95,8 +95,9 @@ class DocumentsController < ApplicationController
     if @document.job_id != nil
       begin ActiveRecord::RecordNotFound
         @job = Job.find(@document.job_id)
-      rescue 
-	puts "INFO: Job for Document #{@document.name} no longer exists." 
+      rescue
+        @job = false
+        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
       end
     end
 
@@ -221,7 +222,7 @@ class DocumentsController < ApplicationController
 
           job = Job.new(:description => "Document #{@document.name} validation")
           job.save
-          job.submit_job(current_user, @document, {:ifilter => f})
+          job.submit_job(current_user, @document, {:ifilter_id => f.id})
         end
       end
     end #end if in text edit mode, else...

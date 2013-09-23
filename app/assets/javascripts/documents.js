@@ -3,6 +3,9 @@ var DOCUMENTS_SEARCH_TABLE = null;
 jQuery(function($) {
 
 	function runDocumentsControllerJS() {
+		//enable tooltip
+		$('.job-label').popover({html : true, trigger : 'hover'});
+
 		//disables warnings, TODO to fix
 		$.fn.dataTableExt.sErrMode = "throw";
 

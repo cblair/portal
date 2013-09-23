@@ -541,7 +541,8 @@ module DocumentsHelper
         
     return false
   end
-#=end
+
+  
   #Adds document to selected project (see view -> documents -> edit)
   def add_project_doc(project, document)
     document.project_id = project.id
