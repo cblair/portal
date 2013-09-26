@@ -1,0 +1,29 @@
+<h1>Listing Metaforms</h1>
+
+<table border="0" cellpadding="5">
+  <tr>
+    <th>Name</th>
+    <!--<th>Mddesc</th>-->
+    <th>Description</th>
+    <!--<th>User</th>-->
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @metaforms.each do |metaform| %>
+  <tr>
+    <td><%= metaform.name %></td>
+    <td><%= metaform.mddesc %></td>
+    <!--<td><%#= metaform.user_id %></td>-->
+    <td><%= link_to 'Show', metaform %></td>
+    <td><%= link_to 'Edit', edit_metaform_path(metaform) %></td>
+    <td><%= link_to 'Destroy', metaform, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Metaform', new_metaform_path %>

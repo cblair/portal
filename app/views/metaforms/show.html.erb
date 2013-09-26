@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+<hr>
+
+<hr>
+
+<p>
+  <b>Name:</b>
+  <%= @metaform.name %>
+</p>
+
+<p>
+  <b>Mddesc:</b>
+  <%= @metaform.mddesc %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @metaform.user_id %>
+</p>
+
+<hr>
+<ol>
+<% for mrow in @metaform.metarows %>
+  <li>
+  <p>
+    <b>Key:</b>
+    <%= mrow.key %>&emsp;
+  
+    <b>Value:</b>
+    <%= mrow.value %>&emsp;
+  
+    <b>Autofill:</b>
+    <%= mrow.autofill %>
+  </p>
+  </li>
+  
+<% end %>
+</ol>
+
+<%= link_to 'Edit', edit_metaform_path(@metaform) %> |
+<%= link_to 'Back', metaforms_path %>
