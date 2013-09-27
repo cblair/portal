@@ -2,6 +2,7 @@ class MetaformsController < ApplicationController
   include MetaformsHelper
   
   before_filter :authenticate_user!
+  #load_and_authorize_resource
   #TODO: CanCan permissions
   
   # GET /metaforms/mdf_input/1
