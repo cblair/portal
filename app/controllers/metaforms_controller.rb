@@ -2,33 +2,33 @@ class MetaformsController < ApplicationController
   include MetaformsHelper
   
   before_filter :authenticate_user!
+  #TODO: CanCan permissions
   
   # GET /metaforms/mdf_input/1
   def mdf_input
     @metaform = Metaform.find(params[:metaf][:id])
     @document = Document.find(params[:doc_id])
   end
-  
+
   # POST /metaforms/mdf_save/1
   def mdf_save
-    document = Document.find(params[:id]) #id is from document
-    metaform = Metaform.find(params[:metaf]) #hidden form
+    metaform = Metaform.find(params[:metaf])
     mf_data = params[:metaform][:metarows_attributes] #passed row data
-    metarows_save(mf_data, document)
+    document = Document.find(params[:id]) #id is from document
+    mdf_saved = metarows_save(mf_data, document)
     
-    mdf_saved = true
     respond_to do |format|
       if (mdf_saved == true)
         format.html { redirect_to document, notice: 'Metadata was successfully saved.' }
         format.json { head :no_content }
       else
         #format.html { render action: "mdf_input" }
-        format.html { redirect_to metaform, notice: 'ERROR: Metadata was not saved.' }
+        format.html { redirect_to document, notice: 'ERROR: Metadata was not saved.' }
         format.json { render json: @metaform.errors, status: :unprocessable_entity }
       end
     end
   end
-  
+
   # GET /metaforms
   # GET /metaforms.json
   def index
@@ -56,9 +56,6 @@ class MetaformsController < ApplicationController
   def new
     @metaform = Metaform.new
     setup_mrows()
-    #2.times { @metaform.metarows.build(:user_id => current_user.id) }
-    #@metaform.metarows.build(:key => "Location", :user_id => current_user.id)
-    #@metaform.metarows.build(:key => "Site", :user_id => current_user.id)
 
     respond_to do |format|
       format.html # new.html.erb
