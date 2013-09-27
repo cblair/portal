@@ -65,5 +65,6 @@ class Ability
     #Public access permissions
     can :read, Project, :public => true
     can :read, Collection, :projects => { :public => true }
+    can :read, Document, :collection => { :projects => { :public => true }}
   end
 end
