@@ -1,6 +1,7 @@
 
 class SearchesController < ApplicationController
   include SearchesHelper
+  include ElasticsearchHelper
 
   delegate :link_to, to: :@view
 
@@ -88,23 +89,30 @@ class SearchesController < ApplicationController
 
   #Does an initial search, and returns the common columns names for all matching documents
   def search_init
-    search_val = ""
+    search = ""
     doc_list = []
     colnames = []
     result_rows = []
 
     if params.include?("searchval")
-      search_val = params["searchval"]
+      search = params["searchval"]
     end
     
-    if search_val != ""
-      results = elastic_search_all_and_return_doc_ids(search_val, current_user)
+    if search != ""
+      results = es_query_string_search(search, 'm')
 
-      doc_list = results.collect {|id| Document.find(id)}
+      doc_list = get_docs_from_raw_es_data(results, current_user)
 
-      if !doc_list.empty?
-        colnames = get_colnames_in_common(doc_list)
+      #Don't let unvalidated docs screw up the search results
+      validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      if !validated_doc_list.empty?
+        colnames = get_colnames_in_common(validated_doc_list)
       end
+    end
+
+    #if colnames is empty, then just have one columns named "Documents"
+    if colnames.empty?
+      colnames = ["Documents", "More Information"]
     end
 
     search_data = {

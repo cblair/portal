@@ -57,7 +57,6 @@ jQuery(function($) {
     		});
 
     	if(searchVal != undefined) {
-    		console.log("TS57");
 	    	//Call search to filter from our initial search val
     		search_table.fnFilter(searchVal);
     	}
@@ -67,6 +66,9 @@ jQuery(function($) {
 	// Main Search stuff
 	////////////////////////////////////////////////////////////////////////////	
 	function initMainSearch() {
+		//Hide our "Document results only" alert for now
+		$('div.document-name-results-only').hide();
+
 		//Override the search submit with our own function that will do
 		// Datatable stuff
 		$('form#main-search').submit(updateMainSearch);
@@ -96,6 +98,17 @@ jQuery(function($) {
 				//$('div.scaffold table').hide();
 			},
 			success: function(result) {
+				//Fade out the doc-name only alert by default
+				$('div.document-name-results-only').fadeOut();
+
+				if(
+					(result["colnames"].length === 2)
+					&&
+					(result["colnames"][0] === "Documents")
+				) {
+					$('div.document-name-results-only').fadeIn();
+				}
+
 				populateInitialSearch(result, searchVal);
 			},
 			error: function(result) {
@@ -141,6 +154,13 @@ jQuery(function($) {
 	}
 
 	////////////////////////////////////////////////////////////////////////////
+	// Other Search decoration stuff
+	////////////////////////////////////////////////////////////////////////////
+	function decorateDocPopovers() {
+		$('.doc-popover').popover({html : true, trigger : 'hover'});
+	}
+
+	////////////////////////////////////////////////////////////////////////////
 	// Search Controller stuff
 	////////////////////////////////////////////////////////////////////////////
 	function runSearchesControllerJS() {
@@ -152,9 +172,18 @@ jQuery(function($) {
 
 	} //end runSearchesControllerJS
 
+
 	$(document).ready(function () {
 		if(CONTROLLER_NAME == "searches") {
 			runSearchesControllerJS();
 		}
+
+		//other page decorations
+		$('#search-help').tooltip();
+
+	    //decorate popovers on search results
+		//We won't know from Datatable's AJAX call when new data is displayed, 
+		//so call popover every once in a while.
+		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
 	}); 
 });

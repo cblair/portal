@@ -14,7 +14,11 @@
     end
   %>
   <dd><%= status %></dd>
+
+  <dt><strong>Output / error:</strong></dt>
+  <dd><%= @job.get_error_or_output.html_safe %></dd>
 </dl>
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

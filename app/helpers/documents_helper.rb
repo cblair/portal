@@ -126,7 +126,12 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    @document.stuffing_text = @opened_file.read()
+    
+    file_text = @opened_file.read()
+    #Make sure we have valid UTF-8 encoding
+    file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
+
+    @document.stuffing_text = file_text
     #@document.project=p		#links document to project
     @document.user = user
 
@@ -270,7 +275,7 @@ module DocumentsHelper
        colnames = IfiltersHelper::get_ifiltered_colnames(row)
       else
         row = [row]
-      end
+      end 
       
       for j in (0..row.count() - 1)
         data_col_hash[ colnames[j] ] = row[j]
@@ -478,7 +483,7 @@ module DocumentsHelper
     return data_columns
   end
   
-#=begin
+
   #If the collection has any viewable docs or sub-collections
   def collection_is_viewable(collection, user, project=nil)
     if collection == nil
@@ -496,8 +501,8 @@ module DocumentsHelper
   
     return false
   end
-#=end
-#=begin
+
+
   def doc_is_viewable(doc, user)
     if doc == nil
       return false
@@ -526,15 +531,18 @@ module DocumentsHelper
     end
     
     #If document is part of a public project
-    doc.collection.projects.each do |project|
-      if (doc.collection.projects[0].public == true)
-        return true
+    if doc.collection
+      doc.collection.projects.each do |project|
+        if (doc.collection.projects[0].public == true)
+          return true
+        end
       end
     end
         
     return false
   end
-#=end
+
+  
   #Adds document to selected project (see view -> documents -> edit)
   def add_project_doc(project, document)
     document.project_id = project.id

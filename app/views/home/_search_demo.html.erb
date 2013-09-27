@@ -37,7 +37,17 @@
 
 	<p>Selecting only the columns you want searchable helps keep other columns values from cluttering your search results. The search query syntax follows the Lucene syntax (click <%= link_to "here", "http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html" %> for reference).</p>
 
-	<p>In the future, Hatch will implement automated way to add columns to your documents.</p>
+	<p>You can search the entire database for a specific term without an associated key/column name. If some documents in your search results have similar column names, Search will merge all the document columns together and show the data results:</p>
+
+	<%= image_tag("search_demo_ptagis_specific.png") %>
+
+	<p>You can also search for more general terms. Chances are, the documents won't all have the same column names, so Search will just list the matching documents:</p>
+
+	<%= image_tag("search_demo_doc_names.png") %>
+
+	<p>If a term you're searching for is pretty common (i.e. a year like '2004'), you can gaurantee Search to return only documents that match the column names by suppling the column names in the search query:</p>
+
+	<%= image_tag("search_demo_2004.png") %>
 
 	<!--
 	<p>In the following example, the 'Time', 'Tag', and 'Document Name' columns are all indices throughout the entire Hatch database. Since the Hatch users have identified these colums as important searchable columns, search tables are pre-built, and searches are quick.</p>

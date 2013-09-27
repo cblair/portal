@@ -113,7 +113,7 @@ module SearchesHelper
     #override with elasticsearch's port
     conn_hash[:port] = 9200
 
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?q='#{search}'"
 
     puts "Elasticsearch query: #{conn_str}, with connection:"
     puts conn_hash.inspect
@@ -222,6 +222,31 @@ module SearchesHelper
     end
 
     colnames
+  end
+
+  def get_docs_from_raw_es_data(raw_data, current_user)
+    retval = []
+    raw_data.collect do |row|
+      doc_name = row[:doc_name]
+      doc_id = doc_name.sub("Document-", "").to_i
+
+      begin
+        doc = Document.find(doc_id)
+      rescue ActiveRecord::RecordNotFound
+        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found in search. Skipping. Raw search return data:"
+        puts raw_data
+
+        next
+      end
+
+      if doc == nil
+        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found"
+      elsif doc_is_viewable(doc, current_user)
+        retval << doc
+      end
+    end
+
+    retval
   end
 
 end

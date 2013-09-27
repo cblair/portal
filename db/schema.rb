@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130912165510) do
+ActiveRecord::Schema.define(:version => 20130922233636) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -121,6 +121,10 @@ ActiveRecord::Schema.define(:version => 20130912165510) do
     t.string   "ar_name"
     t.integer  "ar_id"
     t.boolean  "started"
+    t.string   "Job"
+    t.text     "last_error"
+    t.text     "output"
+    t.boolean  "succeeded"
   end
 
   create_table "metadata", :force => true do |t|
