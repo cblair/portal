@@ -3,7 +3,7 @@ production:
   encoding: unicode
   database: portal_production
   pool: 5
-  username: cblair
+  username: portal_std
   password: ALT/chi!
   host: 127.0.0.1
 
@@ -13,7 +13,7 @@ development:
   database: portal_development
   pool: 100
   username: portal_std
-  password:
+  password: ALT/chi!
   host: 127.0.0.1
   reconnect: true
 

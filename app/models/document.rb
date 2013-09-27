@@ -2,6 +2,7 @@ class Document < ActiveRecord::Base
   include CouchdbHelper
   include DocumentsHelper
   require 'stuffing'
+  require 'hatch_custom_exceptions'
 
   attr_accessible :name, :stuffing_data, :stuffing_search, :stuffing_primary_keys, :stuffing_foreign_keys, :collection_id
 
@@ -116,7 +117,7 @@ class Document < ActiveRecord::Base
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
       stuffing_data = filter_data_columns(f, self.stuffing_text)
 
-      #Check if filter was successfu=l
+      #Check if filter was successful
       if stuffing_data != nil and not stuffing_data.empty?
         if  (f.stuffing_headers != nil \
              and stuffing_metadata.count == f.stuffing_headers.count)\
@@ -153,12 +154,17 @@ class Document < ActiveRecord::Base
     end
 
     if !suc_valid
-      puts "Document filtering failed. One of these is not right:"
-      puts "####metadata:"
-      puts "stuffing_metadata.count #{stuffing_metadata.count.to_s} ?= f.stuffing_headers.count #{f.stuffing_headers.count}"
-      puts stuffing_metadata.to_s
-      puts "####data:####"
-      puts stuffing_data.to_s
+      mcount = f.stuffing_metadata.count if f.stuffing_metadata != nil
+      hcount = f.stuffing_headers.count if f.stuffing_headers != nil
+
+      msg = "Document filtering failed. One of these is not right:\n"
+      msg += "####metadata:\n"
+      msg += "stuffing_metadata.count #{mcount.to_s} ?= f.stuffing_headers.count #{hcount.to_s}\n"
+      msg += stuffing_metadata.to_s + "\n"
+      msg += "####data:####\n"
+      msg += stuffing_data.to_s + "\n"
+
+      raise msg
     end
 
     self.stuffing_foreign_keys = get_foreign_keys(self, ifilter)
@@ -175,12 +181,18 @@ class Document < ActiveRecord::Base
 
 
   def submit_job(job, options)
-    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
-
     puts "########################################################"
     puts "Validating doc #{self.name}..."
+
+    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
+
     self.job_id = job.id
-    self.validate(ifilter)
+    self.save
+
+    job.succeeded = self.validate(ifilter)
+    if job.succeeded
+      job.output = "Document validated successfully."
+    end
     
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"

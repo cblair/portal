@@ -1,0 +1,36 @@
+<div class="container-fluid well" style="background-color: #dfdfdf;">
+		<div class="container-fluid well" style="background-color: #f5f5f5;">
+		<div class="hero-unit">
+			<h1>Editing document text</h1>
+
+			<hr />
+
+			<%= form_for(@document) do |f| %>
+				<% if @document.errors.any? %>
+				<div id="error_explanation">
+				  <h2><%= pluralize(@document.errors.count, "error") %> prohibited this document from being saved:</h2>
+
+				  <ul>
+				  <% @document.errors.full_messages.each do |msg| %>
+				    <li><%= msg %></li>
+				  <% end %>
+				  </ul>
+				</div>
+				<% end %>
+
+				<%= f.hidden_field(:post, :value => "edit_text") %>
+
+				<div class="field">
+					<%= f.text_area :stuffing_text, :style => "height: 1000px; width: 800px" %>
+				</div>
+
+				<div class="actions">
+					<%= f.submit %>
+				</div>
+			<% end %> <!--end form--->
+
+			<%= link_to 'Show', @document %> |
+			<%= link_to 'Back', documents_path %>
+		</div>
+	</div>
+</div>

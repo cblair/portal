@@ -33,6 +33,19 @@
 		<%= render 'doc_job_status' %>
 	</div>
 
+	<% if @document.validated %>
+	        <% if can? :manage, @document %>
+	           <%= link_to 'Edit', edit_document_path(@document) %> |
+                <% end %>
+		<%= link_to 'Back', documents_path %>
+	<% else %>
+         	<% if can? :manage, @document %>
+		   <%= link_to 'Edit Properties', edit_document_path(@document) %> |
+		   <%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+		<% end %>
+		<%= link_to 'Back', documents_path %>
+	<% end %>
+
 	<hr/>
 	
 	<div class="container-fluid">
@@ -92,7 +105,7 @@
 			</table>
 		<% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
 			<p>Raw unvalidated text: </p>
-			<p><%= simple_format @document.stuffing_text[1..100000] %>...</p>
+			<p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
 			<p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
 		<% else %>
 			<p>(none)</p>
@@ -134,8 +147,4 @@
 	<hr/>
 	-->
 
-	<% if can? :manage, @document %>
-	  <%= link_to 'Edit', edit_document_path(@document) %> |
-	<% end %>
-	<%= link_to 'Back', documents_path %>
 </div>

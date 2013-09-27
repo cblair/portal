@@ -54,4 +54,7 @@ Portal::Application.configure do
 
   #Jobs stuff
   config.job_type = "delayed_job"
+
+  # Enable threaded mode, unless a rake task (likely Delayed Job) is running:
+  config.threadsafe! unless defined?($rails_rake_task) && $rails_rake_task
 end

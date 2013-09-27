@@ -27,6 +27,7 @@ class JobsController < ApplicationController
   # GET /jobs/1.json
   def show
     @job = Job.find(params[:id])
+    @delayed_job = Delayed::Job.where(:job_id => @job.id).first
 
     respond_to do |format|
       format.html # show.html.erb

@@ -3,7 +3,7 @@ class SearchAllDatatable
   include ElasticsearchHelper
   require 'will_paginate/array'
 
-  delegate :params, :h, :link_to, to: :@view
+  delegate :params, :h, :link_to, :document_path, to: :@view
 
   def initialize(view, current_user)
     @view = view
@@ -59,8 +59,7 @@ private
             begin
               doc = Document.find(doc_id)
             rescue ActiveRecord::RecordNotFound
-              log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-              puts raw_datum
+              log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
             end
 
             if doc_is_viewable(doc, @current_user)
@@ -104,17 +103,19 @@ private
       
       #TODO: do one search instead of two
       #Get doc list, so we can get colnames in common
-      results = elastic_search_all_and_return_doc_ids(search, @current_user)
-      doc_list = results.collect {|id| Document.find(id)}
+      results = es_query_string_search(search, 'm')
+
+      doc_list = get_docs_from_raw_es_data(results, @current_user)
       colnames = []
-      if !doc_list.empty?
-        colnames = get_colnames_in_common(doc_list)
+
+      #Don't let unvalidated docs screw up the search results
+      validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      if !validated_doc_list.empty?
+        colnames = get_colnames_in_common(validated_doc_list)
       end
 
       #Get data results
-      #raw_data = elastic_search_all_data(search) #Orignal
-      #raw_data = elastic_search_url(search)
-      raw_data = elastic_search_all_data(search, mode="full")
+      raw_data = es_query_string_search(search, 'f')
       
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
       #raw_data = es_terms_facet(search, sfield) #SAS makes ES query
@@ -152,24 +153,48 @@ private
           begin
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
-            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-            puts raw_data
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
             next
           end
 
           if doc_is_viewable(doc, @current_user)
-            row["_source"]["data"].map do |data_row| 
-              values = []
-=begin
-              data_row.each do |key, val|
-                values << val
+            #If there are no colnames in common, just return a list of document links
+            if colnames.empty?
+              #Make Popover content
+              # Metadata
+              popover_content = "(no metadata)"
+              if doc.stuffing_metadata
+                key_values_list = doc.stuffing_metadata.collect do |md|
+                  "<tr><td>" + md.keys.first + "</td><td>" + md.values.first + "</td></tr>"
+                end
+                popover_content = "<table>"
+                popover_content += key_values_list.join
+                popover_content += "</table>"
               end
-=end
-              colnames.each do |colname|
-                values << data_row[colname]
+
+              #Colnames
+              doc_colnames = get_data_colnames(doc.stuffing_data)
+              if doc_colnames
+                popover_content += "<b>Column names:</b>"
+                popover_content += '<table>'
+                popover_content += doc_colnames.collect {|doc_colname| "<tr><td>" + doc_colname + "</td></tr>" }.join
+                popover_content += "</table>"
               end
-              @retval << values
-            end
+
+              popover_html = '<a href="' + document_path(doc) + '" class="btn btn-lg btn-info doc-popover" data-toggle="popover" title="" data-content="' + popover_content + '" data-original-title="Metadata">Metadata</a>'
+              popover_html = '<div style="font-size:x-small">' + popover_html.html_safe + '</div>'
+
+              @retval << [link_to(doc.name, doc), popover_html]
+            #Don't let unvalidated docs screw up the search results
+            elsif doc.validated
+              row["_source"]["data"].map do |data_row| 
+                values = []
+                colnames.each do |colname|
+                  values << data_row[colname]
+                end
+                @retval << values
+              end #end row...map
+            end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect
       end #end raw_data
@@ -193,8 +218,7 @@ private
           begin
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
-            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping. Raw search return data:"
-            puts raw_data
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
           end
 
           if doc_is_viewable(doc, @current_user)

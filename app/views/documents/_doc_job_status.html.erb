@@ -1,0 +1,14 @@
+<% if @job != nil %>
+	<% if @job == false %>
+		<span class="label job-label label-info">Job deleted</span>
+	<% elsif @job.finished == true %>
+		<%
+			popover_content = '<p>' + @job.get_error_or_output + '</p>'
+		%>
+		<div style="font-size:x-small">
+			<a href="<%= job_path(@job) %>" class="label job-label label-success" data-toggle="popover" title="" data-content="<%= popover_content.html_safe %>" data-original-title="Job output"><i class="icon-check icon-white"></i> Job finished</a>
+		</div>
+	<% else %>
+		<a href="<%= job_path(@job) %>" class="label job-label label-warning"><i class="icon-refresh icon-spin icon-white"></i> Job processing...</a>
+	<% end %>
+<% end %>
