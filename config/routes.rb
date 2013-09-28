@@ -18,7 +18,8 @@ Portal::Application.routes.draw do
   match '/home/dashboard' => "home#dashboard", :as => :home_dashboard
   match '/home/search' => "home#search", :as => :home_search
   match '/home/analyze' => "home#analyze", :as => :home_analyze
-  
+  match '/demo' => "home#demo", :as => :demo
+
   #Devise / Users
   devise_for :users
 

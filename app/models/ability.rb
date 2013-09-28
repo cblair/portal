@@ -49,9 +49,11 @@ class Ability
     can :read, Project, :collaborators => { :user_id => user.id }
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
     can :read, Document do |doc|
-      doc.collection.projects.each do |proj|
-        doc.collection.projects.include?(proj) && proj.users.include?(user)
-      end
+        if (doc) && (doc.collection) && (doc.collection.projects)
+          doc.collection.projects.each do |proj|
+            doc.collection.projects.include?(proj) && proj.users.include?(user)
+          end
+        end
     end
     
     #Public access permissions

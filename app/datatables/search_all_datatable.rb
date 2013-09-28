@@ -1,34 +1,66 @@
 class SearchAllDatatable
   include SearchesHelper
+  include SearchesDatatableHelper
   include ElasticsearchHelper
   require 'will_paginate/array'
 
   delegate :params, :h, :link_to, :document_path, to: :@view
+
+  @document_results = true
+  attr_accessor :document_results
 
   def initialize(view, current_user)
     @view = view
     @current_user = current_user
   end
 
-
   def as_json(options = {})
+    #Get our search data now, so we set all the search side affects
+    # now (i.e. counts, modes, etc.)
+    aaData = paginate_data_if_needed
+
     {
       sEcho:params[:sEcho].to_i,
-      iTotalRecords:data.count,
-      iTotalDisplayRecords:data.count,
+      #TODO: count functions for document_results == true
+      iTotalRecords: get_data_count,
+      iTotalDisplayRecords: get_data_count,
       aaData:
         #Format:
         #  [
         #    ["test","",nil],
         #    ["test","",nil]
         #  ]
-        data.paginate({:page => page, :per_page => per_page})
+        aaData,
+      totalDocumentCount: @document_count
     }
   end
 
-
 private
 
+  def paginate_data_if_needed
+    search_data 
+
+    #only paginate the results if they are data, not documents
+    if @document_results
+      puts "INFO: document results"
+      data
+    else
+      puts "INFO: data results"
+      data.paginate({:page => page, :per_page => per_page})
+    end
+  end
+
+  #Returns the data count, based on whether is document results
+  # from ES, or 
+  def get_data_count
+    if @document_results
+      #this variable gets set down below, depending on the
+      # search data type
+      @document_count
+    else
+      data.count
+    end
+  end
 
   def data
     search_data
@@ -36,11 +68,10 @@ private
 
 
   def search_data
-    #@documents ||= fetch_documents
-
     #Couchdb search sucks
     #fetch_search_data_couchdb
-    fetch_search_data_elasticsearch
+
+    retval ||= fetch_search_data_elasticsearch
   end
 
 
@@ -94,6 +125,8 @@ private
 
 
   def fetch_search_data_elasticsearch
+    puts "INFO: fetching elasticsearch results..."
+
     @retval = []
 
     #We are overriding the Datatable search box with our own, so we don't get a
@@ -102,8 +135,18 @@ private
       search = params[:search_val]
       
       #TODO: do one search instead of two
+
       #Get doc list, so we can get colnames in common
-      results = es_query_string_search(search, 'm')
+      options =   {
+                    #set the ES from (search offset) field from our page method
+                    :from => page,
+                    #set the ES size (how many from search offset) field from our
+                    # per_page method
+                    :size => per_page
+                  }
+
+      options[:flag] = 'm'
+      results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
 
       doc_list = get_docs_from_raw_es_data(results, @current_user)
       colnames = []
@@ -115,7 +158,8 @@ private
       end
 
       #Get data results
-      raw_data = es_query_string_search(search, 'f')
+      options[:flag] = 'f'
+      raw_data = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
       
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
       #raw_data = es_terms_facet(search, sfield) #SAS makes ES query
@@ -145,6 +189,12 @@ private
       #raw_data = elastic_search_url(search)
 
       if raw_data
+        #Set the total documents found in the results, in case we later
+        # determine that we only have document results and the return
+        # data is already paginated from ES, so a data.count would be
+        # wrong
+        @document_count = ElasticsearchHelper.get_document_count
+
         raw_data.collect do |row|
           doc_name = row["_source"]["_id"]
           score = row["_score"]
@@ -154,12 +204,20 @@ private
             doc = Document.find(doc_id)
           rescue ActiveRecord::RecordNotFound
             log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
+            #better decrement our document_count for the results
             next
           end
 
-          if doc_is_viewable(doc, @current_user)
+          #We're displaying documents not usually visible, but we have to be carefull on
+          #what metadate we expose.
+          #if doc_is_viewable(doc, @current_user)
+          if true
             #If there are no colnames in common, just return a list of document links
-            if colnames.empty?
+            #TODO: re-enable data merging search results when we can make sense of it all
+            #if colnames.empty?
+            if true
+              @document_results = true
+
               #Make Popover content
               # Metadata
               popover_content = "(no metadata)"
@@ -187,6 +245,7 @@ private
               @retval << [link_to(doc.name, doc), popover_html]
             #Don't let unvalidated docs screw up the search results
             elsif doc.validated
+              @document_results = false
               row["_source"]["data"].map do |data_row| 
                 values = []
                 colnames.each do |colname|
@@ -194,11 +253,14 @@ private
                 end
                 @retval << values
               end #end row...map
+            else
+              @document_results = false
             end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect
       end #end raw_data
     end #if params[:sSearch].present?
+
     @retval
   end
 
@@ -232,26 +294,5 @@ private
       end
     end
     @retval
-  end
-
-
-  def page
-    params[:iDisplayStart].to_i/per_page + 1
-  end
-
-
-  def per_page
-    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : 10
-  end
-
-
-  def sort_column
-    columns = %w[name category released_on price]
-    columns[params[:iSortCol_0].to_i]
-  end
-
-
-  def sort_direction
-    params[:sSortDir_0] == "desc" ? "desc" : "asc"
   end
 end

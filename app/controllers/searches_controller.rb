@@ -1,6 +1,6 @@
-
 class SearchesController < ApplicationController
   include SearchesHelper
+  include SearchesDatatableHelper
   include ElasticsearchHelper
 
   delegate :link_to, to: :@view
@@ -99,7 +99,12 @@ class SearchesController < ApplicationController
     end
     
     if search != ""
-      results = es_query_string_search(search, 'm')
+      options =  {
+                  :flag => 'm',
+                  :from => page,
+                  :size => per_page
+                }
+      results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
 
       doc_list = get_docs_from_raw_es_data(results, current_user)
 
@@ -111,7 +116,10 @@ class SearchesController < ApplicationController
     end
 
     #if colnames is empty, then just have one columns named "Documents"
-    if colnames.empty?
+    # TODO: we're only allowing for document results for now, same in 
+    # search_all_datatables.rb.
+    #if colnames.empty?
+    if true
       colnames = ["Documents", "More Information"]
     end
 

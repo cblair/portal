@@ -13,7 +13,11 @@ jQuery(function($) {
 	////////////////////////////////////////////////////////////////////////////
 	// Datatable stuff
 	////////////////////////////////////////////////////////////////////////////
-	function updateSearchDatatables(searchVal) {
+	function updateSearchDatatables(searchVal, prevShowSelectVal) {
+		if(prevShowSelectVal === undefined) {
+			prevShowSelectVal = 10;
+		}
+
 		//disables warnings, TODO to fix
 		$.fn.dataTableExt.sErrMode = "throw";
 
@@ -28,7 +32,7 @@ jQuery(function($) {
 
 		var sourceUrl = $('#search').data('source');
 		if(searchVal != undefined) {
-			sourceUrl += "?search_val=" + searchVal;
+			sourceUrl += "?search_val='" + searchVal + "'";
 		}
 
 		//dataTable
@@ -45,7 +49,9 @@ jQuery(function($) {
 			"sServerMethod"		: "POST",
 			//Taking out search
 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-			"sAjaxSource"		: sourceUrl
+			"sAjaxSource"		: sourceUrl,
+			//We have to set this on the init request per what was set before
+			"iDisplayLength" : prevShowSelectVal
 		});
 
 		//only search on enter keypress 
@@ -60,6 +66,18 @@ jQuery(function($) {
 	    	//Call search to filter from our initial search val
     		search_table.fnFilter(searchVal);
     	}
+	}
+
+	function changeSearchIconToRefresh() {
+		$('.search-button').removeClass('icon-search')
+			.addClass('icon-refresh')
+			.addClass('icon-spin');
+	}
+
+	function changeRefreshIconToSearch() {
+		$('.search-button').removeClass('icon-refresh')
+			.removeClass('icon-spin')
+			.addClass('icon-search');
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -90,12 +108,14 @@ jQuery(function($) {
 	//This function does the initial search, so we can find out what document
 	// match
 	function runInitialSearch(urlSource, searchVal) {
-		urlSource += "?searchval=" + searchVal;
+		urlSource += "?searchval='" + encodeURI(searchVal) + "'";
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
 			cache: false,
 			beforeSend: function(result) {
-				//$('div.scaffold table').hide();
+
+				//Change the search icon to a spinning refresh
+				changeSearchIconToRefresh();
 			},
 			success: function(result) {
 				//Fade out the doc-name only alert by default
@@ -110,6 +130,9 @@ jQuery(function($) {
 				}
 
 				populateInitialSearch(result, searchVal);
+
+				//Change the search icon to a spinning refresh
+				changeRefreshIconToSearch();
 			},
 			error: function(result) {
 				$('#error').show();
@@ -118,6 +141,13 @@ jQuery(function($) {
 	}
 
 	function populateInitialSearch(initSearchResults, searchVal) {
+		//Get the current value of the "Show" select, so we can reset it in the
+		// new table
+		var prevShowSelectVal =  $('div#search_length select').val();
+		if(prevShowSelectVal === undefined) {
+			prevShowSelectVal = 10;
+		}
+
 		//Get our search result container
 		var mainSearchResults = $('#main-search-results');
 
@@ -150,7 +180,10 @@ jQuery(function($) {
 		//TODO: if search criteria empty, hide
 		mainSearchResults.fadeIn();
 
-		updateSearchDatatables(searchVal);
+		updateSearchDatatables(searchVal, prevShowSelectVal);
+
+		//Reset the Show select value to the previous, just for the display
+		$('div#search_length select').val(prevShowSelectVal);
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -165,7 +198,7 @@ jQuery(function($) {
 	////////////////////////////////////////////////////////////////////////////
 	function runSearchesControllerJS() {
 		//init / update DataTables
-		updateSearchDatatables(undefined);
+		updateSearchDatatables(undefined, undefined);
 
 		//init other stuff
 		initMainSearch();

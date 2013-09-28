@@ -1,9 +1,24 @@
 module ElasticsearchHelper
 
+  require 'uri'
+
+  #gets set by the actual query receiver, before we parse it out
+  @@document_count = 0
+
+  #Extend this helper off of CouchdbHelper
+  extend CouchdbHelper
+  def self.included(base)
+    base.send :extend, CouchdbHelper
+  end
+
+  def self.get_document_count
+    @@document_count
+  end
+
   #Facet Searches ------------------------------------------------------
   #Takes a query and field string, returns terms facet information
   #Returns metadata only
-  def es_terms_facet(qstr, sfield, flag)
+  def self.es_terms_facet(qstr, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -31,7 +46,7 @@ module ElasticsearchHelper
   
   #Takes a starting and ending value plus a field, returns a range facet
   #NOTE: it is unclear how this is working
-  def es_range_facet(qfrom, qto, sfield, flag)
+  def self.es_range_facet(qfrom, qto, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -65,7 +80,7 @@ module ElasticsearchHelper
   end
   
   #Takes a staring and ending date plus a date field, returns a date range facet
-  def es_date_range_facet(qfrom, qto, sfield, flag)
+  def self.es_date_range_facet(qfrom, qto, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -101,7 +116,7 @@ module ElasticsearchHelper
   #Takes an interval (e.g. "day", "month") plus a date field,
   #returns a date range histogram
   #TODO: input needs date range?
-  def es_date_histogram_facet(sfield, myinterval, qfrom, qto, flag)
+  def self.es_date_histogram_facet(sfield, myinterval, qfrom, qto, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -135,7 +150,7 @@ module ElasticsearchHelper
   #Basic Searches ------------------------------------------------------
   #Match: accept text/numerics/dates, analyzes it, and constructs a query
   #Input: query string, field
-  def es_match_search(qstr, sfield, flag)
+  def self.es_match_search(qstr, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -160,7 +175,7 @@ module ElasticsearchHelper
   
   #Filtered: applies a filter to the results of another query
   #Input: query, search field, range field, staring and ending value
-  def es_filtered_search(qstr, sfield, rfield, qfrom, qto, flag)
+  def self.es_filtered_search(qstr, sfield, rfield, qfrom, qto, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -191,7 +206,7 @@ module ElasticsearchHelper
   #Fuzzy Like This: find documents that are “like” provided text by
   # running it against a single field
   #Input: text, field name, max query terms
-  def es_flt_field_search(qtext, sfield, max, flag)
+  def self.es_flt_field_search(qtext, sfield, max, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -222,7 +237,7 @@ module ElasticsearchHelper
   #Prefix Query: Matches documents that have fields containing terms
   # with a specified prefix (not analyzed)
   #Input: query and field strings
-  def es_prefix_search(qstr, sfield, flag)
+  def self.es_prefix_search(qstr, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -243,9 +258,76 @@ module ElasticsearchHelper
     return data
   end
   
+
+  def self.es_search_dispatcher(type, qstr, options)
+    #Strip off beginning and end url escape single quotes from the query string,
+    # if they exist
+    if (qstr[0] == "'") && (qstr[-1] == "'")
+      qstr[0] = ""
+      qstr[-1] = ""
+    end
+
+    qstr = URI.escape(qstr)
+
+    flag = options[:flag] || 'm'
+    from = options[:from] || nil
+    size = options[:size] || nil
+
+    flag_str = search_type(flag)
+
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
+    search_str = es_query_string_search(qstr)
+    from_and_size_str = es_from_and_size_str(from, size)
+
+    #add a delim if necessary
+    if flag_str != ""
+      flag_str += ","
+    end
+    if from_and_size_str != ""
+      from_and_size_str += ","
+    end
+
+    qbody = "
+    {
+      #{from_and_size_str}
+      #{flag_str}
+      #{search_str}
+    }'"
+    
+    data = []
+    case flag
+    when "m"
+      data = es_connect_md(conn_str, qbody) #metadata
+    when "f"
+      data = es_connect(conn_str, qbody) #full document
+    end
+    
+    return data
+  end
+
+  #Get string for ES pagination
+  def self.es_from_and_size_str(from, size)
+    retval = ""
+
+    if from.to_i && size.to_i
+      retval = "
+        \"from\" : #{from.to_i}, \"size\" : #{size.to_i}
+      "
+    end
+
+    retval
+  end
+
   #Query String: uses a query parser in order to parse its content
   #Input: query string
-  def es_query_string_search(qstr, flag)
+  def self.es_query_string_search(qstr)
+  return "
+    \"query\" : {
+       \"query_string\" : {
+         \"query\" : \"#{qstr}\"
+        }
+      }"
+=begin
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -266,11 +348,12 @@ module ElasticsearchHelper
     end
     
     return data
+=end
   end
   
   #Range: Matches documents with fields that have terms within a certain range
   #Input: field string, starting and ending value
-  def es_range_search(sfield, qfrom, qto, flag)
+  def self.es_range_search(sfield, qfrom, qto, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -297,7 +380,7 @@ module ElasticsearchHelper
   
   #Term: Matches documents that have fields that contain a term (not analyzed)
   #Input: query and field string (query -> lower case, field -> uppercase?)
-  def es_term_search(qstr, sfield, flag)
+  def self.es_term_search(qstr, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -323,7 +406,7 @@ module ElasticsearchHelper
   #Wildcard: Matches documents that have fields matching a wildcard
   # expression (not analyzed)
   #Input: query and field string (query -> lower case, field -> uppercase?)
-  def es_wildcard_search(qstr, sfield, flag)
+  def self.es_wildcard_search(qstr, sfield, flag)
     str = search_type(flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
@@ -345,7 +428,7 @@ module ElasticsearchHelper
   end
   
   #SAS for testing and debuging ONLY!
-  def es_test(qstr, sfield, flag)
+  def self.es_test(qstr, sfield, flag)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
     qbody = "
     {#{str}
@@ -361,7 +444,7 @@ module ElasticsearchHelper
   end
 
   #Basic URL search, for testing
-  def elastic_search_url(search)
+  def self.elastic_search_url(search)
     conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
     #data = []
     data = es_connect_md(conn_str, qbody)
@@ -371,7 +454,7 @@ module ElasticsearchHelper
   
   #Takes ES connection string, calls http, performs some post processing,
   # returns document metadata, not the full doc.
-  def es_connect_md(conn_str, qbody)
+  def self.es_connect_md(conn_str, qbody)
     conn_hash = get_http_connection_hash
     #override with elasticsearch's port
     conn_hash[:port] = 9200
@@ -383,8 +466,10 @@ module ElasticsearchHelper
     data = []
 
     begin
-      hits = full_data["hits"]["hits"]
+      #Get the document count
+      @@document_count = full_data["hits"]["total"]
       
+      hits = full_data["hits"]["hits"]
       data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
     rescue NoMethodError
       log_and_print "WARN: elastic_search_all_data missing data in reponse."
@@ -397,7 +482,7 @@ module ElasticsearchHelper
 
   #Takes ES connection string, calls http, performs some post processing,
   # returns raw queried data, full documents.
-  def es_connect(conn_str, qbody)
+  def self.es_connect(conn_str, qbody)
     conn_hash = get_http_connection_hash
     #override with elasticsearch's port
     conn_hash[:port] = 9200
@@ -408,6 +493,9 @@ module ElasticsearchHelper
     full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
 
     begin
+      #Get the document count
+      @@document_count = full_data["hits"]["total"]
+
       data = full_data["hits"]["hits"]
     rescue
       log_and_print "WARN: search had not results."
@@ -419,7 +507,7 @@ module ElasticsearchHelper
   end
   
   #SAS new version, needed for more advanced ES queries
-  def get_es_http_search_result2(conn_hash, conn_str, qbody)
+  def self.get_es_http_search_result2(conn_hash, conn_str, qbody)
     http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
 
     if conn_hash[:https] == true
@@ -450,11 +538,11 @@ module ElasticsearchHelper
   
   #Determines if the search should return document metadata only or the
   # full document
-  def search_type(flag)
+  def self.search_type(flag)
     str = ""
     
     if (flag == "m")
-      str = "\"fields\" : []," #ES command for document metadata only
+      str = "\"fields\" : []" #ES command for document metadata only
     elsif (flag == "f")
       str = ""
     end
