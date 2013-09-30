@@ -207,7 +207,10 @@ jQuery(function($) {
 
 
 	$(document).ready(function () {
-		if(CONTROLLER_NAME == "searches") {
+		if(
+			(CONTROLLER_NAME == "searches")
+			|| (CONTROLLER_NAME == "home" && ACTION_NAME == "demo")
+		) {
 			runSearchesControllerJS();
 		}
 

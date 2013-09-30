@@ -7,7 +7,7 @@
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="min-width: 800px;">
 	  <div class="modal-header">
 	    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
-	    <%= link_to "×", collections_path %>
+	    <%= link_to "×", "/demo" %>
 	    <h3 id="myModalLabel">Data Import</h3>
 	  </div>
 	  <div class="modal-body">
@@ -44,9 +44,15 @@
 	<p>Now to add the files to Hatch, do the following steps:</p>
 
 	<ol>
-		<li>Click on the <b>Upload</b> button below.</li>
-		<li>Enter in the name <b>test</b> for the <b>Add to Collection</b> field.</li>
+		<li>Click on the <b>Upload files</b> button below.</li>
+		<li>Select the collection <b>Demo Collection</b> for the <b>Add to Collection</b> field.</li>
 		<li>Select <b>CSV (pre-defined)</b> for the <b>What kind of data is this?</b> field.</li>
+		<li>Either drag and drop, or click <b>Add Files</b>, to add those desktop CSV files from the demo email above.</li>
+		<li>Click the <b>Start Upload</b> button. It may take a minute or so for all files to upload and filter.</li>
+		<li>Click the <i class="icon-plus icon-white"></i> button next to the <b>Demo Collection</b> in the Collection list.</li>
+		<ul>
+			<li>When the files finish uploading and filtering, the document labels will change from <i class="label label-important">Unvalidated</i> -> <i class="label label-info"`>Validated</i>. You can click the <i class="icon-plus icon-white"></i> and <i class="icon-minus icon-white"></i> buttons next to the <b>Demo Collection</b> to refresh.</li>
+		</ul>
 	</ol>
 
 	<div class="modal" style="display:none; min-width: 800px;">
@@ -56,7 +62,7 @@
 
 	<%
 		tree_depth = 0
-		@root_collections = []
+
 	%>
 
 	<div class="hero-unit" style="font-size: 14px;">
@@ -70,8 +76,9 @@
 					:locals => {:root_collections => @root_collections, :tree_depth => tree_depth, :project => @project} %>
 	</div>
 
+	<!--Keeps the above datatable from trying to share space with the below content-->
 	<br />
-	<hr />
+	<hr style="width: 1000px"/>
 
 </div>
 
