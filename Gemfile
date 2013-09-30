@@ -85,7 +85,7 @@ group :development do
 end
 
 #Rubyzip
-gem 'rubyzip'
+gem 'rubyzip', '0.9.9'
 
 #Paperclip
 gem "paperclip", "~> 3.0"
@@ -94,7 +94,7 @@ gem "paperclip", "~> 3.0"
 gem "spawn", :git => 'git://github.com/rfc2822/spawn'
 
 #New Relic
-gem 'newrelic_rpm'
+#gem 'newrelic_rpm'
 
 gem 'ancestry'
 

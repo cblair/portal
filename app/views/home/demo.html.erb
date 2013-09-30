@@ -1,10 +1,102 @@
 <div class="hero-unit">
-<h1>Hatch Demo</h1>
-<p><span class="label label-info">This will be awesome!</span></p>
-<hr />
+	<h1>Hatch Demo</h1>
+	<p><span class="label label-info">This will be awesome!</span></p>
+	<hr />
 
-<p>Hatch has a lot of documentation, but a good old demo is the best way to highlight the features and use cases we want to show.</p>
+	<!-- Modal -->
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="min-width: 800px;">
+	  <div class="modal-header">
+	    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+	    <%= link_to "×", collections_path %>
+	    <h3 id="myModalLabel">Data Import</h3>
+	  </div>
+	  <div class="modal-body">
+		<%= render :partial => "collections/js_upload" %>
+	  </div>
+	</div>
 
-<%= render :partial => "job_demo" %>
+	<p>Hatch has a lot of documentation, but a good old demo is the best way to highlight the features and use cases we want to show.</p>
 
+	<h2>Data Upload</h2>
+
+	<p>So you've just come to work to start another day of data analysis. Someone sends you an email with a link to files:</p>
+
+	<div class="hero-unit" style="background-color: #99CCFF">
+		<i class="icon-envelope icon-4x">New Mail</i>
+		<p>Per our conversation yesterday, could you look at the following datasets? We're curious about the relationship between the environmental and XXXTODOXXX data. We'll need to present on this really soon, so it would be great if we could get started.</p>
+
+		<%= link_to "sonde_1_4-24-13--2.csv", "/data/demo/sonde_1_4-24-13--2.csv" %>
+
+		<p>TODO: another file with similar data</p>
+
+		<p>Thanks!</p>
+
+		<p>Devon</p>
+	</div>
+
+	<p>Click on the files in the above email, and save them to your desktop. You're about to do something that will make data sharing much easier, and less likely to overload or get lost in your inbox.</p>
+
+</div>
+
+<div class="hero-unit">
+	<h3>Upload data to Hatch</h3>
+
+	<p>Now to add the files to Hatch, do the following steps:</p>
+
+	<ol>
+		<li>Click on the <b>Upload</b> button below.</li>
+		<li>Enter in the name <b>test</b> for the <b>Add to Collection</b> field.</li>
+		<li>Select <b>CSV (pre-defined)</b> for the <b>What kind of data is this?</b> field.</li>
+	</ol>
+
+	<div class="modal" style="display:none; min-width: 800px;">
+		<%= link_to "X", collections_path, :class => "btn btn-danger" %>
+		<%= render :partial => "collections/js_upload" %>
+	</div>
+
+	<%
+		tree_depth = 0
+		@root_collections = []
+	%>
+
+	<div class="hero-unit" style="font-size: 14px;">
+		<h2>Collections</h2>
+
+		<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
+		<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>
+
+		<hr />
+		<%= render :partial => "collections/rec_collection_documents_render", 
+					:locals => {:root_collections => @root_collections, :tree_depth => tree_depth, :project => @project} %>
+	</div>
+
+	<br />
+	<hr />
+
+</div>
+
+<div class="hero-unit">
+	<h3>Search</h3>
+
+	<p>Now we have some data in Hatch, let's do some searching. Search using the query <b>3*</b>:</p>
+
+	<%= render :partial => "searches/search_main" %>
+
+	<p>TODO: do a few more searches with AND, OR, etc terms, and talk about the popovers for the Metadata.</p>
+
+
+</div>
+
+<div class="hero-unit">
+	<h3>Merging data</h3>
+
+	<p>That's great! You've now learned the power of Search. But it can do more. Say you have values that are the same in the same columns, but in two different tables. Hatch will automatically merge the rows together for you into one metadocument with Search:</p>
+
+	<p>TODO: suggest a query that will work for this example.</p>
+</div>
+
+<div class="hero-unit">
+	<h3>More information</h3>
+
+	<p>TODO: put the Hatch demo video here, showing start to finish the upload through search through Project work flow, a little more in detail, like we developers know it.</p>
 </div>

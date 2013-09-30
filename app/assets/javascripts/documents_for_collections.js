@@ -53,7 +53,10 @@ jQuery(function($) {
 		});
 	} //end runDocumentsForCollectionsControllers
 
-	if(CONTROLLER_NAME == "collections" || CONTROLLER_NAME == "projects") {
+	if(	CONTROLLER_NAME == "collections" 
+		|| CONTROLLER_NAME == "projects"
+		|| (CONTROLLER_NAME == "home" && ACTION_NAME == "demo")
+	) {
 		runDocumentsForCollectionsControllers();
 	} 
 });
