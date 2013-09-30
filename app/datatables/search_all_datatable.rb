@@ -213,9 +213,8 @@ private
           #if doc_is_viewable(doc, @current_user)
           if true
             #If there are no colnames in common, just return a list of document links
-            #TODO: re-enable data merging search results when we can make sense of it all
-            #if colnames.empty?
-            if true
+            colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+            if !colnames_in_common_and_merge_search
               @document_results = true
 
               #Make Popover content

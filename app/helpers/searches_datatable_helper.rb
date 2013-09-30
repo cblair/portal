@@ -16,4 +16,8 @@ module SearchesDatatableHelper
   def sort_direction
     params[:sSortDir_0] == "desc" ? "desc" : "asc"
   end
+
+  def merge_search
+    params["merge_search"] == "true"
+  end
 end

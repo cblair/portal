@@ -115,11 +115,9 @@ class SearchesController < ApplicationController
       end
     end
 
-    #if colnames is empty, then just have one columns named "Documents"
-    # TODO: we're only allowing for document results for now, same in 
-    # search_all_datatables.rb.
-    #if colnames.empty?
-    if true
+    #
+    colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+    if !colnames_in_common_and_merge_search
       colnames = ["Documents", "More Information"]
     end
 

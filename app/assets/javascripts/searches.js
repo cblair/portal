@@ -1,4 +1,7 @@
 jQuery(function($) {
+
+	var IS_MERGE_SEARCH = false;
+
 	//Add a format function to String
 	String.prototype.format = function() {
 	  var args = arguments;
@@ -31,9 +34,14 @@ jQuery(function($) {
 		});
 
 		var sourceUrl = $('#search').data('source');
+
+		//Add the search value
 		if(searchVal != undefined) {
 			sourceUrl += "?search_val='" + searchVal + "'";
 		}
+
+		//Add the merge search option
+		sourceUrl += getMergeButtonParams();
 
 		//dataTable
 		var search_table = $('#search').dataTable({
@@ -84,12 +92,34 @@ jQuery(function($) {
 	// Main Search stuff
 	////////////////////////////////////////////////////////////////////////////	
 	function initMainSearch() {
-		//Hide our "Document results only" alert for now
+		//Hide our alerts for now
 		$('div.document-name-results-only').hide();
+		$('div.search-alert-other').hide();
 
 		//Override the search submit with our own function that will do
 		// Datatable stuff
 		$('form#main-search').submit(updateMainSearch);
+
+		$(".merge-button").on("click", updateMergeSearch);
+	}
+
+	//Sets our merge search option, and then just call updateMainSearch
+	function updateMergeSearch(e) {
+		//Set merge option in the DOM. Setting variables here will be 
+		// ignored in out actuall even callbacks/ajax calls.
+		$('.merge-button').data('enabled', 'true');
+
+		updateMainSearch(e);
+	}
+
+	//Return the merge search params string per the value we've stored in
+	// the DOM.
+	function getMergeButtonParams () {
+		if($('.merge-button').data('enabled') === "true") {
+			return("&merge_search=true");
+		} else {
+			return("&merge_search=false");
+		}
 	}
 
 	function updateMainSearch(e) {
@@ -109,6 +139,10 @@ jQuery(function($) {
 	// match
 	function runInitialSearch(urlSource, searchVal) {
 		urlSource += "?searchval='" + encodeURI(searchVal) + "'";
+
+		//Add the merge search option
+		urlSource += getMergeButtonParams();
+
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
 			cache: false,
@@ -118,21 +152,31 @@ jQuery(function($) {
 				changeSearchIconToRefresh();
 			},
 			success: function(result) {
-				//Fade out the doc-name only alert by default
+				//Fade out the alerts by default
 				$('div.document-name-results-only').fadeOut();
+				$('div.search-alert-other').fadeOut();
 
 				if(
 					(result["colnames"].length === 2)
 					&&
 					(result["colnames"][0] === "Documents")
+					&&
+					(getMergeButtonParams() === "&merge_search=true")
 				) {
 					$('div.document-name-results-only').fadeIn();
+				} else if (getMergeButtonParams() === "&merge_search=true") {
+					$('div.search-alert-other p').text("Column names in common for merged documents: " + result["colnames"].join(', '));
+					$('div.search-alert-other').fadeIn();
 				}
 
 				populateInitialSearch(result, searchVal);
 
 				//Change the search icon to a spinning refresh
 				changeRefreshIconToSearch();
+
+				//Clear the merge button option, in case the main 
+				// search button is the next to be pressed
+				$('.merge-button').data('enabled', 'false');
 			},
 			error: function(result) {
 				$('#error').show();
