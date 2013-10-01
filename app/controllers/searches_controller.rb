@@ -1,6 +1,6 @@
-
 class SearchesController < ApplicationController
   include SearchesHelper
+  include SearchesDatatableHelper
   include ElasticsearchHelper
 
   delegate :link_to, to: :@view
@@ -99,7 +99,12 @@ class SearchesController < ApplicationController
     end
     
     if search != ""
-      results = es_query_string_search(search, 'm')
+      options =  {
+                  :flag => 'm',
+                  :from => page,
+                  :size => per_page
+                }
+      results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
 
       doc_list = get_docs_from_raw_es_data(results, current_user)
 
@@ -110,8 +115,9 @@ class SearchesController < ApplicationController
       end
     end
 
-    #if colnames is empty, then just have one columns named "Documents"
-    if colnames.empty?
+    #
+    colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+    if !colnames_in_common_and_merge_search
       colnames = ["Documents", "More Information"]
     end
 
@@ -135,6 +141,74 @@ class SearchesController < ApplicationController
       #  format.html # index.html.erb
       #  format.json { render json: @documents }
       format.json { render json: SearchAllDatatable.new(view_context, current_user)}
+    end
+  end
+
+  def save_doc_from_search
+    @document = Document.new(:name => "Document from Merged Search")
+    doc_data = []
+
+    @current_user = current_user
+
+    search = params[:searchval]
+    
+    #TODO: do one search instead of two
+
+    #Get doc list, so we can get colnames in common
+    options =   {
+                  #set the ES from (search offset) field from our page method
+                  :from => page,
+                  #set the ES size (how many from search offset) field from our
+                  # per_page method
+                  :size => per_page
+                }
+
+    options[:flag] = 'm'
+    results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+
+    doc_list = get_docs_from_raw_es_data(results, @current_user)
+    colnames = []
+
+    #Don't let unvalidated docs screw up the search results
+    validated_doc_list = doc_list.reject {|doc| !doc.validated }
+    if !validated_doc_list.empty?
+      colnames = get_colnames_in_common(validated_doc_list)
+    end
+
+    #Get data results
+    options[:flag] = 'f'
+    raw_data = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+
+    raw_data.collect do |row|
+      doc_name = row["_source"]["_id"]
+      score = row["_score"]
+      doc_id = doc_name.sub("Document-", "").to_i
+
+      begin
+        doc = Document.find(doc_id)
+      rescue ActiveRecord::RecordNotFound
+        log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
+        #better decrement our document_count for the results
+        next
+      end
+
+      doc_data = row["_source"]["data"].collect
+
+    end #end raw_data.collect
+
+    c = Collection.find_or_create_by_name(:name => "From Merged Search")
+    c.user_id = current_user.id
+    c.save
+    @document.collection = c
+    @document.stuffing_data = doc_data
+    @document.user_id = current_user.id
+
+    respond_to do |format|
+      if @document.save
+        format.html { redirect_to @document, notice: 'Document from Merged Search was successfully saved.' }
+      else
+        format.html { render controller: "documents", action: "new" }
+      end
     end
   end
 end

@@ -8,7 +8,13 @@
 <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="min-width: 800px;">
   <div class="modal-header">
     <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
-    <%= link_to "×", collections_path %>
+    <%
+    	#Allows us to overrider the return link if we want
+    	if !@return_from_upload_link
+    		@return_from_upload_link = collections_path
+    	end
+    %>
+    <%= link_to "×", @return_from_upload_link %>
     <h3 id="myModalLabel">Data Import</h3>
   </div>
   <div class="modal-body">

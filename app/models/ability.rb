@@ -57,6 +57,7 @@ class Ability
     
     #SAS: This rule version should be depricated but keep it for now
     #can :read, Document do |doc|
+    ## if (doc) && (doc.collection) && (doc.collection.projects)
     #  doc.collection.projects.each do |proj|
     #    doc.collection.projects.include?(proj) && proj.users.include?(user)
     #  end

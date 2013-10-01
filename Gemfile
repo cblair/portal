@@ -43,7 +43,8 @@ gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
 
 gem 'less'
 
-gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "less-rails", "2.3.3"
+#Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
 #this requires the command:
 # rails g bootstrap:install
 gem 'twitter-bootstrap-rails', '2.2.0'
@@ -85,7 +86,7 @@ group :development do
 end
 
 #Rubyzip
-gem 'rubyzip'
+gem 'rubyzip', '0.9.9'
 
 #Paperclip
 gem "paperclip", "~> 3.0"
@@ -94,7 +95,7 @@ gem "paperclip", "~> 3.0"
 gem "spawn", :git => 'git://github.com/rfc2822/spawn'
 
 #New Relic
-gem 'newrelic_rpm'
+#gem 'newrelic_rpm'
 
 gem 'ancestry'
 

@@ -29,7 +29,7 @@ module DocumentsHelper
 
 
   def log_and_print(str)
-    logger.info str
+    #logger.info str
     puts str
   end
 
