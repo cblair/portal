@@ -138,10 +138,10 @@ jQuery(function($) {
 	//This function does the initial search, so we can find out what document
 	// match
 	function runInitialSearch(urlSource, searchVal) {
-		urlSource += "?searchval='" + encodeURI(searchVal) + "'";
-
+		var searchParams = "?searchval='" + encodeURI(searchVal) + "'";
 		//Add the merge search option
-		urlSource += getMergeButtonParams();
+		searchParams += getMergeButtonParams();
+		urlSource += searchParams;
 
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
@@ -165,7 +165,19 @@ jQuery(function($) {
 				) {
 					$('div.document-name-results-only').fadeIn();
 				} else if (getMergeButtonParams() === "&merge_search=true") {
+					//Update alert content
 					$('div.search-alert-other p').text("Column names in common for merged documents: " + result["colnames"].join(', '));
+
+					//Other link overrides
+					$('button.save-doc-from-search-button').on("click", function(e) {
+						e.preventDefault();
+
+						var saveDocUrl = $(this).data('source-url') + searchParams;
+
+						window.location = saveDocUrl;
+					});
+
+					//Fade in alert
 					$('div.search-alert-other').fadeIn();
 				}
 
@@ -244,9 +256,8 @@ jQuery(function($) {
 		//init / update DataTables
 		updateSearchDatatables(undefined, undefined);
 
-		//init other stuff
+		//init other search stuff
 		initMainSearch();
-
 	} //end runSearchesControllerJS
 
 

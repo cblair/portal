@@ -45,6 +45,7 @@ Portal::Application.routes.draw do
   match '/search/search_init' => "searches#search_init", :as => :search_init
   match '/search/search_all' => "searches#search_all", :as => :search_all
   match '/search/new' => "searches#new", :as => :new_search
+  match '/search/save_doc_from_search' => "searches#save_doc_from_search", :as => :save_doc_from_search
 
   resources :projects
   match '/projects/project_public_set/:id' => "projects#project_public_set", :as => :project_public_set
