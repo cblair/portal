@@ -17,13 +17,13 @@ class SearchAllDatatable
   def as_json(options = {})
     #Get our search data now, so we set all the search side affects
     # now (i.e. counts, modes, etc.)
-    aaData = paginate_data_if_needed
+    aaData = search_data
 
     {
       sEcho:params[:sEcho].to_i,
       #TODO: count functions for document_results == true
-      iTotalRecords: get_data_count,
-      iTotalDisplayRecords: get_data_count,
+      iTotalRecords: @document_count,
+      iTotalDisplayRecords: @document_count,
       aaData:
         #Format:
         #  [
@@ -36,31 +36,6 @@ class SearchAllDatatable
   end
 
 private
-
-  def paginate_data_if_needed
-    search_data 
-
-    #only paginate the results if they are data, not documents
-    if @document_results
-      puts "INFO: document results"
-      data
-    else
-      puts "INFO: data results"
-      data.paginate({:page => page, :per_page => per_page})
-    end
-  end
-
-  #Returns the data count, based on whether is document results
-  # from ES, or 
-  def get_data_count
-    if @document_results
-      #this variable gets set down below, depending on the
-      # search data type
-      @document_count
-    else
-      data.count
-    end
-  end
 
   def data
     search_data
@@ -124,6 +99,38 @@ private
   end
 
 
+  def fetch_search_data_cloudant
+    @retval = []
+
+    if params[:sSearch].present?
+      raw_data = cloudant_search_all_data(params[:sSearch])
+
+      if raw_data
+        raw_data.collect do |row|
+          doc_name = row["id"]
+          score = row["order"][0]
+          doc_id = doc_name.sub("Document-", "").to_i
+
+          begin
+            doc = Document.find(doc_id)
+          rescue ActiveRecord::RecordNotFound
+            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
+          end
+
+          if doc_is_viewable(doc, @current_user)
+            row = {}
+            row["0"] = link_to doc.name, doc
+            #count col
+            row["1"] = score
+            @retval << row
+          end
+        end
+      end
+    end
+    @retval
+  end
+
+
   def fetch_search_data_elasticsearch
     puts "INFO: fetching elasticsearch results..."
 
@@ -145,7 +152,8 @@ private
                     :size => per_page
                   }
 
-      options[:flag] = 'm'
+      #options[:flag] = 'm'
+      options[:flag] = 'f'
       results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
 
       doc_list = get_docs_from_raw_es_data(results, @current_user)
@@ -158,9 +166,10 @@ private
       end
 
       #Get data results
-      options[:flag] = 'f'
-      raw_data = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
-      
+      #options[:flag] = 'f'
+      #raw_data = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      raw_data = results
+
       #sfield = "Survey_Year" #SAS TODO: get field name from user?
       #raw_data = es_terms_facet(search, sfield) #SAS makes ES query
       
@@ -242,56 +251,12 @@ private
               popover_html = '<div style="font-size:x-small">' + popover_html.html_safe + '</div>'
 
               @retval << [link_to(doc.name, doc), popover_html]
-            #Don't let unvalidated docs screw up the search results
-            elsif doc.validated
-              @document_results = false
-              row["_source"]["data"].map do |data_row| 
-                values = []
-                colnames.each do |colname|
-                  values << data_row[colname]
-                end
-                @retval << values
-              end #end row...map
-            else
-              @document_results = false
             end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect
       end #end raw_data
     end #if params[:sSearch].present?
 
-    @retval
-  end
-
-
-  def fetch_search_data_cloudant
-    @retval = []
-
-    if params[:sSearch].present?
-      raw_data = cloudant_search_all_data(params[:sSearch])
-
-      if raw_data
-        raw_data.collect do |row|
-          doc_name = row["id"]
-          score = row["order"][0]
-          doc_id = doc_name.sub("Document-", "").to_i
-
-          begin
-            doc = Document.find(doc_id)
-          rescue ActiveRecord::RecordNotFound
-            log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
-          end
-
-          if doc_is_viewable(doc, @current_user)
-            row = {}
-            row["0"] = link_to doc.name, doc
-            #count col
-            row["1"] = score
-            @retval << row
-          end
-        end
-      end
-    end
     @retval
   end
 end

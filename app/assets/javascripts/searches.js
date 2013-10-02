@@ -41,7 +41,11 @@ jQuery(function($) {
 		}
 
 		//Add the merge search option
-		sourceUrl += getMergeButtonParams();
+		sourceUrl += "&" + getMergeButtonParams();
+
+		//Add the doc search pagination options
+		sourceUrl += "&" + getActivePaginateParams();
+		sourceUrl += "&" + getSearchLengthParams();
 
 		//dataTable
 		var search_table = $('#search').dataTable({
@@ -70,10 +74,13 @@ jQuery(function($) {
       			search_table.fnFilter($(this).val());
     		});
 
+    	//TODO: don't think we need this anymore
+    	/*
     	if(searchVal != undefined) {
 	    	//Call search to filter from our initial search val
     		search_table.fnFilter(searchVal);
     	}
+    	*/	
 	}
 
 	function changeSearchIconToRefresh() {
@@ -106,8 +113,12 @@ jQuery(function($) {
 	//Sets our merge search option, and then just call updateMainSearch
 	function updateMergeSearch(e) {
 		//Set merge option in the DOM. Setting variables here will be 
-		// ignored in out actuall even callbacks/ajax calls.
+		// ignored in out actually even callbacks/ajax calls.
 		$('.merge-button').data('enabled', 'true');
+
+		//Get the last document search params we need, so that merge search
+		// will merge the documents in this view
+		updateDocSearchStashedData();
 
 		updateMainSearch(e);
 	}
@@ -116,10 +127,35 @@ jQuery(function($) {
 	// the DOM.
 	function getMergeButtonParams () {
 		if($('.merge-button').data('enabled') === "true") {
-			return("&merge_search=true");
+			return("merge_search=true");
 		} else {
-			return("&merge_search=false");
+			return("merge_search=false");
 		}
+	}
+
+	function getActivePaginateParams() {
+		var activePaginate = $('button.merge-button').data('document-active-paginate');
+		if(activePaginate === null) {
+			activePaginate = "''";
+		}
+
+		return("active_paginate=" + activePaginate);
+	}
+
+	function getSearchLengthParams() {
+		var searchLength = $('button.merge-button').data('document-active-search-length');
+		if(searchLength === null) {
+			searchLength = "''";
+		}
+
+		return("search_length=" + searchLength);
+	}
+
+	function updateDocSearchStashedData() {
+		var activePaginate = $('div.dataTables_paginate ul li.active').text();
+		var searchLength = $('div#search_length select option:selected').val();
+		$('button.merge-button').data('document-active-paginate', activePaginate);
+		$('button.merge-button').data('document-active-search-length', searchLength);
 	}
 
 	function updateMainSearch(e) {
@@ -140,7 +176,12 @@ jQuery(function($) {
 	function runInitialSearch(urlSource, searchVal) {
 		var searchParams = "?searchval='" + encodeURI(searchVal) + "'";
 		//Add the merge search option
-		searchParams += getMergeButtonParams();
+		searchParams += "&" + getMergeButtonParams();
+
+		//Add the doc search pagination options
+		searchParams += "&" + getActivePaginateParams();
+		searchParams += "&" + getSearchLengthParams();
+
 		urlSource += searchParams;
 
 		$.ajax(urlSource, {
@@ -161,10 +202,10 @@ jQuery(function($) {
 					&&
 					(result["colnames"][0] === "Documents")
 					&&
-					(getMergeButtonParams() === "&merge_search=true")
+					(getMergeButtonParams() === "merge_search=true")
 				) {
 					$('div.document-name-results-only').fadeIn();
-				} else if (getMergeButtonParams() === "&merge_search=true") {
+				} else if (getMergeButtonParams() === "merge_search=true") {
 					//Update alert content
 					$('div.search-alert-other p').text("Column names in common for merged documents: " + result["colnames"].join(', '));
 

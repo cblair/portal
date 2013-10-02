@@ -1,6 +1,8 @@
 class SearchesController < ApplicationController
   include SearchesHelper
   include SearchesDatatableHelper
+  #include MergeSearchDatatable
+  #include SearchAllDatatable
   include ElasticsearchHelper
 
   delegate :link_to, to: :@view
@@ -100,7 +102,7 @@ class SearchesController < ApplicationController
     
     if search != ""
       options =  {
-                  :flag => 'm',
+                  :flag => 'f',
                   :from => page,
                   :size => per_page
                 }
@@ -116,7 +118,7 @@ class SearchesController < ApplicationController
     end
 
     #
-    colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+    colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
       colnames = ["Documents", "More Information"]
     end
@@ -140,7 +142,11 @@ class SearchesController < ApplicationController
     respond_to do |format|
       #  format.html # index.html.erb
       #  format.json { render json: @documents }
-      format.json { render json: SearchAllDatatable.new(view_context, current_user)}
+      if merge_search
+        format.json { render json: MergeSearchDatatable.new(view_context, current_user)}
+      else
+        format.json { render json: SearchAllDatatable.new(view_context, current_user)}
+      end
     end
   end
 

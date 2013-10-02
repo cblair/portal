@@ -227,14 +227,13 @@ module SearchesHelper
   def get_docs_from_raw_es_data(raw_data, current_user)
     retval = []
     raw_data.collect do |row|
-      doc_name = row[:doc_name]
+      doc_name = row["_id"]
       doc_id = doc_name.sub("Document-", "").to_i
 
       begin
         doc = Document.find(doc_id)
       rescue ActiveRecord::RecordNotFound
-        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found in search. Skipping. Raw search return data:"
-        puts raw_data
+        log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found in search. Skipping."
 
         next
       end
