@@ -41,7 +41,7 @@
 <div class="hero-unit">
 	<h3>Upload data to Hatch</h3>
 
-	<p>Now to add the files to Hatch, do the following steps:</p>
+	<p>Now to add the files to Hatch, go to the <%= link_to "Data", collections_path %> and do the following steps:</p>
 
 	<ol>
 		<li>Click on the <b>Upload files</b> button below.</li>
@@ -55,55 +55,20 @@
 		</ul>
 	</ol>
 
-	<div class="modal" style="display:none; min-width: 800px;">
-		<%= link_to "X", collections_path, :class => "btn btn-danger" %>
-		<%= render :partial => "collections/js_upload" %>
-	</div>
-
-	<%
-		tree_depth = 0
-
-	%>
-
-	<div class="hero-unit" style="font-size: 14px;">
-		<h2>Collections</h2>
-
-		<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
-		<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>
-
-		<hr />
-		<%= render :partial => "collections/rec_collection_documents_render", 
-					:locals => {:root_collections => @root_collections, :tree_depth => tree_depth, :project => @project} %>
-	</div>
-
-	<!--Keeps the above datatable from trying to share space with the below content-->
-	<br />
-	<hr style="width: 1000px"/>
-
 </div>
 
 <div class="hero-unit">
 	<h3>Search</h3>
 
-	<p>Now we have some data in Hatch, let's do some searching. Search using the query <b>3*</b>:</p>
+	<p>Now we have some data in Hatch, let's do some searching. Go to the <%= link_to "Searches", new_search_path %> page. Search using the query <b>2:3D9*</b>. You should see some documents in your search results.</p>
 
-	<%= render :partial => "searches/search_main" %>
-
-	<p>TODO: do a few more searches with AND, OR, etc terms, and talk about the popovers for the Metadata.</p>
-
-
+	<p>Now click the <b>Merge</b> button. This will merge the data from the documents in this view. Keep in mind that all documents show up in the normal search, but only document data that you have permissions to will get merged in.</p>
 </div>
 
-<div class="hero-unit">
-	<h3>Merging data</h3>
-
-	<p>That's great! You've now learned the power of Search. But it can do more. Say you have values that are the same in the same columns, but in two different tables. Hatch will automatically merge the rows together for you into one metadocument with Search:</p>
-
-	<p>TODO: suggest a query that will work for this example.</p>
-</div>
-
+<!--
 <div class="hero-unit">
 	<h3>More information</h3>
 
 	<p>TODO: put the Hatch demo video here, showing start to finish the upload through search through Project work flow, a little more in detail, like we developers know it.</p>
 </div>
+-->
