@@ -151,6 +151,18 @@ jQuery(function($) {
 		return("search_length=" + searchLength);
 	}
 
+	//Shows the pending search alert if the search hasn't yet completed.
+	function updatePendingSearchAlert() {
+		console.log("TS156");
+		console.log($('div.search-alert-pending').data('search-completed'));
+		console.log($('div.search-alert-pending').data('search-completed') === "false");
+		if($('div.search-alert-pending').data('search-completed') === "false")
+		{
+			console.log("TS161");
+			$('div.search-alert-pending').fadeIn();
+		}
+	}
+
 	function updateDocSearchStashedData() {
 		var activePaginate = $('div.dataTables_paginate ul li.active').text();
 		var searchLength = $('div#search_length select option:selected').val();
@@ -183,6 +195,11 @@ jQuery(function($) {
 		searchParams += "&" + getSearchLengthParams();
 
 		urlSource += searchParams;
+
+		//Reset search completed to false for pending search.
+		$('div.search-alert-pending').data('search-completed', 'false');
+		// ~and set a callback to show the alert after 5 seconds.
+		setTimeout(updatePendingSearchAlert, 5000);
 
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
@@ -230,10 +247,19 @@ jQuery(function($) {
 				//Clear the merge button option, in case the main 
 				// search button is the next to be pressed
 				$('.merge-button').data('enabled', 'false');
+
+				// Set search completed to true for pending search, in case updatePendingSearchAlert hasn't
+				// fired yet.
+				$('div.search-alert-pending').data('search-completed', 'true');
+				// ~and hide the pending search alert, in case updatePendingSearchAlert has already
+				// fired.
+				$('div.search-alert-pending').fadeOut();
 			},
 			error: function(result) {
 				$('#error').show();
-			}
+			},
+			//timeout after a minute
+			timeout: 60000
 		});
 	}
 
