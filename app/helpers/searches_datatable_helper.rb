@@ -20,4 +20,12 @@ module SearchesDatatableHelper
   def merge_search
     params["merge_search"] == "true"
   end
+  
+  def doc_search_page
+    params["active_paginate"]
+  end
+
+  def doc_search_per_page
+    params["search_length"]
+  end
 end

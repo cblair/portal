@@ -155,13 +155,5 @@ private
     end
     @retval
   end
-
-  def doc_search_page
-    params["active_paginate"]
-  end
-
-  def doc_search_per_page
-    params["search_length"]
-  end
 end
 
