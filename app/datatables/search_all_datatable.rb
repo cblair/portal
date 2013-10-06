@@ -160,10 +160,10 @@ private
       colnames = []
 
       #Don't let unvalidated docs screw up the search results
-      validated_doc_list = doc_list.reject {|doc| !doc.validated }
-      if !validated_doc_list.empty?
-        colnames = get_colnames_in_common(validated_doc_list)
-      end
+      #validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      #if !validated_doc_list.empty?
+      #  colnames = get_colnames_in_common(validated_doc_list)
+      #end
 
       #Get data results
       #options[:flag] = 'f'
@@ -222,8 +222,9 @@ private
           #if doc_is_viewable(doc, @current_user)
           if true
             #If there are no colnames in common, just return a list of document links
-            colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
-            if !colnames_in_common_and_merge_search
+            #colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+            #if !colnames_in_common_and_merge_search
+            if true
               @document_results = true
 
               #Make Popover content
