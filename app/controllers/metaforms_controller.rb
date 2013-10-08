@@ -1,5 +1,6 @@
+include MetaformsHelper
+
 class MetaformsController < ApplicationController
-  include MetaformsHelper
   
   before_filter :authenticate_user!
   #load_and_authorize_resource
@@ -13,7 +14,7 @@ class MetaformsController < ApplicationController
 
   # POST /metaforms/mdf_save/1
   def mdf_save
-    metaform = Metaform.find(params[:metaf])
+    @metaform = Metaform.find(params[:metaf])
     mf_data = params[:metaform][:metarows_attributes] #passed row data
     document = Document.find(params[:id]) #id is from document
     mdf_saved = metarows_save(mf_data, document)
@@ -57,6 +58,10 @@ class MetaformsController < ApplicationController
   def new
     @metaform = Metaform.new
     setup_mrows()
+    #puts "new *********************************************************"
+    #@metaform.metarows.each do |mr|
+    #  p mr
+    #end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -67,6 +72,10 @@ class MetaformsController < ApplicationController
   # GET /metaforms/1/edit
   def edit
     @metaform = Metaform.find(params[:id])
+    #puts "edit ********************************************************"
+    #@metaform.metarows.each do |mr|
+    #  p mr
+    #end
   end
 
   # POST /metaforms
@@ -74,6 +83,10 @@ class MetaformsController < ApplicationController
   def create
     @metaform = Metaform.new(params[:metaform])
     @metaform.user_id = current_user.id
+    #puts "create ******************************************************"
+    #@metaform.metarows.each do |mr|
+    #  p mr
+    #end
 
     respond_to do |format|
       if @metaform.save
@@ -90,6 +103,12 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
+    #puts "update ******************************************************"
+    #tmp = params[:_destroy]
+    #p "tmp ***", tmp
+    #@metaform.metarows.each do |mr|
+    #  p mr
+    #end
 
     respond_to do |format|
       if @metaform.update_attributes(params[:metaform])

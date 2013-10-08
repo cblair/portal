@@ -37,13 +37,14 @@
 	  <% if can? :manage, @document %>
 	    <%= link_to 'Edit', edit_document_path(@document) %> |
 	  <% end %> <!-- can can -->
-		<%= link_to 'Back', documents_path %>
+		<%= link_to 'Back', collections_path %>
+		<%#= link_to 'Back', documents_path %>
 	<% else %>
 		<% if can? :manage, @document %>
 		   <%= link_to 'Edit Properties', edit_document_path(@document) %> |
 		   <%= link_to 'Edit Text', edit_document_text_path(@document) %> |
 		<% end %> <!-- can can -->
-		<%= link_to 'Back', documents_path %>
+		<%#= link_to 'Back', documents_path %>
 	<% end %>
 
 	<hr/>

@@ -80,7 +80,7 @@ class ProjectTest < ActiveSupport::TestCase
   #test bad edit/update pdesc of project
   test "test_bad_project_edit_pdesc" do
     proj = Project.new({:name => "Edit Project", :pdesc => "Edit project pdesc."})
-    proj.update_attributes(:name => "")
+    proj.update_attributes(:pdesc => "")
     assert proj.invalid?, "Description may be too short."
   end
 

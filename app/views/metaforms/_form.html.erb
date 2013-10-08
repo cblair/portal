@@ -29,14 +29,14 @@
 </div> -->
   
   <hr>
-  <%= f.fields_for :metarows do |mrow| %>
-    <%= render "metarows_fields", :f => mrow %><br />
-  <% end %>
-  <hr>
+  <div class="mdrows">
+    <%= f.fields_for :metarows do |mrow| %>
+      <%= render "metarow_fields", :f => mrow %><br />
+    <% end %>
+  </div>
   
-  <!--<%#= link_to_function "add", "add_mrow(this)" %>-->
-  <!--<p><%#= link_to_add_mrows "Add Metadata", f, :metarows %>-->
-  
+  <%= link_to_add_fields "Add Metadata", f, :metarows %>
+
   <div class="actions">
     <%= f.submit %>
   </div>
