@@ -144,6 +144,38 @@ class MetaformsHelperTest < ActionView::TestCase
     
     assert metarows_save(mf_data, doc) == false, "Document not nil."
   end
+  
+  #Test good arguments to "metarows_delete".
+  test "test_metarows_delete_good_arg" do
+    @metaform = metaforms(:metaform1)
+    mf_data = {"0" => {"key" => "KeyTest1", "value" => "Value1", "id" => "1"}}
+    
+    #Save and filter document to Couch
+	fname = 'smallv.csv'
+	upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+	save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+	
+	f = get_ifilter(-1) #internal CSV
+	docs = Document.where(:name => fname)
+	d = docs.first
+
+	data = filter_data_columns_csv(d.stuffing_text) #call filters
+	suc_valid = d.validate(f)
+	
+	mf_data2 = {"0" => {"key" => "KeyTest2", "value" => "Value2", "id" => "1"}}
+	metarows_save(mf_data2, d)
+	metadata = d.stuffing_metadata
+	
+	assert metarows_delete(d) == true, "Metarows not deleted."
+	assert metadata == [{"HatchFilter"=>"CSV (pre-defined)"}, {"Metaform"=>"Metaform1"}, {"KeyTest2"=>"Value2"}], 
+	"Metarows don't match"
+  end
+
+  #Test nil document to "metarows_delete".
+  test "test_metarows_delete_nil_doc" do
+    doc = nil
+    assert metarows_delete(doc) == false, "Document not nil."
+  end
 
   #Test metarow setup function
   test "test_metarow_setup" do

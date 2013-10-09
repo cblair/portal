@@ -7,6 +7,8 @@ module MetaformsHelper
       return false
     end
     
+    metarows_delete(document) #Removes meataform data
+    
     #Test for nil FIRST or error?
     if (document.stuffing_metadata == nil or document.stuffing_metadata.empty?)
       document.stuffing_metadata = [{"Metaform" => @metaform.name}]
@@ -26,10 +28,36 @@ module MetaformsHelper
     return true
   end
   
+  #Deletes metaform metadata added to a Couch document.
+  #Dose not delete filter but deletes all other metadata.
+  def metarows_delete(document)
+    if (document == nil)
+      return false
+    end
+    
+    #Test for nil FIRST or error?
+    if (document.stuffing_metadata == nil or document.stuffing_metadata.empty?)
+      #Do nothing
+    else
+      curr_md = document.stuffing_metadata #Gets current metadata
+      new_md = nil
+      
+      #Looks for filter type, if found copies to new metadata
+      curr_md.each do |metad|
+        if metad.has_key?("HatchFilter")
+          new_md = [metad]
+        end
+      end
+      document.stuffing_metadata = new_md
+      document.save
+    end
+    
+    return true
+  end
+  
   #Sets up the metarows for the metaform creation page.
-  #TODO: make rows dynamic.
+  #TODO: improve.
   def setup_mrows()
-    #1.times { @metaform.metarows.build(:user_id => current_user.id) } #Unit test error
     1.times { @metaform.metarows.build }
     return true
   end
