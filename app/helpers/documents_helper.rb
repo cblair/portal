@@ -306,7 +306,7 @@ module DocumentsHelper
 
     colnames = rows.first
 
-    (2..rows.length - 1).each do |i|
+    (1..rows.length - 1).each do |i|
       row = Hash[[colnames, rows[i]].transpose]
       retval << row
     end
