@@ -6,10 +6,10 @@
   <%= f.text_field :value, :size => nil %>
   
   <%= f.label :autofill, "Autofill" %>
-  <%= f.check_box :autofill %><br />
+  <%= f.check_box :autofill %><br /><br />
   
   <%= f.hidden_field :_destroy %>
-  <%= link_to_function "remove", "del_mrow(this)" %>  
+  <%= link_to_function "Remove Metadata", "del_mrow(this)" %>  
   <%#= link_to "Remove", '#', class: "remove_fields" %>
   <hr>
 </fieldset>
