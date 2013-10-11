@@ -1,0 +1,27 @@
+<h1>Metadata Input</h1>
+
+<p>
+  <b>Document:</b>
+  <%= @document.name %>
+</p>
+
+<p>
+  <b>Metaform:</b>
+  <%= @metaform.name %>
+</p>
+
+<p>
+  <!--<b>Mddesc:</b>-->
+  <b>Description:</b>
+  <%= @metaform.mddesc %>
+</p>
+
+<hr>
+<%= form_for @metaform, :url => mdf_save_path do |f| %>
+  <%= f.fields_for :metarows do |mrow| %>
+    <%= render "mdr_fields", :f => mrow %><br />
+  <% end %>
+  <%= hidden_field_tag "metaf", @metaform.id %>
+  <%= f.submit %>
+<% end %>
+<hr>

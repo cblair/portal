@@ -1,0 +1,43 @@
+<%= form_for(@metaform) do |f| %>
+  <% if @metaform.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@metaform.errors.count, "error") %> prohibited this metaform from being saved:</h2>
+
+      <ul>
+      <% @metaform.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <!--<%= f.label :mddesc %>-->
+    <%= f.label :Description %>
+    <%= f.text_area :mddesc, :rows => 5 %>
+  </div>
+  
+<!-- <div>
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+</div> -->
+  
+  <hr>
+  <div class="mdrows">
+    <%= f.fields_for :metarows do |mrow| %>
+      <%= render "metarow_fields", :f => mrow %><br />
+    <% end %>
+  </div>
+  
+  <%= link_to_add_fields "Add Metadata", f, :metarows %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

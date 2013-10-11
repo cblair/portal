@@ -14,4 +14,5 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :documents  #as collaborators
   has_many :jobs
   has_and_belongs_to_many :roles
+  has_many :metaforms
 end

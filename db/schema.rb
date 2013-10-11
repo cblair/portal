@@ -133,6 +133,24 @@ ActiveRecord::Schema.define(:version => 20130922233636) do
     t.datetime "updated_at"
   end
 
+  create_table "metaforms", :force => true do |t|
+    t.string   "name"
+    t.text     "mddesc"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "metarows", :force => true do |t|
+    t.string   "key"
+    t.string   "value"
+    t.boolean  "autofill"
+    t.integer  "metaform_id"
+    t.integer  "user_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "notifications", :force => true do |t|
     t.string   "title"
     t.text     "body"

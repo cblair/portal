@@ -45,6 +45,7 @@
 //= require documents
 //= require documents_for_collections
 //= require searches
+//= require metaforms
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 

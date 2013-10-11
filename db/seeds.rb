@@ -6,6 +6,9 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Emanuel', :city => cities.first)
 
+metaf1 = Metaform.new(:name => 'Metaform1.1', :mddesc => 'test 1.1', :user_id => 1)
+metaf1.save
+
 user1 = User.new(:email => 'test@example.com', :password => 'password', :password_confirmation => 'password')
 user1.save()
 user2 = User.new(:email => 't2@ex.com', :password => 'password', :password_confirmation => 'password')
@@ -17,7 +20,6 @@ user4.save()
 role_list = Role.create([{:name => 'admin'}])
 user4.roles << role_list[0]
 #role_list = Role.create([{:name => 'admin'}, {:name => 'owner'}, {:name => 'collaborator'}, {:name => 'group'}])
-
 
 proj1 = Project.new(:name => 'Test1.1', :pdesc => 'test 1.1', :user_id => 1, :public => false)
 proj1.save()

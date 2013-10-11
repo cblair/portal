@@ -47,6 +47,10 @@ Portal::Application.routes.draw do
   match '/search/new' => "searches#new", :as => :new_search
   match '/search/save_doc_from_search' => "searches#save_doc_from_search", :as => :save_doc_from_search
 
+  resources :metaforms
+  match '/metaforms/mdf_input/:id' => "metaforms#mdf_input", :as => :mdf_input
+  match '/metaforms/mdf_save/:id' => "metaforms#mdf_save", :as => :mdf_save
+
   resources :projects
   match '/projects/project_public_set/:id' => "projects#project_public_set", :as => :project_public_set
   match '/projects/owner/:id' => "projects#owner", :as => :owner
