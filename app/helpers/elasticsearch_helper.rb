@@ -303,7 +303,6 @@ module ElasticsearchHelper
       data = es_connect(conn_str, qbody) #full document
     end
     
-    debugger
     return data
   end
 

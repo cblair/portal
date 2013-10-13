@@ -24,14 +24,20 @@ module CollectionsHelper
 
     #just build up jobs for now
     collection.documents.each do |document|
-      job = Job.new(
-        :description => "Document #{document.name} " + 
-        "validation from collection #{collection.name}"
-      )
-      job.save
-      #TODO: submit_job will likely die if Portal::Application.config.job_type == "threads",
-      # because the jobs lock up the PG pool
-      job.submit_job(current_user, document, {:ifilter_id => ifilter.id})
+      #Let's only submit jobs for documents that haven't already
+      # been validated...
+      if !document.validated
+        job = Job.new(
+          :description => "Document #{document.name} " + 
+          "validation from collection #{collection.name}"
+        )
+        job.save
+        #TODO: submit_job will likely die if Portal::Application.config.job_type == "threads",
+        # because the jobs lock up the PG pool
+        job.submit_job(current_user, document, {:ifilter_id => ifilter.id})
+      else
+        puts "INFO: Document '#{document.name}' already validated, not submitting job."
+      end
     end
   end
   

@@ -184,15 +184,23 @@ class Document < ActiveRecord::Base
     puts "########################################################"
     puts "Validating doc #{self.name}..."
 
-    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
-
     self.job_id = job.id
     self.save
 
-    job.succeeded = self.validate(ifilter)
-    if job.succeeded
-      job.output = "Document validated successfully."
+    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
+
+    if !self.validated
+      job.succeeded = self.validate(ifilter)
+
+      if job.succeeded
+        job.output = "Document validated successfully."
+      end
+    else
+      job.succeeded = true
+      job.output = "Document already validated."
     end
+
+    puts job.output
     
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"
