@@ -1,7 +1,11 @@
 module SearchesDatatableHelper
   def page
     #params[:iDisplayStart].to_i/per_page + 1
-    params[:iDisplayStart].to_i + 1
+    params[:iDisplayStart].to_i
+  end
+
+  def merge_page
+    params[:iDisplayStart].to_i/per_page + 1
   end
 
   def per_page
@@ -22,7 +26,7 @@ module SearchesDatatableHelper
   end
   
   def doc_search_page
-    params["active_paginate"]
+    params["active_paginate"].to_i - 1
   end
 
   def doc_search_per_page

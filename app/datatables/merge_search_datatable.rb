@@ -17,6 +17,8 @@ class MergeSearchDatatable
     # now (i.e. counts, modes, etc.)
     aaData = data
 
+    puts "INFO: data size: #{search_data.count.inspect}, page: #{merge_page.inspect}"
+
     {
       sEcho:params[:sEcho].to_i,
       iTotalRecords: search_data.count,
@@ -36,7 +38,7 @@ private
 
 
   def data
-    search_data.paginate({:page => page, :per_page => per_page})
+    search_data.paginate({:page => merge_page, :per_page => per_page})
   end
 
 

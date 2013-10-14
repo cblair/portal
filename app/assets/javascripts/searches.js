@@ -153,9 +153,6 @@ jQuery(function($) {
 
 	//Shows the pending search alert if the search hasn't yet completed.
 	function updatePendingSearchAlert() {
-		console.log("TS156");
-		console.log($('div.search-alert-pending').data('search-completed'));
-		console.log($('div.search-alert-pending').data('search-completed') === "false");
 		if($('div.search-alert-pending').data('search-completed') === "false")
 		{
 			console.log("TS161");
@@ -168,6 +165,8 @@ jQuery(function($) {
 		var searchLength = $('div#search_length select option:selected').val();
 		$('button.merge-button').data('document-active-paginate', activePaginate);
 		$('button.merge-button').data('document-active-search-length', searchLength);
+		console.log('TS171');
+		console.log($('button.merge-button').data('document-active-paginate'));
 	}
 
 	function updateMainSearch(e) {

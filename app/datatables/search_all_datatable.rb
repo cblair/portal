@@ -15,6 +15,8 @@ class SearchAllDatatable
   end
 
   def as_json(options = {})
+    @document_count = 0
+    
     #Get our search data now, so we set all the search side affects
     # now (i.e. counts, modes, etc.)
     aaData = search_data
