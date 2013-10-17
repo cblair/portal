@@ -5,7 +5,6 @@
 #
 # Generated January 29, 2013
 #
-# This configuration file is custom generated for Colby Blair - cblair@vandals.uidaho.edu
 
 # Here are the settings that are common to all environments:
 common: &default_settings
@@ -14,8 +13,8 @@ common: &default_settings
   # You must specify the license key associated with your New Relic
   # account.  This key binds your Agent's data to your account in the
   # New Relic service.
-  license_key: '3df347861eab361319780334d21c806e664ced83'
-  
+  license_key: 'f68885ba4a6d5ca913a4070c856ba57e6dd4cbb1'
+
   # Agent Enabled (Ruby/Rails Only)
   # Use this setting to force the agent to run or not run.
   # Default is 'auto' which means the agent will install and run only
@@ -23,8 +22,9 @@ common: &default_settings
   # it from running with Rake or the console.  Set to false to
   # completely turn the agent off regardless of the other settings.
   # Valid values are true, false and auto.
-  # agent_enabled: auto
-  
+  # agent_enabled: auto  
+  agent_enabled: true
+
   # Application Name
   # Set this to be the name of your application as you'd like it show
   # up in New Relic.  New Relic will then auto-map instances of your application
@@ -33,7 +33,7 @@ common: &default_settings
   # "All UI" then specify a semicolon-separated list of up to three
   # distinct names.  If you comment this out, it defaults to the 
   # capitalized RAILS_ENV (i.e., Production, Staging, etc)
-  app_name: My Application
+  app_name: Hatch CNR
 
   # When "true", the agent collects performance data about your 
   # application and reports this data to the New Relic service at
@@ -57,7 +57,8 @@ common: &default_settings
   # encryption involved in SSL communication, but this work is done
   # asynchronously to the threads that process your application code,
   # so it should not impact response times.
-  ssl: false
+  #ssl: false
+  ssl: true
 
   # EXPERIMENTAL: enable verification of the SSL certificate sent by
   # the server. This setting has no effect unless SSL is enabled
