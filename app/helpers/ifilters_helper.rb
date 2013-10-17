@@ -34,7 +34,6 @@ module IfiltersHelper
                     :name => "CSV (pre-defined)",
                     :regex=> nil
                   )
-      #TODO: id
     f.id = -1 #we don't want to stomp on an valid id
     retval.prepend(f)
 
@@ -43,7 +42,6 @@ module IfiltersHelper
                     :name => "XML (pre-defined)",
                     :regex=> nil
                   )
-      #TODO: id
     f.id = -2 #we don't want to stomp on an valid id    
     retval.prepend(f)
 

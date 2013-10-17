@@ -104,3 +104,6 @@ gem 'daemons'
 gem 'delayed_job_active_record'
 #TODO: not sure if we're going to use this
 gem "delayed_job_web"
+
+#Excel parsing
+gem 'roo'
