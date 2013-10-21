@@ -145,7 +145,8 @@ module DocumentsHelper
         @document.stuffing_text << worksheet
       end
     else
-      @opened_file = File.open file
+      #@opened_file = File.open file
+      @opened_file = File.open(file, "r:iso-8859-1")
       file_text = @opened_file.read()
       #Make sure we have valid UTF-8 encoding
       file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
@@ -273,7 +274,7 @@ module DocumentsHelper
         if row.is_a? Hash
           row = row.map {|k,v| v}.join
         end
-        
+
         if (f['regex'] == "csv")
           iterator = strip_header(h, iterator)
         end
@@ -304,7 +305,7 @@ module DocumentsHelper
       iterator = iterator.join('') #Converts back into string
     end
     iterator = iterator.lstrip #Removes leading whitespace
-    
+
     return iterator
   end
   
