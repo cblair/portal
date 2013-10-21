@@ -107,3 +107,5 @@ gem "delayed_job_web"
 
 #Excel parsing
 gem 'roo'
+
+gem 'ruby-filemagic'

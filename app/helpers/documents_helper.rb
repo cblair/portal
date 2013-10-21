@@ -4,6 +4,7 @@ module DocumentsHelper
   require 'open-uri'
   require 'json'
   require 'cgi'
+  require 'filemagic'
   include IfiltersHelper
   include CouchdbHelper
 
@@ -117,8 +118,6 @@ module DocumentsHelper
       log_and_print "WARN: file name or object was nil, can't save to document"
       return false
     end
-
-    @opened_file = File.open file
     
     stime = Time.now()
     
@@ -126,12 +125,34 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    
-    file_text = @opened_file.read()
-    #Make sure we have valid UTF-8 encoding
-    file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
-    @document.stuffing_text = file_text
+    fm = FileMagic.new
+    if (\
+      (file.kind_of? String) \
+      && \
+        (\
+        (fm.file(file).include?("Excel")) \
+        || (fm.file(file).include?("Composite Document"))\
+        )\
+      )
+      @document.stuffing_text = []
+      @opened_file = Roo::Excel.new(file, nil, :ignore)
+      #There's a lot of ways to get all the sheets, but this
+      # way so far is the quickest
+      @opened_file.workbook.worksheets.each do |worksheet|
+        @document.stuffing_text << worksheet
+      end
+    else
+      @opened_file = File.open file
+      file_text = @opened_file.read()
+      #Make sure we have valid UTF-8 encoding
+      file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
+
+      @opened_file.close
+
+      @document.stuffing_text = file_text
+    end
+
     #@document.project=p		#links document to project
     @document.user = user
 
@@ -155,8 +176,6 @@ module DocumentsHelper
       log_and_print "ERROR: some other saving problem happend with document #{fname}."
       return false
     end
-
-    @opened_file.close
 
     return status
   end
@@ -225,7 +244,7 @@ module DocumentsHelper
   end
   
   
-  def filter_data_columns(f, iterator)
+  def filter_data_columns(f, iterator, options = {})
     if iterator == nil
       log_and_print "WARN: data iterator was nil"
       return []
@@ -239,6 +258,18 @@ module DocumentsHelper
     #XML
     if (f != nil and f['id'] == -2)
       return filter_data_columns_xml(iterator)
+    end
+
+    #Excel
+    if (f != nil and f['id'] == -3)
+      if filter_data_columns_excel(iterator, options)
+        doc = options[:document]
+        #Delete this document, we saved the data in sheet docs
+        doc.destroy
+      end
+
+      #We don't want our callee to do anything
+      return true
     end
     
     #TODO: cleanup
@@ -339,6 +370,61 @@ module DocumentsHelper
     data
   end
 
+
+  def filter_data_columns_excel(iterator, options = {})
+    retval = false
+
+    if iterator == nil
+      return []
+    end
+
+    if !options.include?(:document)
+      puts "WARN: filter_data_columns_excel() needs a document in the option param."
+      return []
+    end
+
+    document = options[:document]
+
+    #The original document save put CSV-ish stuff in stuffing_text, so we just have
+    # to format the data.
+    i = 0
+    iterator.each do |sheet|
+      colnames = sheet.first
+
+      hash_rows = []
+      for row_i in 1..sheet.count
+        row = sheet[row_i]
+        hash_row = {}
+        begin
+          for j in (0..row.count() - 1)
+            hash_row[ colnames[j] ] = row[j]
+          end
+
+          if !hash_row.empty?
+            hash_rows << hash_row
+          end
+        rescue
+          puts "WARN: parsing error while processing a sheet in #{document.name}."
+        end
+      end #each sheet row
+    
+      if !hash_rows.empty?
+        new_doc = Document.new(:name => "#{document.name}_sheet_#{i.to_s}")
+        new_doc.collection = document.collection
+        new_doc.user = user
+        new_doc.stuffing_data = hash_rows
+        new_doc.validated = true
+        new_doc.save
+
+        #We parsed a sheet successfully.
+        retval = true
+      end
+
+      i += 1
+    end #each sheet
+
+    return retval
+  end
 
   # Gets index columns from the corresponding .xsd file.
   def get_foreign_keys(doc, f)
