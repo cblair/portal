@@ -118,7 +118,8 @@ module DocumentsHelper
       return false
     end
 
-    @opened_file = File.open file
+    #@opened_file = File.open file
+    @opened_file = File.open(file, "r:iso-8859-1")
     
     stime = Time.now()
     
@@ -169,9 +170,7 @@ module DocumentsHelper
     return d.first().keys()
   end
   
-  
   def filter_metadata_columns(f, iterator)
-
     if iterator.class == String
       #spilt the iterator text by endlines
       iterator = iterator.split(/$/)
@@ -224,6 +223,84 @@ module DocumentsHelper
     return metadata_columns
   end
   
+  #Removes headers from input stream (iteratror) so it can be CSV parsed.
+  def strip_metadata(f, iterator)
+    if (f == nil or iterator == nil)
+      return false
+    end
+    
+    if iterator.class == String
+      #spilt the iterator text by endlines, outputs array
+      iterator = iterator.split(/$/)
+    #else if iterator.class == File (or anything else), do nothing
+    end
+    
+    if f != nil and iterator != nil
+      i = 0
+
+      f.get_ifilter_headers.each do |h|
+        #metadata_col_hash = {}
+        
+        begin
+          row = iterator[i]
+        rescue
+          row = []
+          log_and_print "WARN: filter_metadata_columns() is parsing empty data"
+        end
+        
+        #if row is a hash (i.e. from a Couchdb doc and not a Tempfile),
+        # join it back into one string
+        if row.is_a? Hash
+          row = row.map {|k,v| v}.join
+        end
+        
+        if (f['regex'] == "csv")
+          iterator = strip_header(h, iterator)
+        end
+        
+        #If row is length of two, then we want to make a key => val pair out 
+        # of the row. Else, the user has matches an unknown amout of values,
+        # and we can only number the keys.
+=begin
+        if row.count == 2
+          #metadata_columns << {row[0] => row[1]}
+        else
+          #colnames = IfiltersHelper::get_ifiltered_colnames(row)
+          for j in (0..row.count-1)
+            #metadata_col_hash[ colnames[j] ] = row[j]
+            if not metadata_col_hash.empty?
+              #metadata_columns << metadata_col_hash
+            end
+          end
+        end
+=end
+        i = i + 1 
+      end
+    else
+      #metadata_columns = []
+    end
+    
+    if iterator.is_a? Array
+      iterator = iterator.join('') #Converts back into string
+    end
+    iterator = iterator.lstrip #Removes leading whitespace
+    
+    return iterator
+  end
+  
+  #Removes single header from input stream (iteratror) so it can be CSV parsed.
+  def strip_header(h, iterator)
+    if (h == nil or iterator == nil)
+      return false
+    end
+    
+    #Checks if input stream line = filter pattern, removes line if true.
+    if (iterator.first =~ /#{h["val"]}/)
+      iterator.delete_at(0)
+    end
+
+   return iterator
+  end
   
   def filter_data_columns(f, iterator)
     if iterator == nil
@@ -239,6 +316,12 @@ module DocumentsHelper
     #XML
     if (f != nil and f['id'] == -2)
       return filter_data_columns_xml(iterator)
+    end
+    
+    #Header metadata + CSV
+    if (f != nil and f['regex'] == "csv")
+      iterator = strip_metadata(f, iterator)
+      return filter_data_columns_csv(iterator)
     end
     
     #TODO: cleanup
@@ -294,7 +377,6 @@ module DocumentsHelper
     return data_columns
   end
 
-
   def filter_data_columns_csv(iterator)
     retval = []
 
@@ -302,7 +384,8 @@ module DocumentsHelper
       return []
     end
 
-    rows = CSV.parse(iterator)
+    #rows = CSV.parse(iterator)
+    rows = CSV.parse(iterator, :skip_blanks => true)
 
     colnames = rows.first
 

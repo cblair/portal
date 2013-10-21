@@ -1,10 +1,7 @@
 <p class="mrow">
-  <%= f.label :key, "Key" %>
-  <%= f.text_field :key %>
+  <%= f.label :key, "Key (cannot edit)" %>
+  <%= f.text_field :key, :readonly => true %>
   
   <%= f.label :value, "Value" %>
   <%= f.text_field :value %>
-  
-  <!-- <%#= f.label :autofill, "Autofill" %>
-  <%#= f.check_box :autofill %><br /> -->
 </p>

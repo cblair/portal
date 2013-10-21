@@ -78,7 +78,6 @@ class DocumentsHelperTest < ActionView::TestCase
 	    assert result
  	end
 
-
 	test "save_zip_to_documents - create parent collection" do
 		c=Collection.new(:name => "test_save_zip_to_documents")
 		fname = 'TUC2.zip'
@@ -481,6 +480,84 @@ class DocumentsHelperTest < ActionView::TestCase
 		fp.close
 	end
 
+  #test removal of headers from input stream (iteratror) so it can be CSV parsed.
+  test "strip_metadata - valid args" do
+    head = "Location: Moscow
+    Site: U of I
+    "
+    body = "\"fname\",\"lname\",\"gpa\"
+    
+    Alice,Kent,3.5
+    Bob, Jones,3.9
+    Eve,Wayne,4.0"
+    iterator = head + body
+
+    f = ifilters(:ifilter2)
+    f.stuffing_headers = [
+      {"val" => "(Location)\s*:\s*(.+)"},
+      {"val" => "(Site)\s*:\s*(.+)"},
+    ]
+    f.save
+    iterator2 = strip_metadata(f, iterator)
+    
+    assert_equal body, iterator2, "Header not removed correctly"
+  end
+
+  #Test bad filter argument to "strip_metadata"
+  test "strip_metadata - nil filter" do
+    f = nil
+    iterator = "test test test."
+    
+    assert strip_metadata(f, iterator) == false, "Ifilter is not nil."
+  end
+  
+  #SAS test bad input stream (iterator) argument to "strip_metadata"
+  test "strip_metadata - nil ins" do
+    f = ifilters(:ifilter2)
+    f.stuffing_headers = [
+      {"val" => "(Location)\s*:\s*(.+)"},
+      {"val" => "(Site)\s*:\s*(.+)"},
+    ]
+    f.save
+    iterator = nil
+    
+    assert strip_metadata(f, iterator) == false, "Input stream is not nil."
+  end
+
+  #Test good arguments for function "strip_header"
+  test "strip_header - good args" do
+    h = {"val" => "(Location)\s*:\s*(.+)"}
+    iterator = "Location: Moscow
+    Site: U of I
+    
+    \"fname\",\"lname\",\"gpa\"
+    
+    Alice,Kent,3.5
+    Bob, Jones,3.9
+    Eve,Wayne,4.0"
+    
+    iterator = iterator.split(/$/)
+    iterator2 = strip_header(h, iterator)
+    iterator.delete_at(0)
+    
+    assert_equal iterator, iterator2, "Header not removed."
+  end
+
+  #Test bad single filter to "strip_header"
+  test "strip_header - nil filter" do
+    h = nil
+    iterator = "test test test"
+    
+    assert strip_header(h, iterator) == false, "Ifilter not nil."
+  end
+  
+  #Test bad input stream (iterator) to "strip_header"
+  test "strip_header - nil ins" do
+    h = {"val" => "(Location)\s*:\s*(.+)"}
+    iterator = nil
+    
+    assert strip_header(h, iterator) == false, "Input stream not nil."
+  end
 
 	test "filter_data_columns - nil args" do
 		fp = File.open('test/unit/test_files/TMJ06001.A91_2.txt')

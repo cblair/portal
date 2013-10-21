@@ -7,9 +7,7 @@ module MetaformsHelper
       return false
     end
     
-    metarows_delete(document) #Removes meataform data
-    
-    #Test for nil FIRST or error?
+    #Inserts metaform name as metadata. Test for nil FIRST or error?
     if (document.stuffing_metadata == nil or document.stuffing_metadata.empty?)
       document.stuffing_metadata = [{"Metaform" => @metaform.name}]
     else
@@ -30,6 +28,7 @@ module MetaformsHelper
   
   #Deletes metaform metadata added to a Couch document.
   #Dose not delete filter but deletes all other metadata.
+  #SATUS: Inactive.
   def metarows_delete(document)
     if (document == nil)
       return false

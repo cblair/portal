@@ -7,3 +7,7 @@ ifilter1:
 ifilter_bad:
   name: ifilter_bad
   regex: ("this string better not exist")
+
+ifilter2:
+  name: ifilter header strip
+  regex: csv
