@@ -90,6 +90,8 @@ class DocumentsController < ApplicationController
     
     @sdata = @document.stuffing_data
     @msdata = get_document_metadata(@document)
+
+    @doc_collection = Collection.find(@document.collection_id)
     
     @job = nil
     if @document.job_id != nil

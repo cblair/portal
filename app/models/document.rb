@@ -115,10 +115,16 @@ class Document < ActiveRecord::Base
       
       #Attempt filter
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
-      stuffing_data = filter_data_columns(f, self.stuffing_text)
+      stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
+
+      #If stuffing_data equals true, then everything is ok, but we don't want to do
+      # anything more.
+      if stuffing_data == true
+        return true
+      end
 
       #Check if filter was successful
-      if stuffing_data != nil and not stuffing_data.empty?
+      if stuffing_data != nil && stuffing_data != true && !stuffing_data.empty?
         if  (f.stuffing_headers != nil \
              and stuffing_metadata.count == f.stuffing_headers.count)\
             or \
@@ -153,6 +159,7 @@ class Document < ActiveRecord::Base
       end
     end
 
+    
     if !suc_valid
       mcount = f.stuffing_metadata.count if f.stuffing_metadata != nil
       hcount = f.stuffing_headers.count if f.stuffing_headers != nil
@@ -184,15 +191,23 @@ class Document < ActiveRecord::Base
     puts "########################################################"
     puts "Validating doc #{self.name}..."
 
-    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
-
     self.job_id = job.id
     self.save
 
-    job.succeeded = self.validate(ifilter)
-    if job.succeeded
-      job.output = "Document validated successfully."
+    ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
+
+    if !self.validated
+      job.succeeded = self.validate(ifilter)
+
+      if job.succeeded
+        job.output = "Document validated successfully."
+      end
+    else
+      job.succeeded = true
+      job.output = "Document already validated."
     end
+
+    puts job.output
     
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"

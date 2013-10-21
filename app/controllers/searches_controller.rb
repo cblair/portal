@@ -1,6 +1,8 @@
 class SearchesController < ApplicationController
   include SearchesHelper
   include SearchesDatatableHelper
+  #include MergeSearchDatatable
+  #include SearchAllDatatable
   include ElasticsearchHelper
 
   delegate :link_to, to: :@view
@@ -100,11 +102,14 @@ class SearchesController < ApplicationController
     
     if search != ""
       options =  {
-                  :flag => 'm',
+                  :flag => 'f',
                   :from => page,
                   :size => per_page
                 }
+      start_time = Time.new
       results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      run_time_seconds = Time.new - start_time
+      puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
 
       doc_list = get_docs_from_raw_es_data(results, current_user)
 
@@ -116,7 +121,7 @@ class SearchesController < ApplicationController
     end
 
     #
-    colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+    colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
       colnames = ["Documents", "More Information"]
     end
@@ -140,7 +145,11 @@ class SearchesController < ApplicationController
     respond_to do |format|
       #  format.html # index.html.erb
       #  format.json { render json: @documents }
-      format.json { render json: SearchAllDatatable.new(view_context, current_user)}
+      if merge_search
+        format.json { render json: MergeSearchDatatable.new(view_context, current_user)}
+      else
+        format.json { render json: SearchAllDatatable.new(view_context, current_user)}
+      end
     end
   end
 
@@ -156,14 +165,14 @@ class SearchesController < ApplicationController
 
     #Get doc list, so we can get colnames in common
     options =   {
-                  #set the ES from (search offset) field from our page method
-                  :from => page,
-                  #set the ES size (how many from search offset) field from our
+                  #set the ES from (search offset) field from the last doc search
+                  :from => doc_search_page,
+                  #set the ES size (how many from search offset) field from the last doc search
                   # per_page method
-                  :size => per_page
+                  :size => doc_search_per_page
                 }
 
-    options[:flag] = 'm'
+    options[:flag] = 'f'
     results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
 
     doc_list = get_docs_from_raw_es_data(results, @current_user)
@@ -175,26 +184,41 @@ class SearchesController < ApplicationController
       colnames = get_colnames_in_common(validated_doc_list)
     end
 
-    #Get data results
-    options[:flag] = 'f'
-    raw_data = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+    raw_data = results
 
-    raw_data.collect do |row|
-      doc_name = row["_source"]["_id"]
-      score = row["_score"]
-      doc_id = doc_name.sub("Document-", "").to_i
+    doc_data = []
+    if raw_data
+      #Set the total documents found in the results, in case we later
+      # determine that we only have document results and the return
+      # data is already paginated from ES, so a data.count would be
+      # wrong
+      @document_count = ElasticsearchHelper.get_document_count
 
-      begin
-        doc = Document.find(doc_id)
-      rescue ActiveRecord::RecordNotFound
-        log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
-        #better decrement our document_count for the results
-        next
-      end
+      raw_data.collect do |row|
+        doc_name = row["_source"]["_id"]
+        score = row["_score"]
+        doc_id = doc_name.sub("Document-", "").to_i
 
-      doc_data = row["_source"]["data"].collect
+        begin
+          doc = Document.find(doc_id)
+        rescue ActiveRecord::RecordNotFound
+          log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
+          #better decrement our document_count for the results
+          next
+        end
 
-    end #end raw_data.collect
+        #Only merge in data that this user can view, even though SearchAllDatable would
+        # show them any and every doc's metadata
+        if doc_is_viewable(doc, @current_user)
+          colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+          if colnames_in_common_and_merge_search && doc.validated
+            row["_source"]["data"].map do |data_row| 
+              doc_data << data_row
+            end #end row...map
+          end #end if doc.validated
+        end #end if doc_is_viewable
+      end #end raw_data.collect
+    end #end raw_data
 
     c = Collection.find_or_create_by_name(:name => "From Merged Search")
     c.user_id = current_user.id

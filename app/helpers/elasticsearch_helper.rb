@@ -267,7 +267,8 @@ module ElasticsearchHelper
       qstr[-1] = ""
     end
 
-    qstr = URI.escape(qstr)
+    #TODO: we need to escape some chars, but URI escape is too much and will fail
+    #qstr = URI.escape(qstr)
 
     flag = options[:flag] || 'm'
     from = options[:from] || nil
