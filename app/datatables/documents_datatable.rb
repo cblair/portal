@@ -15,15 +15,16 @@ class DocumentsDatatable
   def as_json(options = {})
     {
       sEcho:params[:sEcho].to_i,
-      iTotalRecords:@document.stuffing_data.count,  #total before filtering
-      iTotalDisplayRecords:data.count,              #total after filtering
+      iTotalRecords: couchdb_document_data_row_count, # @document.stuffing_data.count,  #total before filtering
+      iTotalDisplayRecords: couchdb_document_data_row_count, # data.count,              #total after filtering
       aaData:
         #Format:
         #  [
         #    ["test","",nil],
         #    ["test","",nil]
         #  ]
-        data.paginate({:page => page, :per_page => per_page})
+        #data.paginate({:page => page, :per_page => per_page})
+        data
     }
   end
 
@@ -43,15 +44,23 @@ private
 
 
   def fetch_document_data
+    
+=begin
     if params[:sSearch].present?
       raw_data = couch_search_row_by_doc_and_data(@document.id,params[:sSearch])
       return_data = raw_data.collect {|datum| datum["value"] }
     else
       return_data = @document.stuffing_data
     end
+=end
+    return_data = couchdb_view__all_rows(@document.id, per_page, (page - 1) * per_page)
 
     return_data = return_data.map do |row| 
       values = []
+      row["value"].each do |key, val|
+        values << val
+      end
+=begin
       row.each do |key, val|
         #if the value is in the foreign keys, add links and icons for search
         if (@document.stuffing_foreign_keys and @document.stuffing_foreign_keys.include?(key))
@@ -64,12 +73,10 @@ private
           values << val
         end
       end
+=end
       values
     end
-
     #return_data = return_data.paginate({:page => page, :per_page => per_page})
-
-    return_data
 =begin
     documents = Document.order("#{sort_column} #{sort_direction}")
     documents = documents.page(page).per_page(per_page)
@@ -78,6 +85,7 @@ private
     end
     documents
 =end
+    return_data
   end
 
 
@@ -99,5 +107,13 @@ private
 
   def sort_direction
     params[:sSortDir_0] == "desc" ? "desc" : "asc"
+  end
+
+  def couchdb_document_data_row_count
+    begin
+      couchdb_view__all_row_count(@document.id).first["value"]
+    rescue
+      0
+    end
   end
 end

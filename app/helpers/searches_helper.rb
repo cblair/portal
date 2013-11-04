@@ -106,6 +106,97 @@ module SearchesHelper
     return data
   end
 
+  #
+  # doc_id - The document ID.
+  # limit - how many rows to return.
+  # skip - how many rows to skip.
+  def couchdb_view__all_rows(doc_id, limit, skip)
+    data = []
+
+    doc_id = doc_id.to_i #verify the id is really an int
+    limit = limit.to_s
+    skip = skip.to_s
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/all_rows/_view/view1"
+
+    startkey = "\"Document-#{doc_id.to_s}\""
+    endkey = "\"Document-#{doc_id.to_s}\""
+
+    conn_str += "?startkey=" + CGI.escape(startkey)
+    conn_str += "&endkey=" + CGI.escape(endkey)
+
+    conn_str += "&limit=" + CGI.escape(limit)
+    conn_str += "&skip=" + CGI.escape(skip)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
+
+    if data == nil
+      data = []
+    end
+
+    return data
+  end
+
+
+  def couchdb_view__all_row_count(doc_id)
+    data = []
+
+    doc_id = doc_id.to_i #verify the id is really an int
+    limit = limit.to_s
+    skip = skip.to_s
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/all_row_count/_view/view1"
+
+    startkey = "\"Document-#{doc_id.to_s}\""
+    endkey = "\"Document-#{doc_id.to_s}\""
+
+    conn_str += "?startkey=" + CGI.escape(startkey)
+    conn_str += "&endkey=" + CGI.escape(endkey)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
+
+    if data == nil
+      data = []
+    end
+
+    return data
+  end
+
+
   def elastic_search_all_data(search, mode="doc_names")
     data = []
 

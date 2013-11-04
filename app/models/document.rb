@@ -24,7 +24,7 @@ class Document < ActiveRecord::Base
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
 
-  def create_default_couchdb(called_by_init=false)
+  def create_default_couchdb(called_by_init=true)
     if (called_by_init == true and is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
@@ -32,7 +32,7 @@ class Document < ActiveRecord::Base
               password = Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
               https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
         )
-    )
+      )
       if !self.view_exists("all_data_values")
         self.create_simple_view("all_data_values", 
                                 "function(doc) {
@@ -60,6 +60,8 @@ class Document < ActiveRecord::Base
                                   }
                                   return(retval);
                                 }")
+      end
+      if !self.view_exists("row_by_doc_and_data")
         self.create_simple_view("row_by_doc_and_data", 
                                 "function(doc) {
                                   if(doc.primary_keys) {
@@ -75,7 +77,30 @@ class Document < ActiveRecord::Base
                                       }
                                     }
                                   }
-                                }")
+                                }",
+                                "")
+      end
+      if !self.view_exists("all_rows")
+        self.create_simple_view("all_rows",
+"function(doc) {
+    for(data_i in doc.data) {
+       var row = doc.data[data_i];
+       emit(doc._id, row);
+    }
+  }",
+"")
+      end
+      if !self.view_exists("all_row_count")
+        self.create_simple_view("all_row_count",
+"function(doc) {
+    var data_i = 0;
+    var count = 0;
+    for(data_i in doc.data) {
+      count = count + 1;
+    }
+    emit(doc._id, count);
+}",
+"")
       end
     end
   end

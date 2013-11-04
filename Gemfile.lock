@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/cblair/stuffing.git
-  revision: a1877bb5dbaedd51e9066df3a520c734fcd843e4
+  revision: 05b4651a648bde863c0333850c91243a79b729bd
   branch: integration
   specs:
-    stuffing (0.0.10)
+    stuffing (0.0.11)
 
 GIT
   remote: git://github.com/rfc2822/spawn
@@ -63,7 +63,7 @@ GEM
     cancan (1.6.10)
     climate_control (0.0.3)
       activesupport (>= 3.0)
-    cocaine (0.5.2)
+    cocaine (0.5.3)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coffee-rails (3.2.2)
@@ -84,7 +84,7 @@ GEM
       couchrest (~> 1.1.3)
       mime-types (>= 1.15)
       tzinfo (>= 0.3.22)
-    d3_rails (3.3.8)
+    d3_rails (3.3.9)
       railties (>= 3.1.0)
     daemons (1.1.9)
     debug_inspector (0.0.2)
@@ -130,10 +130,10 @@ GEM
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.0.5)
+    jquery-ui-rails (4.1.0)
       railties (>= 3.1.0)
-    json (1.8.0)
-    lazy_high_charts (1.4.3)
+    json (1.8.1)
+    lazy_high_charts (1.5.0)
       bundler (>= 1.0)
       hash-deep-merge
     less (2.3.3)
@@ -151,16 +151,16 @@ GEM
       rack-contrib
       railties
     mime-types (1.25)
-    mini_portile (0.5.1)
+    mini_portile (0.5.2)
     multi_json (1.8.2)
-    newrelic_rpm (3.6.8.164)
+    newrelic_rpm (3.6.8.168)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     orm_adapter (0.4.0)
-    paperclip (3.5.1)
+    paperclip (3.5.2)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
-      cocaine (~> 0.5.0)
+      cocaine (~> 0.5.3)
       mime-types
     pg (0.17.0)
     polyglot (0.3.3)
@@ -171,7 +171,7 @@ GEM
       rack (>= 0.9.1)
     rack-mini-profiler (0.1.31)
       rack (>= 1.1.3)
-    rack-protection (1.5.0)
+    rack-protection (1.5.1)
       rack
     rack-ssl (1.3.3)
       rack
@@ -205,7 +205,7 @@ GEM
     ruby-ole (1.2.11.7)
     ruby-prof (0.13.0)
     rubyzip (0.9.9)
-    rufus-scheduler (3.0.0)
+    rufus-scheduler (3.0.2)
       tzinfo
     sass (3.2.12)
     sass-rails (3.2.6)
@@ -216,11 +216,11 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    sinatra (1.4.3)
+    sinatra (1.4.4)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    spreadsheet (0.9.0)
+    spreadsheet (0.9.1)
       ruby-ole (>= 1.0)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -241,9 +241,9 @@ GEM
       execjs
       railties (>= 3.1)
     tzinfo (0.3.38)
-    uglifier (2.2.1)
+    uglifier (2.3.0)
       execjs (>= 0.3.0)
-      multi_json (~> 1.0, >= 1.0.2)
+      json (>= 1.8.0)
     uuidtools (2.1.4)
     warden (1.2.3)
       rack (>= 1.0)
