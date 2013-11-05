@@ -1,1 +1,2 @@
-#Document.new().create_default_couchdb(called_by_init=true)
+#Mark now that we've not yet initialized the Document model.
+Rails.cache.write("document_model_initialized", false)

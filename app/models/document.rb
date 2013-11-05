@@ -24,14 +24,13 @@ class Document < ActiveRecord::Base
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
 
-  def create_default_couchdb(called_by_init=true)
-    if (called_by_init == true and is_couchdb_running?(
+  def create_default_couchdb
+    if (Rails.cache.fetch("document_model_initialized") != true) && is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
               username = Portal::Application.config.couchdb['COUCHDB_USERNAME'],
               password = Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
               https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
-        )
       )
       if !self.view_exists("all_data_values")
         self.create_simple_view("all_data_values", 
@@ -102,6 +101,9 @@ class Document < ActiveRecord::Base
 }",
 "")
       end
+
+      #Mark ourselves as initialized.
+      Rails.cache.write("document_model_initialized", true)
     end
   end
 
