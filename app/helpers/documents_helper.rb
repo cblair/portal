@@ -416,7 +416,7 @@ module DocumentsHelper
     if iterator == nil
       return []
     end
-
+=begin
     #rows = CSV.parse(iterator)
     rows = CSV.parse(iterator, :skip_blanks => true)
 
@@ -425,6 +425,12 @@ module DocumentsHelper
     (1..rows.length - 1).each do |i|
       row = Hash[[colnames, rows[i]].transpose]
       retval << row
+    end
+=end
+    csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
+    csv.each do |row|
+      row_hash = (row.to_hash)
+      retval << row_hash
     end
 
     return retval
