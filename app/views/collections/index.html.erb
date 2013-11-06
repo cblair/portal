@@ -30,7 +30,44 @@
 <% tree_depth = 0 %>
 
 <div class="hero-unit" style="font-size: 14px;">
+
 	<h2>Collections</h2>
+  <div id="hidden_group">
+    <a class="btn btn-info" href="#">More Info</a>
+    <a class="btn btn-inverse" href="#">Hide</a>
+
+    <hr />
+
+    <div class="hidden_section">
+      <h2>Documents</h2>
+      <p><span class="label label-info">Live</span></p>
+      <p>Hatch uses its own document data store. Users can upload documents in multiple
+        formats, including:
+      </p>
+
+      <ul>
+        <li>CSV</li>
+        <li>text</li>
+        <li>SQL (future)</li>
+      </ul>
+
+      <p>The raw text from each format is stored in Hatch, and then the user runs filters
+        over the data to validate it. Hatch can try to automatically detect which filters
+        the data belongs to, or the user can specify which ones to use. Documents can be organized into Hatch Collections (like folders/directories).
+        Filters can then be applied over whole Collections, or just individual documents.
+      </p>
+
+      <p>Document data can then be easily sortable, searchable, and passed off to 
+        visualizations. Documents and Collections are private by default, but users
+        can then add individual user collaborators, share with other groups of users
+        within projects, or make the documents public to the world.
+      </p>
+
+      <p>IFilters are what turn semi-structured data into structured data in Hatch.</p>
+
+      <%= render :partial => "ifilters/ifilters_demo" %>
+    </div>
+  </div>
 
 	<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
 	<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>

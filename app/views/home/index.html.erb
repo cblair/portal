@@ -78,6 +78,17 @@
 	</p>
 
 	<%= render "home_datatable_example" %>
+
+	<h3>Inputting data</h3>
+  	<div id="hidden_group">
+	    <p>IFilters are what turn semi-structured data into structured data in Hatch.</p>
+	    <a class="btn btn-info" href="#">More</a>
+	    <a class="btn btn-inverse" href="#">Hide</a>
+
+	    <div class="hidden_section">
+	      <%= render :partial => "ifilters/ifilters_demo" %>
+	    </div>
+  	</div>
 </div>
 
 <div class="hero-unit">
