@@ -3,6 +3,16 @@
   <div class="page-header">
     <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
   </div>
+
+  <div id="hidden_group">
+    <a class="btn btn-info" href="#">See Project Info</a>
+    <a class="btn btn-inverse" href="#">Hide Project Info</a>
+
+    <div class="hidden_section">
+      <%= render :partial => "projects/demo" %>
+    </div>
+  </div>
+
   <table class="table table-striped">
     <thead>
       <tr>
