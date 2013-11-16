@@ -30,8 +30,14 @@
 		</a>
 	</p>
 -->
+
+	<!--We're going to do this now with JS
 	<div>
 		<%= render 'doc_job_status' %>
+	</div>
+	-->
+	<div id="doc_job_display" data-doc-id="<%= @document.id %>" data-show-simple-json-source="<%= show_simple_json_path %>" style="display: none;">
+		<a id="job-label" href="" class="label job-label label-warning" data-toggle="popover" title="" data-content="" data-original-title="Job output"><i class="icon-refresh icon-spin icon-white"></i> <span class="job-status-text">Job status unknown</span></a>
 	</div>
 
 	<% if @document.validated %>

@@ -37,6 +37,7 @@ Portal::Application.routes.draw do
   match '/documents_manip' => "documents#manip", :as => :document_manip
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   match '/documents/edit_text/:id' => "documents#edit_text", :as => "edit_document_text"
+  match '/documents/show_simple_json/:id' => "documents#show_simple_json", :as => "show_simple_json"
   resources :documents
 
   resources :collections

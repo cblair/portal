@@ -118,6 +118,26 @@ class DocumentsController < ApplicationController
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
   end
+
+  #Shows the JSON like the show() method would normally do. show() is doing datatable
+  # JSON, so this method will do the normal JSON.
+  def show_simple_json
+    @document_object = Document.find(params[:id])
+
+    #Let's add some extra stuff, like some job data, for JS.
+    @document_object['job_succeeded'] = Job.find(@document_object.job_id)[:succeeded] \
+      rescue @document_object['job_succeeded'] = false
+    @document_object['job_waiting'] = Job.find(@document_object.job_id)[:waiting] \
+      rescue @document_object['job_waiting'] = false
+    @document_object['job_started'] = Job.find(@document_object.job_id)[:started] \
+      rescue @document_object['job_started'] = false
+    @document_object['job_error_or_output'] = Job.find(@document_object.job_id).get_error_or_output \
+      rescue @document_object['job_error_or_output'] = false
+
+    respond_to do |format|
+      format.json { render json: @document_object }
+    end
+  end
   
   # GET /documents/new
   # GET /documents/new.json
