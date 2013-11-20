@@ -122,7 +122,7 @@ class DocumentsController < ApplicationController
   #Shows the JSON like the show() method would normally do. show() is doing datatable
   # JSON, so this method will do the normal JSON.
   def show_simple_json
-    @document_object = Document.find(params[:id])
+    @document_object = Document.find(params[:id]).as_json
 
     #Let's add some extra stuff, like some job data, for JS.
     @document_object['job_succeeded'] = Job.find(@document_object.job_id)[:succeeded] \
