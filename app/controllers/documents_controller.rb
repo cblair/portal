@@ -21,8 +21,29 @@ class DocumentsController < ApplicationController
 #=end
     end
   end
-  
-  
+
+  def doc_md_edit
+    #puts "doc_md_edit *************************************************"
+    md_table = params[:md_table]  #metadata table from MD editor
+    document = Document.find(params[:id])
+    edited_suc = false
+    
+    if (md_table != nil and document != nil)
+      edited_suc = metadata_save(md_table, document)
+    end
+    
+    #TODO: return data to md table?
+    respond_to do |format|
+      if (edited_suc == true)
+        format.html { redirect_to @document, notice: suc_msg }
+        format.json { head :ok }
+      else
+        format.html { render action: "show" }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # GET /documents
   # GET /documents.json
   def index

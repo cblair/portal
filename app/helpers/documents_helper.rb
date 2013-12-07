@@ -13,6 +13,26 @@ module DocumentsHelper
   #  include Devise::TestHelpers
   #end
 
+  #Takes metadata from document metadata editor and saves to couch.
+  def metadata_save(md_table, document)
+    if (md_table == nil or document == nil)
+      return false
+    end
+    #Due to the way the table to json jQuery plugin forms the json string
+    # all keys are numbers, this is to make things more readable.
+    labelKey = "0"  #Actual key from doc MD table
+    valKey = "1"    #Actual value from doc MD table
+    doc_md_new = [] #Array of hashes, stores extracted metadata
+    
+    md_table.each do |key, value|
+      md_row = {value[labelKey] => value[valKey]} #Must be "hashified" to save
+      doc_md_new << md_row
+    end
+    document.stuffing_metadata = doc_md_new
+    document.save
+    
+    return true
+  end
 
   def is_json?(str)
     begin

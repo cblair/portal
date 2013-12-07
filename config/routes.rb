@@ -38,6 +38,7 @@ Portal::Application.routes.draw do
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   match '/documents/edit_text/:id' => "documents#edit_text", :as => "edit_document_text"
   resources :documents
+  match '/documents/:id/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
 
   resources :collections
   

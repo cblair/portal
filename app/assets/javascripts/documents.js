@@ -55,9 +55,102 @@ jQuery(function($) {
 	    		}
 	    	);
 		};
+//----------------------------------------------------------------------
+// Metadata editor code
+//Add delete row button
+function delRow() {
+  //console.log("del_btn");
+  //console.log(this);
+  $(this).closest('tr').remove().off();
+}
+
+//Add add row button
+function addRow() {
+  //console.log("add_btn");
+  //console.log(this);
+  var md_row = $('.container-fluid > table').last('tr');
+  var rowNew = '<tr> <td></td> <td></td> <td><button class="del_btn">Delete</button> </tr>'
+  $(md_row).append(rowNew);
+  $(md_row).last().find('td').dblclick(inputForm); //adds input handler to new row
+}
+
+//Add input form when cell is double clicked
+function inputForm() {
+  //console.log("inputForm");
+  //console.log(this);
+  if ( $(this).children().is('.del_btn') )
+    return;  //Prevents del button from becoming an input form
+  
+  var orignalText = $(this).text();
+  $(this).html("<input type='text' value='" + orignalText + "' />");
+  $(this).children().first().focus();
+  
+  $(this).children().first().keypress(function (e) {
+    if (e.which == 13) {
+      var newContent = $(this).val();
+      $(this).parent().text(newContent);
+      //$(this).parent().removeClass("cellEditing");
+    }
+  });
+  $(this).children().first().blur(function(){
+    $(this).parent().text(orignalText);
+    //$(this).parent().removeClass("cellEditing");
+  });
+}
+
+//Save new data and perform cleanup
+function saveData() {
+  //console.log("saveData");
+  //console.log(this);
+  var md_table = $('.container-fluid > table');
+  $('.add_btn').remove().off();
+  $('.save_btn').remove().off();
+  $('.del_btn').closest('td').remove().off();
+  $('.edit_md_btn').show()
+  $(md_table).find('td').off(); //removes input events on MD table?
+  
+  var doc_url = window.location.pathname + '/doc_md_edit'  //Creat
+  var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json
+  var pmd_table =   {"md_table": jmd_table};  //Add key for table (for controller)
+  
+  $.ajax({
+    url: doc_url,
+    type: 'POST',
+    //processData: false,
+    dataType: "JSON",
+    data: pmd_table,
+  });
+}
+
+//Metadata Editor
+function md_editorSetup() {
+  //console.log("md_editorSetup");
+  //console.log(this);
+  
+  //Button setup
+  var delButton = $('<td> <button class="del_btn">Delete</button> </td>');
+  var addButton = $('<button class="add_btn">Add</button>');
+  var saveButton = $('<button class="save_btn">Save</button>');
+  var md_table = $('.container-fluid > table');
+  
+  $(md_table).find('tr').append(delButton);
+  $('.edit_md_btn').before(addButton);
+  $('.edit_md_btn').before(saveButton);
+  $('.edit_md_btn').hide();
+
+  //Click events
+  $(md_table).on('click', '.del_btn', delRow);  //Delete row
+  $('.add_btn').on('click', addRow);            //Add row
+  $(md_table).find('td').dblclick(inputForm);   //Edit cell
+  $('.save_btn').on('click', saveData);         //Save data
+}
+//----------------------------------------------------------------------
 
 		$(document).ready(function () {
 			$.initDocumentDatatable($);
+      //Add editor button
+      $('.container-fluid > table').after('<p> <button class="edit_md_btn">Edit Metadata</button> </p>');
+      $('.edit_md_btn').on('click', md_editorSetup); //Add editing event/handler
 		});
 	} //end runDocumentsControllerJS
 
