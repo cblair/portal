@@ -29,8 +29,6 @@
 
 <% tree_depth = 0 %>
 
-<div class="hero-unit" style="font-size: 14px;">
-
 	<h2>Collections</h2>
   <div id="hidden_group">
     <a class="btn btn-info" href="#">More Info</a>
@@ -76,4 +74,3 @@
 	<hr />
 	<%= render :partial => "collections/rec_collection_documents_render", 
 				:locals => {:root_collections => @root_collections, :tree_depth => tree_depth, :project => @project} %>
-</div>

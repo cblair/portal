@@ -253,6 +253,14 @@ jQuery(function($) {
 				// ~and hide the pending search alert, in case updatePendingSearchAlert has already
 				// fired.
 				$('div.search-alert-pending').fadeOut();
+
+				//If there were unviewabled documents, display their option in case
+				// the user wants to request access.
+				console.log("TS259");
+				console.log(result["unviewable_doc_ids"]);
+				if(result['unviewable_doc_ids']) {
+					console.log("TS260");
+				}
 			},
 			error: function(result) {
 				$('#error').show();

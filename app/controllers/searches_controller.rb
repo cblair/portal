@@ -129,7 +129,8 @@ class SearchesController < ApplicationController
     search_data = {
       "documents" => doc_list.collect {|doc| doc.name}, 
       "colnames" => colnames,
-      "doc_links" => doc_list.collect {|doc| view_context.link_to(doc.name, doc)}
+      "doc_links" => doc_list.collect {|doc| view_context.link_to(doc.name, doc)},
+      "unviewable_doc_ids" => doc_list.reject {|doc| doc_is_viewable(doc, @current_user)}
     }
 
     respond_to do |format|

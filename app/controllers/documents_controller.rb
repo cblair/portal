@@ -15,7 +15,12 @@ class DocumentsController < ApplicationController
       document = Document.find(params[:id])
 #=begin
       if not doc_is_viewable(document, current_user)
-        flash[:error] = "Document not found, or you do not have permissions for this action."
+
+        flash[:error] = "Document not found, or you do not have permissions for this action. ".html_safe
+        if document
+          flash[:error] += view_context.mail_to document.user.email, "Request access via email.", subject: "Requesting access to #{document.name}"
+        end
+
         redirect_to collections_path
       end
 #=end
