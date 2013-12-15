@@ -221,8 +221,6 @@ class Document < ActiveRecord::Base
     self.job_id = job.id
     self.save
 
-    debugger
-
     ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
 
     if !self.validated

@@ -7,7 +7,6 @@
 	<p>
 	  <b>Collection:</b>
 	  <%= @doc_collection.name || "(none)" %>
-	  <%= link_to '<i class="icon-download"> Download</i>'.html_safe, csv_export_path(@doc_collection, :format => 'zip', :stype => 'Collection'), :class => "label label-info" %>
 	</p>
 	
 	<p>
@@ -30,6 +29,9 @@
 		</a>
 	</p>
 -->
+
+	<%= link_to '<i class="icon-download"> Download</i>'.html_safe, csv_export_path(@document, :format => 'zip', :stype => 'Document'), :class => "label label-info" %>
+	<br />
 
 	<!--We're going to do this now with JS
 	<div>
