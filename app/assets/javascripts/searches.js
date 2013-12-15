@@ -155,7 +155,8 @@ jQuery(function($) {
 	function updatePendingSearchAlert() {
 		if($('div.search-alert-pending').data('search-completed') === "false")
 		{
-			console.log("TS161");
+			$('p#search-alert-pending-msg').text(
+				'The search server is taking longer than expected, and is busy with other search requests. You can wait for your requests to complete, or try again later. We apologize for the delay.');
 			$('div.search-alert-pending').fadeIn();
 		}
 	}
@@ -220,6 +221,8 @@ jQuery(function($) {
 					&&
 					(getMergeButtonParams() === "merge_search=true")
 				) {
+					$('div.document-name-results-only span').text(
+						'Your search may have found matching documents, but search found no column names in common.');
 					$('div.document-name-results-only').fadeIn();
 				} else if (getMergeButtonParams() === "merge_search=true") {
 					//Update alert content
@@ -235,6 +238,7 @@ jQuery(function($) {
 					});
 
 					//Fade in alert
+
 					$('div.search-alert-other').fadeIn();
 				}
 
@@ -256,10 +260,11 @@ jQuery(function($) {
 
 				//If there were unviewabled documents, display their option in case
 				// the user wants to request access.
-				console.log("TS259");
-				console.log(result["unviewable_doc_ids"]);
-				if(result['unviewable_doc_ids']) {
-					console.log("TS260");
+				if(result['unviewable_doc_links']) {
+					$('div.document-name-results-only span').html(
+						'You do not have valid credentials to view the following documents:<br />\n'
+						+ result['unviewable_doc_links'].join('<br />\n'));
+					$('div.document-name-results-only').fadeIn();
 				}
 			},
 			error: function(result) {

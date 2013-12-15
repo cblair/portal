@@ -92,7 +92,9 @@ class SearchesController < ApplicationController
   #Does an initial search, and returns the common columns names for all matching documents
   def search_init
     search = ""
-    doc_list = []
+    doc_results = []
+    viewable_doc_list = []
+    unviewable_doc_list = []
     colnames = []
     result_rows = []
 
@@ -111,10 +113,12 @@ class SearchesController < ApplicationController
       run_time_seconds = Time.new - start_time
       puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
 
-      doc_list = get_docs_from_raw_es_data(results, current_user)
+      doc_results = get_viewable_and_nonviewable_docs_from_raw_es_data(results, current_user)
+      viewable_doc_list = doc_results[:viewable_docs]
+      unviewable_doc_list = doc_results[:unviewable_docs]
 
       #Don't let unvalidated docs screw up the search results
-      validated_doc_list = doc_list.reject {|doc| !doc.validated }
+      validated_doc_list = viewable_doc_list.reject {|doc| !doc.validated }
       if !validated_doc_list.empty?
         colnames = get_colnames_in_common(validated_doc_list)
       end
@@ -127,10 +131,11 @@ class SearchesController < ApplicationController
     end
 
     search_data = {
-      "documents" => doc_list.collect {|doc| doc.name}, 
+      "documents" => viewable_doc_list.collect {|doc| doc.name}, 
       "colnames" => colnames,
-      "doc_links" => doc_list.collect {|doc| view_context.link_to(doc.name, doc)},
-      "unviewable_doc_ids" => doc_list.reject {|doc| doc_is_viewable(doc, @current_user)}
+      "doc_links" => viewable_doc_list.collect {|doc| view_context.link_to(doc.name, doc)},
+      #Show some unviewable doc links, but only the first 10 in case there's a lot.
+      "unviewable_doc_links" => unviewable_doc_list[0..10].collect {|doc| view_context.mail_to doc.user.email, "#{doc.name} - request access via email.", subject: "Requesting access to #{doc.name}"}
     }
 
     respond_to do |format|

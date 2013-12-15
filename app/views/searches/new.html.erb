@@ -23,10 +23,13 @@
 
 <% end %>
 
-<div id="notice" class="alert alert-info document-name-results-only">
+<div id="notice" class="alert alert-info document-name-results-only" style="display: none;">
 	<a class="close" data-dismiss="alert" href="#">×</a>
-	Your search may have found matching documents, but search found no column names in common.
+	<!--Our search JS will put text here.-->
+	<span></span>
 </div>
+
+
 
 <div id="notice" class="alert alert-info search-alert-other">
 	<a class="close" data-dismiss="alert" href="#">×</a>
@@ -40,7 +43,8 @@
 
 <div id="notice" class="alert alert-info search-alert-pending" data-search-completed="false" style="display: none;">
 	<a class="close" data-dismiss="alert" href="#">×</a>
-	<p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i> The search server is taking longer than expected, and is busy with other search requests. You can wait for your requests to complete, or try again later. We apologize for the delay.</p>
+	<p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i></p>
+	<span></span>
 </div>
 
 <div class="hero-unit">

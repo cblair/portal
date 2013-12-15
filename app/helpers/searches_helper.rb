@@ -322,7 +322,7 @@ module SearchesHelper
 
   #Gets all docs
   def get_viewable_and_nonviewable_docs_from_raw_es_data(raw_data, current_user)
-    retval = {:viewable_docs => [], :nonviewable_docs => []}
+    retval = {:viewable_docs => [], :unviewable_docs => []}
 
     if raw_data
       raw_data.collect do |row|
@@ -342,7 +342,7 @@ module SearchesHelper
         elsif doc_is_viewable(doc, current_user)
           retval[:viewable_docs] << doc
         else
-          retval[:nonviewable_docs] << doc
+          retval[:unviewable_docs] << doc
         end
       end
     end
