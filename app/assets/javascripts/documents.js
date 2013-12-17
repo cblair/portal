@@ -59,8 +59,6 @@ jQuery(function($) {
 // Metadata editor code
 //Add delete row button event
 function delRow() {
-  //console.log("del_btn");
-  //console.log(this);
   $(this).closest('tr').remove().off();
 }
 
@@ -158,8 +156,6 @@ function md_editorSetup() {
 
 		$(document).ready(function () {
 			$.initDocumentDatatable($);
-      //Add editor button
-      $('.container-fluid > table').after('<p> <button class="edit_md_btn">Edit Metadata</button> </p>');
       $('.edit_md_btn').on('click', md_editorSetup); //Add editing event/handler
 		});
 	} //end runDocumentsControllerJS

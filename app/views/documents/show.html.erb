@@ -71,6 +71,9 @@
 				<% end %>
 				</tbody>
 			</table>
+      <% if can? :manage, @document %>
+        <%= button_tag("Edit Metadata", :class => "edit_md_btn", :name => "edit_metad_btn") %>
+      <% end %>
 		<% else %>
 			<p>(none)</p>
 		<% end %>

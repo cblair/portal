@@ -3,7 +3,7 @@ include MetaformsHelper
 class MetaformsController < ApplicationController
   
   before_filter :authenticate_user!
-  #load_and_authorize_resource
+  load_and_authorize_resource
   #TODO: CanCan permissions
   
   # GET /metaforms/mdf_input/1
@@ -98,12 +98,6 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
-    #puts "update ******************************************************"
-    #tmp = params[:_destroy]
-    #p "tmp ***", tmp
-    #@metaform.metarows.each do |mr|
-    #  p mr
-    #end
 
     respond_to do |format|
       if @metaform.update_attributes(params[:metaform])

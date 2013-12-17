@@ -44,7 +44,7 @@ class Ability
     can :manage, Project, :user_id => user.id #user/currrent ID is owner ID
     can :manage, Collection, :user_id => user.id
     can :manage, Document, :user_id => user.id
-    #can :manage, Metaform, :user_id => user.id
+    can :manage, Metaform, :user_id => user.id
     
     #Editor access permissions
     can :manage, Project, :collaborators => { :user_id => user.id, :editor => true }

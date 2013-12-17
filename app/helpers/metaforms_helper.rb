@@ -60,14 +60,13 @@ module MetaformsHelper
     1.times { @metaform.metarows.build }
     return true
   end
-#=begin
+
   #Dynamicly add a metarow to creation page
-  def link_to_add_fields(name, f, association)
+  def add_fields_link(name, f, association)
     if (name == nil or name == "" or f == nil or association == nil or association == "")
       return false
     end
     
-    #puts "add_mrow ****************************************************"
     new_object = f.object.send(association).klass.new
     id = new_object.object_id
     metarows = f.fields_for(association, new_object, child_index: id) do |builder|
@@ -77,5 +76,4 @@ module MetaformsHelper
     
     #return true #gets displayed in view
   end
-#=end
 end

@@ -46,7 +46,6 @@
 //= require documents_for_collections
 //= require searches
 //= require metaforms
-
 //= require jquery.tabletojson
 
 jQuery.ajaxSetup({ 
