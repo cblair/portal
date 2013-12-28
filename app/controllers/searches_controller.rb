@@ -5,7 +5,7 @@ class SearchesController < ApplicationController
   #include SearchAllDatatable
   include ElasticsearchHelper
 
-  delegate :link_to, to: :@view
+  delegate :link_to, to: :view_context
 
   # GET /searches
   # GET /searches.json
@@ -161,83 +161,55 @@ class SearchesController < ApplicationController
 
   def save_doc_from_search
     @document = Document.new(:name => "Document from Merged Search")
+    @document.user = current_user
+    
+    c = Collection.find_or_create_by_name(:name => "From Merged Search")
+    @document.collection = c
     doc_data = []
-
-    @current_user = current_user
 
     search = params[:searchval]
     
-    #TODO: do one search instead of two
-
-    #Get doc list, so we can get colnames in common
-    options =   {
-                  #set the ES from (search offset) field from the last doc search
-                  :from => doc_search_page,
-                  #set the ES size (how many from search offset) field from the last doc search
-                  # per_page method
-                  :size => doc_search_per_page
-                }
-
-    options[:flag] = 'f'
-    results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
-
-    doc_list = get_docs_from_raw_es_data(results, @current_user)
-    colnames = []
-
-    #Don't let unvalidated docs screw up the search results
-    validated_doc_list = doc_list.reject {|doc| !doc.validated }
-    if !validated_doc_list.empty?
-      colnames = get_colnames_in_common(validated_doc_list)
-    end
-
-    raw_data = results
-
-    doc_data = []
-    if raw_data
-      #Set the total documents found in the results, in case we later
-      # determine that we only have document results and the return
-      # data is already paginated from ES, so a data.count would be
-      # wrong
-      @document_count = ElasticsearchHelper.get_document_count
-
-      raw_data.collect do |row|
-        doc_name = row["_source"]["_id"]
-        score = row["_score"]
-        doc_id = doc_name.sub("Document-", "").to_i
-
-        begin
-          doc = Document.find(doc_id)
-        rescue ActiveRecord::RecordNotFound
-          log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
-          #better decrement our document_count for the results
-          next
-        end
-
-        #Only merge in data that this user can view, even though SearchAllDatable would
-        # show them any and every doc's metadata
-        if doc_is_viewable(doc, @current_user)
-          colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
-          if colnames_in_common_and_merge_search && doc.validated
-            row["_source"]["data"].map do |data_row| 
-              doc_data << data_row
-            end #end row...map
-          end #end if doc.validated
-        end #end if doc_is_viewable
-      end #end raw_data.collect
-    end #end raw_data
-
-    c = Collection.find_or_create_by_name(:name => "From Merged Search")
-    c.user_id = current_user.id
-    c.save
-    @document.collection = c
-    @document.stuffing_data = doc_data
-    @document.user_id = current_user.id
+    @document.create_merge_search_document(search, @current_user)
 
     respond_to do |format|
       if @document.save
         format.html { redirect_to @document, notice: 'Document from Merged Search was successfully saved.' }
       else
         format.html { render controller: "documents", action: "new" }
+      end
+    end
+  end
+
+  def save_doc_from_merge_search
+    @document = Document.new(:name => "Document from Merged Search")
+    @document.user = current_user
+    
+    c = Collection.find_or_create_by_name(:name => "From Merged Search")
+    @document.collection = c
+
+    search = params[:searchval]
+
+    #@document.create_merge_search_document(search, view_context, current_user)
+    job = Job.new(:description => "#{@document.name} (document) merge")   
+
+    respond_to do |format|
+      if @document.save && job.save
+        #Submit the job.
+        job.submit_job(current_user, @document, 
+          {:mode => :merge_search, :params => params, :params => params}) 
+
+        #Point the document to the job.
+        @document.job = job
+        @document.save
+
+        format.json { render json: \
+          {\
+            "document_link" => link_to(@document.name, @document),\
+            "job_link" => link_to(job.description, job)\
+          }\
+        }
+      else
+        format.json { render json: @search.errors, status: :unprocessable_entity }
       end
     end
   end

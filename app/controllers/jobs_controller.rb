@@ -103,7 +103,7 @@ class JobsController < ApplicationController
       doc_ids.each do |doc_id|
         job = Job.find(doc_id.to_i)
 
-	#TODO: check if user_id == current_user.id
+	      #TODO: check if user_id == current_user.id
 
         if job != nil
           #destroy delayed_job first

@@ -73,14 +73,6 @@ jQuery(function($) {
       			if (e.keyCode != 13) return;
       			search_table.fnFilter($(this).val());
     		});
-
-    	//TODO: don't think we need this anymore
-    	/*
-    	if(searchVal != undefined) {
-	    	//Call search to filter from our initial search val
-    		search_table.fnFilter(searchVal);
-    	}
-    	*/	
 	}
 
 	function changeSearchIconToRefresh() {
@@ -166,8 +158,6 @@ jQuery(function($) {
 		var searchLength = $('div#search_length select option:selected').val();
 		$('button.merge-button').data('document-active-paginate', activePaginate);
 		$('button.merge-button').data('document-active-search-length', searchLength);
-		console.log('TS171');
-		console.log($('button.merge-button').data('document-active-paginate'));
 	}
 
 	function updateMainSearch(e) {
@@ -199,7 +189,16 @@ jQuery(function($) {
 		//Reset search completed to false for pending search.
 		$('div.search-alert-pending').data('search-completed', 'false');
 		// ~and set a callback to show the alert after 5 seconds.
-		setTimeout(updatePendingSearchAlert, 5000);
+		var pendingAlertTimeout = 5000;
+		setTimeout(updatePendingSearchAlert, pendingAlertTimeout);
+
+		//Set timeout based on the type of search
+		var searchTimeout = 60000;
+		if(getMergeButtonParams() === "merge_search=true") {
+			//Make sure its a little longer than the pending alert,
+			// so the merge alert is the last.
+			searchTimeout = pendingAlertTimeout + 1000;
+		}
 
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
@@ -260,7 +259,7 @@ jQuery(function($) {
 
 				//If there were unviewabled documents, display their option in case
 				// the user wants to request access.
-				if(result['unviewable_doc_links']) {
+				if(result['unviewable_doc_links'].length > 0) {
 					$('div.document-name-results-only span').html(
 						'You do not have valid credentials to view the following documents:<br />\n'
 						+ result['unviewable_doc_links'].join('<br />\n'));
@@ -268,10 +267,42 @@ jQuery(function($) {
 				}
 			},
 			error: function(result) {
-				$('#error').show();
+				//If we timed out
+				if( (getMergeButtonParams() === "merge_search=true")
+					&& (result.statusText === "timeout")) {
+					startMergeSearchJob(searchParams);
+				}
 			},
-			//timeout after a minute
-			timeout: 60000
+			timeout: searchTimeout
+		});
+	}
+
+	function startMergeSearchJob(searchParams) {
+		var urlSource = $('#main-search-results').data('merge-job-source');
+		urlSource += searchParams;
+		$.ajax(urlSource, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//Nothing to do.
+			},
+			success: function(result) {
+				
+				$('p#search-alert-pending-msg').html(
+					'Merging the search results was taking too long, so its been moved to a Job '
+					+ '(' + result["job_link"] + ')'
+					+ ' for a Document (' + result['document_link'] + ').'
+					+ '<br />\n');
+				$('div.search-alert-pending').fadeIn();
+			},
+			error: function(result) {
+				if( (getMergeButtonParams() === "merge_search=true")
+					&& (result.statusText === "timeout")) {
+					startMergeSearchJob(searchParams);
+				}
+			},
+			//30 second timeout, but we shouldn't ever need it
+			timeout: 30000
 		});
 	}
 

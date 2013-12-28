@@ -349,5 +349,4 @@ module SearchesHelper
     
     retval
   end
-
 end

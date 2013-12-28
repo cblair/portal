@@ -72,7 +72,7 @@
 
 <!--Display data-->
 	<% default_search = params[:default_search] or "" %>
-	<div class="container-fluid" id="main-search-results" style="display: none;" data-init-source="<%= search_init_path(:format => :json) %>" data-source="<%= search_all_path(:format => :json) %>" data-default-search="<%= default_search %>">
+	<div class="container-fluid" id="main-search-results" style="display: none;" data-init-source="<%= search_init_path(:format => :json) %>" data-source="<%= search_all_path(:format => :json) %>" data-default-search="<%= default_search %>" data-merge-job-source="<%= save_doc_from_merge_search_path(:format => :json) %>">
 		<!--Our Datatable template will get inserted here by JS-->
 	</div>
 </div>
