@@ -78,15 +78,15 @@
 			<p>(none)</p>
 		<% end %>
 		
-		<% if can? :manage, @document %>
-		  <%= form_tag({controller: "metaforms", action: "mdf_input"}, method: "get") do %>
+		<% if can? :add_md, @document %>
+		  <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
 		    <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
 		      {:prompt => '(select a metaform)'}) %><br />
 		    <%= hidden_field_tag "doc_id", @document.id %>
-		    <%= submit_tag("Add Metadata") %>
+		    <%= submit_tag "Add Metadata" %>
 		  <% end %>
 		<% end %> <!-- CanCan -->
-		
+    
 		<hr />
 
 		<% 

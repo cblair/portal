@@ -4,22 +4,31 @@ class MetaformsController < ApplicationController
   
   before_filter :authenticate_user!
   load_and_authorize_resource
-  #TODO: CanCan permissions
   
-  # GET /metaforms/mdf_input/1
+  # GET /metaforms/mdf_input
   def mdf_input
     @document = Document.find(params[:doc_id])
+    authorize! :add_md, @document if params[:doc_id] #custom action, CanCan
+    
     if (params[:metaf][:id].blank?)
       redirect_to @document, notice: 'Not a Metaform.'
     else
       @metaform = Metaform.find(params[:metaf][:id])
     end
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @metaforms }
+    end
   end
 
-  # POST /metaforms/mdf_save/1
+  # POST /metaforms/mdf_save
   def mdf_save
     @metaform = Metaform.find(params[:metaf])
-    document = Document.find(params[:id]) #id is from document
+    authorize! :add_md, @metaform if params[:metaf] #custom action, CanCan
+    document = Document.find(params[:doc_id])
+    
+    mdf_saved = false
     if (params[:metaform] == nil)
       mdf_saved = false
     else

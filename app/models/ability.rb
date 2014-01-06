@@ -44,7 +44,8 @@ class Ability
     can :manage, Project, :user_id => user.id #user/currrent ID is owner ID
     can :manage, Collection, :user_id => user.id
     can :manage, Document, :user_id => user.id
-    can :manage, Metaform, :user_id => user.id
+    can :manage, Metaform, :user_id => user.id #For main scaffold
+    can :add_md, Document, :user_id => user.id #Custom action, adding metadata to document
     
     #Editor access permissions
     can :manage, Project, :collaborators => { :user_id => user.id, :editor => true }
