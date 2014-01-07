@@ -183,30 +183,30 @@ class MetaformsHelperTest < ActionView::TestCase
     assert setup_mrows() == true, "Metarow setup failed."
   end
 
-  #TODO: Make tests for metarow dynamic creation function
+  #TODO: Make tests for metarow dynamic creation function?
   
-  #Test nil name for "link_to_add_fields"
+  #Test nil name for "add_fields_link"
   test "test_add_fields_name_nil" do
     name = nil
     f = "test"
     association = "test"
-    assert link_to_add_fields(name, f, association) == false, "Name not nil."
+    assert add_fields_link(name, f, association) == false, "Name not nil."
   end
   
-  #Test nil "f" for "link_to_add_fields"
+  #Test nil "f" for "add_fields_link"
   test "test_add_fields_f_nil" do
     name = "test"
     f = nil
     association = "test"
-    assert link_to_add_fields(name, f, association) == false, "f not nil."
+    assert add_fields_link(name, f, association) == false, "f not nil."
   end
   
-  #Test nil association for "link_to_add_fields"
+  #Test nil association for "add_fields_link"
   test "test_add_fields_association_nil" do
     name = "test"
     f = "test"
     association = nil
-    assert link_to_add_fields(name, f, association) == false, "association not nil."
+    assert add_fields_link(name, f, association) == false, "association not nil."
   end
 
 end
