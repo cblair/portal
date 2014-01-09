@@ -58,6 +58,9 @@ class MetaformsHelperTest < ActionView::TestCase
 	            )
 	    assert result
 	end
+  
+#NOTE: There seems to be a conflict between several tests.  They work
+# individualy but not as a "batch".
 
   #Test adding metadata to document with out metadata
   test "test_metarows_no_md_save" do
