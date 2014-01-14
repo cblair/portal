@@ -23,7 +23,6 @@ class DocumentsController < ApplicationController
   end
 
   def doc_md_edit
-    #puts "doc_md_edit *************************************************"
     md_table = params[:md_table]  #metadata table from MD editor
     document = Document.find(params[:id])
     edited_suc = false
@@ -104,12 +103,40 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def show_data
+    @document = Document.find(params[:id])
+    @msdata = get_document_metadata(@document)
+    @doc_collection = Collection.find(@document.collection_id)
+    
+    @job = nil
+    if @document.job_id != nil
+      begin ActiveRecord::RecordNotFound
+        @job = Job.find(@document.job_id)
+      rescue
+        @job = false
+        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
+      end
+    end
+
+    @sdata = @document.stuffing_data  #Data from couch
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+    
+    chart = Chart.find_by_document_id(@document)
+    @chart = chart || Chart.find(newchart({:document_id => @document}))
+  end
+
   # GET /documents/1
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
     
-    @sdata = @document.stuffing_data
+    #@sdata = @document.stuffing_data #TODO: remove this line?
     @msdata = get_document_metadata(@document)
 
     @doc_collection = Collection.find(@document.collection_id)
@@ -123,7 +150,9 @@ class DocumentsController < ApplicationController
         puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
       end
     end
-
+    
+=begin #Moved to function "show_data"
+    @sdata = @document.stuffing_data  #Data from couch
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
     
@@ -134,10 +163,12 @@ class DocumentsController < ApplicationController
     
     chart = Chart.find_by_document_id(@document)
     @chart = chart || Chart.find(newchart({:document_id => @document}))
+=end
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
+
   end
   
   # GET /documents/new

@@ -13,12 +13,12 @@ class CollectionsController < ApplicationController
       redirect_to home_path
     elsif ( params.include?("collections") and params.include?("id") )
       collection = Collection.find(params[:id])
-#=begin
+
       if not collection_is_viewable(collection, current_user)
         flash[:error] = "Collection not found, or you do not have permissions for this action."
         redirect_to collections_path
       end
-#=end
+
     end
   end
   

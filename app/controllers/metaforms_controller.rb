@@ -15,7 +15,7 @@ class MetaformsController < ApplicationController
     else
       @metaform = Metaform.find(params[:metaf][:id])
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @metaforms }
@@ -24,24 +24,24 @@ class MetaformsController < ApplicationController
 
   # POST /metaforms/mdf_save
   def mdf_save
+    @document = Document.find(params[:doc_id])
+    authorize! :add_md, @document if params[:metaf] #custom action, CanCan
     @metaform = Metaform.find(params[:metaf])
-    authorize! :add_md, @metaform if params[:metaf] #custom action, CanCan
-    document = Document.find(params[:doc_id])
     
     mdf_saved = false
     if (params[:metaform] == nil)
       mdf_saved = false
     else
       mf_data = params[:metaform][:metarows_attributes] #passed row data
-      mdf_saved = metarows_save(mf_data, document)
+      mdf_saved = metarows_save(mf_data, @document)
     end
     
     respond_to do |format|
       if (mdf_saved == true)
-        format.html { redirect_to document, notice: 'Metadata was successfully saved.' }
-        format.json { render json: document, status: :created, location: document  }
+        format.html { redirect_to @document, notice: 'Metadata was successfully saved.' }
+        format.json { render json: @document, status: :created, location: document  }
       else
-        format.html { redirect_to document, notice: 'ERROR: Metadata was not saved.' }
+        format.html { redirect_to @document, notice: 'ERROR: Metadata was not saved.' }
         format.json { render json: @metaform.errors, status: :unprocessable_entity }
       end
     end

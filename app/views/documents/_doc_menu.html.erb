@@ -1,0 +1,53 @@
+<p>
+	  <b>Name:</b>
+	  <%= @document.name %>
+	</p>
+	
+	<p>
+	  <b>Collection:</b>
+	  <%= @doc_collection.name || "(none)" %>
+	  <%= link_to '<i class="icon-download"> Download</i>'.html_safe, csv_export_path(@doc_collection, :format => 'zip', :stype => 'Collection'), :class => "label label-info" %>
+	</p>
+	
+	<p>
+		<b>Owner:</b>
+		<% if @document.user %>
+			<%= @document.user.email %> 
+		<% end %>
+	</p>
+<!--
+	<p>
+		<% if @document.public %>
+			<a class="label label-important" href="<%#= pub_priv_doc_path(@document, :public => "false") %>">
+				<i class="icon-eye-open icon-white"></i>
+				public
+		<% else %>
+			<a class="label label-default" href="<%#= pub_priv_doc_path(@document, :public => "true") %>">
+				<i class="icon-eye-close icon-white"></i>
+				private
+		<% end %>
+		</a>
+	</p>
+-->
+	<div>
+		<%= render 'doc_job_status' %>
+	</div>
+
+	<% if @document.validated %>
+	  <% if can? :manage, @document %>
+	    <%= link_to 'Edit', edit_document_path(@document) %> |
+	  <% end %> <!-- can can -->
+	<% else %>
+	  <% if can? :manage, @document %>
+		   <%= link_to 'Edit Properties', edit_document_path(@document) %> |
+		   <%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+	  <% end %> <!-- can can -->
+	<% end %>
+	<% if can? :manage, @document %>
+	<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+		   		document_path(@document),
+                :method => 'delete',
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) } %> |
+	<% end %> <!-- can can -->
+		<%#= link_to 'Back', documents_path %>
+		<%= link_to 'Back', @document.collection %>

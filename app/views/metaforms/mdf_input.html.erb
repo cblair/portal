@@ -18,7 +18,7 @@
 
 <hr>
 
-<% if can? :add_md, @metaform %>
+<% if can? :add_md, @document %>
 <%= form_for @metaform, :url => mdf_save_path do |f| %>
   <%= f.fields_for :metarows do |mrow| %>
     <%= render "mdr_fields", :f => mrow %><br />

@@ -1,0 +1,31 @@
+	<div class="container-fluid">
+		<h2>Metadata</h2>
+		<% if @msdata != nil  and !@msdata.empty? %>
+			<table class="table table-striped table-bordered table-condensed" style="width:5;">
+				<tbody>
+				<% @msdata.each do |msdata_row| %>
+					<!--If the row is a Hash, display values only-->
+					<tr>
+						<% msdata_row.each do |key, val| %>
+							<td><%= key %></td>
+							<td><%= val %></td>
+						<% end %>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+      <% if can? :manage, @document %>
+        <%= button_tag("Edit Metadata", :class => "edit_md_btn", :name => "edit_metad_btn") %>
+      <% end %>
+		<% else %>
+			<p>(none)</p>
+		<% end %>
+		
+		<% if can? :add_md, @document %>
+		  <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
+		    <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
+		      {:prompt => '(select a metaform)'}) %><br />
+		    <%= hidden_field_tag "doc_id", @document.id %>
+		    <%= submit_tag "Add Metadata" %>
+		  <% end %>
+		<% end %> <!-- CanCan -->
