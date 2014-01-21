@@ -4,8 +4,13 @@ class DocumentsControllerTest < ActionController::TestCase
   include Devise::TestHelpers 
   
   setup do
-    @document = documents(:one)
+    document = documents(:doc1) #document = documents(:one)
   end
+
+  #test "should update metadata" do
+   # post :doc_md_edit, {"0"=>{"0"=>"HatchFilter", "1"=>"CSV (pre-defined)"}, "1"=>{"0"=>"11", "1"=>"22"}}
+   # assert_response :success
+  #end
 
   test "should get index" do
     get :index

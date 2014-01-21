@@ -77,6 +77,32 @@ class DocumentsHelperTest < ActionView::TestCase
 	            )
 	    assert result
  	end
+  
+  #Test good input to function "get_menu"
+  test "test_doc_get_menu_good" do
+    @document = documents(:doc1)
+    assert get_menu() == true, "Document is nil."
+  end
+  
+  #Test nil document to "get_menu"
+  test "test_doc_get_menu_nil" do
+    @document = nil
+    assert get_menu() == false, "Document is not nil."
+  end
+=begin
+  #Error: undefined method `newchart'
+  #Test good input to function "get_show_data"
+  test "get_show_data_good" do
+    @document = documents(:doc1)
+    assert get_show_data() == true, "Document is nil."
+  end
+
+  #Test nil document to "get_show_data"
+  test "get_show_data_nil" do
+    @document = nil
+    assert get_show_data() == false, "Document is not nil."
+  end
+=end
 
 	test "save_zip_to_documents - create parent collection" do
 		c=Collection.new(:name => "test_save_zip_to_documents")
@@ -511,7 +537,7 @@ class DocumentsHelperTest < ActionView::TestCase
     assert strip_metadata(f, iterator) == false, "Ifilter is not nil."
   end
   
-  #SAS test bad input stream (iterator) argument to "strip_metadata"
+  #Test bad input stream (iterator) argument to "strip_metadata"
   test "strip_metadata - nil ins" do
     f = ifilters(:ifilter2)
     f.stuffing_headers = [

@@ -12,6 +12,47 @@ module DocumentsHelper
   #if Rails.env.test?
   #  include Devise::TestHelpers
   #end
+  
+  #Gets menu data for display.
+  def get_menu
+    if (@document == nil)
+      return false
+    end
+    
+    @doc_collection = Collection.find(@document.collection_id)
+    
+    @job = nil
+    if @document.job_id != nil
+      begin ActiveRecord::RecordNotFound
+        @job = Job.find(@document.job_id)
+      rescue
+        @job = false
+        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
+      end
+    end
+    return true
+  end
+  
+  #Gets document data from Couch for display.
+  def get_show_data
+    if (@document == nil)
+      return false
+    end
+    
+    @sdata = @document.stuffing_data  #Data from couch
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+    
+    chart = Chart.find_by_document_id(@document)
+    @chart = chart || Chart.find(newchart({:document_id => @document}))
+    
+    return true
+  end
 
   #Takes metadata from document metadata editor and saves to couch.
   def metadata_save(md_table, document)

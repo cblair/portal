@@ -9,7 +9,8 @@
   <%= render "doc_metadata" %>
 
   <hr />
-  
-  <%= link_to "Show Data", show_data_path %>
+  <% if can? :show_data, @document %>
+    <%= link_to "Show Data", show_data_path %>
+  <% end %> <!-- CanCan -->
 
 </div>
