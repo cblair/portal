@@ -1,0 +1,11 @@
+<h2>Notes</h2>
+
+  <% if can? :read, @document %>
+    <%= content_tag("a", "Show Notes", :id => "show_notes_link") %>
+  <% end %> <!-- can can -->
+  
+  <% if can? :manage, @document %>
+    | <%= link_to 'Edit Notes', edit_notes_text_path(@document) %>
+  <% end %> <!-- can can -->
+  
+  <p id="notes"> <%= @notes %> </p>

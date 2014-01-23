@@ -2,59 +2,59 @@ var DOCUMENTS_SEARCH_TABLE = null;
 
 jQuery(function($) {
 
-	function runDocumentsControllerJS() {
-		//enable tooltip
-		$('.job-label').popover({html : true, trigger : 'hover'});
+  function runDocumentsControllerJS() {
+    //enable tooltip
+    $('.job-label').popover({html : true, trigger : 'hover'});
 
-		//disables warnings, TODO to fix
-		$.fn.dataTableExt.sErrMode = "throw";
+    //disables warnings, TODO to fix
+    $.fn.dataTableExt.sErrMode = "throw";
 
-		//dataTables
-		$.extend( $.fn.dataTableExt.oStdClasses, {
-			//Taking out for now - URI too long
-			//"sSortAsc": "header headerSortDown",
-			//"sSortDesc": "header headerSortUp",
-			//"sSortable": "header",
-			"sWrapper": "dataTables_wrapper form-inline"
-		});
+    //dataTables
+    $.extend( $.fn.dataTableExt.oStdClasses, {
+      //Taking out for now - URI too long
+      //"sSortAsc": "header headerSortDown",
+      //"sSortDesc": "header headerSortUp",
+      //"sSortable": "header",
+      "sWrapper": "dataTables_wrapper form-inline"
+    });
 
-		$.initDocumentDatatable = function ($, data_source) {
-			if(data_source == undefined) {
-				data_source = $('#documents').data('source');
-			}
+    $.initDocumentDatatable = function ($, data_source) {
+      if(data_source == undefined) {
+        data_source = $('#documents').data('source');
+      }
 
-			//dataTables
-			DOCUMENTS_SEARCH_TABLE = $('#documents').dataTable({
-				"sPaginationType"	: "bootstrap",
-				"bJQueryUI"			: true,
-				"bProcessing"		: true,
-				"bServerSide"		: true,
-				"bSort"				: false,
-				//Helps with long URIs
-				//"fnServerParams": "",
-				"sServerMethod"		: "POST",
-				//Taking out search
-				//"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-				"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-				"sAjaxSource"		: data_source
-			});
+      //dataTables
+      DOCUMENTS_SEARCH_TABLE = $('#documents').dataTable({
+        "sPaginationType"  : "bootstrap",
+        "bJQueryUI"      : true,
+        "bProcessing"    : true,
+        "bServerSide"    : true,
+        "bSort"        : false,
+        //Helps with long URIs
+        //"fnServerParams": "",
+        "sServerMethod"    : "POST",
+        //Taking out search
+        //"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+        "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+        "sAjaxSource"    : data_source
+      });
 
-			//Do a default search if the data attr is set (probably originally from
-			// an HTML param)
-			var default_search = $('#documents').data('default-search');
-			if((default_search != undefined) && (default_search != "")) {
-				DOCUMENTS_SEARCH_TABLE.fnFilter(default_search);
-			}
+      //Do a default search if the data attr is set (probably originally from
+      // an HTML param)
+      var default_search = $('#documents').data('default-search');
+      if((default_search != undefined) && (default_search != "")) {
+        DOCUMENTS_SEARCH_TABLE.fnFilter(default_search);
+      }
 
-			//only search on enter keypress 
-			$('.dataTables_filter input')
-	    		.unbind('keypress keyup')
-	    		.bind('keypress keyup', function(e){
-	      			if (e.keyCode != 13) return;
-	      			DOCUMENTS_SEARCH_TABLE.fnFilter($(this).val());
-	    		}
-	    	);
-		};
+      //only search on enter keypress 
+      $('.dataTables_filter input')
+          .unbind('keypress keyup')
+          .bind('keypress keyup', function(e){
+              if (e.keyCode != 13) return;
+              DOCUMENTS_SEARCH_TABLE.fnFilter($(this).val());
+          }
+        );
+    };
 //----------------------------------------------------------------------
 // Metadata editor code
 //Add delete row button event
@@ -154,13 +154,32 @@ function md_editorSetup() {
 }
 //----------------------------------------------------------------------
 
-		$(document).ready(function () {
-			$.initDocumentDatatable($);
+  function show_notesJS() {
+    console.log("show_notes_link clicked");
+    var hide_notes = $('<a id="hide_notes_link">Hide Notes</a>');
+    $('#show_notes_link').before(hide_notes);
+    $("#hide_notes_link").on('click', hide_notesJS);
+    $('#show_notes_link').hide();
+    $("#notes").show();
+  }
+  
+  function hide_notesJS() {
+    console.log("hide_notes_link clicked");
+    $('#hide_notes_link').remove();
+    $('#show_notes_link').show();
+    $("#notes").hide();
+  }
+  
+    $(document).ready(function () {
+      $.initDocumentDatatable($);
       $('.edit_md_btn').on('click', md_editorSetup); //Add editing event/handler
-		});
-	} //end runDocumentsControllerJS
+      $("#notes").hide();
+      $("#show_notes_link").on('click', show_notesJS);
+      
+    });
+  } //end runDocumentsControllerJS
 
-	if(CONTROLLER_NAME == "documents") {
-		runDocumentsControllerJS();
-	} 
+  if(CONTROLLER_NAME == "documents") {
+    runDocumentsControllerJS();
+  } 
 });

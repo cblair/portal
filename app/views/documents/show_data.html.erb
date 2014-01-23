@@ -8,86 +8,94 @@
   <!-- Document Metadata -->
   <%= render "doc_metadata" %>
 
+  <hr/>
+  
+  <%= render "doc_notes" %>
+  
+  <hr />
+  
+  <%= link_to "Hide Data", document_path %>
+
   <!-- Document Data -->
-		<% 
-			#Get row data
-			@row = @paged_sdata.first()
-			#if there is no first row, set to empty instead of nil
-			if @row == nil
-				@row = {}
-			end 
-			@colnames = get_data_colnames(@paged_sdata) 
-		%>
+    <% 
+      #Get row data
+      @row = @paged_sdata.first()
+      #if there is no first row, set to empty instead of nil
+      if @row == nil
+        @row = {}
+      end 
+      @colnames = get_data_colnames(@paged_sdata) 
+    %>
 
-	    <h2>Data</h2>
-		<!--Display data-->
-		<% default_search = params[:default_search] or "" %>
-		<% if @document.stuffing_data != nil %>
-		    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="documents"
-		    	data-source="<%= document_path(:id => @document.id, :format => :json) %>" data-default-search="<%= default_search %>">
-		     <thead>
-		      <tr>
-				    <% row_keys = [] %>
-				    <% if !@row.empty? %>
-				    	<% row_keys = @row.keys %>
-				    <% end %>
-				    <% row_keys.each do |name| %>
-				    	<th>
-							<%= name %>
-				    	</th>
-				    <% end %>
-		      </tr>
-		     </thead>
-		     <tbody>
-			 </tbody>
-			</table>
-		<% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
-			<p>Raw unvalidated text: </p>
+      <h2>Data</h2>
+    <!--Display data-->
+    <% default_search = params[:default_search] or "" %>
+    <% if @document.stuffing_data != nil %>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="documents"
+          data-source="<%= document_path(:id => @document.id, :format => :json) %>" data-default-search="<%= default_search %>">
+         <thead>
+          <tr>
+            <% row_keys = [] %>
+            <% if !@row.empty? %>
+              <% row_keys = @row.keys %>
+            <% end %>
+            <% row_keys.each do |name| %>
+              <th>
+              <%= name %>
+              </th>
+            <% end %>
+          </tr>
+         </thead>
+         <tbody>
+       </tbody>
+      </table>
+    <% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
+      <p>Raw unvalidated text: </p>
 
-			<% if @document.stuffing_text.is_a? Array %>
-				<p><%= @document.stuffing_text[0..100]%>...</p>
-			<% else %>
-				<p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
-			<% end %>
-			<p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
-		<% else %>
-			<p>(none)</p>
-		<% end %>
-	</div>
-	
-	
-	<%= 
-		#render 'viz/visualization', :layout => 'true'
-	%>
-	<hr/>
-	
-	
-	<!--
-	<div id="hidden_form">
-	<h2>Data Manipulation</h2>
-	<a class="btn btn-info" href="#">More</a>
-	<a class="btn btn-inverse" href="#">Hide</a>
-	-->
+      <% if @document.stuffing_text.is_a? Array %>
+        <p><%= @document.stuffing_text[0..100]%>...</p>
+      <% else %>
+        <p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
+      <% end %>
+      <p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
+    <% else %>
+      <p>(none)</p>
+    <% end %>
+  </div>
+  
+  
+  <%= 
+    #render 'viz/visualization', :layout => 'true'
+  %>
+  <hr/>
+  
+  
+  <!--
+  <div id="hidden_form">
+  <h2>Data Manipulation</h2>
+  <a class="btn btn-info" href="#">More</a>
+  <a class="btn btn-inverse" href="#">Hide</a>
+  -->
 
-	<!--Document Manip Form-->
-	<!--
-	<%= form_tag(document_manip_path) do %>
-		<%= hidden_field_tag(:id, @document[:id]) %>
-		
-		<% @colnames.each do |colname|%>
-	    	<%= radio_button_tag("manip_colname", colname) %> 
-	    	<%= colname %>
-		<% end %>
-		<br />
-		<%= select_tag(:manip_func, options_for_select([ ["categorize","categorize"] ]))%>
-		<br />
+  <!--Document Manip Form-->
+  <!--
+  <%= form_tag(document_manip_path) do %>
+    <%= hidden_field_tag(:id, @document[:id]) %>
+    
+    <% @colnames.each do |colname|%>
+        <%= radio_button_tag("manip_colname", colname) %> 
+        <%= colname %>
+    <% end %>
+    <br />
+    <%= select_tag(:manip_func, options_for_select([ ["categorize","categorize"] ]))%>
+    <br />
 
-	    <%= submit_tag("Manipulate")%>
-	<% end %>
-	</ul>
-	</div>
-	
-	<hr/>
-	-->
+      <%= submit_tag("Manipulate")%>
+  <% end %>
+  </ul>
+  </div>
+  
+  <hr/>
+  -->
 
 </div>

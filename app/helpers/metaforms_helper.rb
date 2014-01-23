@@ -1,4 +1,4 @@
-include DocumentsHelper
+#include DocumentsHelper
 
 module MetaformsHelper
   #Saves each metarow as metadata to CouchDB
@@ -16,12 +16,12 @@ module MetaformsHelper
     end
     
     mf_data.each do |k, v|
-        #reformats metarow so it only contains the key and value and drops unwanted data,
-        #(i.e. is in the form {key => value}) for saving to CouchDB
-        #TODO: add blank key/value checking.
-        mrow_cdb = {v['key'] => v['value']}
-        document.stuffing_metadata << mrow_cdb
-      end
+      #reformats metarow so it only contains the key and value and drops unwanted data,
+      #(i.e. is in the form {key => value}) for saving to CouchDB
+      #TODO: add blank key/value checking.
+      mrow_cdb = {v['key'] => v['value']}
+      document.stuffing_metadata << mrow_cdb
+    end
     document.save
     return true
   end

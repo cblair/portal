@@ -109,6 +109,7 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     authorize! :show_data, @document if params[:id]
     @msdata = get_document_metadata(@document)
+    @notes = @document.stuffing_notes
     
     get_menu()
     get_show_data()
@@ -119,6 +120,7 @@ class DocumentsController < ApplicationController
   def show
     @document = Document.find(params[:id])
     @msdata = get_document_metadata(@document)
+    @notes = @document.stuffing_notes
     get_menu()
 
     respond_to do |format|
@@ -155,8 +157,10 @@ class DocumentsController < ApplicationController
 
   def edit_text
     @document = Document.find(params[:id])
-
-
+  end
+  
+  def edit_notes
+    @document = Document.find(params[:id])
   end
 
   # POST /documents
@@ -187,9 +191,12 @@ class DocumentsController < ApplicationController
 
     suc_msg = 'Document was successfully updated. '
       
-    #if we're in document text edit mode
+    #if we're in document text edit mode, or notes edit mode
     if (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_text")
       @document.stuffing_text = params["document"]["stuffing_text"]
+      update_suc = @document.save
+    elsif (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_notes")
+      @document.stuffing_notes = params["document"]["stuffing_notes"]
       update_suc = @document.save
     else
       #Add doc to project
