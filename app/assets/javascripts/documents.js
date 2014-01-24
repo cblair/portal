@@ -64,19 +64,14 @@ function delRow() {
 
 //Add add row button event
 function addRow() {
-  //console.log("add_btn");
-  //console.log(this);
   var md_row = $('.container-fluid > table').last('tr');
   var rowNew = '<tr> <td></td> <td></td> <td><button class="del_btn">Delete</button> </tr>'
   $(md_row).append(rowNew);
-  $(md_row).last().find('td').dblclick(inputForm); //adds input handler to new row
+  $(md_row).find('tr').last().find('td').dblclick(inputForm); //adds input handler to new row
 }
 
 //Add input form when cell is double clicked
 function inputForm() {
-  //console.log("inputForm");
-  //console.log(this);
-  
   if ( $(this).children().is('.del_btn') )
     return;  //Prevents del button from becoming an input form
   
@@ -98,11 +93,9 @@ function inputForm() {
 
 //Save new data and perform cleanup
 function saveData() {
-  //console.log("saveData");
-  //console.log(this);
   var md_table = $('.container-fluid > table');
   endEdit(); //Cleanup
-  var doc_url = window.location.pathname + '/doc_md_edit'  //Creat
+  var doc_url = window.location.pathname + '/doc_md_edit'     //Creat
   var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json
   var pmd_table = {"md_table": jmd_table};  //Add key for table (for controller)
   
@@ -116,8 +109,6 @@ function saveData() {
 
 //Cancel button event and cleanup
 function endEdit() {
-  //console.log("endEdit");
-  //console.log(this);
   var md_table = $('.container-fluid > table');
   $('.add_btn').remove().off();
   $('.save_btn').remove().off();
@@ -129,8 +120,6 @@ function endEdit() {
 
 //Metadata Editor
 function md_editorSetup() {
-  //console.log("md_editorSetup");
-  //console.log(this);
   var md_table = $('.container-fluid > table');
 
   //Button setup
@@ -140,10 +129,7 @@ function md_editorSetup() {
   var cancelButton = $('<button class="cancel_btn">Cancel</button>');
   
   $(md_table).find('tr').append(delButton);
-  $('.edit_md_btn').before(addButton);
-  $('.edit_md_btn').before(saveButton);
-  $('.edit_md_btn').before(cancelButton);
-  $('.edit_md_btn').hide();
+  $('.edit_md_btn').before(addButton).before(saveButton).before(cancelButton).hide();
 
   //Click events
   $(md_table).on('click', '.del_btn', delRow);  //Delete row
@@ -155,27 +141,24 @@ function md_editorSetup() {
 //----------------------------------------------------------------------
 
   function show_notesJS() {
-    console.log("show_notes_link clicked");
     var hide_notes = $('<a id="hide_notes_link">Hide Notes</a>');
-    $('#show_notes_link').before(hide_notes);
+    $('#show_notes_link').before(hide_notes).hide();
     $("#hide_notes_link").on('click', hide_notesJS);
-    $('#show_notes_link').hide();
     $("#notes").show();
   }
   
   function hide_notesJS() {
-    console.log("hide_notes_link clicked");
     $('#hide_notes_link').remove();
     $('#show_notes_link').show();
     $("#notes").hide();
   }
-  
+//----------------------------------------------------------------------
+
     $(document).ready(function () {
       $.initDocumentDatatable($);
       $('.edit_md_btn').on('click', md_editorSetup); //Add editing event/handler
       $("#notes").hide();
       $("#show_notes_link").on('click', show_notesJS);
-      
     });
   } //end runDocumentsControllerJS
 

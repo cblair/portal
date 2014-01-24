@@ -8,4 +8,4 @@
     | <%= link_to 'Edit Notes', edit_notes_text_path(@document) %>
   <% end %> <!-- can can -->
   
-  <p id="notes"> <%= @notes %> </p>
+  <div id="notes"> <%= simple_format(@notes) %> </div>
