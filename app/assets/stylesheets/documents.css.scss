@@ -1,3 +1,21 @@
 // Place all the styles related to the Documents controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#metadata_table
+{
+  table-layout:fixed;
+  color:black;
+  //width:100%;
+  //height:100%;
+}
+
+#del_btn_cell
+{
+  width:10%;
+}
+
+#delete_btn
+{
+  width:100%;
+}

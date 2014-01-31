@@ -64,7 +64,7 @@ function delRow() {
 
 //Add add row button event
 function addRow() {
-  var md_row = $('.container-fluid > table').last('tr');
+  var md_row = $('#metadata_table').last('tr');
   var rowNew = '<tr> <td></td> <td></td> <td><button class="del_btn">Delete</button> </tr>'
   $(md_row).append(rowNew);
   $(md_row).find('tr').last().find('td').dblclick(inputForm); //adds input handler to new row
@@ -72,7 +72,7 @@ function addRow() {
 
 //Add input form when cell is double clicked
 function inputForm() {
-  if ( $(this).children().is('.del_btn') )
+  if ( $(this).is('#del_btn_cell') )  //if ( $(this).children().is('.del_btn') )
     return;  //Prevents del button from becoming an input form
   
   var orignalText = $(this).text();
@@ -93,7 +93,7 @@ function inputForm() {
 
 //Save new data and perform cleanup
 function saveData() {
-  var md_table = $('.container-fluid > table');
+  var md_table = $('#metadata_table');
   endEdit(); //Cleanup
   var doc_url = window.location.pathname + '/doc_md_edit'     //Creat
   var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json
@@ -109,7 +109,7 @@ function saveData() {
 
 //Cancel button event and cleanup
 function endEdit() {
-  var md_table = $('.container-fluid > table');
+  var md_table = $('#metadata_table');
   $('.add_btn').remove().off();
   $('.save_btn').remove().off();
   $('.del_btn').closest('td').remove().off();
@@ -120,10 +120,10 @@ function endEdit() {
 
 //Metadata Editor
 function md_editorSetup() {
-  var md_table = $('.container-fluid > table');
+  var md_table = $('#metadata_table');
 
   //Button setup
-  var delButton = $('<td> <button class="del_btn">Delete</button> </td>');
+  var delButton = $('<td id="del_btn_cell"> <button id="delete_btn" class="del_btn">Delete</button> </td>');
   var addButton = $('<button class="add_btn">Add</button>');
   var saveButton = $('<button class="save_btn">Save</button>');
   var cancelButton = $('<button class="cancel_btn">Cancel</button>');

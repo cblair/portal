@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h2>Metadata</h2>
   <% if @msdata != nil  and !@msdata.empty? %>
-   <table class="table table-striped table-bordered table-condensed" style="width:5;">
+   <table id="metadata_table" class="table table-striped table-bordered table-condensed" style="width:5;">
     <tbody>
     <% @msdata.each do |msdata_row| %>
      <!--If the row is a Hash, display values only-->
