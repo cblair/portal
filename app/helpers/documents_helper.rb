@@ -5,6 +5,7 @@ module DocumentsHelper
   require 'json'
   require 'cgi'
   require 'filemagic'
+  require 'rails_autolink'
   include IfiltersHelper
   include CouchdbHelper
 

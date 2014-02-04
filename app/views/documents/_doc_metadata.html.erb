@@ -8,7 +8,7 @@
      <tr>
       <% msdata_row.each do |key, val| %>
        <td><%= key %></td>
-       <td><%= val %></td>
+       <td><%= auto_link(val) %></td>
       <% end %>
      </tr>
     <% end %>

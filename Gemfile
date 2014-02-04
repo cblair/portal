@@ -109,3 +109,6 @@ gem "delayed_job_web"
 gem 'roo'
 
 gem 'ruby-filemagic'
+
+#Turns all URLs and e-mail addresses into clickable links (depricated in rails 3.0.9))
+gem 'rails_autolink'
