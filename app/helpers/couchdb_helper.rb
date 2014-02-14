@@ -10,7 +10,7 @@ module CouchdbHelper
         conn_str = "http://"
       end
       
-      if username != nil and password != nil
+      if ((username != nil) && (password != nil) && (!username.empty?) && (!password.empty?))
         conn_str += "#{username}:#{password}@"
       end
       

@@ -28,6 +28,10 @@ class Document < ActiveRecord::Base
 
 
   def create_default_couchdb
+    #TODO: since moving to couchdb 1.5.0, we're moving away from couchdb views.
+    # So most of this method will go away.
+    return
+
     if (Rails.cache.fetch("document_model_initialized") != true) && is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
