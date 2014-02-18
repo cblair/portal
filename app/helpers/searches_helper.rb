@@ -1,3 +1,6 @@
+#TODO: this file nees much refactoring; most methods to be
+# called through the dispatcher, and the redundant portion taken out
+
 module SearchesHelper
   include CouchdbHelper
   require 'net/https'
@@ -7,6 +10,61 @@ module SearchesHelper
     #logger.info str
     puts str
   end
+
+  def couch_dispatcher(design_doc_name, view_name, options = {})
+    data = []
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/#{design_doc_name}/_view/#{view_name}"
+    
+    @options = options
+    conn_str += send(design_doc_name)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)
+    end
+
+    puts data 
+    return data["rows"]
+  end
+
+  def all_data_keys
+    search = @options[:search]
+    limit = @options[:limit] || 10
+
+    params = "?group=true"
+    params += "&limit=#{limit}"
+
+    #Start key starts with whatever the 
+    startkey = '"' + CGI.escape("#{search}") + '"'
+    #Get the last possible key with this prefix ('z'). It would be better to
+    # set this to the end of the UTF values (or even ASCII), but the latest
+    # working char is 'z'.
+    endkey =   '"' + CGI.escape("#{search}z") + '"'
+
+    params += "&startkey=" + startkey
+    params += "&endkey=" + endkey
+
+    params
+  end
+
+  #############################################################################
+  ## The following need refactoring to use couch_dispatcher().
+  #############################################################################
 
   def couch_search_count_data_in_document(search, lucky_search = false)
     data = []

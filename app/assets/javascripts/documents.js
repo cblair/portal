@@ -116,6 +116,26 @@ jQuery(function($) {
 			//timeout after our polling interval
 			timeout: JOB_DATA_POLL_INTERVAL
 		});
+
+		function overrideMetaformSelector() {
+			var urlSource = $('metaform-input-source');
+
+			$.ajax(urlSource, {
+				//data: { data : "div.uploads" },
+				cache: false,
+				beforeSend: function(result) {
+
+				},
+				success: function(result) {
+
+				},
+				error: function(result) {
+				$('#error').show();
+				},
+				//timeout after 5 seconds
+				timeout: 5000
+			});
+		}
 	}
 
 	if(CONTROLLER_NAME == "documents") {

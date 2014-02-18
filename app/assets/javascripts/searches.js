@@ -99,6 +99,11 @@ jQuery(function($) {
 		// Datatable stuff
 		$('form#main-search').submit(updateMainSearch);
 
+		//TODO: override autocomplete here.
+		console.log("TS172");
+		console.log(searchVal);
+		addSearchRecommendations(searchVal);
+
 		$(".merge-button").on("click", updateMergeSearch);
 	}
 
@@ -369,6 +374,26 @@ jQuery(function($) {
 		//init other search stuff
 		initMainSearch();
 	} //end runSearchesControllerJS
+
+
+	function addSearchRecommendations(searchVal) {
+		var urlSource = $('#main-search-results').data('recommendation-source');
+		$.ajax(urlSource, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//Nothing to do.
+			},
+			success: function(result) {
+				console.log("TS387");
+				console.log(result);
+			},
+			error: function(result) {
+			},
+			//5 second timeout
+			timeout: 1000
+		});
+	}
 
 
 	$(document).ready(function () {

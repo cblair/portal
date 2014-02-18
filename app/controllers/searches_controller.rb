@@ -213,4 +213,27 @@ class SearchesController < ApplicationController
       end
     end
   end
+
+  #Returns the count of possible matching columns to search for
+  def get_search_recommendations
+    search = params[:searchval]
+    
+    column_suggestions = {}
+    couch_dispatcher("all_data_keys", "view1", {:search => search}).each do |row|
+      #Each row should just have one key-val pair, but we'll collect them all
+      # anyway.
+      row.each do |key, val|
+        #If the key exists in the suggestions, add to its count. Else, set it.
+        if column_suggestions.keys.include? key
+          column_suggestions[key] += val.to_i
+        else
+          column_suggestions[key] = val.to_i
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.json { render json: {"column_suggestions" => column_suggestions} }
+    end
+  end
 end
