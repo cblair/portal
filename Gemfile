@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.2.11'
-ruby '1.9.3'
+#ruby '1.9.3'
+ruby '2.0.0'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -76,7 +77,11 @@ gem 'cancan'
 
 #Only for development
 group :development do
-  gem 'debugger'
+  #Debugger for ruby < 1.9.x
+  #gem 'debugger'
+  #Debugger for ruby >= 2.0.0
+  gem 'byebug'
+
   gem "ruby-prof"
   gem 'simplecov', :require => false, :group => :test
   gem 'rack-mini-profiler'

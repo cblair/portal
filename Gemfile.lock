@@ -59,6 +59,9 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.0.4)
+    byebug (2.6.0)
+      columnize (~> 0.3)
+      debugger-linecache (~> 1.2)
     callsite (0.0.11)
     cancan (1.6.10)
     climate_control (0.0.3)
@@ -88,12 +91,7 @@ GEM
       railties (>= 3.1.0)
     daemons (1.1.9)
     debug_inspector (0.0.2)
-    debugger (1.6.2)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.3)
     debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.2.3)
     delayed_job (4.0.0)
       activesupport (>= 3.0, < 4.1)
     delayed_job_active_record (4.0.0)
@@ -256,13 +254,13 @@ DEPENDENCIES
   ancestry
   better_errors
   binding_of_caller
+  byebug
   cancan
   coffee-rails
   couchrest
   couchrest_model
   d3_rails
   daemons
-  debugger
   delayed_job_active_record
   delayed_job_web
   devise

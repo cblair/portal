@@ -101,8 +101,8 @@ jQuery(function($) {
 
 		//TODO: override autocomplete here.
 		console.log("TS172");
-		console.log(searchVal);
-		addSearchRecommendations(searchVal);
+		//console.log(searchVal);
+		//addSearchRecommendations(searchVal);
 
 		$(".merge-button").on("click", updateMergeSearch);
 	}
