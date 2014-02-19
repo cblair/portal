@@ -51,7 +51,7 @@
 <div class="hero-unit">
 
 	<form id="main-search" class="navbar-form pull-left">
-	  <input type="text" id="main-search" class="span2" placeholder="Search...">
+	  <input type="text" id="main-search" class="span2" placeholder="Search..." data-recommendation-source="<%= search_recommendations_path %>">
 	  <button type="submit" class="btn">
 	  	<i class="icon-search search-button"></i>
 	  </button>
@@ -78,7 +78,6 @@
 		data-source="<%= search_all_path(:format => :json) %>" 
 		data-default-search="<%= default_search %>" 
 		data-merge-job-source="<%= save_doc_from_merge_search_path(:format => :json) %>"
-		data-recommendation-source="<%= get_search_recommendations_path %>"
 		>
 		<!--Our Datatable template will get inserted here by JS-->
 	</div>

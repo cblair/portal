@@ -99,11 +99,6 @@ jQuery(function($) {
 		// Datatable stuff
 		$('form#main-search').submit(updateMainSearch);
 
-		//TODO: override autocomplete here.
-		console.log("TS172");
-		//console.log(searchVal);
-		//addSearchRecommendations(searchVal);
-
 		$(".merge-button").on("click", updateMergeSearch);
 	}
 
@@ -373,6 +368,22 @@ jQuery(function($) {
 
 		//init other search stuff
 		initMainSearch();
+
+		//other page decorations
+		$('#search-help').tooltip();
+
+	    //decorate popovers on search results
+		//We won't know from Datatable's AJAX call when new data is displayed, 
+		//so call popover every once in a while.
+		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
+
+		//Search Autocomplete - Init
+		console.log("TS381");
+		console.log($('input#main-search'));
+		console.log($('input#main-search').data('recommendation-source'));
+		$('input#main-search').autocomplete({
+			source: $('input#main-search').data('recommendation-source')
+		});
 	} //end runSearchesControllerJS
 
 
@@ -403,13 +414,5 @@ jQuery(function($) {
 		) {
 			runSearchesControllerJS();
 		}
-
-		//other page decorations
-		$('#search-help').tooltip();
-
-	    //decorate popovers on search results
-		//We won't know from Datatable's AJAX call when new data is displayed, 
-		//so call popover every once in a while.
-		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
 	}); 
 });
