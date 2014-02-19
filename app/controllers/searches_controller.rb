@@ -224,7 +224,9 @@ class SearchesController < ApplicationController
     if !(search.include?(' ') || search.include?(':'))    
       #Gets us the data keys, in order of occurance
       column_suggestions = couch_dispatcher("all_data_keys", "view1", {:search => search}).collect do |row|
-        row["key"]
+        #row["key"]
+        #Format for JQuery UI - Autocomplete, with key=>value in suggestion
+        { "label" => "#{row["key"]} (#{row["value"]} occurances)", "value" => row["key"] }
       end
     end
 
