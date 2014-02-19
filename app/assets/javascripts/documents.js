@@ -95,8 +95,9 @@ function inputForm() {
 function saveData() {
   var md_table = $('#metadata_table');
   endEdit(); //Cleanup
-  var doc_url = window.location.pathname + '/doc_md_edit'     //Creat
-  var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json
+  var doc_url = window.location.pathname + '/doc_md_edit'     //Create
+  //var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json OLD
+  var jmd_table = md_table.tableToJSON();  //Convert table to json
   var pmd_table = {"md_table": jmd_table};  //Add key for table (for controller)
   
   $.ajax({
@@ -116,7 +117,16 @@ function endEdit() {
   $('.cancel_btn').remove().off();
   $('.edit_md_btn').show();
   $(md_table).find('td').off(); //removes input form events on MD table?
+  location.reload(); //Refresh page sos changes can take effect
 }
+
+// Return a helper with preserved width of cells when sorting
+var fixHelper = function(e, ui) {
+  ui.children().each(function() {
+    $(this).width($(this).width());
+  });
+  return ui;
+};
 
 //Metadata Editor
 function md_editorSetup() {
@@ -129,6 +139,7 @@ function md_editorSetup() {
   var cancelButton = $('<button class="cancel_btn">Cancel</button>');
   
   $(md_table).find('tr').append(delButton);
+  $('#fields').find('#delete_btn').remove(); //Removes delete button from field row
   $('.edit_md_btn').before(addButton).before(saveButton).before(cancelButton).hide();
 
   //Click events
@@ -137,6 +148,9 @@ function md_editorSetup() {
   $(md_table).find('td').dblclick(inputForm);   //Edit cell
   $('.save_btn').on('click', saveData);         //Save data
   $('.cancel_btn').on('click', endEdit);        //Cancel
+  $("#metadata_table tbody").sortable({
+    helper: fixHelper }).disableSelection(); //Make table D&D sortable
+  
 }
 //----------------------------------------------------------------------
 

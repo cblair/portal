@@ -2,9 +2,17 @@
   <h2>Metadata</h2>
   <% if @msdata != nil  and !@msdata.empty? %>
    <table id="metadata_table" class="table table-striped table-bordered table-condensed" style="width:5;">
+     <thead>
+       <tr id="fields">
+         <th><%= link_to "Label", :sort => "label" %></th>
+         <th><%= link_to "Value", :sort => "value" %></th>
+      </tr>
+     </thead>
     <tbody>
+      
     <% @msdata.each do |msdata_row| %>
      <!--If the row is a Hash, display values only-->
+     <!-- tr id="<%#= @row_id += 1 %>" -->
      <tr>
       <% msdata_row.each do |key, val| %>
        <td><%= key %></td>
@@ -14,11 +22,11 @@
     <% end %>
     </tbody>
    </table>
-      <% if can? :manage, @document %>
+   <% if can? :manage, @document %>
         <%= button_tag("Edit Metadata", :class => "edit_md_btn", :name => "edit_metad_btn") %>
-      <% end %>
+    <% end %>
   <% else %>
-   <p>(none)</p>
+    <p>(none)</p>
   <% end %>
   
   <% if can? :add_md, @document %>

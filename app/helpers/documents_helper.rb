@@ -14,6 +14,96 @@ module DocumentsHelper
   #  include Devise::TestHelpers
   #end
   
+  #Sorts metadata (by means of an index list) before display.
+  def sort_metadata(md_index)
+    if (@document == nil || md_index == nil)
+      return false
+    end
+  
+    md_sorted = md_index.map do |n|
+      @msdata[n]
+    end
+
+    @msdata = md_sorted
+    return true
+  end
+
+  #Gets the metadata sort index from CouchDB
+  def get_md_index
+    if (@document == nil)
+      return false
+    end
+    
+    md_index = [] #Contains the metadata sort index
+    if (@document.stuffing_metadata_index == nil)
+      puts "###########################################################"
+      puts "Document has no metadata sort index. Attempting to create..."
+      create_md_index()
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    elsif (@document.stuffing_metadata == nil)
+      create_md_index()
+      return (md_index = nil)
+    elsif (@document.stuffing_metadata.length != @document.stuffing_metadata_index.length)
+      puts "###########################################################"
+      puts "Metadata has changed, rebuilding sort index..."
+      create_md_index()
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    elsif (@document.stuffing_metadata_index.kind_of?(Array) )
+      puts "###########################################################"
+      puts "Getting metadata sort index..."
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    else
+      puts "###########################################################"
+      puts "Unknown error"
+    end
+    
+    return false  #Unknown error
+  end
+  
+  #Creates metadata sort index if it was not created during doc import
+  def create_md_index
+    if (@document == nil)
+      return false
+    end
+    
+    if (@document.stuffing_metadata == nil)
+      puts "###########################################################"
+      puts "No metadata or error, index not created"
+      @document.stuffing_metadata_index = nil  #No metadata
+      @document.save
+      return false
+    else
+      puts "###########################################################"
+      puts "Building metadata sort index..."
+      md_index = []
+      metadata = @document.stuffing_metadata
+      (0..metadata.length - 1).each do |i|
+        md_index[i] = i
+      end
+      @document.stuffing_metadata_index = md_index
+      @document.save
+    end
+    
+    return true
+  end
+  
+  #Recreates metadata sort index if
+  
+#-----------------------------------------------------------------------
+  #Gets metadata and sorts it for display
+  def get_metadata
+    if (@document == nil)
+      return false
+    end
+    
+    @msdata = get_document_metadata(@document)
+    md_index = get_md_index() #Gets metadata index for sorting
+    sort_metadata(md_index) #Sorts metadata
+  end
+
   #Gets menu data for display.
   def get_menu
     if (@document == nil)
@@ -57,25 +147,34 @@ module DocumentsHelper
 
   #Takes metadata from document metadata editor and saves to couch.
   def metadata_save(md_table, document)
-    if (md_table == nil or document == nil)
+    if (document == nil)
       return false
     end
-    #Due to the way the table-to-json jQuery plugin forms the json string
-    # all keys are numbers, this is to make things more readable.
-    labelKey = "0"  #Actual key from doc MD table
-    valKey = "1"    #Actual value from doc MD table
-    doc_md_new = [] #Array of hashes, stores extracted metadata
     
-    md_table.each do |key, value|
-      #puts key, value  #debug
-      md_row = {value[labelKey] => value[valKey]} #Must be "hashified" to save
-      doc_md_new << md_row
+    doc_md_new = []          #Array of hashes, stores extracted metadata
+    if (md_table == nil)
+      doc_md_new = nil
+    else
+      #Due to the way the table-to-json jQuery plugin forms the json string
+      # we need to "decode" the JSON. The plugin uses the column names as
+      # keys. For CouchDB we want the 1st value to be the key and the 2nd
+      # value to be the value.
+      md_fields = md_table["0"].keys #Gets the column names of the metadata table
+      labelKey = md_fields[0]  #Actual key from doc MD table
+      valKey = md_fields[1]    #Actual value from doc MD table
+    
+      md_table.each do |key, value|
+        md_row = {value[labelKey] => value[valKey]} #Must be "hashified" to save
+        doc_md_new << md_row
+      end
     end
+    
     document.stuffing_metadata = doc_md_new
     document.save
     
     return true
   end
+#-----------------------------------------------------------------------
 
   def is_json?(str)
     begin

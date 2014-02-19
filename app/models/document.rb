@@ -180,8 +180,20 @@ class Document < ActiveRecord::Base
     #@document.stuffing_primary_keys = params[:primary_keys]
     #Hack for now - add all column keys to primary keys for search
     self.stuffing_primary_keys = get_data_colnames(self.stuffing_data)
-
     self.save
+    
+    #Creates metadata index list in a document for sorting
+    if (self.stuffing_metadata == nil)
+      self.stuffing_metadata_index = nil  #No metadata
+    else
+      md_index = []
+      metadata = self.stuffing_metadata
+      (0..metadata.length - 1).each do |i|
+        md_index[i] = i
+      end
+      self.stuffing_metadata_index = md_index
+      self.save
+    end
     
     return suc_valid
   end

@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
     document = Document.find(params[:id])
     edited_suc = false
     
-    if (md_table != nil and document != nil)
+    if (document != nil)
       edited_suc = metadata_save(md_table, document)
     end
     
@@ -111,10 +111,9 @@ class DocumentsController < ApplicationController
   def show_data
     @document = Document.find(params[:id])
     authorize! :show_data, @document if params[:id]
-    @msdata = get_document_metadata(@document)
-    @notes = @document.stuffing_notes
-    
     get_menu()
+    get_metadata()
+    @notes = @document.stuffing_notes
     get_show_data()
   end
 
@@ -122,9 +121,10 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
-    @msdata = get_document_metadata(@document)
-    @notes = @document.stuffing_notes
+    @md_sort = params[:sort] #TEMP
     get_menu()
+    get_metadata()
+    @notes = @document.stuffing_notes
 
     respond_to do |format|
       format.html # show.html.erb
