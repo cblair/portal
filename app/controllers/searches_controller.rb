@@ -109,6 +109,7 @@ class SearchesController < ApplicationController
                   :size => per_page
                 }
       start_time = Time.new
+
       results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
       run_time_seconds = Time.new - start_time
       puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
@@ -124,18 +125,25 @@ class SearchesController < ApplicationController
       end
     end
 
-    #
+    #Setup colnames for merge search if results have colnames in common.
     colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
       colnames = ["Documents", "More Information"]
     end
+
+    unviewable_doc_links = unviewable_doc_list[0..10].collect do |doc|
+      if doc.user
+        view_context.mail_to doc.user.email, "#{doc.name} - request access via email.", subject: "Requesting access to #{doc.name}"
+      end
+    end
+    unviewable_doc_links.reject! {|l| !l}
 
     search_data = {
       "documents" => viewable_doc_list.collect {|doc| doc.name}, 
       "colnames" => colnames,
       "doc_links" => viewable_doc_list.collect {|doc| view_context.link_to(doc.name, doc)},
       #Show some unviewable doc links, but only the first 10 in case there's a lot.
-      "unviewable_doc_links" => unviewable_doc_list[0..10].collect {|doc| view_context.mail_to doc.user.email, "#{doc.name} - request access via email.", subject: "Requesting access to #{doc.name}"}
+      "unviewable_doc_links" => unviewable_doc_links
     }
 
     respond_to do |format|
@@ -217,22 +225,41 @@ class SearchesController < ApplicationController
   #Returns the count of possible matching columns to search for
   def search_recommendations
     search = params[:term]
-    column_suggestions = nil
+    suggestions = nil
 
-    #If ' ' or ':' Lucene chars are in the search term, those are too complicated for
+    #If ' ' those are too complicated for
     # our CouchDB view for now.
-    if !(search.include?(' ') || search.include?(':'))    
-      #Gets us the data keys, in order of occurance
-      column_suggestions = couch_dispatcher("all_data_keys", "view1", {:search => search}).collect do |row|
-        #row["key"]
-        #Format for JQuery UI - Autocomplete, with key=>value in suggestion
-        { "label" => "#{row["key"]} (#{row["value"]} occurances)", "value" => row["key"] }
+    if !search.include?(' ') 
+      #If there is a ':' char, then suggest a value.
+      if search.include?(':')
+        #Change the search to be only the value (string after the ':' char).
+        search_key = search.split(':')[0]
+        search_value = search.split(':')[1] || ""
+
+        #Add a wild character to whatever the search value is, so the user
+        # doesn't have to for a suggestion.
+        search_value += "*"
+
+        #Get suggestions from the value data
+        value_data = ElasticsearchHelper::es_search_dispatcher("es_terms_facet",
+          search_value, {:sfield => search_key, :get_full_data => true})
+        suggestions = value_data["facets"][search_key]["terms"].collect do |row|
+          #Format for JQuery UI - Autocomplete, with key=>value in suggestion
+          { "label" => "#{search_key}:#{row["term"]} (#{row["count"]} occurances)", "value" => "#{search_key}:#{row["term"]}" }
+        end
+      #Else, suggest a key
+      else
+        #Gets us the data keys, in order of occurance
+        suggestions = couch_dispatcher("all_data_keys", "view1", {:search => search}).collect do |row|
+          #Format for JQuery UI - Autocomplete, with key=>value in suggestion
+          { "label" => "#{row["key"]} (#{row["value"]} occurances)", "value" => row["key"] }
+        end
       end
     end
 
     respond_to do |format|
-      format.js { render json: column_suggestions }
-      format.json { render json: column_suggestions }
+      format.js { render json: suggestions }
+      format.json { render json: suggestions }
     end
   end
 end

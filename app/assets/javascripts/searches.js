@@ -378,9 +378,6 @@ jQuery(function($) {
 		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
 
 		//Search Autocomplete - Init
-		console.log("TS381");
-		console.log($('input#main-search'));
-		console.log($('input#main-search').data('recommendation-source'));
 		$('input#main-search').autocomplete({
 			source: $('input#main-search').data('recommendation-source')
 		});
