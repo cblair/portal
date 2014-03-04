@@ -3,29 +3,45 @@ include MetaformsHelper
 class MetaformsController < ApplicationController
   
   before_filter :authenticate_user!
-  #load_and_authorize_resource
-  #TODO: CanCan permissions
+  load_and_authorize_resource
   
-  # GET /metaforms/mdf_input/1
+  # GET /metaforms/mdf_input
   def mdf_input
-    @metaform = Metaform.find(params[:metaf][:id])
     @document = Document.find(params[:doc_id])
+    authorize! :add_md, @document if params[:doc_id] #custom action, CanCan
+    
+    if (params[:metaf][:id].blank?)
+      redirect_to @document, notice: 'Not a Metaform.'
+    else
+      @metaform = Metaform.find(params[:metaf][:id])
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @metaforms }
+    end
   end
 
-  # POST /metaforms/mdf_save/1
+  # POST /metaforms/mdf_save
   def mdf_save
+    @document = Document.find(params[:doc_id])
+    authorize! :add_md, @document if params[:metaf] #custom action, CanCan
     @metaform = Metaform.find(params[:metaf])
-    mf_data = params[:metaform][:metarows_attributes] #passed row data
-    document = Document.find(params[:id]) #id is from document
-    mdf_saved = metarows_save(mf_data, document)
+    
+    mdf_saved = false
+    if (params[:metaform] == nil)
+      mdf_saved = false
+    else
+      mf_data = params[:metaform][:metarows_attributes] #passed row data
+      mdf_saved = metarows_save(mf_data, @document)
+    end
     
     respond_to do |format|
       if (mdf_saved == true)
-        format.html { redirect_to document, notice: 'Metadata was successfully saved.' }
-        format.json { head :no_content }
+        format.html { redirect_to @document, notice: 'Metadata was successfully saved.' }
+        format.json { render json: @document, status: :created, location: document  }
       else
-        #format.html { render action: "mdf_input" }
-        format.html { redirect_to document, notice: 'ERROR: Metadata was not saved.' }
+        format.html { redirect_to @document, notice: 'ERROR: Metadata was not saved.' }
         format.json { render json: @metaform.errors, status: :unprocessable_entity }
       end
     end
@@ -58,10 +74,6 @@ class MetaformsController < ApplicationController
   def new
     @metaform = Metaform.new
     setup_mrows()
-    #puts "new *********************************************************"
-    #@metaform.metarows.each do |mr|
-    #  p mr
-    #end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -72,10 +84,6 @@ class MetaformsController < ApplicationController
   # GET /metaforms/1/edit
   def edit
     @metaform = Metaform.find(params[:id])
-    #puts "edit ********************************************************"
-    #@metaform.metarows.each do |mr|
-    #  p mr
-    #end
   end
 
   # POST /metaforms
@@ -83,10 +91,6 @@ class MetaformsController < ApplicationController
   def create
     @metaform = Metaform.new(params[:metaform])
     @metaform.user_id = current_user.id
-    #puts "create ******************************************************"
-    #@metaform.metarows.each do |mr|
-    #  p mr
-    #end
 
     respond_to do |format|
       if @metaform.save
@@ -103,12 +107,6 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
-    #puts "update ******************************************************"
-    #tmp = params[:_destroy]
-    #p "tmp ***", tmp
-    #@metaform.metarows.each do |mr|
-    #  p mr
-    #end
 
     respond_to do |format|
       if @metaform.update_attributes(params[:metaform])

@@ -14,12 +14,14 @@
 
 <% @metaforms.each do |metaform| %>
   <tr>
-    <td><%= metaform.name %></td>
-    <td><%= metaform.mddesc %></td>
-    <!--<td><%#= metaform.user_id %></td>-->
-    <td><%= link_to 'Show', metaform %></td>
-    <td><%= link_to 'Edit', edit_metaform_path(metaform) %></td>
-    <td><%= link_to 'Destroy', metaform, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% if can? :manage, metaform %>
+      <td><%= metaform.name %></td>
+      <td><%= metaform.mddesc %></td>
+      <!--<td><%#= metaform.user_id %></td>-->
+      <td><%= link_to 'Show', metaform %></td>
+      <td><%= link_to 'Edit', edit_metaform_path(metaform) %></td>
+      <td><%= link_to 'Destroy', metaform, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %> <!-- end CanCan -->
   </tr>
 <% end %>
 </table>

@@ -46,6 +46,7 @@
 //= require documents_for_collections
 //= require searches
 //= require metaforms
+//= require jquery.tabletojson
 
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 

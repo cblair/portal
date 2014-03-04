@@ -1,4 +1,5 @@
 <div class="hero-unit">
+<<<<<<< HEAD
 	<p>
 	  <b>Name:</b>
 	  <%= @document.name %>
@@ -183,5 +184,24 @@
 	
 	<hr/>
 	-->
+=======
+
+  <!-- Document Menu -->
+  <%= render "doc_menu" %>
+
+  <hr/>
+  
+  <!-- Document Metadata -->
+  <%= render "doc_metadata" %>
+
+  <hr />
+  
+  <%= render "doc_notes" %>
+  
+  <hr />
+  <% if can? :show_data, @document %>
+    <%= link_to "Show Data", show_data_path %>
+  <% end %> <!-- CanCan -->
+>>>>>>> integration
 
 </div>

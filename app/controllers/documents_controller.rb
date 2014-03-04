@@ -26,8 +26,32 @@ class DocumentsController < ApplicationController
 #=end
     end
   end
-  
-  
+
+  # PUT /documents/1/doc_md_edit
+  def doc_md_edit
+    md_table = params[:md_table]  #metadata table from MD editor
+    document = Document.find(params[:id])
+    edited_suc = false
+    
+    if (md_table != nil and document != nil)
+      edited_suc = metadata_save(md_table, document)
+    end
+    
+    #TODO: return data to md table?
+    respond_to do |format|
+      if (edited_suc == true)
+        format.html { redirect_to document, notice: "Metadata saved" }
+        format.js { render :text => "Metadata saved", notice: "Metadata saved!"}
+        format.json { head :ok }
+      else
+        format.html { render action: "show" }
+        format.js { render :text => "Error: metadata could not be saved",
+          notice: "Metadata not saved!" }
+        format.json { render json: document.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # GET /documents
   # GET /documents.json
   def index
@@ -88,40 +112,30 @@ class DocumentsController < ApplicationController
     end
   end
 
+  # GET /documents/1/show_data
+  def show_data
+    @document = Document.find(params[:id])
+    authorize! :show_data, @document if params[:id]
+    @msdata = get_document_metadata(@document)
+    @notes = @document.stuffing_notes
+    
+    get_menu()
+    get_show_data()
+  end
+
   # GET /documents/1
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
-    
-    @sdata = @document.stuffing_data
     @msdata = get_document_metadata(@document)
+    @notes = @document.stuffing_notes
+    get_menu()
 
-    @doc_collection = Collection.find(@document.collection_id)
-    
-    @job = nil
-    if @document.job_id != nil
-      begin ActiveRecord::RecordNotFound
-        @job = Job.find(@document.job_id)
-      rescue
-        @job = false
-        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
-      end
-    end
-
-    current_page = params[:page]
-    per_page = params[:per_page] # could be configurable or fixed in your app
-    
-    @paged_sdata = []
-    if @sdata != nil
-      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
-    end
-    
-    chart = Chart.find_by_document_id(@document)
-    @chart = chart || Chart.find(newchart({:document_id => @document}))
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
+
   end
 
   #Shows the JSON like the show() method would normally do. show() is doing datatable
@@ -173,8 +187,10 @@ class DocumentsController < ApplicationController
 
   def edit_text
     @document = Document.find(params[:id])
-
-
+  end
+  
+  def edit_notes
+    @document = Document.find(params[:id])
   end
 
   # POST /documents
@@ -205,16 +221,17 @@ class DocumentsController < ApplicationController
 
     suc_msg = 'Document was successfully updated. '
       
-    #if we're in document text edit mode
+    #if we're in document text edit mode, or notes edit mode
     if (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_text")
       @document.stuffing_text = params["document"]["stuffing_text"]
+      update_suc = @document.save
+    elsif (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_notes")
+      @document.stuffing_notes = params["document"]["stuffing_notes"]
       update_suc = @document.save
     else
       #Add doc to project
       if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
         project = Project.find(params[:proj][:id])
-          #p("*** doc proj = ", project.name, project.id) #debug
-          #p("*** doc = ", @document.name, @document.id) #debug
         if (project != nil)
           add_project_doc(project, @document) #call to document helper, adds doc to project
         end

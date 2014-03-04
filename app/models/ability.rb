@@ -44,7 +44,8 @@ class Ability
     can :manage, Project, :user_id => user.id #user/currrent ID is owner ID
     can :manage, Collection, :user_id => user.id
     can :manage, Document, :user_id => user.id
-    #can :manage, Metaform, :user_id => user.id
+    can :manage, Metaform, :user_id => user.id #For main scaffold
+    can :add_md, Document, :user_id => user.id #Custom action, adding metadata to document
     
     #Editor access permissions
     can :manage, Project, :collaborators => { :user_id => user.id, :editor => true }
@@ -55,6 +56,7 @@ class Ability
     can :read, Project, :collaborators => { :user_id => user.id }
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
     can :read, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
+    can :show_data, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}} #not sure why "read doc" dose not cover this.
     
     #SAS: This rule version should be depricated but keep it for now
     #can :read, Document do |doc|
@@ -68,5 +70,6 @@ class Ability
     can :read, Project, :public => true
     can :read, Collection, :projects => { :public => true }
     can :read, Document, :collection => { :projects => { :public => true }}
+    can :show_data, Document, :collection => { :projects => { :public => true }}
   end
 end

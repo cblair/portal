@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+metarow1:
+  id: 1
+  metaform_id: 1
+  key: "Metarow 1"
+  value: "This is metarow 1 unit test."
+  autofill: true
+  user_id: 1
+
+metarow2:
+  id: 2
+  metaform_id: 1
+  key: "Metarow 2"
+  value: "This is metarow 2 unit test."
+  autofill: true
+  user_id: 1
+  
+metarow3:
+  id: 3
+  metaform_id: 1
+  key: "Metarow 3"
+  value: "This is metarow 3 unit test."
+  autofill: false
+  user_id: 1
