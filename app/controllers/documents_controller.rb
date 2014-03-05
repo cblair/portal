@@ -131,6 +131,26 @@ class DocumentsController < ApplicationController
     @notes = @document.stuffing_notes
     get_menu()
 
+    @doc_collection = Collection.find(@document.collection_id)
+    
+    @job = nil
+    if @document.job_id != nil
+      begin ActiveRecord::RecordNotFound
+        @job = Job.find(@document.job_id)
+      rescue
+        @job = false
+        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
+      end
+    end
+
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
