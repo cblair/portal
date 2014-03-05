@@ -37,14 +37,11 @@ Portal::Application.routes.draw do
   match '/documents_manip' => "documents#manip", :as => :document_manip
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   match '/documents/edit_text/:id' => "documents#edit_text", :as => "edit_document_text"
-<<<<<<< HEAD
   match '/documents/show_simple_json/:id' => "documents#show_simple_json", :as => "show_simple_json"
-=======
   match '/documents/:id/edit_notes' => "documents#edit_notes", :as => "edit_notes_text"
   match '/documents/:id/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data' => "documents#show_data", :as => :show_data
->>>>>>> integration
   resources :documents
 
   resources :collections
