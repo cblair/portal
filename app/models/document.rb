@@ -181,8 +181,8 @@ class Document < ActiveRecord::Base
     #Hack for now - add all column keys to primary keys for search
     self.stuffing_primary_keys = get_data_colnames(self.stuffing_data)
     self.save
-    
-    #Creates metadata index list in a document for sorting
+=begin
+    #Creates metadata index list in a document for (ace/dec) sorting
     if (self.stuffing_metadata == nil)
       self.stuffing_metadata_index = nil  #No metadata
     else
@@ -194,7 +194,7 @@ class Document < ActiveRecord::Base
       self.stuffing_metadata_index = md_index
       self.save
     end
-    
+=end
     return suc_valid
   end
 

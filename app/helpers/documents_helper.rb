@@ -13,6 +13,9 @@ module DocumentsHelper
   #if Rails.env.test?
   #  include Devise::TestHelpers
   #end
+=begin
+  #The following code is for asc/dec sorting, but is not currently
+  # being used.
   
   #Sorts metadata (by means of an index list) before display.
   def sort_metadata(md_index)
@@ -89,9 +92,7 @@ module DocumentsHelper
     
     return true
   end
-  
-  #Recreates metadata sort index if
-  
+=end
 #-----------------------------------------------------------------------
   #Gets metadata and sorts it for display
   def get_metadata
@@ -100,8 +101,8 @@ module DocumentsHelper
     end
     
     @msdata = get_document_metadata(@document)
-    md_index = get_md_index() #Gets metadata index for sorting
-    sort_metadata(md_index) #Sorts metadata
+    #md_index = get_md_index() #Gets metadata index for (ace/dec) sorting 
+    #sort_metadata(md_index) #Sorts metadata (ace/dec)
   end
 
   #Gets menu data for display.
