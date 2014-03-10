@@ -77,7 +77,11 @@ gem 'cancan'
 
 #Only for development
 group :development do
-  gem 'debugger'
+  #Debugger for ruby < 1.9.x
+  #gem 'debugger'
+  #Debugger for ruby >= 2.0.0
+  gem 'byebug'
+
   gem "ruby-prof"
   gem 'simplecov', :require => false, :group => :test
   gem 'rack-mini-profiler'

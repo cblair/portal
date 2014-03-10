@@ -15,7 +15,12 @@ class DocumentsController < ApplicationController
       document = Document.find(params[:id])
 #=begin
       if not doc_is_viewable(document, current_user)
-        flash[:error] = "Document not found, or you do not have permissions for this action."
+
+        flash[:error] = "Document not found, or you do not have permissions for this action. ".html_safe
+        if document
+          flash[:error] += view_context.mail_to document.user.email, "Request access via email.", subject: "Requesting access to #{document.name}"
+        end
+
         redirect_to collections_path
       end
 #=end
@@ -126,11 +131,53 @@ class DocumentsController < ApplicationController
     get_metadata()
     @notes = @document.stuffing_notes
 
+    @doc_collection = Collection.find(@document.collection_id)
+    
+    @job = nil
+    if @document.job_id != nil
+      begin ActiveRecord::RecordNotFound
+        @job = Job.find(@document.job_id)
+      rescue
+        @job = false
+        puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
+      end
+    end
+
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
 
+  end
+
+  #Shows the JSON like the show() method would normally do. show() is doing datatable
+  # JSON, so this method will do the normal JSON.
+  def show_simple_json
+    @document_object = Document.find(params[:id]).as_json
+
+    job = Job.find(@document_object["job_id"].to_i)
+
+    #Let's add some extra stuff, like some job data, for JS.
+    @document_object['job_succeeded'] = job[:succeeded] \
+      rescue @document_object['job_succeeded'] = false
+    @document_object['job_waiting'] = job[:waiting] \
+      rescue @document_object['job_waiting'] = false
+    @document_object['job_started'] = job[:started] \
+      rescue @document_object['job_started'] = false
+    @document_object['job_error_or_output'] = job.get_error_or_output \
+      rescue @document_object['job_error_or_output'] = false
+
+    respond_to do |format|
+      format.json { render json: @document_object }
+    end
   end
   
   # GET /documents/new

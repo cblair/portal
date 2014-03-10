@@ -83,11 +83,15 @@ class Job < ActiveRecord::Base
   def safe_html(key)
     s = self[key]
 
-    #drop <> chars 
-    s = s.gsub(/[<>]/, '')
-    #turn newlines into breaks
-    s = s.gsub(/\n/, '<br />')
-
+    if s != nil
+      #drop <> chars 
+      s = s.gsub(/[<>]/, '')
+      #turn newlines into breaks
+      s = s.gsub(/\n/, '<br />')
+    else
+      s = ""
+    end
+    
     s
   end
 

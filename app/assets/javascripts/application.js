@@ -39,7 +39,7 @@
 //= require live_scaffolds
 //= require paging
 //= require uploads
-//= require viz
+//= require simple_jquery
 //= require jobs
 //= require home_datatable_example
 //= require documents

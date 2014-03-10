@@ -23,30 +23,35 @@
 
 <% end %>
 
-<div id="notice" class="alert alert-info document-name-results-only">
+<div id="notice" class="alert alert-info document-name-results-only" style="display: none;">
 	<a class="close" data-dismiss="alert" href="#">×</a>
-	Your search may have found matching documents, but search found no column names in common.
+	<!--Our search JS will put text here.-->
+	<span></span>
 </div>
+
+
 
 <div id="notice" class="alert alert-info search-alert-other">
 	<a class="close" data-dismiss="alert" href="#">×</a>
 	<h4>Search results:</h4>
 	<p id="search-alert-other-msg"></p>
 
-	  <button class="btn btn-success save-doc-from-search-button" data-enabled="false" data-source-url="<%= save_doc_from_search_path %>">
+	  <button class="btn btn-success save-doc-from-search-button" 
+	  	data-enabled="false" data-source-url="<%= save_doc_from_search_path %>">
   		<i class="icon-save"></i> Save as...
 	  </button>	
 </div>
 
 <div id="notice" class="alert alert-info search-alert-pending" data-search-completed="false" style="display: none;">
 	<a class="close" data-dismiss="alert" href="#">×</a>
-	<p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i> The search server is taking longer than expected, and is busy with other search requests. You can wait for your requests to complete, or try again later. We apologize for the delay.</p>
+	<p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i></p>
+	<span></span>
 </div>
 
 <div class="hero-unit">
 
 	<form id="main-search" class="navbar-form pull-left">
-	  <input type="text" id="main-search" class="span2" placeholder="Search...">
+	  <input type="text" id="main-search" class="span2" placeholder="Search..." data-recommendation-source="<%= search_recommendations_path %>">
 	  <button type="submit" class="btn">
 	  	<i class="icon-search search-button"></i>
 	  </button>
@@ -68,7 +73,12 @@
 
 <!--Display data-->
 	<% default_search = params[:default_search] or "" %>
-	<div class="container-fluid" id="main-search-results" style="display: none;" data-init-source="<%= search_init_path(:format => :json) %>" data-source="<%= search_all_path(:format => :json) %>" data-default-search="<%= default_search %>">
+	<div class="container-fluid" id="main-search-results" style="display: none;" 
+		data-init-source="<%= search_init_path(:format => :json) %>" 
+		data-source="<%= search_all_path(:format => :json) %>" 
+		data-default-search="<%= default_search %>" 
+		data-merge-job-source="<%= save_doc_from_merge_search_path(:format => :json) %>"
+		>
 		<!--Our Datatable template will get inserted here by JS-->
 	</div>
 </div>

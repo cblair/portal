@@ -1,3 +1,6 @@
+#TODO: this file nees much refactoring; most methods to be
+# called through the dispatcher, and the redundant portion taken out
+
 module SearchesHelper
   include CouchdbHelper
   require 'net/https'
@@ -7,6 +10,61 @@ module SearchesHelper
     #logger.info str
     puts str
   end
+
+  def couch_dispatcher(design_doc_name, view_name, options = {})
+    data = []
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/#{design_doc_name}/_view/#{view_name}"
+    
+    @options = options
+    conn_str += send(design_doc_name)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)
+    end
+
+    puts data 
+    return data["rows"]
+  end
+
+  def all_data_keys
+    search = @options[:search]
+    limit = @options[:limit] || 10
+
+    params = "?group=true"
+    params += "&limit=#{limit}"
+
+    #Start key starts with whatever the 
+    startkey = '"' + CGI.escape("#{search}") + '"'
+    #Get the last possible key with this prefix ('z'). It would be better to
+    # set this to the end of the UTF values (or even ASCII), but the latest
+    # working char is 'z'.
+    endkey =   '"' + CGI.escape("#{search}z") + '"'
+
+    params += "&startkey=" + startkey
+    params += "&endkey=" + endkey
+
+    params
+  end
+
+  #############################################################################
+  ## The following need refactoring to use couch_dispatcher().
+  #############################################################################
 
   def couch_search_count_data_in_document(search, lucky_search = false)
     data = []
@@ -105,6 +163,97 @@ module SearchesHelper
 
     return data
   end
+
+  #
+  # doc_id - The document ID.
+  # limit - how many rows to return.
+  # skip - how many rows to skip.
+  def couchdb_view__all_rows(doc_id, limit, skip)
+    data = []
+
+    doc_id = doc_id.to_i #verify the id is really an int
+    limit = limit.to_s
+    skip = skip.to_s
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/all_rows/_view/view1"
+
+    startkey = "\"Document-#{doc_id.to_s}\""
+    endkey = "\"Document-#{doc_id.to_s}\""
+
+    conn_str += "?startkey=" + CGI.escape(startkey)
+    conn_str += "&endkey=" + CGI.escape(endkey)
+
+    conn_str += "&limit=" + CGI.escape(limit)
+    conn_str += "&skip=" + CGI.escape(skip)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
+
+    if data == nil
+      data = []
+    end
+
+    return data
+  end
+
+
+  def couchdb_view__all_row_count(doc_id)
+    data = []
+
+    doc_id = doc_id.to_i #verify the id is really an int
+    limit = limit.to_s
+    skip = skip.to_s
+
+    conn_hash = get_http_connection_hash
+
+    conn_str = "/#{get_database_name}/_design/all_row_count/_view/view1"
+
+    startkey = "\"Document-#{doc_id.to_s}\""
+    endkey = "\"Document-#{doc_id.to_s}\""
+
+    conn_str += "?startkey=" + CGI.escape(startkey)
+    conn_str += "&endkey=" + CGI.escape(endkey)
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      req = Net::HTTP::Get.new(conn_str)
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+
+      data = JSON.parse(http.request(req).body)["rows"]
+    end
+
+    if data == nil
+      data = []
+    end
+
+    return data
+  end
+
 
   def elastic_search_all_data(search, mode="doc_names")
     data = []
@@ -224,8 +373,14 @@ module SearchesHelper
     colnames
   end
 
+  #Gets only the viewabled docs
   def get_docs_from_raw_es_data(raw_data, current_user)
-    retval = []
+    return get_viewable_and_nonviewable_docs_from_raw_es_data(raw_data, current_user)[:viewable_docs]
+  end
+
+  #Gets all docs
+  def get_viewable_and_nonviewable_docs_from_raw_es_data(raw_data, current_user)
+    retval = {:viewable_docs => [], :unviewable_docs => []}
 
     if raw_data
       raw_data.collect do |row|
@@ -243,12 +398,13 @@ module SearchesHelper
         if doc == nil
           log_and_print "WARN: Document #{doc_name} with id #{doc_id} not found"
         elsif doc_is_viewable(doc, current_user)
-          retval << doc
+          retval[:viewable_docs] << doc
+        else
+          retval[:unviewable_docs] << doc
         end
       end
     end
     
     retval
   end
-
 end

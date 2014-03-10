@@ -37,6 +37,7 @@ Portal::Application.routes.draw do
   match '/documents_manip' => "documents#manip", :as => :document_manip
   match '/documents/search_test' => "documents#search_test", :as => :document_search_test
   match '/documents/edit_text/:id' => "documents#edit_text", :as => "edit_document_text"
+  match '/documents/show_simple_json/:id' => "documents#show_simple_json", :as => "show_simple_json"
   match '/documents/:id/edit_notes' => "documents#edit_notes", :as => "edit_notes_text"
   match '/documents/:id/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
@@ -50,6 +51,8 @@ Portal::Application.routes.draw do
   match '/search/search_all' => "searches#search_all", :as => :search_all
   match '/search/new' => "searches#new", :as => :new_search
   match '/search/save_doc_from_search' => "searches#save_doc_from_search", :as => :save_doc_from_search
+  match '/search/save_doc_from_merge_search' => "searches#save_doc_from_merge_search", :as => :save_doc_from_merge_search
+  match '/search/search_recommendations' => "searches#search_recommendations", :as => :search_recommendations
 
   match '/metaforms/mdf_input' => "metaforms#mdf_input", :as => :mdf_input
   match '/metaforms/mdf_save' => "metaforms#mdf_save", :as => :mdf_save

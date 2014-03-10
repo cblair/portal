@@ -15,33 +15,149 @@ module ElasticsearchHelper
     @@document_count
   end
 
-  #Facet Searches ------------------------------------------------------
-  #Takes a query and field string, returns terms facet information
-  #Returns metadata only
-  def self.es_terms_facet(qstr, sfield, flag)
-    str = search_type(flag)
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
-    qbody = "
-    {#{str}
-     \"query\": 
-      {\"query_string\": {\"query\":\"#{qstr}\"} },
-       \"facets\": 
-         {\"#{sfield}\": 
-              {\"terms\": 
-                {\"field\" : \"#{sfield}\"}
-              }
-         }
-    }'"
+  #############################################################################
+  ##  Internal utility methods
+  #############################################################################
+
+  #Basic URL search, for testing
+  def self.elastic_search_url(search)
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
+    #data = []
+    data = es_connect_md(conn_str, qbody)
     
+    return data
+  end
+  
+  #Takes ES connection string, calls http, performs some post processing,
+  # returns document metadata, not the full doc.
+  def self.es_connect_md(conn_str, qbody, get_full_data = false)
+    conn_hash = get_http_connection_hash
+    #override with elasticsearch's port
+    conn_hash[:port] = 9200
+    
+    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
     data = []
-    case flag
-    when "m"
-      data = es_connect_md(conn_str, qbody) #metadata
-    when "f"
-      data = es_connect(conn_str, qbody) #full document
+
+    begin
+      #Get the document count
+      @@document_count = full_data["hits"]["total"]
+      
+      if get_full_data
+        data = full_data
+      else
+        hits = full_data["hits"]["hits"]
+        data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
+      end
+    rescue NoMethodError
+      puts "WARN: ES query missing data in reponse."
+      #Leaving this reporting data out, as its too slow.
+      #puts full_data.to_s
     end
 
     return data
+  end
+
+  #Takes ES connection string, calls http, performs some post processing,
+  # returns raw queried data, full documents.
+  def self.es_connect(conn_str, qbody, get_full_data = false)
+    conn_hash = get_http_connection_hash
+    #override with elasticsearch's port
+    conn_hash[:port] = 9200
+    
+    puts "Elasticsearch query: #{conn_str} -d '#{qbody}', with connection:"
+    puts conn_hash.inspect
+
+    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
+    begin
+      #Get the document count
+      @@document_count = full_data["hits"]["total"]
+
+      #Return all the data if wanted, else just the hits.
+      if get_full_data
+        data = full_data
+      else
+        data = full_data["hits"]["hits"]
+      end
+    rescue
+      log_and_print "WARN: search had not results."
+      #Leaving this reporting data out, as its too slow.
+      #log_and_print full_data.inspect
+    end
+
+    return data
+  end
+  
+  #SAS new version, needed for more advanced ES queries
+  def self.get_es_http_search_result2(conn_hash, conn_str, qbody)
+    #Last formatting needed for multiline JSON.
+    conn_str += "-d "
+    qbody = "#{qbody}"
+
+    puts "Sending ES request: #{conn_str} #{qbody} with connection:"
+    puts conn_hash.inspect
+
+    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
+
+    if conn_hash[:https] == true
+      http.use_ssl = true
+    end
+
+    data = []
+    http.start do |http|
+      uri = URI.encode(conn_str) #Encodes URL part into uri obj
+      
+      req = Net::HTTP::Get.new(uri)
+      req.body = qbody #Appends JSON query to uri, should be seperate from connection string
+
+      if conn_hash[:https] == true
+        req.basic_auth(conn_hash[:username], conn_hash[:password])
+      end
+      
+      response_data = http.request(req)
+      data = JSON.parse(response_data.body)
+      
+    end
+
+    return data
+  end
+  
+  #Determines if the search should return document metadata only or the
+  # full document
+  def self.search_type(flag)
+    str = ""
+    
+    if (flag == "m")
+      str = "\"fields\" : []" #ES command for document metadata only
+    elsif (flag == "f")
+      str = ""
+    end
+    
+    return str
+  end
+
+
+  #############################################################################
+  ##  Facet searches
+  ##  TODO: Most of these are out of data; they should be refactored to return
+  ##  the query body string, not the actual data (see es_terms_facet).
+  #############################################################################
+
+  #Takes a query and field string, returns terms facet information
+  #Returns metadata only
+  def self.es_terms_facet(qstr, options)
+    qbody = "
+    {
+      \"query\": {\"query_string\": {\"query\":\"#{qstr}\"} },
+      \"facets\": 
+         {\"#{options[:sfield]}\": 
+              {
+                \"terms\": {\"field\" : \"#{options[:sfield]}\"}
+              },
+              \"type\": \"nested\"
+         }
+    }"
+
+    return qbody
   end
   
   #Takes a starting and ending value plus a field, returns a range facet
@@ -70,10 +186,10 @@ module ElasticsearchHelper
     
     data = []
     case flag
-    when "m"
-      data = es_connect_md(conn_str, qbody) #metadata
-    when "f"
-      data = es_connect(conn_str, qbody) #full document
+      when "m"
+        data = es_connect_md(conn_str, qbody) #metadata
+      when "f"
+        data = es_connect(conn_str, qbody) #full document
     end
 
     return data
@@ -260,6 +376,11 @@ module ElasticsearchHelper
   
 
   def self.es_search_dispatcher(type, qstr, options)
+    #Get required options.
+    get_full_data = options[:get_full_data] || false
+    flag = options[:flag] || 'm'
+    flag_str = search_type(flag)
+
     #Strip off beginning and end url escape single quotes from the query string,
     # if they exist
     if (qstr[0] == "'") && (qstr[-1] == "'")
@@ -270,37 +391,21 @@ module ElasticsearchHelper
     #TODO: we need to escape some chars, but URI escape is too much and will fail
     #qstr = URI.escape(qstr)
 
-    flag = options[:flag] || 'm'
-    from = options[:from] || nil
-    size = options[:size] || nil
-
-    flag_str = search_type(flag)
-
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
-    search_str = es_query_string_search(qstr)
-    from_and_size_str = es_from_and_size_str(from, size)
-
-    #add a delim if necessary
-    if flag_str != ""
-      flag_str += ","
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true "
+    
+    #Get the string from the respective search.
+    if type == "es_query_string_search"
+      search_str = es_query_string_search(qstr, options)
+    elsif type == "es_terms_facet"
+      search_str = es_terms_facet(qstr, options)
     end
-    if from_and_size_str != ""
-      from_and_size_str += ","
-    end
-
-    qbody = "
-    {
-      #{from_and_size_str}
-      #{flag_str}
-      #{search_str}
-    }'"
     
     data = []
     case flag
-    when "m"
-      data = es_connect_md(conn_str, qbody) #metadata
-    when "f"
-      data = es_connect(conn_str, qbody) #full document
+      when "m"
+        data = es_connect_md(conn_str, search_str, get_full_data) #metadata
+      when "f"
+        data = es_connect(conn_str, search_str, get_full_data) #full document
     end
     
     return data
@@ -321,35 +426,33 @@ module ElasticsearchHelper
 
   #Query String: uses a query parser in order to parse its content
   #Input: query string
-  def self.es_query_string_search(qstr)
-  return "
-    \"query\" : {
-       \"query_string\" : {
-         \"query\" : \"#{qstr}\"
-        }
-      }"
-=begin
-    str = search_type(flag)
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true -d '"
-    qbody = "
-    {#{str}
-     \"query\" : {
-       \"query_string\" : {
-         \"query\" : \"#{qstr}\"
-        }
-      }
-    }'"
+  def self.es_query_string_search(qstr, options)
+    flag = options[:flag] || 'm'
+    from = options[:from] || nil
+    size = options[:size] || nil
+
+    flag_str = search_type(flag)
     
-    data = []
-    case flag
-    when "m"
-      data = es_connect_md(conn_str, qbody) #metadata
-    when "f"
-      data = es_connect(conn_str, qbody) #full document
+    from_and_size_str = es_from_and_size_str(from, size)
+
+    #add a delim if necessary
+    if flag_str != ""
+      flag_str += ","
     end
-    
-    return data
-=end
+    if from_and_size_str != ""
+      from_and_size_str += ","
+    end
+
+    return "
+    {
+      #{from_and_size_str}
+      #{flag_str}
+      \"query\" : {
+         \"query_string\" : {
+           \"query\" : \"#{qstr}\"
+          }
+        }
+    }"
   end
   
   #Range: Matches documents with fields that have terms within a certain range
@@ -442,113 +545,6 @@ module ElasticsearchHelper
     data = es_connect_md(conn_str, qbody) #metadata
     
     return data
-  end
-
-  #Basic URL search, for testing
-  def self.elastic_search_url(search)
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?q=#{search}"
-    #data = []
-    data = es_connect_md(conn_str, qbody)
-    
-    return data
-  end
-  
-  #Takes ES connection string, calls http, performs some post processing,
-  # returns document metadata, not the full doc.
-  def self.es_connect_md(conn_str, qbody)
-    conn_hash = get_http_connection_hash
-    #override with elasticsearch's port
-    conn_hash[:port] = 9200
-    
-    puts "Elasticsearch query: #{conn_str} #{qbody}, with connection:"
-    puts conn_hash.inspect
-
-    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
-    data = []
-
-    begin
-      #Get the document count
-      @@document_count = full_data["hits"]["total"]
-      
-      hits = full_data["hits"]["hits"]
-      data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
-    rescue NoMethodError
-      log_and_print "WARN: elastic_search_all_data missing data in reponse."
-      #Leaving this reporting data out, as its too slow.
-      #log_and_print full_data.to_s
-    end
-
-    return data
-  end
-
-  #Takes ES connection string, calls http, performs some post processing,
-  # returns raw queried data, full documents.
-  def self.es_connect(conn_str, qbody)
-    conn_hash = get_http_connection_hash
-    #override with elasticsearch's port
-    conn_hash[:port] = 9200
-    
-    puts "Elasticsearch query: #{conn_str} #{qbody}, with connection:"
-    puts conn_hash.inspect
-
-    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
-
-    begin
-      #Get the document count
-      @@document_count = full_data["hits"]["total"]
-
-      data = full_data["hits"]["hits"]
-    rescue
-      log_and_print "WARN: search had not results."
-      #Leaving this reporting data out, as its too slow.
-      #log_and_print full_data.inspect
-    end
-
-    return data
-  end
-  
-  #SAS new version, needed for more advanced ES queries
-  def self.get_es_http_search_result2(conn_hash, conn_str, qbody)
-    http = Net::HTTP.new(conn_hash[:host], conn_hash[:port])
-
-    if conn_hash[:https] == true
-      http.use_ssl = true
-    end
-
-    data = []
-    http.start do |http|
-      uri = URI.encode(conn_str) #Encodes URL part into uri obj
-      
-      req = Net::HTTP::Get.new(uri)
-      req.body = qbody #Appends JSON query to uri, should be seperate from connection string
-
-      if conn_hash[:https] == true
-        req.basic_auth(conn_hash[:username], conn_hash[:password])
-      end
-      
-      response_data = http.request(req)
-      data = JSON.parse(response_data.body)
-      
-    end
-
-    return data
-  end
-  
-  #---------------------------------------------------------------------
-  #Other helper functions
-  
-  #Determines if the search should return document metadata only or the
-  # full document
-  def self.search_type(flag)
-    str = ""
-    
-    if (flag == "m")
-      str = "\"fields\" : []" #ES command for document metadata only
-    elsif (flag == "f")
-      str = ""
-    end
-    
-    return str
   end
 
 end

@@ -45,6 +45,12 @@ class HomeController < ApplicationController
         |.js_code)
     end
 
+    #For upoad/import demo
+    c = Collection.find_or_create_by_name(:name => "Demo Collection")
+    c.user = current_user
+    c.save
+    @root_collections = [c] 
+
   end
 
   

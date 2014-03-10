@@ -1,6 +1,8 @@
 class Document < ActiveRecord::Base
   include CouchdbHelper
   include DocumentsHelper
+  include SearchesDatatableHelper
+  include SearchesHelper
   require 'stuffing'
   require 'hatch_custom_exceptions'
 
@@ -16,6 +18,7 @@ class Document < ActiveRecord::Base
   belongs_to :user                #owner
   belongs_to :project
   has_many :charts, :dependent => :destroy
+  belongs_to :job
   
   stuffing  :host     => Portal::Application.config.couchdb['COUCHDB_HOST'], 
             :port     => Portal::Application.config.couchdb['COUCHDB_PORT'],
@@ -24,15 +27,18 @@ class Document < ActiveRecord::Base
             :https    => Portal::Application.config.couchdb['COUCHDB_HTTPS']
 
 
-  def create_default_couchdb(called_by_init=false)
-    if (called_by_init == true and is_couchdb_running?(
+  def create_default_couchdb
+    #TODO: since moving to couchdb 1.5.0, we're moving away from couchdb views.
+    # So most of this method will go away.
+    return
+
+    if (Rails.cache.fetch("document_model_initialized") != true) && is_couchdb_running?(
               host     = Portal::Application.config.couchdb['COUCHDB_HOST'], 
               port     = Portal::Application.config.couchdb['COUCHDB_PORT'],
               username = Portal::Application.config.couchdb['COUCHDB_USERNAME'],
               password = Portal::Application.config.couchdb['COUCHDB_PASSWORD'],
               https    = Portal::Application.config.couchdb['COUCHDB_HTTPS']
-        )
-    )
+      )
       if !self.view_exists("all_data_values")
         self.create_simple_view("all_data_values", 
                                 "function(doc) {
@@ -60,6 +66,8 @@ class Document < ActiveRecord::Base
                                   }
                                   return(retval);
                                 }")
+      end
+      if !self.view_exists("row_by_doc_and_data")
         self.create_simple_view("row_by_doc_and_data", 
                                 "function(doc) {
                                   if(doc.primary_keys) {
@@ -75,8 +83,34 @@ class Document < ActiveRecord::Base
                                       }
                                     }
                                   }
-                                }")
+                                }",
+                                "")
       end
+      if !self.view_exists("all_rows")
+        self.create_simple_view("all_rows",
+"function(doc) {
+    for(data_i in doc.data) {
+       var row = doc.data[data_i];
+       emit(doc._id, row);
+    }
+  }",
+"")
+      end
+      if !self.view_exists("all_row_count")
+        self.create_simple_view("all_row_count",
+"function(doc) {
+    var data_i = 0;
+    var count = 0;
+    for(data_i in doc.data) {
+      count = count + 1;
+    }
+    emit(doc._id, count);
+}",
+"")
+      end
+
+      #Mark ourselves as initialized.
+      Rails.cache.write("document_model_initialized", true)
     end
   end
 
@@ -199,12 +233,79 @@ class Document < ActiveRecord::Base
   end
 
 
-  def submit_job(job, options)
+  def create_merge_search_document(search, view, current_user)
+    #Set up our view context so we can delegate merge search stuff.
+    @view = view
+
+    #Get doc list, so we can get colnames in common
+    options =   {
+                  #set the ES from (search offset) field from the last doc search
+                  :from => doc_search_page,
+                  #set the ES size (how many from search offset) field from the last doc search
+                  # per_page method
+                  :size => doc_search_per_page
+                }
+
+    options[:flag] = 'f'
+    results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+
+    doc_list = get_docs_from_raw_es_data(results, current_user)
+    colnames = []
+
+    #Don't let unvalidated docs screw up the search results
+    validated_doc_list = doc_list.reject {|doc| !doc.validated }
+    if !validated_doc_list.empty?
+      colnames = get_colnames_in_common(validated_doc_list)
+    end
+
+    raw_data = results
+
+    doc_data = []
+    if raw_data
+      #Set the total documents found in the results, in case we later
+      # determine that we only have document results and the return
+      # data is already paginated from ES, so a data.count would be
+      # wrong
+      @document_count = ElasticsearchHelper.get_document_count
+
+      raw_data.collect do |row|
+        doc_name = row["_source"]["_id"]
+        score = row["_score"]
+        doc_id = doc_name.sub("Document-", "").to_i
+
+        begin
+          doc = Document.find(doc_id)
+        rescue ActiveRecord::RecordNotFound
+          log_and_print "WARN: Document with id #{doc_id} not found in search. Skipping."
+          #better decrement our document_count for the results
+          next
+        end
+
+        #Only merge in data that this user can view, even though SearchAllDatable would
+        # show them any and every doc's metadata
+        if doc_is_viewable(self, current_user)
+          colnames_in_common_and_merge_search =  (!colnames.empty?) && (merge_search)
+          if colnames_in_common_and_merge_search && doc.validated
+            row["_source"]["data"].map do |data_row| 
+              doc_data << data_row
+            end #end row...map
+          end #end if doc.validated
+        end #end if doc_is_viewable
+      end #end raw_data.collect
+    end #end raw_data
+
+    c = Collection.find_or_create_by_name(:name => "From Merged Search")
+    c.user_id = current_user.id
+    c.save
+    self.collection = c
+    self.stuffing_data = doc_data
+    self.user_id = current_user.id
+  end
+
+
+  def validate_document_with_job(job, options)
     puts "########################################################"
     puts "Validating doc #{self.name}..."
-
-    self.job_id = job.id
-    self.save
 
     ifilter = get_ifilter(options[:ifilter_id].to_i) or nil
 
@@ -223,7 +324,55 @@ class Document < ActiveRecord::Base
     
     puts "Validating doc #{self.name} complete!"
     puts "########################################################"
+  end
+
+
+  def merge_search_with_job(job, options)
+    puts "########################################################"
+    puts "Merging doc #{self.name}..."
+
+    #Get the original search query.
+    search = params["searchval"]
+
+    #We assume the user to merge with is the user that submitted the job
+    current_user = job.user
+
+    #Get the params
+
+    #Do the merge.
+    self.create_merge_search_document(search, @view, current_user)
+
+    #If we made it this far, all is well.
+    job.succeeded = true
+    job.output = "Document merged successfully."
+
+    puts "Merging doc #{self.name} complete!"
+    puts "########################################################"
+  end
+
+
+  def submit_job(job, options)
+    #Save params from original web request.
+    self.stuffing_params = options[:params]
+
+    self.job_id = job.id
+    self.save
+
+    if options[:mode] == :merge_search
+      merge_search_with_job job, options
+    else
+      validate_document_with_job job, options
+    end
+
     job.finished = true
     job.save
+  end
+
+
+  #Return saved params from original web request, usually for a Job.
+  # Used implicitly by a lot of (seach) helpers who normally would
+  # see this global set by view_context
+  def params
+    self.stuffing_params
   end
 end

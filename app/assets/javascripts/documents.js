@@ -1,5 +1,8 @@
 var DOCUMENTS_SEARCH_TABLE = null;
 
+//Poll every 5 seconds.
+var JOB_DATA_POLL_INTERVAL = 5000;
+
 jQuery(function($) {
 
   function runDocumentsControllerJS() {

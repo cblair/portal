@@ -73,14 +73,6 @@ jQuery(function($) {
       			if (e.keyCode != 13) return;
       			search_table.fnFilter($(this).val());
     		});
-
-    	//TODO: don't think we need this anymore
-    	/*
-    	if(searchVal != undefined) {
-	    	//Call search to filter from our initial search val
-    		search_table.fnFilter(searchVal);
-    	}
-    	*/	
 	}
 
 	function changeSearchIconToRefresh() {
@@ -155,7 +147,8 @@ jQuery(function($) {
 	function updatePendingSearchAlert() {
 		if($('div.search-alert-pending').data('search-completed') === "false")
 		{
-			console.log("TS161");
+			$('p#search-alert-pending-msg').text(
+				'The search server is taking longer than expected, and is busy with other search requests. You can wait for your requests to complete, or try again later. We apologize for the delay.');
 			$('div.search-alert-pending').fadeIn();
 		}
 	}
@@ -165,8 +158,6 @@ jQuery(function($) {
 		var searchLength = $('div#search_length select option:selected').val();
 		$('button.merge-button').data('document-active-paginate', activePaginate);
 		$('button.merge-button').data('document-active-search-length', searchLength);
-		console.log('TS171');
-		console.log($('button.merge-button').data('document-active-paginate'));
 	}
 
 	function updateMainSearch(e) {
@@ -198,7 +189,16 @@ jQuery(function($) {
 		//Reset search completed to false for pending search.
 		$('div.search-alert-pending').data('search-completed', 'false');
 		// ~and set a callback to show the alert after 5 seconds.
-		setTimeout(updatePendingSearchAlert, 5000);
+		var pendingAlertTimeout = 5000;
+		setTimeout(updatePendingSearchAlert, pendingAlertTimeout);
+
+		//Set timeout based on the type of search
+		var searchTimeout = 60000;
+		if(getMergeButtonParams() === "merge_search=true") {
+			//Make sure its a little longer than the pending alert,
+			// so the merge alert is the last.
+			searchTimeout = pendingAlertTimeout + 1000;
+		}
 
 		$.ajax(urlSource, {
 			//data: { data : "div.uploads" },
@@ -220,6 +220,8 @@ jQuery(function($) {
 					&&
 					(getMergeButtonParams() === "merge_search=true")
 				) {
+					$('div.document-name-results-only span').text(
+						'Your search may have found matching documents, but search found no column names in common.');
 					$('div.document-name-results-only').fadeIn();
 				} else if (getMergeButtonParams() === "merge_search=true") {
 					//Update alert content
@@ -235,6 +237,7 @@ jQuery(function($) {
 					});
 
 					//Fade in alert
+
 					$('div.search-alert-other').fadeIn();
 				}
 
@@ -253,12 +256,53 @@ jQuery(function($) {
 				// ~and hide the pending search alert, in case updatePendingSearchAlert has already
 				// fired.
 				$('div.search-alert-pending').fadeOut();
+
+				//If there were unviewabled documents, display their option in case
+				// the user wants to request access.
+				if(result['unviewable_doc_links'].length > 0) {
+					$('div.document-name-results-only span').html(
+						'You do not have valid credentials to view the following documents:<br />\n'
+						+ result['unviewable_doc_links'].join('<br />\n'));
+					$('div.document-name-results-only').fadeIn();
+				}
 			},
 			error: function(result) {
-				$('#error').show();
+				//If we timed out
+				if( (getMergeButtonParams() === "merge_search=true")
+					&& (result.statusText === "timeout")) {
+					startMergeSearchJob(searchParams);
+				}
 			},
-			//timeout after a minute
-			timeout: 60000
+			timeout: searchTimeout
+		});
+	}
+
+	function startMergeSearchJob(searchParams) {
+		var urlSource = $('#main-search-results').data('merge-job-source');
+		urlSource += searchParams;
+		$.ajax(urlSource, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//Nothing to do.
+			},
+			success: function(result) {
+				
+				$('p#search-alert-pending-msg').html(
+					'Merging the search results was taking too long, so its been moved to a Job '
+					+ '(' + result["job_link"] + ')'
+					+ ' for a Document (' + result['document_link'] + ').'
+					+ '<br />\n');
+				$('div.search-alert-pending').fadeIn();
+			},
+			error: function(result) {
+				if( (getMergeButtonParams() === "merge_search=true")
+					&& (result.statusText === "timeout")) {
+					startMergeSearchJob(searchParams);
+				}
+			},
+			//30 second timeout, but we shouldn't ever need it
+			timeout: 30000
 		});
 	}
 
@@ -324,7 +368,40 @@ jQuery(function($) {
 
 		//init other search stuff
 		initMainSearch();
+
+		//other page decorations
+		$('#search-help').tooltip();
+
+	    //decorate popovers on search results
+		//We won't know from Datatable's AJAX call when new data is displayed, 
+		//so call popover every once in a while.
+		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
+
+		//Search Autocomplete - Init
+		$('input#main-search').autocomplete({
+			source: $('input#main-search').data('recommendation-source')
+		});
 	} //end runSearchesControllerJS
+
+
+	function addSearchRecommendations(searchVal) {
+		var urlSource = $('#main-search-results').data('recommendation-source');
+		$.ajax(urlSource, {
+			//data: { data : "div.uploads" },
+			cache: false,
+			beforeSend: function(result) {
+				//Nothing to do.
+			},
+			success: function(result) {
+				console.log("TS387");
+				console.log(result);
+			},
+			error: function(result) {
+			},
+			//5 second timeout
+			timeout: 1000
+		});
+	}
 
 
 	$(document).ready(function () {
@@ -334,13 +411,5 @@ jQuery(function($) {
 		) {
 			runSearchesControllerJS();
 		}
-
-		//other page decorations
-		$('#search-help').tooltip();
-
-	    //decorate popovers on search results
-		//We won't know from Datatable's AJAX call when new data is displayed, 
-		//so call popover every once in a while.
-		setInterval(function() {decorateDocPopovers()}, 1000); //call once a second
 	}); 
 });
