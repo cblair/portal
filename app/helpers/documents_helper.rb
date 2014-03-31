@@ -13,99 +13,8 @@ module DocumentsHelper
   #if Rails.env.test?
   #  include Devise::TestHelpers
   #end
-=begin
-  #The following code is for asc/dec sorting, but is not currently
-  # being used.
-  
-  #Sorts metadata (by means of an index list) before display.
-  def sort_metadata(md_index)
-    if (@document == nil || md_index == nil)
-      return false
-    end
-  
-    md_sorted = md_index.map do |n|
-      @msdata[n]
-    end
-
-    @msdata = md_sorted
-    return true
-  end
-
-  #Gets the metadata sort index from CouchDB
-  def get_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    md_index = [] #Contains the metadata sort index
-    if (@document.stuffing_metadata_index == nil)
-      puts "###########################################################"
-      puts "Document has no metadata sort index. Attempting to create..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata == nil)
-      create_md_index()
-      return (md_index = nil)
-    elsif (@document.stuffing_metadata.length != @document.stuffing_metadata_index.length)
-      puts "###########################################################"
-      puts "Metadata has changed, rebuilding sort index..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata_index.kind_of?(Array) )
-      puts "###########################################################"
-      puts "Getting metadata sort index..."
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    else
-      puts "###########################################################"
-      puts "Unknown error"
-    end
-    
-    return false  #Unknown error
-  end
-  
-  #Creates metadata sort index if it was not created during doc import
-  def create_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    if (@document.stuffing_metadata == nil)
-      puts "###########################################################"
-      puts "No metadata or error, index not created"
-      @document.stuffing_metadata_index = nil  #No metadata
-      @document.save
-      return false
-    else
-      puts "###########################################################"
-      puts "Building metadata sort index..."
-      md_index = []
-      metadata = @document.stuffing_metadata
-      (0..metadata.length - 1).each do |i|
-        md_index[i] = i
-      end
-      @document.stuffing_metadata_index = md_index
-      @document.save
-    end
-    
-    return true
-  end
-=end
 #-----------------------------------------------------------------------
-  #Gets metadata and sorts it for display
-  def get_metadata
-    if (@document == nil)
-      return false
-    end
-    
-    @msdata = get_document_metadata(@document)
-    #md_index = get_md_index() #Gets metadata index for (ace/dec) sorting 
-    #sort_metadata(md_index) #Sorts metadata (ace/dec)
-  end
-
-  #Gets menu data for display.
+#Gets menu data for display.
   def get_menu
     if (@document == nil)
       return false
@@ -124,6 +33,91 @@ module DocumentsHelper
     end
     return true
   end
+
+  #Gets metadata and sorts it for display
+  def get_metadata
+    if (@document == nil)
+      return false
+    end
+
+    @msdata = get_document_metadata(@document) #stuffing
+    #md_index = get_md_index() #Gets metadata index for (ace/dec) sorting 
+    #sort_metadata(md_index) #Sorts metadata (ace/dec)
+    return true
+  end
+  
+  #Creates URL to be used by Rest Client to get a single key:value pair
+  # from CouchDB show function
+  # ARGS: "metadata", "data"
+  def get_couch_show_url(show_type)
+    #TODO: check args
+    cdb_url = "http://"
+    cdb_url << Portal::Application.config.couchdb['COUCHDB_HOST'] << ":"
+    cdb_url << Portal::Application.config.couchdb['COUCHDB_PORT'] << "/"
+    cdb_url << Rails.configuration.database_configuration[Rails.env]['database'] << "/"
+    cdb_url << Portal::Application.config.hatch_show_name << "/"
+    cdb_url << "_show" << "/"
+    
+    if (show_type == "metadata")
+      cdb_url << "show_metadata" << "/"
+    elsif (show_type == "data")
+      cdb_url << "show_data" << "/"
+    elsif (show_type == "notes")
+      cdb_url << "show_notes" << "/"
+    end
+    
+    doc_id = "Document-" << @document.id.to_s
+    cdb_url << doc_id
+    
+    return cdb_url
+  end
+  
+  #Alternative function for getting only notes from couch. Uses a couch
+  # show function.
+  def get_notes_rest
+    if (@document == nil)
+      return false
+    end
+    
+    cdb_md_url = get_couch_show_url("notes")
+    @notes = nil
+    begin
+      @notes = RestClient.get(cdb_md_url, {:params => {:name => 'notes' }})
+    rescue => e
+      puts "ERROR: Can't access notes show function or it dose not exist."
+      puts e
+    end
+    
+    return true
+  end
+
+  #Alternative function for getting only metadata from couch. Uses a couch
+  # show function.
+  def get_metadata_rest
+    if (@document == nil)
+      return false
+    end
+    #cdb_md_url = "http://127.0.0.1:5984/portal_development/_design/mdshow/_show/show_metadata/"
+    #doc_id = "Document-" << @document.id.to_s
+    #metadata_raw = RestClient.get("#{cdb_md_url}#{doc_id}", {:params => {:name => 'metadata' }})
+
+    cdb_md_url = get_couch_show_url("metadata")
+    metadata_raw = nil
+    begin
+      metadata_raw = RestClient.get(cdb_md_url, {:params => {:name => 'metadata' }})
+    rescue => e
+      puts "ERROR: Can't access metadata show function or it dose not exist."
+      puts e
+    end
+    
+    if (metadata_raw == "" or metadata_raw == nil)
+      @msdata = metadata_raw
+    else
+      @msdata = JSON.parse(metadata_raw)
+    end
+    
+    return true
+  end
   
   #Gets document data from Couch for display.
   def get_show_data
@@ -132,6 +126,45 @@ module DocumentsHelper
     end
     
     @sdata = @document.stuffing_data  #Data from couch
+    current_page = params[:page]
+    per_page = params[:per_page] # could be configurable or fixed in your app
+    
+    @paged_sdata = []
+    if @sdata != nil
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+    end
+    
+    chart = Chart.find_by_document_id(@document)
+    @chart = chart || Chart.find(newchart({:document_id => @document}))
+    
+    return true
+  end
+  
+  #Alternative function for getting only data from couch. Uses a couch
+  # show function. 
+  def get_show_data_rest
+    if (@document == nil)
+      return false
+    end
+    #cdb_md_url = "http://127.0.0.1:5984/portal_development/_design/mdshow/_show/show_data/"
+    #doc_id = "Document-" << @document.id.to_s
+    #data_raw = RestClient.get("#{cdb_md_url}#{doc_id}", {:params => {:name => 'data' }})
+    
+    cdb_md_url = get_couch_show_url("data")
+    data_raw = nil
+    begin
+      data_raw = RestClient.get(cdb_md_url, {:params => {:name => 'data' }})
+    rescue => e
+      puts "ERROR: Can't access data show function or it dose not exist."
+      puts e
+    end
+    
+    if (data_raw == "" or data_raw == nil)
+      @sdata = nil
+    else
+      @sdata = JSON.parse(data_raw)
+    end
+    
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
     
@@ -265,7 +298,7 @@ module DocumentsHelper
 
     return status
   end
-   
+#-----------------------------------------------------------------------
    
   #save a file from a web upload to an db doc
   # 
@@ -290,7 +323,7 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-
+    
     fm = FileMagic.new
     if (\
       (file.kind_of? String) \
@@ -323,6 +356,7 @@ module DocumentsHelper
     @document.user = user
 
     begin
+      puts "Saving document text to couch *****"
       status = @document.save
       etime = Time.now()
       log_and_print "INFO: Saved document #{fname} in #{etime - stime} seconds."
@@ -345,7 +379,7 @@ module DocumentsHelper
 
     return status
   end
-  
+#-----------------------------------------------------------------------
 
   def get_data_colnames(d)
     if d == nil or d.empty?
@@ -572,7 +606,7 @@ module DocumentsHelper
     data_columns.reject! { |item| item.empty? }
     return data_columns
   end
-
+#-----------------------------------------------------------------------
   def filter_data_columns_csv(iterator)
     retval = []
 
@@ -598,7 +632,7 @@ module DocumentsHelper
 
     return retval
   end
-
+#-----------------------------------------------------------------------
 
   def filter_data_columns_xml(iterator)
     data_text = iterator
@@ -982,4 +1016,86 @@ module DocumentsHelper
 
     return retval
   end
+  
+  #---------------------------------------------------------------------
+=begin
+  #The following code is for asc/dec sorting, but is not currently
+  # being used.
+  
+  #Sorts metadata (by means of an index list) before display.
+  def sort_metadata(md_index)
+    if (@document == nil || md_index == nil)
+      return false
+    end
+  
+    md_sorted = md_index.map do |n|
+      @msdata[n]
+    end
+
+    @msdata = md_sorted
+    return true
+  end
+
+  #Gets the metadata sort index from CouchDB
+  def get_md_index
+    if (@document == nil)
+      return false
+    end
+    
+    md_index = [] #Contains the metadata sort index
+    if (@document.stuffing_metadata_index == nil)
+      puts "###########################################################"
+      puts "Document has no metadata sort index. Attempting to create..."
+      create_md_index()
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    elsif (@document.stuffing_metadata == nil)
+      create_md_index()
+      return (md_index = nil)
+    elsif (@document.stuffing_metadata.length != @document.stuffing_metadata_index.length)
+      puts "###########################################################"
+      puts "Metadata has changed, rebuilding sort index..."
+      create_md_index()
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    elsif (@document.stuffing_metadata_index.kind_of?(Array) )
+      puts "###########################################################"
+      puts "Getting metadata sort index..."
+      md_index = @document.stuffing_metadata_index
+      return md_index
+    else
+      puts "###########################################################"
+      puts "Unknown error"
+    end
+    
+    return false  #Unknown error
+  end
+  
+  #Creates metadata sort index if it was not created during doc import
+  def create_md_index
+    if (@document == nil)
+      return false
+    end
+    
+    if (@document.stuffing_metadata == nil)
+      puts "###########################################################"
+      puts "No metadata or error, index not created"
+      @document.stuffing_metadata_index = nil  #No metadata
+      @document.save
+      return false
+    else
+      puts "###########################################################"
+      puts "Building metadata sort index..."
+      md_index = []
+      metadata = @document.stuffing_metadata
+      (0..metadata.length - 1).each do |i|
+        md_index[i] = i
+      end
+      @document.stuffing_metadata_index = md_index
+      @document.save
+    end
+    
+    return true
+  end
+=end
 end

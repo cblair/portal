@@ -117,20 +117,25 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     authorize! :show_data, @document if params[:id]
     get_menu()
-    get_metadata()
-    @notes = @document.stuffing_notes
-    get_show_data()
+    #get_metadata()
+    #@notes = @document.stuffing_notes
+    #get_show_data()
+    get_metadata_rest()
+    get_notes_rest()
+    get_show_data_rest()
   end
 
   # GET /documents/1
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
-    @md_sort = params[:sort] #TEMP
+    #@md_sort = params[:sort] #TEMP
     get_menu()
-    get_metadata()
-    @notes = @document.stuffing_notes
-
+    #get_metadata()
+    #@notes = @document.stuffing_notes
+    get_metadata_rest()
+    get_notes_rest()
+    
     @doc_collection = Collection.find(@document.collection_id)
     
     @job = nil

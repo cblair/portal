@@ -25,6 +25,9 @@ Portal::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = false
   
+  #Name of the Couch document that contains the show functions.
+  config.hatch_show_name = "_design/hatch_show"
+  
   #CouchDB stuff
   config.couchdb = {
                               'COUCHDB_HOST'      => '127.0.0.1',
