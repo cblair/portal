@@ -300,7 +300,22 @@ module ProjectsHelper
     end
     
     target_user = User.find(target_user_id) #finds selected user
-    
+    @project.collections.each do |collection|
+      docs = Document.where("collection_id = ?", collection.id) #gets an array of documents with the given project ID
+      
+      docs.each do |doc|
+        doc.update_attributes(:user_id => target_user.id) #changes user ID of documents to target user    
+      end
+      collection.update_attributes(:user_id => target_user.id) #changes user ID of collections to target user
+    end
+    @project.update_attributes(:user_id => target_user.id) #changes current project's user ID to target user's ID
+=begin
+    if is_project_colab(target_user) #if target user is a collaborator
+      user_ids = Array.new(1, target_user.id)
+      colab_remove_project(user_ids)
+    end
+=end
+=begin
     collections = Collection.where("project_id = ?", @project.id) #gets an array of collections with the given project ID
     collections.each do |c|
       c.update_attributes(:user_id => target_user.id) #changes user ID of collections to target user    
@@ -316,7 +331,7 @@ module ProjectsHelper
       user_ids = Array.new(1, target_user.id)
       colab_remove_project(user_ids)
     end
-    
+=end
     @user_id_err = false
     return true
   end

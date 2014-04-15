@@ -5,4 +5,16 @@
 	                                   :default => "Edit #{model_class.model_name.human}") %></h1>
 	</div>
 	<%= render :partial => 'form' %>
+  
+  <hr />
+  <% if can? :manage, @project %>
+    <%= form_tag(controller: "projects", action: "owner", method: "get") do %>
+      <p>Change owner of this project</p>
+      <p style="color:red">WARNING: Ownership of all collections and documents in this project will be transferred</p>
+      <%= select("user", "user_id", User.find(:all, :order => "email").collect {|u| [u.email, u.id]},
+        {:prompt => '(select a user)'}) %> <br />
+      <%= submit_tag("Change Owner") %>
+    <% end %>
+  <% end %> <!-- CanCan -->
+  
 </div>

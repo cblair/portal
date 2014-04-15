@@ -155,7 +155,6 @@ class DocumentsController < ApplicationController
       format.html # show.html.erb
       format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
-
   end
 
   #Shows the JSON like the show() method would normally do. show() is doing datatable

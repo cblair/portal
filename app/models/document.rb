@@ -129,6 +129,7 @@ class Document < ActiveRecord::Base
     # either successfully filtered or are out of filters
     validation_finished = false
     suc_valid = false
+    message = "" 
     
     if ifilter == nil
       ifilters = Ifilter.all
@@ -149,11 +150,15 @@ class Document < ActiveRecord::Base
       
       #Attempt filter
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
-      stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
+      #stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
+      retval_arr = filter_data_columns(f, self.stuffing_text, {:document => self})
+      stuffing_data = retval_arr[1]
+      message = retval_arr[0]
 
       #If stuffing_data equals true, then everything is ok, but we don't want to do
       # anything more.
       if stuffing_data == true
+        puts message
         return true
       end
 
@@ -185,6 +190,11 @@ class Document < ActiveRecord::Base
             puts "Document #{self.name} fitering success!"
           end
         end
+      #end
+      elsif stuffing_data == nil
+        puts "#### Error: there was a problem filtering ####"
+        validation_finished = true
+        suc_valid = false
       end
       
       i = i + 1
@@ -193,12 +203,12 @@ class Document < ActiveRecord::Base
       end
     end
 
-    
     if !suc_valid
       mcount = f.stuffing_metadata.count if f.stuffing_metadata != nil
       hcount = f.stuffing_headers.count if f.stuffing_headers != nil
 
       msg = "Document filtering failed. One of these is not right:\n"
+      msg += message
       msg += "####metadata:\n"
       msg += "stuffing_metadata.count #{mcount.to_s} ?= f.stuffing_headers.count #{hcount.to_s}\n"
       msg += stuffing_metadata.to_s + "\n"

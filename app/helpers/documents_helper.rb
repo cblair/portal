@@ -353,7 +353,9 @@ module DocumentsHelper
     end
     return d.first().keys()
   end
-  
+#-----------------------------------------------------------------------
+  #Filter metadata
+  #iterator is a string
   def filter_metadata_columns(f, iterator)
     if iterator.class == String
       #spilt the iterator text by endlines
@@ -406,7 +408,7 @@ module DocumentsHelper
 
     return metadata_columns
   end
-  
+#-----------------------------------------------------------------------
   #Removes headers from input stream (iteratror) so it can be CSV parsed.
   def strip_metadata(f, iterator)
     if (f == nil or iterator == nil)
@@ -485,7 +487,7 @@ module DocumentsHelper
 
    return iterator
   end
-  
+#-----------------------------------------------------------------------
   def filter_data_columns(f, iterator, options = {})
     if iterator == nil
       log_and_print "WARN: data iterator was nil"
@@ -572,7 +574,9 @@ module DocumentsHelper
     data_columns.reject! { |item| item.empty? }
     return data_columns
   end
-
+#-----------------------------------------------------------------------
+  #Takes text (from couch DB) and parses it into CSV format
+  #iterater is a string
   def filter_data_columns_csv(iterator)
     retval = []
 
@@ -591,14 +595,28 @@ module DocumentsHelper
     end
 =end
     csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
+    
+    headers = csv.headers() #check for duplicate field names
+    dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
+    
+    if (headers.blank?)
+      message = "#### Error: header filtering failed.\n"
+      return [message, nil]
+    end
+    
+    if (dup_head != nil)
+      message = "#### Error: document may contain duplicate column names.\n"
+      return [message, nil]
+    end
+    
     csv.each do |row|
       row_hash = (row.to_hash)
       retval << row_hash
     end
-
-    return retval
+    
+    return [message, retval]
   end
-
+#-----------------------------------------------------------------------
 
   def filter_data_columns_xml(iterator)
     data_text = iterator

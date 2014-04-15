@@ -18,7 +18,7 @@ class Job < ActiveRecord::Base
     self.waiting = true
 
     job_type = Portal::Application.config.job_type
-    #job_type = "threads" #SAS need to make validations work?
+    #job_type = "threads" #SAS
 
     if job_type == "threads"
       self.submit_job_threads(ar_module, options)
@@ -42,6 +42,7 @@ class Job < ActiveRecord::Base
         ActiveRecord::Base.connection_pool.with_connection do
           #wait for a few seconds before we start
           sleep 5
+          #If ar_module is a doc, gets passed to "submit_job" in doc model?
           ar_module.submit_job(self, options)
         end
       rescue ActiveRecord::ConnectionTimeoutError
