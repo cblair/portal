@@ -58,6 +58,25 @@ module CollectionsHelper
     project.save
   end
   
+  #collection inherits project and permissions of parent collection by default
+  def inherit_collection(parent_collection)
+    #collection is a sub-collection, parent has a project
+    if (!parent_collection.projects.empty?)
+      add_project_col(parent_collection.projects.first, @collection)
+    #collection is a sub-collection, parent dose not have a project
+    elsif (parent_collection.projects.empty?)
+      @collection.projects.each do |project|
+        @collection.projects.delete project
+        
+        @collection.descendants.each do |c|
+          if !c.projects.empty?
+            c.projects.delete project
+          end
+        end
+      end
+    end
+  end
+  
   def collection_is_validated(collection)
     suc_valid = true
     
