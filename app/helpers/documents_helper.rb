@@ -599,7 +599,7 @@ module DocumentsHelper
     headers = csv.headers() #check for duplicate field names
     dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
     
-    if (headers.blank?)
+    if (headers.empty?)
       message = "#### Error: header filtering failed.\n"
       return [message, nil]
     end

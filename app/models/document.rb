@@ -215,6 +215,7 @@ class Document < ActiveRecord::Base
       msg += "####data:####\n"
       msg += stuffing_data.to_s + "\n"
 
+      puts msg
       raise msg
     end
 
