@@ -12,6 +12,8 @@ jQuery(function($) {
     //disables warnings, TODO to fix
     $.fn.dataTableExt.sErrMode = "throw";
 
+    //intializeLiveMetaforms();
+
     //dataTables
     $.extend( $.fn.dataTableExt.oStdClasses, {
       //Taking out for now - URI too long
@@ -156,6 +158,25 @@ function md_editorSetup() {
     $("#notes").hide();
   }
 //----------------------------------------------------------------------
+
+  //TODO: for later.
+  function intializeLiveMetaforms() {
+    var urlSource = $();
+    $.ajax(urlSource, {
+      //data: { data : "div.uploads" },
+      cache: false,
+      beforeSend: function(result) {
+        //NTD
+      },
+      success: function(result) {
+        
+      },
+      error: function(result) {
+        //NTD
+      },
+      //timeout: NTD
+    });
+  }
 
     $(document).ready(function () {
       $.initDocumentDatatable($);

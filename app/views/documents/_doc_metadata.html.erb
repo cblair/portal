@@ -15,13 +15,25 @@
     </tbody>
    </table>
       <% if can? :manage, @document %>
-        <%= button_tag("Edit Metadata", :class => "edit_md_btn", :name => "edit_metad_btn") %>
+        <%= button_tag("Edit Metadata", :class => "btn edit_md_btn", :name => "edit_metad_btn") %>
       <% end %>
   <% else %>
    <p>(none)</p>
   <% end %>
   
+  <!--TODO: metaform stuff
   <% if can? :add_md, @document %>
+    <div id="hidden_group">
+      <a class="btn btn-info" href="#">Show Metaform</a>
+      <a class="btn btn-inverse" href="#">Hide Metaform</a>
+
+      <div class="hidden_section">
+        <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
+          {:prompt => '(select a metaform)'}) %>
+        <%= link_to "Metaform Editor...", metaforms_path %> <br />
+      </div>
+    </div>
+
     <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
       <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
         {:prompt => '(select a metaform)'}) %>
@@ -29,5 +41,7 @@
       <%= hidden_field_tag "doc_id", @document.id %>
       <%= submit_tag "Add Metaform" %>
     <% end %>
-  <% end %> <!-- CanCan -->
+  <% end %>
+  -->
+  <!-- CanCan -->
 </div>
