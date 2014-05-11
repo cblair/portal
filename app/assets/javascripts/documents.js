@@ -14,7 +14,7 @@ jQuery(function($) {
 
     //intializeLiveMetaforms();
 
-    //dataTables
+    //dataTables initialization.
     $.extend( $.fn.dataTableExt.oStdClasses, {
       //Taking out for now - URI too long
       //"sSortAsc": "header headerSortDown",
@@ -22,6 +22,87 @@ jQuery(function($) {
       //"sSortable": "header",
       "sWrapper": "dataTables_wrapper form-inline"
     });
+
+    //datatables - add first and last buttons
+    $.extend( $.fn.dataTableExt.oPagination, {
+    "bootstrap": {
+        "fnInit": function( oSettings, nPaging, fnDraw ) {
+            var oLang = oSettings.oLanguage.oPaginate;
+            var fnClickHandler = function ( e ) {
+                e.preventDefault();
+                if ( oSettings.oApi._fnPageChange(oSettings, e.data.action) ) {
+                    fnDraw( oSettings );
+                }
+            };
+ 
+            $(nPaging).addClass('pagination pagination-right').append(
+                '<ul>' +
+                    '<li class="prev disabled"><a href="#">&larr; ' + oLang.sFirst + '</a></li>' +
+                    '<li class="prev disabled"><a href="#">&larr; '+oLang.sPrevious+'</a></li>'+
+                    '<li class="next disabled"><a href="#">' + oLang.sNext + ' &rarr; </a></li>' +
+                    '<li class="next disabled"><a href="#">' + oLang.sLast + ' &rarr; </a></li>' +
+                '</ul>'
+            );
+            var els = $('a', nPaging);
+            $(els[0]).bind('click.DT', { action: "first" }, fnClickHandler);
+            $(els[1]).bind( 'click.DT', { action: "previous" }, fnClickHandler );
+            $(els[2]).bind('click.DT', { action: "next" }, fnClickHandler);
+            $(els[3]).bind('click.DT', { action: "last" }, fnClickHandler);
+        },
+ 
+        "fnUpdate": function ( oSettings, fnDraw ) {
+            var iListLength = 5;
+            var oPaging = oSettings.oInstance.fnPagingInfo();
+            var an = oSettings.aanFeatures.p;
+            var i, j, sClass, iStart, iEnd, iHalf=Math.floor(iListLength/2);
+ 
+            if ( oPaging.iTotalPages < iListLength) {
+                iStart = 1;
+                iEnd = oPaging.iTotalPages;
+            }
+            else if ( oPaging.iPage <= iHalf ) {
+                iStart = 1;
+                iEnd = iListLength;
+            } else if ( oPaging.iPage >= (oPaging.iTotalPages-iHalf) ) {
+                iStart = oPaging.iTotalPages - iListLength + 1;
+                iEnd = oPaging.iTotalPages;
+            } else {
+                iStart = oPaging.iPage - iHalf + 1;
+                iEnd = iStart + iListLength - 1;
+            }
+ 
+            for ( i=0, iLen=an.length ; i<iLen ; i++ ) {
+                // Remove the middle elements
+                $('li:gt(1)', an[i]).filter(':not(.next)').remove();
+ 
+                // Add the new list items and their event handlers
+                for ( j=iStart ; j<=iEnd ; j++ ) {
+      sClass = (j==oPaging.iPage+1) ? 'class="active"' : '';
+                    $('<li '+sClass+'><a href="#">'+j+'</a></li>')
+                        .insertBefore( $('li.next:first', an[i])[0] )
+                        .bind('click', function (e) {
+                            e.preventDefault();
+                            oSettings._iDisplayStart = (parseInt($('a', this).text(),10)-1) * oPaging.iLength;
+                            fnDraw( oSettings );
+                        } );
+                }
+ 
+                // Add / remove disabled classes from the static elements
+                if ( oPaging.iPage === 0 ) {
+                    $('li.prev', an[i]).addClass('disabled');
+                } else {
+                    $('li.prev', an[i]).removeClass('disabled');
+                }
+ 
+                if ( oPaging.iPage === oPaging.iTotalPages-1 || oPaging.iTotalPages === 0 ) {
+                    $('li.next', an[i]).addClass('disabled');
+                } else {
+                    $('li.next', an[i]).removeClass('disabled');
+                }
+            }
+        }
+      }
+    } ); //end datatables - add first and last buttons
 
     $.initDocumentDatatable = function ($, data_source) {
       if(data_source == undefined) {
@@ -59,7 +140,7 @@ jQuery(function($) {
               DOCUMENTS_SEARCH_TABLE.fnFilter($(this).val());
           }
         );
-    };
+    }; //end initDocumentDatatable
 //----------------------------------------------------------------------
 // Metadata editor code
 //Add delete row button event
