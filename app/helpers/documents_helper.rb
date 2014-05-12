@@ -597,7 +597,12 @@ module DocumentsHelper
     csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
     
     headers = csv.headers() #check for duplicate field names
-    dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
+    #dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
+    dup_head = headers.detect do |e|
+      if (!e.empty?)
+        headers.rindex(e) != headers.index(e)
+      end
+    end
     
     if (headers.empty?)
       message = "#### Error: header filtering failed.\n"
@@ -605,7 +610,8 @@ module DocumentsHelper
     end
     
     if (dup_head != nil)
-      message = "#### Error: document may contain duplicate column names.\n"
+      message = "### Error: document may contain duplicate column names.\n"
+      message << "# Source: " << dup_head << "\n"
       return [message, nil]
     end
     

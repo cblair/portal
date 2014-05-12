@@ -44,7 +44,7 @@ jQuery(function($) {
 		$(document).ready(function () {
 			//dataTable
 			JOBS_SEARCH_TABLE = $('#jobs').dataTable({
-				"sPaginationType"	: "bootstrap",
+				"sPaginationType"	: "full_numbers", //"sPaginationType"	: "bootstrap",
 				"bJQueryUI"			: true,
 				"bProcessing"		: true,
 				"bServerSide"		: true,
