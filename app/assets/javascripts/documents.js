@@ -61,6 +61,7 @@ jQuery(function($) {
 //----------------------------------------------------------------------
 // Metadata editor code
 //Add delete row button event
+/*
 function delRow() {
   $(this).closest('tr').remove().off();
 }
@@ -151,12 +152,106 @@ function md_editorSetup() {
   $(md_table).find('td').dblclick(inputForm);   //Edit cell
   $('.save_btn').on('click', saveData);         //Save data
   $('.cancel_btn').on('click', endEdit);        //Cancel
-  $("#metadata_table tbody").sortable({
-    helper: fixHelper }).disableSelection(); //Make table D&D sortable
+  //$("#metadata_table tbody").sortable({
+   // helper: fixHelper }).disableSelection(); //Make table D&D sortable
+  
+}*/
+//----------------------------------------------------------------------
+
+//Cancel button event and cleanup
+function endEdit() {
+  location.reload(); //Refresh page so changes can take effect
+}
+
+//Add input form when cell is double clicked
+function inputForm2() {
+  var orignalText = $(this).text();
+  $(this).html("<input type='text' class='edit_area' value='" + orignalText + "' />");
+  $(this).children().first().focus();
+
+  $(this).children().first().keypress(function (e) {
+    if (e.which == 13) {
+      var newContent = $(this).val();
+      $(this).parent().text(newContent);
+    }
+  });
+  $(this).children().first().blur(function(){
+    $(this).parent().text(orignalText);
+  });
+}
+
+//Adds a new blank row, adds "add row" button event
+function addRow() {
+  var last_row = $('#metadata_table').find('tr').last();
+  var rowNew = '<tr> <td class="editable"></td> <td class="editable"></td> <td> <button id="delete_btn" class="del_btn">Delete</button> </td>'
+  $(last_row).after(rowNew);
+  $(last_row).next().find('.editable').dblclick(inputForm2);
+}
+
+//Deletes row from table
+function delRow() {
+  $(this).closest('tr').remove().off();
+}
+
+//Save new data and perform cleanup
+function saveData() {
+  var md_table = $('#metadata_table');
+  endEdit(); //Cleanup
+  var doc_url = window.location.pathname + '/doc_md_edit'     //Create
+  //var jmd_table = md_table.tableToJSON({ headings: [0,1] });  //Convert table to json OLD
+  var jmd_table = md_table.tableToJSON();  //Convert table to json
+  var pmd_table = {"md_table": jmd_table};  //Add key for table (for controller)
+  
+  $.ajax({
+    url: doc_url,
+    type: 'POST',
+    dataType: "JSON",
+    data: pmd_table,
+  });
+}
+
+function md_editorSetup2() {
+  var md_table = $('#metadata_table');
+  
+  //Button setup
+  $('.edit_md_btn').hide();
+  $('.sort_md_btn').hide();
+  $('.edit_menu').show();
+  var delButton = $('<td> <button id="delete_btn" class="del_btn">Delete</button> </td>');
+  $(md_table).find('.md_row').append(delButton);
+  
+  //Click events
+  $(md_table).on('click', '.del_btn', delRow);  //Delete row
+  $('#add_btn').on('click', addRow);            //Add row
+  $(md_table).find('.editable').dblclick(inputForm2); //Makes cell editable
+  $('#save_btn').on('click', saveData);         //Save data
+  $('#cancel_btn').on('click', endEdit);        //Cancel changes
   
 }
 //----------------------------------------------------------------------
+// Return a helper with preserved width of cells when sorting
+var fixHelper = function(e, ui) {
+  ui.children().each(function() {
+    $(this).width($(this).width());
+  });
+  return ui;
+};
 
+//----------------------------------------------------------------------
+function sort_editor() {
+  //Button setup
+  $('.edit_md_btn').hide();
+  $('.sort_md_btn').hide();
+  $('.sort_menu').show();
+  
+  $("#metadata_table tbody").sortable({
+    helper: fixHelper }).disableSelection();  //Make table D&D sortable
+    
+  $('#save_sort_btn').on('click', saveData);  //Save sorted data
+  $('#cancel_sort_btn').on('click', endEdit); //Cancel sorting changes
+}
+
+//----------------------------------------------------------------------
   function show_notesJS() {
     var hide_notes = $('<a id="hide_notes_link">Hide Notes</a>');
     $('#show_notes_link').before(hide_notes).hide();
@@ -169,11 +264,17 @@ function md_editorSetup() {
     $('#show_notes_link').show();
     $("#notes").hide();
   }
+
 //----------------------------------------------------------------------
 
     $(document).ready(function () {
       $.initDocumentDatatable($);
-      $('.edit_md_btn').on('click', md_editorSetup); //Add editing event/handler
+      $('.edit_menu').hide();
+      $('.sort_menu').hide();
+      //Enter editing "mode", add editing event/handler
+      $('.edit_md_btn').on('click', md_editorSetup2);
+      $('.sort_md_btn').on('click', sort_editor);
+      
       $("#notes").hide();
       $("#show_notes_link").on('click', show_notesJS);
     });

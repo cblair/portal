@@ -7,22 +7,14 @@
   table-layout:fixed;
   word-wrap:break-word;
   color:black;
-  //width:100%;
-  //height:100%;
 }
 
-#metadata_table input
+#metadata_table input //input form
 {
-  width: 300px;
+  width: 98%;
 }
 
-#del_btn_cell
-{
-  width:10%;
-}
-
-#delete_btn
+.del_btn
 {
   width:100%;
 }
-
