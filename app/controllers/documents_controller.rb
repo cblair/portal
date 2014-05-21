@@ -27,31 +27,6 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # PUT /documents/1/doc_md_edit
-  def doc_md_edit
-    md_table = params[:md_table]  #metadata table from MD editor
-    document = Document.find(params[:id])
-    edited_suc = false
-    
-    if (document != nil)
-      edited_suc = metadata_save(md_table, document)
-    end
-    
-    #TODO: return data to md table?
-    respond_to do |format|
-      if (edited_suc == true)
-        format.html { redirect_to document, notice: "Metadata saved" }
-        format.js { render :text => "Metadata saved", notice: "Metadata saved!"}
-        format.json { head :ok }
-      else
-        format.html { render action: "show" }
-        format.js { render :text => "Error: metadata could not be saved",
-          notice: "Metadata not saved!" }
-        format.json { render json: document.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # GET /documents
   # GET /documents.json
   def index
@@ -111,14 +86,40 @@ class DocumentsController < ApplicationController
       format.json { render json: @documents }
     end
   end
+  
+  # PUT /documents/1/doc_md_edit
+  def doc_md_edit
+    md_table = params[:md_table]  #metadata table from MD editor
+    document = Document.find(params[:id])
+    mdsave_params = params
+    edited_suc = false
+    
+    if (document != nil)
+      edited_suc = metadata_save(md_table, document)
+    end
+    
+    respond_to do |format|
+      if (edited_suc == true)
+        format.html { redirect_to document, notice: "Metadata saved" }
+        #format.js { render :text => "Metadata saved!", notice: "Metadata saved!"}
+        format.js { render :text => mdsave_params[:value], notice: "Metadata saved!"}
+        format.json { head :ok }
+      else
+        format.html { render action: "show" }
+        format.js { render :text => "Error: metadata could not be saved",
+          notice: "Metadata not saved!" }
+        format.json { render json: document.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   # GET /documents/1/show_data
   def show_data
     @document = Document.find(params[:id])
     authorize! :show_data, @document if params[:id]
     get_menu()
-    get_metadata()
-    @notes = @document.stuffing_notes
+    #get_metadata()
+    #@notes = @document.stuffing_notes
     get_show_data()
   end
 
@@ -126,11 +127,11 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
-    @md_sort = params[:sort] #TEMP
+    #@md_sort = params[:sort] #TEMP
     get_menu()
     get_metadata()
     @notes = @document.stuffing_notes
-
+    
     @doc_collection = Collection.find(@document.collection_id)
     
     @job = nil
