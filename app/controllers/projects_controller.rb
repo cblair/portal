@@ -253,7 +253,8 @@ class ProjectsController < ApplicationController
   # PUT /projects/owner/1.json
   def owner
     @project = Project.find(params[:id])
-    target_user_id = params[:user_id][:id]
+    #target_user_id = params[:user_id][:id]
+    target_user_id = params[:user][:user_id]
 
     if (params.include?(:id) and params[:id] != "" and @project != nil)
       if (not target_user_id.blank? and target_user_id != nil)
