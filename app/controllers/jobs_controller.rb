@@ -1,5 +1,8 @@
 class JobsController < ApplicationController
+  #include JobsHelper
+  
   before_filter :require_permissions
+  #load_and_authorize_resource #CanCan
   
   def require_permissions
     if params.include?("id")
@@ -15,7 +18,7 @@ class JobsController < ApplicationController
   # GET /jobs
   # GET /jobs.json
   def index
-    @jobs = Job.where(:user_id => current_user.id)
+    #@jobs = Job.where(:user_id => current_user.id) #not needed?
 
     respond_to do |format|
       format.html # index.html.erb

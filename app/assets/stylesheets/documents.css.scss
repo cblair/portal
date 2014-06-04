@@ -5,17 +5,16 @@
 #metadata_table
 {
   table-layout:fixed;
+  word-wrap:break-word;
   color:black;
-  //width:100%;
-  //height:100%;
 }
 
-#del_btn_cell
+#metadata_table input //input form
 {
-  width:10%;
+  width: 98%;
 }
 
-#delete_btn
+.del_btn
 {
   width:100%;
 }

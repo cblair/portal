@@ -125,6 +125,9 @@ class CollectionsController < ApplicationController
       #if !collection_is_parent(@collection, parent_collection)
       if !parent_collection.ancestors.include?(@collection)
         @collection.parent_id = parent_collection.id
+        
+        #inherits project (and permissions) of parent by default
+        inherit_collection(parent_collection)
       else
         parent_child_violation = true
       end

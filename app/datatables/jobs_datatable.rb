@@ -81,6 +81,9 @@ private
         elsif ("finished".start_with? search_downcase)
           jobs = jobs.where("description like :search or finished=true", 
             search: "%#{search}%", search_lit: search)
+        elsif (search_downcase.include? "@") #search by user name
+          user = User.where('email = ?', search_downcase).first
+          jobs = jobs.where('user_id = ?', user.id)
         else
           jobs = jobs.where("description like :search", 
             search: "%#{search}%", search_lit: search)

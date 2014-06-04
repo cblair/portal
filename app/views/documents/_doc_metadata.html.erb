@@ -2,25 +2,45 @@
   <h2>Metadata</h2>
   <% if @msdata != nil  and !@msdata.empty? %>
    <table id="metadata_table" class="table table-striped table-bordered table-condensed" style="width:5;">
+     <col style="width:45%">
+     <col style="width:45%">
+
+     <thead>
+       <tr id="fields">
+         <th>Label</th>
+         <th>Value</th>
+      </tr>
+     </thead>
     <tbody>
+      
     <% @msdata.each do |msdata_row| %>
      <!--If the row is a Hash, display values only-->
-     <tr>
+     <!-- tr id="<%#= @row_id += 1 %>" -->
+     <tr class="md_row">
       <% msdata_row.each do |key, val| %>
-       <td><%= key %></td>
-       <td><%= auto_link(val) %></td>
+       <td class="editable"><%= key %></td>
+       <td class="editable"><%= auto_link(val) %></td>
       <% end %>
      </tr>
     <% end %>
     </tbody>
    </table>
-      <% if can? :manage, @document %>
+   <% if can? :manage, @document %>
         <%= button_tag("Edit Metadata", :class => "btn edit_md_btn", :name => "edit_metad_btn") %>
-      <% end %>
+        <%= button_tag("Add", :class => "edit_menu", :id => "add_btn") %>
+        <%= button_tag("Cancel", :class => "edit_menu", :id => "cancel_btn") %>
+        <%= button_tag("Save", :class => "edit_menu", :id => "save_btn") %>
+        
+        <%= button_tag("Sort Metadata", :class => "sort_md_btn", :name => "sort_metad_btn") %>
+        <%= button_tag("Save Sorting", :class => "sort_menu", :id => "save_sort_btn") %>
+        <%= button_tag("Cancel Sorting", :class => "sort_menu", :id => "cancel_sort_btn") %>
+    <% end %>
   <% else %>
-   <p>(none)</p>
+    <p>(none)</p>
   <% end %>
-  
+</div>
+<br />
+
   <!--TODO: metaform stuff
   <% if can? :add_md, @document %>
     <div id="hidden_group">

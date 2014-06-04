@@ -11,6 +11,7 @@
       <%= f.text_area :pdesc, :class => 'text_area' %>
     </div>
   </div>
+  
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
@@ -18,6 +19,7 @@
       <%= select_tag("new_user_id", options_from_collection_for_select(User.order("email").all, "id", "email"), :include_blank => true) %>
     </div>
   </div>
+  
   <div class="control-group">
     <%= f.label :remove_existing_collaborators_from_this_project, :class => "control-label" %>
     <% if (@colab_list != nil) %>
@@ -29,6 +31,7 @@
       <% end %>
     <% end %>
   </div>
+  
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
@@ -36,6 +39,7 @@
       <%= select_tag("new_editor_id", options_from_collection_for_select(User.order("email").all, "id", "email"), :include_blank => true) %>
     </div>
   </div>
+  
   <div class="control-group">
     <%= f.label :remove_existing_editors_from_this_project, :class => "control-label" %>
     <% if (@editor_list != nil) %>

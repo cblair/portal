@@ -23,6 +23,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
       #gets all docs for the project
     @proj_docs = Document.where("project_id = ?", @project.id).order("name")
+    @owner = User.find(@project.user_id).email #gets email/ID of project owner
     
     @public = ""
     if (@project.public == true)
@@ -252,16 +253,17 @@ class ProjectsController < ApplicationController
   # PUT /projects/owner/1.json
   def owner
     @project = Project.find(params[:id])
-    target_user_id = params[:user_name][:id]
+    #target_user_id = params[:user_id][:id]
+    target_user_id = params[:user][:user_id]
 
     if (params.include?(:id) and params[:id] != "" and @project != nil)
-	  if (not target_user_id.blank? and target_user_id != nil)
-	    change_owner(target_user_id) #calls project helper
-	  else
-	    @user_id_err = true
-	  end
-	else
-	  @user_id_err = true
+      if (not target_user_id.blank? and target_user_id != nil)
+        change_owner(target_user_id) #calls project helper
+      else
+        @user_id_err = true
+      end
+    else
+      @user_id_err = true
     end
     
     respond_to do |format|

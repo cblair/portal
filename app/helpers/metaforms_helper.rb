@@ -57,7 +57,8 @@ module MetaformsHelper
   #Sets up the metarows for the metaform creation page.
   #TODO: improve.
   def setup_mrows()
-    1.times { @metaform.metarows.build }
+   1.times { @metaform.metarows.build }
+   #@metaform.metarows.build(:key => "Location")
     return true
   end
 
