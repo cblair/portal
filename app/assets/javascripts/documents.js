@@ -22,7 +22,7 @@ jQuery(function($) {
       //"sSortable": "header",
       "sWrapper": "dataTables_wrapper form-inline"
     });
-
+/*
     //datatables - add first and last buttons
     $.extend( $.fn.dataTableExt.oPagination, {
     "bootstrap": {
@@ -103,7 +103,7 @@ jQuery(function($) {
         }
       }
     } ); //end datatables - add first and last buttons
-
+*/
     $.initDocumentDatatable = function ($, data_source) {
       if(data_source == undefined) {
         data_source = $('#documents').data('source');

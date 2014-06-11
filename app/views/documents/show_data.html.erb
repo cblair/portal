@@ -55,7 +55,9 @@
       <% else %>
         <p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
       <% end %>
-      <p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
+      <% if can? :manage, @document %>
+        <p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
+      <% end %> <!-- CanCan -->
     <% else %>
       <p>(none)</p>
     <% end %>

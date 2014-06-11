@@ -1,4 +1,5 @@
 <!--Start of collection section-->
+
   <% if collection_is_viewable(collection, current_user, project) %>
   	<ul class="col-doc" data-collectionid="<%= collection.id %>">
 	    <li>
@@ -50,7 +51,7 @@
 					</div>
 				<% end %> <!-- if can? :manage, collection -->
 		  		</span>
-		  	  <% end %> <!-- if can? :read, collection -->
+        <% end %> <!-- if can? :read, collection -->
 		    </span>
 	    	<ul class="col-doc-attr-form">
 	  			<% collection.children.order('name').each do |child_collection| %>

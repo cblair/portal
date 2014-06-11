@@ -258,7 +258,7 @@ class DocumentsController < ApplicationController
       end
 
       user = User.where(:id => params[:new_user_id]).first
-     
+
       #Add collaborator
       if user != nil
         if not user.documents.include?(@document)
@@ -275,7 +275,14 @@ class DocumentsController < ApplicationController
       end
 
       #Update other attributes
-      update_suc = @document.update_attributes(params[:document])
+      if (@document.user_id == current_user)
+        update_suc = @document.update_attributes(params[:document])
+      else
+        #needed becuase update will drop collection id if an editor tries to use a filter
+        coll_id = @document.collection_id
+        update_suc = @document.update_attributes(params[:document])
+        update_suc = @document.update_attributes(:collection_id => coll_id)
+      end
 
       #Filter / Validate
       if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )

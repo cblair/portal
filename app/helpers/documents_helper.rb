@@ -847,6 +847,16 @@ module DocumentsHelper
     return data_columns
   end
   
+  #TODO finish?: Determines if collection (in a project) has an editor.
+  def collection_has_editor(collection)
+    project = collection.projects.first
+    
+    project.collaborators.each do |user|
+      if ( user.user_id == current_user )
+      end
+    end
+  end
+  
 
   #If the collection has any viewable docs or sub-collections
   def collection_is_viewable(collection, user, project=nil)
@@ -857,6 +867,8 @@ module DocumentsHelper
     if collection.user == user
       return true
     end
+    
+    #collection_has_editor(collection) #makes collection viewable to editor in data view
     
     #If collection is part of a project
     if project != nil && collection.projects.include?(project)
