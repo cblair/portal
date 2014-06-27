@@ -495,14 +495,6 @@ module DocumentsHelper
       log_and_print "WARN: data iterator was nil"
       return []
     end
-    
-    puts "filter_data_columns f ***************************************"
-    p f
-    regex_arr = []
-    if ( f['regex'] != nil)
-      regex_arr = f['regex'].split(' ')
-    end
-    p regex_arr
 
     #CSV
     if (f != nil and f['id'] == -1)
@@ -529,27 +521,20 @@ module DocumentsHelper
     #Header metadata + CSV
     if ( f != nil and f['regex'] == "csv" )
       iterator = strip_metadata(f, iterator)
-      puts "iterator 0"
-      p iterator
       return filter_data_columns_csv(iterator)
     end
 
-    #Special cases of filtering
+    #Special cases of filtering (regex is treated like command line)
     if ( f != nil and f['regex'] != nil )
+      comm = f['regex'].split(" ") #convert to array (to be like ARGV)
     
-      if ( f['regex'].include?("-md") )
-        #Removes and parses metadata
-        iterator = strip_metadata(f, iterator)
-        puts "iterator 1"
-        p iterator
+      if ( comm.include?("-md") )
+        iterator = strip_metadata(f, iterator) #Removes and parses metadata
       end
       
-      if ( f['regex'].include?("csv") )
-        #Other special cases
+      if ( comm.include?("csv") )
         #returns array [metadata,data], "metadata" may be empty
-        result_arr = process_comm(f['regex'], iterator)
-        #puts "result"
-        #p result_arr[1]
+        result_arr = process_comm(comm, iterator)
         return filter_data_columns_csv(result_arr[1])
       end
     end
@@ -628,10 +613,11 @@ module DocumentsHelper
 =end
     csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
     
-    headers = csv.headers() #check for duplicate field names
+    headers = csv.headers() 
+    #check for duplicate field names
     #dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
     dup_head = headers.detect do |e|
-      if (!e.empty?)
+      if (!e.empty?) #For empty (e == "") header fields
         headers.rindex(e) != headers.index(e)
       end
     end

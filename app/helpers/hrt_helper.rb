@@ -40,7 +40,7 @@ module HrtHelper
   
   ########################################################################
   #Error detection, after parsing, detects possible temperature errors
-  
+  #NOTE: Not being used (in Hatch)
   def detect_err(csv_doc)
     temp_min = 0
     temp_max = 100
@@ -177,12 +177,7 @@ module HrtHelper
   
   #Command line flag processing.
   def process_comm(comm, doc)
-  
-    #HATCH: Tells HRT to process metadata using an ifilter (for Hatch)
-    #if ( comm.include?("-md") )
-    #  doc = strip_metadata(f, iterator) #uses ifilter for metadata
-    #end
-  
+
     #Adds quotes to header
     if ( comm.include?("-q") )
       $add_quotes = true
@@ -219,7 +214,5 @@ module HrtHelper
   
     return [metadata, doc]
   end
-  #-----------------------------------------------------------------------
-
 
 end

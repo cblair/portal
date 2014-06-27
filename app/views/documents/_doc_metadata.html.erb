@@ -41,27 +41,22 @@
 </div>
 <br />
 
-  <!--TODO: metaform stuff
+  <!--TODO: metaform stuff -->
   <% if can? :add_md, @document %>
     <div id="hidden_group">
       <a class="btn btn-info" href="#">Show Metaform</a>
       <a class="btn btn-inverse" href="#">Hide Metaform</a>
 
       <div class="hidden_section">
+        <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
         <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
           {:prompt => '(select a metaform)'}) %>
-        <%= link_to "Metaform Editor...", metaforms_path %> <br />
+            <%= link_to "Metaform Editor...", metaforms_path %> <br />
+        <%= hidden_field_tag "doc_id", @document.id %>
+        <%= submit_tag "Add Metaform" %>
+        <% end %>
       </div>
     </div>
+  <% end %>  <!-- CanCan -->
 
-    <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
-      <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
-        {:prompt => '(select a metaform)'}) %>
-          <%= link_to "Metaform Editor...", metaforms_path %> <br />
-      <%= hidden_field_tag "doc_id", @document.id %>
-      <%= submit_tag "Add Metaform" %>
-    <% end %>
-  <% end %>
-  -->
-  <!-- CanCan -->
 </div>
