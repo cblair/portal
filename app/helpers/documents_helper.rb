@@ -8,6 +8,7 @@ module DocumentsHelper
   require 'rails_autolink'
   include IfiltersHelper
   include CouchdbHelper
+  include HrtHelper
 
   #helpers for testing devise
   #if Rails.env.test?
@@ -409,7 +410,7 @@ module DocumentsHelper
     return metadata_columns
   end
 #-----------------------------------------------------------------------
-  #Removes headers from input stream (iteratror) so it can be CSV parsed.
+  #Removes headers from input stream (iterator) so it can be CSV parsed.
   def strip_metadata(f, iterator)
     if (f == nil or iterator == nil)
       return false
@@ -440,7 +441,8 @@ module DocumentsHelper
           row = row.map {|k,v| v}.join
         end
 
-        if (f['regex'] == "csv")
+        #if (f['regex'] == "csv")
+        if ( f['regex'].include?("csv") )
           iterator = strip_header(h, iterator)
         end
         
@@ -474,7 +476,7 @@ module DocumentsHelper
     return iterator
   end
   
-  #Removes single header from input stream (iteratror) so it can be CSV parsed.
+  #Removes single header from input stream (iterator) so it can be CSV parsed.
   def strip_header(h, iterator)
     if (h == nil or iterator == nil)
       return false
@@ -504,12 +506,6 @@ module DocumentsHelper
       return filter_data_columns_xml(iterator)
     end
 
-    #Header metadata + CSV
-    if (f != nil and f['regex'] == "csv")
-      iterator = strip_metadata(f, iterator)
-      return filter_data_columns_csv(iterator)
-    end
-    
     #Excel
     if (f != nil and f['id'] == -3)
       if filter_data_columns_excel(iterator, options)
@@ -520,6 +516,27 @@ module DocumentsHelper
 
       #We don't want our callee to do anything
       return true
+    end
+
+    #Header metadata + CSV
+    if ( f != nil and f['regex'] == "csv" )
+      iterator = strip_metadata(f, iterator)
+      return filter_data_columns_csv(iterator)
+    end
+
+    #Special cases of filtering (regex is treated like command line)
+    if ( f != nil and f['regex'] != nil )
+      comm = f['regex'].split(" ") #convert to array (to be like ARGV)
+    
+      if ( comm.include?("-md") )
+        iterator = strip_metadata(f, iterator) #Removes and parses metadata
+      end
+      
+      if ( comm.include?("csv") )
+        #returns array [metadata,data], "metadata" may be empty
+        result_arr = process_comm(comm, iterator)
+        return filter_data_columns_csv(result_arr[1])
+      end
     end
     
     #TODO: cleanup
@@ -576,7 +593,7 @@ module DocumentsHelper
   end
 #-----------------------------------------------------------------------
   #Takes text (from couch DB) and parses it into CSV format
-  #iterater is a string
+  #iterator is a string
   def filter_data_columns_csv(iterator)
     retval = []
 
@@ -596,10 +613,11 @@ module DocumentsHelper
 =end
     csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
     
-    headers = csv.headers() #check for duplicate field names
+    headers = csv.headers() 
+    #check for duplicate field names
     #dup_head = headers.detect {|e| headers.rindex(e) != headers.index(e)}
     dup_head = headers.detect do |e|
-      if (!e.empty?)
+      if (!e.empty?) #For empty (e == "") header fields
         headers.rindex(e) != headers.index(e)
       end
     end

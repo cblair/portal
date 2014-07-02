@@ -1,7 +1,6 @@
 module CollectionsHelper
   include DocumentsHelper
 
-  
   #Deletes all ancestor collections
   def collection_recursive_destroy(c)
     c.children.each do |child_c|
