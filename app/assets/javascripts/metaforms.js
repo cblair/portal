@@ -7,6 +7,9 @@ function del_mrow(link) {
 
 // Adds metarow (uses link to)
 $(document).ready(function() {
+  $(".mdrows").sortable();
+  //$("#sortable tbody").sortable();
+  
   $('.add_fields').click(function(event) {
     time = new Date().getTime()
     regexp = new RegExp($(this).data('id'), 'g')

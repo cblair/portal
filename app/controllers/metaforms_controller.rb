@@ -107,6 +107,10 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
+    puts "metaform ****************************************************"
+    @metaform.metarows.each do |row|
+      p row
+    end
 
     respond_to do |format|
       if @metaform.update_attributes(params[:metaform])
