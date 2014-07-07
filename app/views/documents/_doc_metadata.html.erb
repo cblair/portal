@@ -57,10 +57,10 @@
         <% end %>
       </div>
     </div>
-<<<<<<< HEAD
-  <% end %> --> <!-- CanCan -->
 
-  <% if can? :add_md, @document %>
+  <% end %> <!-- CanCan -->
+
+  <!-- <% if can? :add_md, @document %>
     <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
       <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
         {:prompt => '(select a metaform)'}) %>
@@ -68,10 +68,6 @@
       <%= hidden_field_tag "doc_id", @document.id %>
       <%= submit_tag "Add Metaform" %>
     <% end %>
-  <% end %> <!-- CanCan -->
+  <% end %> --> <!-- CanCan -->
   
-=======
-  <% end %>  <!-- CanCan -->
-
->>>>>>> integration
 </div>
