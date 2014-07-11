@@ -29,3 +29,29 @@
 <br />
 
 <%= link_to 'New Metaform', new_metaform_path %>
+
+<hr>
+
+<h2>Listing Metaforms (other)</h2>
+
+<table border="0" cellpadding="5">
+  <tr>
+    <th>Name</th>
+    <!--<th>Mddesc</th>-->
+    <th>Description</th>
+    <!--<th>User</th>-->
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @metaforms_other.each do |metaform| %>
+  <tr>
+    <% if can? :read, metaform %>
+      <td><%= metaform.name %></td>
+      <td><%= metaform.mddesc %></td>
+      <!--<td><%#= metaform.user_id %></td>-->
+      <td><%= link_to 'Show', metaform %></td>
+    <% end %> <!-- end CanCan -->
+  </tr>
+<% end %>
+</table>

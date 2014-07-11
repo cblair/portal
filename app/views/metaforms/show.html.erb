@@ -27,13 +27,15 @@
     <b>Value:</b>
     <%= mrow.value %>&emsp;
   
-    <b>Autofill:</b>
-    <%= mrow.autofill %>
+    <!--<b>Autofill:</b>
+    <%#= mrow.autofill %> -->
   </p>
   </li>
   
 <% end %>
 </ol>
 
-<%= link_to 'Edit', edit_metaform_path(@metaform) %> |
+<% if can? :manage, @metaform %>
+  <%= link_to 'Edit', edit_metaform_path(@metaform) %> |
+<% end %>
 <%= link_to 'Back', metaforms_path %>

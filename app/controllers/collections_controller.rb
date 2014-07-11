@@ -101,6 +101,14 @@ class CollectionsController < ApplicationController
     @collection = Collection.new(params[:collection])
     @collection.user = current_user
 
+    #Checks collection for parent, inherits permissions
+    if ( params[:collection].include?("parent_id") and params[:collection]["parent_id"] != "" )
+      parent_collection = Collection.find(params[:collection]["parent_id"])
+      inherit_collection(parent_collection)
+    else
+      puts "### Collection has no parent"
+    end
+
     respond_to do |format|
       if @collection.save
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }

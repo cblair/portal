@@ -1,7 +1,8 @@
 <p class="mrow">
   <%= f.label :key, "Key (cannot edit)" %>
-  <%= f.text_field :key, :readonly => true %>
+  <%= f.text_field :key, :readonly => true, :id => "mf_textarea" %>
   
   <%= f.label :value, "Value" %>
-  <%= f.text_field :value %>
+  <%= f.text_area :value, :rows => 1, :id => "mf_textarea" %>
+  <!--<%#= f.text_field :value %> -->
 </p>

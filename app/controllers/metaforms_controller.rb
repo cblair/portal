@@ -50,7 +50,9 @@ class MetaformsController < ApplicationController
   # GET /metaforms
   # GET /metaforms.json
   def index
-    @metaforms = Metaform.all
+    #@metaforms = Metaform.all
+    @metaforms = Metaform.where("user_id = ?", current_user)
+    @metaforms_other = Metaform.where("user_id != ?", current_user)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -107,6 +109,9 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
+
+    #param_new = sort_metarows(params[:metaform][:metarows_attributes])
+    #params[:metaform][:metarows_attributes] = param_new
 
     respond_to do |format|
       if @metaform.update_attributes(params[:metaform])

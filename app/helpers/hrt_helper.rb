@@ -176,6 +176,7 @@ module HrtHelper
   ########################################################################
   
   #Command line flag processing.
+  #NOTE: Use flag "-md" in Hatch to strip metadata.
   def process_comm(comm, doc)
 
     #Adds quotes to header

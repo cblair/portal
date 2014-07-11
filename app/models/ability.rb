@@ -59,6 +59,7 @@ class Ability
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
     can :read, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
     can :show_data, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}} #not sure why "read doc" dose not cover this.
+    can :read, Metaform  #Lets everyone read metaforms
     
     #SAS: This rule version should be depricated but keep it for now
     #can :read, Document do |doc|

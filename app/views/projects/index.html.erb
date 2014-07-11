@@ -17,7 +17,8 @@
     <thead>
       <tr>
         <th><%= model_class.human_attribute_name(:name) %></th>
-        <th><%= model_class.human_attribute_name(:pdesc) %></th>
+        <!--<th><%= model_class.human_attribute_name(:pdesc) %></th>-->
+        <th>Description</th>
         <th><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
     </thead>
@@ -49,4 +50,40 @@
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_project_path,
               :class => 'btn btn-primary' %>
+
+  <hr>
+  <h2>Projects (other)</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:name) %></th>
+        <!--<th><%= model_class.human_attribute_name(:pdesc) %></th>-->
+        <th>Description</th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @projects_other.each do |project| %>
+        <tr>
+          <% if can? :read, project %>
+          <td><%= link_to project.name, project_path(project) %></td>
+          <td><%= project.pdesc %></td>
+          <td>
+          <% if can? :manage, project %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_project_path(project), :class => 'btn btn-mini' %>
+          <% end %> <!-- can-can -->
+          <% if can? :manage, project %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        project_path(project),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+            <% end %>
+          </td>
+          <% end %> <!-- can-can -->
+        </tr>
+      <% end %> <!-- can-can -->
+    </tbody>
+  </table>
 </div>

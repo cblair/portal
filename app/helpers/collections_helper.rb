@@ -56,7 +56,7 @@ module CollectionsHelper
 
     project.save
   end
-  
+
   #collection inherits project and permissions of parent collection by default
   def inherit_collection(parent_collection)
     #collection is a sub-collection, parent has a project
