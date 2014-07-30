@@ -59,7 +59,7 @@ module IfiltersHelper
 
   #Gets internal and user defined ifilters
   def get_ifilters
-    retval = Ifilter.all
+    retval = Ifilter.order(:name)  #retval = Ifilter.all
     get_internal_ifilters.each do |f|
       retval.prepend(f)
     end

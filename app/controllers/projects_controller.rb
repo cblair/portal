@@ -10,8 +10,8 @@ class ProjectsController < ApplicationController
   def index
     #@projects = Project.order("name").all.paginate(:per_page => 5, :page => params[:page])
     #@projects = Project.order("name").all
-    @projects = Project.where("user_id = ?", current_user.id)
-    @projects_other = Project.where("user_id != ?", current_user.id)
+    @projects = Project.where("user_id = ?", current_user.id).order(:name)
+    @projects_other = Project.where("user_id != ?", current_user.id).order(:name)
     
     respond_to do |format|
       format.html # index.html.erb

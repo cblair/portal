@@ -43,7 +43,28 @@ module MetaformsHelper
     return true
   end
 =end
-  #Saves each metarow as metadata to CouchDB
+#-----------------------------------------------------------------------
+
+  #Adds a metaform to an uploaded document (from data import)
+  def add_document_metaform(document_id, mf_id)
+    metaform = Metaform.find(mf_id)
+    document = Document.find(document_id)
+
+    if (document.stuffing_metadata == nil or document.stuffing_metadata.empty?)
+      document.stuffing_metadata = [{"Metaform" => metaform.name}]
+    else
+      document.stuffing_metadata << {"Metaform" => metaform.name}
+    end
+    
+    metaform.metarows.each do |row|
+      document.stuffing_metadata << {row['key'] => row['value']}
+    end
+    document.save
+
+  end
+#-----------------------------------------------------------------------
+
+  #Saves each metarow as metadata to CouchDB (document metadata table)
   def metarows_save(mf_data, document)
     if (mf_data == nil or document == nil)
       return false
@@ -71,6 +92,7 @@ module MetaformsHelper
   #Deletes metaform metadata added to a Couch document.
   #Dose not delete filter but deletes all other metadata.
   #SATUS: Inactive.
+=begin
   def metarows_delete(document)
     if (document == nil)
       return false
@@ -95,7 +117,7 @@ module MetaformsHelper
     
     return true
   end
-  
+=end
   #Sets up the metarows for the metaform creation page.
   #TODO: improve.
   def setup_mrows()

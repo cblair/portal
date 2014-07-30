@@ -3,6 +3,7 @@ class UploadsController < ApplicationController
   include DocumentsHelper
   include CollectionsHelper
   include IfiltersHelper
+  include MetaformsHelper
   before_filter :require_permissions
   
   
@@ -129,14 +130,16 @@ class UploadsController < ApplicationController
     
     #User
     c.user = current_user
-    
     c.save
+
+    status = nil
+    document_id = nil
 
     #Parse file into db - these ignore the f filter
     if @upload.upfile.content_type == "application/zip"
       save_zip_to_documents(fname, @upload, c, f)
     else #hopefully is something like a "text/plain"
-      save_file_to_document(fname, @upload.upfile.path, c, f) 
+       status, document_id = save_file_to_document(fname, @upload.upfile.path, c, f)
     end
 
     #Filter - now, if we got a filter, start validation jobs
@@ -144,6 +147,13 @@ class UploadsController < ApplicationController
       f = get_ifilter(params[:post]["ifilter_id"].to_i)
 
       validate_collection_helper(c, ifilter=f)
+    end
+
+    #Metaform processing
+    #TODO: make this a job?
+    if ( params.include?("post") and params[:post].include?("metaform_id") and params[:post]["metaform_id"] != "" ) 
+      mf_id = params[:post]["metaform_id"].to_i
+      add_document_metaform(document_id, mf_id)
     end
 
     etime = Time.now() #end time
