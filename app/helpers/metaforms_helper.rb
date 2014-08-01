@@ -45,7 +45,7 @@ module MetaformsHelper
 =end
 #-----------------------------------------------------------------------
 
-  #Adds a metaform to an uploaded document (from data import)
+  #Adds a metaform to an uploaded document (not from metadata table)
   def add_document_metaform(document_id, mf_id)
     metaform = Metaform.find(mf_id)
     document = Document.find(document_id)
@@ -61,6 +61,17 @@ module MetaformsHelper
     end
     document.save
 
+  end
+#-----------------------------------------------------------------------
+
+  #Adds a metaform to all the documents in a collection (not from metadata table)
+  #Does NOT add metadata to sub-collections
+  def add_collection_metaform(collection, mf_id)
+    
+    collection.documents.each do |doc|
+      p doc.id
+      add_document_metaform(doc.id, mf_id)
+    end
   end
 #-----------------------------------------------------------------------
 
