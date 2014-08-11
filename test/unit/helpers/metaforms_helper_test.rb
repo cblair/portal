@@ -58,9 +58,115 @@ class MetaformsHelperTest < ActionView::TestCase
 	            )
 	    assert result
 	end
-  
+
 #NOTE: There seems to be a conflict between several tests.  They work
 # individualy but not as a "batch".
+
+  #Test adding a metaform to an uploaded document (not from metadata table)
+  # with good input
+  test "test_add_document_metaform_good" do
+    #Save document to Couch
+    fname = 'smallv.csv'
+    upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+    save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+    f = get_ifilter(-1) #internal
+    docs = Document.where(:name => fname)
+    d = docs.first
+    
+    mf_id = 1
+    
+    assert add_document_metaform(d.id, mf_id) == true, "Metaform not added to document."
+  end
+
+  #Test adding a metaform to an uploaded document (not from metadata table)
+  # with nil document id
+  test "test_add_document_metaform_nil_doc" do
+    #Save document to Couch
+    doc_id = nil
+    mf_id = 1
+    
+    assert add_document_metaform(doc_id, mf_id) == false, "Document ID not nil."
+  end
+  
+  #Test adding a metaform to an uploaded document (not from metadata table)
+  # with nil metaform id
+  test "test_add_document_metaform_nil_mf" do
+    #Save document to Couch
+    fname = 'smallv.csv'
+    upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+    save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+    f = get_ifilter(-1) #internal
+    docs = Document.where(:name => fname)
+    d = docs.first
+    
+    mf_id = nil
+    
+    assert add_document_metaform(d.id, mf_id) == false, "Metaform not nil."
+  end
+  
+  #Test adding a metaform to an uploaded document (not from metadata table)
+  # with empty document id
+  test "test_add_document_metaform_empty_doc" do
+    #Save document to Couch
+    doc_id = ""
+    mf_id = 1
+    
+    assert add_document_metaform(doc_id, mf_id) == false, "Document ID not empty."
+  end
+  
+  #Test adding a metaform to an uploaded document (not from metadata table)
+  # with empty metaform id
+  test "test_add_document_metaform_empty_mf" do
+    #Save document to Couch
+    fname = 'smallv.csv'
+    upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+    save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+    f = get_ifilter(-1) #internal
+    docs = Document.where(:name => fname)
+    d = docs.first
+    
+    mf_id = ""
+    
+    assert add_document_metaform(d.id, mf_id) == false, "Metaform not empty."
+  end
+
+  #Test adding a metaform to an uploaded collection with good input
+  #Document must be in couch (or will get error)
+  test "test_add_collection_metaform_good" do
+    collection = collections(:col6)
+    mf_id = 1
+    
+    #Save document to Couch
+    fname = 'smallv.csv'
+    upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+    save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+
+    f = get_ifilter(-1) #internal
+    docs = Document.where(:name => fname)
+    d = docs.first
+    d.collection_id = collection.id
+
+    assert add_collection_metaform(collection, mf_id) == true, "Metaform not added through collection"
+  end
+  
+  #Test adding a metaform to an uploaded collection with nil collection
+  test "test_add_collection_metaform_col_nil" do
+    collection = collections(:col6)
+    mf_id = nil
+
+    assert add_collection_metaform(collection, mf_id) == false, "Metaform not nil."
+  end
+  
+  #Test adding a metaform to an uploaded collection with nil metaform
+  test "test_add_collection_metaform_mf_nil" do
+    collection = nil
+    mf_id = 1
+
+    assert add_collection_metaform(collection, mf_id) == false, "Collection not nil."
+  end
 
   #Test adding metadata to document with out metadata
   test "test_metarows_no_md_save" do
@@ -147,38 +253,6 @@ class MetaformsHelperTest < ActionView::TestCase
     
     assert metarows_save(mf_data, doc) == false, "Document not nil."
   end
-  
-  #Test good arguments to "metarows_delete".
-  test "test_metarows_delete_good_arg" do
-    @metaform = metaforms(:metaform1)
-    mf_data = {"0" => {"key" => "KeyTest1", "value" => "Value1", "id" => "1"}}
-    
-    #Save and filter document to Couch
-	fname = 'smallv.csv'
-	upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
-	save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
-	
-	f = get_ifilter(-1) #internal CSV
-	docs = Document.where(:name => fname)
-	d = docs.first
-
-	data = filter_data_columns_csv(d.stuffing_text) #call filters
-	suc_valid = d.validate(f)
-	
-	mf_data2 = {"0" => {"key" => "KeyTest2", "value" => "Value2", "id" => "1"}}
-	metarows_save(mf_data2, d)
-	metadata = d.stuffing_metadata
-	
-	assert metarows_delete(d) == true, "Metarows not deleted."
-	assert metadata == [{"HatchFilter"=>"CSV (pre-defined)"}, {"Metaform"=>"Metaform1"}, {"KeyTest2"=>"Value2"}], 
-	"Metarows don't match"
-  end
-
-  #Test nil document to "metarows_delete".
-  test "test_metarows_delete_nil_doc" do
-    doc = nil
-    assert metarows_delete(doc) == false, "Document not nil."
-  end
 
   #Test metarow setup function
   test "test_metarow_setup" do
@@ -212,4 +286,40 @@ class MetaformsHelperTest < ActionView::TestCase
     assert add_fields_link(name, f, association) == false, "association not nil."
   end
 
+  #Depricated function tests.
+=begin
+  #Test good arguments to "metarows_delete".
+  #NOTE: This function status is inactive.
+  test "test_metarows_delete_good_arg" do
+    @metaform = metaforms(:metaform1)
+    mf_data = {"0" => {"key" => "KeyTest1", "value" => "Value1", "id" => "1"}}
+    
+    #Save and filter document to Couch
+	fname = 'smallv.csv'
+	upload = Upload.create(:name => fname, :upfile => File.open('test/unit/test_files/smallv.csv'))
+	save_file_to_document(fname, upload.upfile.path, nil, nil, @user)
+	
+	f = get_ifilter(-1) #internal CSV
+	docs = Document.where(:name => fname)
+	d = docs.first
+
+	data = filter_data_columns_csv(d.stuffing_text) #call filters
+	suc_valid = d.validate(f)
+	
+	mf_data2 = {"0" => {"key" => "KeyTest2", "value" => "Value2", "id" => "1"}}
+	metarows_save(mf_data2, d)
+	metadata = d.stuffing_metadata
+	
+	assert metarows_delete(d) == true, "Metarows not deleted."
+	assert metadata == [{"HatchFilter"=>"CSV (pre-defined)"}, {"Metaform"=>"Metaform1"}, {"KeyTest2"=>"Value2"}], 
+	"Metarows don't match"
+  end
+
+  #Test nil document to "metarows_delete".
+  #NOTE: This function status is inactive.
+  test "test_metarows_delete_nil_doc" do
+    doc = nil
+    assert metarows_delete(doc) == false, "Document not nil."
+  end
+=end
 end
