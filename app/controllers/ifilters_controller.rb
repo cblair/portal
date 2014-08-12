@@ -9,7 +9,7 @@ class IfiltersController < ApplicationController
   # GET /ifilters
   # GET /ifilters.json
   def index
-    @ifilters = Ifilter.all
+    @ifilters = Ifilter.order(:name).all
 
     respond_to do |format|
       format.html # index.html.erb

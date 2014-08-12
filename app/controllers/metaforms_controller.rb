@@ -51,8 +51,8 @@ class MetaformsController < ApplicationController
   # GET /metaforms.json
   def index
     #@metaforms = Metaform.all
-    @metaforms = Metaform.where("user_id = ?", current_user)
-    @metaforms_other = Metaform.where("user_id != ?", current_user)
+    @metaforms = Metaform.where("user_id = ?", current_user).order(:name)
+    @metaforms_other = Metaform.where("user_id != ?", current_user).order(:name)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -1,5 +1,6 @@
 module CollectionsHelper
   include DocumentsHelper
+  include MetaformsHelper
 
   #Deletes all ancestor collections
   def collection_recursive_destroy(c)

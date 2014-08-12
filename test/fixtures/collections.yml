@@ -24,3 +24,10 @@ col5:
   name: "Collection 5"
   user_id: 2
   project_id: 2
+
+#These collections are user for metaform testing
+col6:
+  id: 6
+  name: "Collection 6"
+  user_id: 1
+  project_id: nil

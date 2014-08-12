@@ -205,6 +205,7 @@ module DocumentsHelper
   def save_zip_to_documents(zip_fname, zip_file_object, user_c, f, user=current_user)
     #true until something fails
     status = true
+    document_id = nil
 
     if (zip_fname == nil or zip_file_object == nil)
       log_and_print "WARN: zip file name or zip file object was nil"
@@ -249,7 +250,9 @@ module DocumentsHelper
           tempfile.close
           
           c_name = File.dirname(fname)
-          status = status and save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
+          retval_status, document_id = save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
+          status = status and retval_status
+          #status = status and save_file_to_document(basename, tempfile, zip_collections[c_name], f, user)
         end
       end
     end
@@ -322,9 +325,11 @@ module DocumentsHelper
 
     #@document.project=p		#links document to project
     @document.user = user
+    document_id = nil
 
     begin
       status = @document.save
+      document_id = @document.id
       etime = Time.now()
       log_and_print "INFO: Saved document #{fname} in #{etime - stime} seconds."
     rescue RestClient::Conflict
@@ -344,7 +349,7 @@ module DocumentsHelper
       return false
     end
 
-    return status
+    return status, document_id
   end
   
 
@@ -441,8 +446,7 @@ module DocumentsHelper
           row = row.map {|k,v| v}.join
         end
 
-        #if (f['regex'] == "csv")
-        if ( f['regex'].include?("csv") )
+        if ( f['regex'].include?("csv") )    #if (f['regex'] == "csv")
           iterator = strip_header(h, iterator)
         end
         

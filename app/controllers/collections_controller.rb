@@ -65,14 +65,14 @@ class CollectionsController < ApplicationController
 
     #@documents = Document.where(:collection_id => @collection.id).paginate(:per_page => 5, :page => params[:page])
     @documents_all = Document.where(:collection_id => @collection.id)
-#=begin
+
     @documents = []
     @documents_all.each do |doc|
       if doc_is_viewable(doc, current_user)
         @documents << doc
       end
     end
-#=end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @collection }
@@ -153,6 +153,12 @@ class CollectionsController < ApplicationController
       f = get_ifilter(params[:post][:ifilter_id].to_i)
 
       validate_collection_helper(@collection, f)
+    end
+    
+    #Add metadata from a metaform
+    if params.include?("post") and params[:post].include?("metaform_id") and params[:post][:metaform_id] != ""
+      #f = get_ifilter(params[:post][:ifilter_id].to_i)
+      add_collection_metaform(@collection, params[:post][:metaform_id].to_i)
     end
 
     #Add to project

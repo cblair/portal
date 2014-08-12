@@ -144,10 +144,11 @@ class Document < ActiveRecord::Base
     while validation_finished == false
       #copy these so filter attempts don't overwrite the original data
       stuffing_metadata = self.stuffing_metadata
+      curr_md = self.stuffing_metadata ||= [] # for existing MD from a metaform
       stuffing_data = self.stuffing_data
-      
+
       f = ifilters[i]
-      
+
       #Attempt filter
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
       #stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
@@ -183,7 +184,8 @@ class Document < ActiveRecord::Base
             stuffing_metadata << {"HatchFilter" => filter_name}
           end
 
-          self.stuffing_metadata = stuffing_metadata
+          #stores new and pre-existing metadata (from metaform)
+          self.stuffing_metadata = stuffing_metadata + curr_md
           suc_valid = self.save
           
           if suc_valid 

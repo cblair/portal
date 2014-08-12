@@ -1,0 +1,4 @@
+<!-- <p>Add metadata from a metaform?</p> -->
+  <%= select("post", "metaform_id", Metaform.all.collect {|m| [m.name, m.id]}, 
+    {:include_blank => '(none)'}) %>
+      <%= link_to "Metaform Editor...", metaforms_path %>

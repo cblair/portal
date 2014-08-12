@@ -35,17 +35,17 @@
             <!--<li><%= link_to "Roles", roles_path %></li> -->
             <!--TODO: someday-->
             <!--<li><%= link_to "Feeds", feeds_path %></li>-->
-            <li><%= link_to "Search", new_search_path %>
-            <li><%= link_to "Analyze", home_analyze_path %>
-            <li><%= link_to "Metaforms", metaforms_path %>
-            	
-            </li>
+            <li><%= link_to "Search", new_search_path %></li>
+            <li><%= link_to "Analyze", home_analyze_path %></li>
+            <li><%= link_to "Metaforms", metaforms_path %></li>
         </ul>
+
         <%= render 'layouts/login_items' %>
       </div><!--/.nav-collapse -->
     </div>
   </div>
 </div>
+
 
 <%
 	#if the couchdb is not running, override alert

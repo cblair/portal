@@ -15,8 +15,20 @@
 
 	<%= render :partial => "documents/documents_datatable", 
 				:locals => {:collection => @collection} %>
+
 	<% if can? :manage, @collection %>
 	  <%= link_to 'Edit', edit_collection_path(@collection) %> |
 	<% end %>
 	<%= link_to 'Back', collections_path %>
+
+  <hr />
+
+  <% if (!@collection.children.empty?) %>
+    <h3>Sub Collections</h3>
+  <% end %>
+  <ul>
+  <% @collection.children.each do |col_child| %>
+    <li> <%= link_to col_child.name,  col_child%> </li>
+  <% end %>
+  </ul>
 </div>
