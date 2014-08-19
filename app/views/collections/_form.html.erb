@@ -19,7 +19,7 @@
   <div>
   	<p>Validate:</p>
   	<%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
- 	<%= link_to "Filters...", ifilters_path %>
+ 	<%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
   </div>
   
   <div>
@@ -36,6 +36,7 @@
   <div>
   	<p>Add to project:</p>
   	<%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
+    <%= link_to "Projects...", projects_path, class: "btn btn-info" %>
     <p>Remove from project:</p>
     <% if @collection.projects.empty? %>
       <p>(none)</p>

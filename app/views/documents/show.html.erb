@@ -13,8 +13,10 @@
   <%= render "doc_notes" %>
   
   <hr />
+  
+  <h2>Data</h2>
   <% if can? :show_data, @document %>
-    <%= link_to "Show Data", show_data_path %>
+    <%= link_to "Show Data", show_data_path, class: "btn btn-primary" %>
   <% end %> <!-- CanCan -->
 
 </div>

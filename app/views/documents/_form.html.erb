@@ -58,7 +58,7 @@
   <div>
   	<p>Validate...</p>
   	<%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
- 	<%= link_to "Filters...", ifilters_path %>
+ 	<%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
   </div>
 
   <!--Hide for now - we're adding all columns to primary keys for search

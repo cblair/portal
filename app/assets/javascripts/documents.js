@@ -336,7 +336,7 @@ function sort_editor() {
 
 //----------------------------------------------------------------------
   function show_notesJS() {
-    var hide_notes = $('<a id="hide_notes_link">Hide Notes</a>');
+    var hide_notes = $('<a id="hide_notes_link" class="btn btn-small">Hide Notes</a>');
     $('#show_notes_link').before(hide_notes).hide();
     $("#hide_notes_link").on('click', hide_notesJS);
     $("#notes").show();
