@@ -1,6 +1,6 @@
 <fieldset>
   <%= f.label :key, "Key" %>
-  <%= f.text_area :key, :rows => 1, :id => "mf_textarea" %>
+  <%= f.text_area :key, :rows => 1, :id => "mf_textarea" %><br />
   <!--<%#= f.text_field :key %>-->
   
   <%= f.label :value, "Value" %>
@@ -11,7 +11,7 @@
   <!--<%#= f.check_box :autofill %><br /><br /> -->
   
   <%= f.hidden_field :_destroy %>
-  <%= link_to_function "Remove Metadata", "del_mrow(this)" %>
+  <%= link_to_function "Remove Metadata", "del_mrow(this)", class: "btn btn-inverse" %>
   <%#= link_to "Remove", '#', class: "remove_fields" %>
   <hr>
 </fieldset>

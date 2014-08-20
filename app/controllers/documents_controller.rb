@@ -121,7 +121,7 @@ class DocumentsController < ApplicationController
     #get_metadata()
     #@notes = @document.stuffing_notes
     get_show_data()
-=begin
+
     #For non datatables view
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
@@ -135,7 +135,6 @@ class DocumentsController < ApplicationController
       format.html # show.html.erb
       format.json { render json: @paged_sdata }
     end
-=end
   end
 
   # GET /documents/1
@@ -158,7 +157,7 @@ class DocumentsController < ApplicationController
         puts "INFO: Job with id #{@document.job_id} for Document #{@document.name} no longer exists." 
       end
     end
-#=begin
+=begin
     #For datatables view
     current_page = params[:page]
     per_page = params[:per_page] # could be configurable or fixed in your app
@@ -167,10 +166,10 @@ class DocumentsController < ApplicationController
     if @sdata != nil
       @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
     end
-#=end
+=end
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: DocumentsDatatable.new(view_context, @document) }
+      #format.json { render json: DocumentsDatatable.new(view_context, @document) }
     end
   end
 

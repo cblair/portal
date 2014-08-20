@@ -64,6 +64,7 @@ class MetaformsController < ApplicationController
   # GET /metaforms/1.json
   def show
     @metaform = Metaform.find(params[:id])
+    @owner = User.find(@metaform.user_id).email #gets email/ID of project owner
 
     respond_to do |format|
       format.html # show.html.erb

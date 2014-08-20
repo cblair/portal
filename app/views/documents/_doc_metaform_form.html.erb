@@ -6,7 +6,7 @@
         <%= form_tag(controller: "metaforms", action: "mdf_input", method: "get") do %>
         <%= select("metaf", "id", Metaform.all.collect {|m| [m.name, m.id]},
           {:prompt => '(select a metaform)'}) %>
-            <%= link_to "Metaform Editor...", metaforms_path %> <br />
+            <%= link_to "Metaform Editor...", metaforms_path, class: "btn btn-info" %> <br />
         <%= hidden_field_tag "doc_id", @document.id %>
         <%= submit_tag "Add Metaform" %>
         <% end %>

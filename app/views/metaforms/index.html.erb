@@ -1,57 +1,82 @@
-<h1>Listing Metaforms</h1>
-
-<table border="0" cellpadding="5">
-  <tr>
-    <th>Name</th>
-    <!--<th>Mddesc</th>-->
-    <th>Description</th>
-    <!--<th>User</th>-->
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @metaforms.each do |metaform| %>
-  <tr>
-    <% if can? :manage, metaform %>
-      <td><%= metaform.name %></td>
-      <td><%= metaform.mddesc %></td>
-      <!--<td><%#= metaform.user_id %></td>-->
-      <td><%= link_to 'Show', metaform %></td>
-      <td><%= link_to 'Edit', edit_metaform_path(metaform) %></td>
-      <td><%= link_to 'Destroy', metaform, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    <% end %> <!-- end CanCan -->
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Metaform', new_metaform_path %>
-
-<hr>
-
-<h2>Listing Metaforms (other)</h2>
-
-<table border="0" cellpadding="5">
-  <tr>
-    <th>Name</th>
-    <!--<th>Mddesc</th>-->
-    <th>Description</th>
-    <!--<th>User</th>-->
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @metaforms_other.each do |metaform| %>
-  <tr>
-    <% if can? :read, metaform %>
-      <td><%= metaform.name %></td>
-      <td><%= metaform.mddesc %></td>
-      <!--<td><%#= metaform.user_id %></td>-->
-      <td><%= link_to 'Show', metaform %></td>
-    <% end %> <!-- end CanCan -->
-  </tr>
-<% end %>
-</table>
+<div class="hero-unit">
+  <%- model_class = Metaform -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+  </div>
+  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:name) %></th>
+        <!--<th><%= model_class.human_attribute_name(:mddesc) %></th>-->
+        <th>Description</th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    <thead>
+    <tbody>
+      <% @metaforms.each do |metaform| %>
+        <tr>
+          <% if can? :read, metaform %>
+          <td><%= link_to metaform.name, metaform_path(metaform) %></td>
+          <td><%= metaform.mddesc %></td>
+          <td>
+          <% if can? :manage, metaform %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_metaform_path(metaform), :class => 'btn btn-mini' %>
+          <% end %> <!-- can-can -->
+          <% if can? :manage, metaform %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        metaform_path(metaform),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+            <% end %>
+          </td>
+          <% end %> <!-- can-can -->
+        </tr>
+      <% end %> <!-- can-can -->
+    </tbody>
+  </table>
+  
+  <br />
+  
+  <%= link_to 'New Metaform', new_metaform_path, class: "btn btn-primary" %>
+  
+  <hr>
+  
+  <h2>Listing Metaforms (other)</h2>
+  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= model_class.human_attribute_name(:name) %></th>
+        <!--<th><%= model_class.human_attribute_name(:mddesc) %></th>-->
+        <th>Description</th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    <thead>
+    <tbody>
+      <% @metaforms_other.each do |metaform| %>
+        <tr>
+          <% if can? :read, metaform %>
+          <td><%= link_to metaform.name, metaform_path(metaform) %></td>
+          <td><%= metaform.mddesc %></td>
+          <td>
+          <% if can? :manage, metaform %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_metaform_path(metaform), :class => 'btn btn-mini' %>
+          <% end %> <!-- can-can -->
+          <% if can? :manage, metaform %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        metaform_path(metaform),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+            <% end %>
+          </td>
+          <% end %> <!-- can-can -->
+        </tr>
+      <% end %> <!-- can-can -->
+    </tbody>
+  </table>
+</div>
