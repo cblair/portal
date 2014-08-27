@@ -1,20 +1,20 @@
 <div class="container-fluid well" style="background-color: #dfdfdf;">
-		<div class="container-fluid well" style="background-color: #f5f5f5;">
-		<div class="hero-unit">
-			<h1>Editing document</h1>
+    <div class="container-fluid well" style="background-color: #f5f5f5;">
+    <div class="hero-unit">
+      <h1>Editing document</h1>
 
-			<%= render 'form' %>
+      <p>
+        <b>Owner:</b>
+        <% if @document.user %>
+          <%= @document.user.email %> 
+        <% end %>
+      </p>
 
-			<p>
-				<b>Owner:</b>
-				<% if @document.user %>
-					<%= @document.user.email %> 
-				<% end %>
-			</p>
+      <%= render 'form' %>
 
-			<%= link_to 'Show', @document, class: "btn" %>
-			<%= link_to 'Back', @document, class: "btn" %>
-			<%#= link_to 'Back', documents_path %>
-		</div>
-	</div>
+      <%= link_to 'Show', @document, class: "btn" %>
+      <%= link_to 'Back', @document, class: "btn" %>
+      <%#= link_to 'Back', documents_path %>
+    </div>
+  </div>
 </div>

@@ -5,7 +5,7 @@
 
   <hr/>
   
-  <%= link_to "Hide Data", document_path, class: "btn btn-primary" %>
+  <p><%= link_to "Hide Data", document_path, class: "btn btn-primary" %></p>
 
   <!-- Document Data -->
     <% 
@@ -18,11 +18,16 @@
       @colnames = get_data_colnames(@paged_sdata) 
     %>
 
-      <h2>Data</h2>
+    <p id="items_per_page">Show
+      <%= select_tag :per_page, options_for_select([5,10,25,50,100,500,1000], params[:per_page].to_i),
+       {:onchange => "if(this.value){window.location='?per_page='+this.value;}", :prompt => "(select number)"} %>
+       items
+    </p>
+
+    <h2>Data</h2>
     <!--Display data-->
     
     <% if @document.stuffing_data != nil %>
-      <!--<table border="1" cellpadding="5">-->
       <table class="table table-striped table-bordered table-condensed">
         <thead>
           <tr>
@@ -48,7 +53,10 @@
         </tbody>
         
       </table>
-      <%= will_paginate @paged_sdata %>
+      
+      <div class="digg_pagination">
+        <%= will_paginate @paged_sdata %>
+      </div>
         
     <% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
       <p>Raw unvalidated text: </p>

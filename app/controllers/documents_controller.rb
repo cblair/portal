@@ -124,11 +124,11 @@ class DocumentsController < ApplicationController
 
     #For non datatables view
     current_page = params[:page]
-    per_page = params[:per_page] # could be configurable or fixed in your app
+    per_page = params[:per_page] || 25 # could be configurable or fixed in your app
     
     @paged_sdata = []
     if @sdata != nil
-      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => 20})
+      @paged_sdata = @sdata.paginate({:page => current_page, :per_page => per_page})
     end
     
     respond_to do |format|
