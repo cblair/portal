@@ -51,6 +51,10 @@
               new_project_path,
               :class => 'btn btn-primary' %>
 
+  <div class="digg_pagination">
+    <%= will_paginate @projects %>
+  </div>
+
   <hr>
   <h2>Projects (other)</h2>
   <table class="table table-striped">
