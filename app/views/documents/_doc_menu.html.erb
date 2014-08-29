@@ -35,19 +35,19 @@
 
  <% if @document.validated %>
    <% if can? :manage, @document %>
-     <%= link_to 'Edit', edit_document_path(@document) %> |
+     <%= link_to 'Edit', edit_document_path(@document), class: "btn" %>
    <% end %> <!-- can can -->
  <% else %>
    <% if can? :manage, @document %>
-     <%= link_to 'Edit Properties', edit_document_path(@document) %> |
-     <%= link_to 'Edit Text', edit_document_text_path(@document) %> |
+     <%= link_to 'Edit Properties', edit_document_path(@document), class: "btn" %>
+     <%= link_to 'Edit Text', edit_document_text_path(@document), class: "btn" %>
    <% end %> <!-- can can -->
  <% end %>
  <% if can? :manage, @document %>
  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-       document_path(@document),
+       document_path(@document), class: "btn btn-danger",
                 :method => 'delete',
-                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) } %> |
+                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) } %>
  <% end %> <!-- can can -->
   <%#= link_to 'Back', documents_path %>
-  <%= link_to 'Back', @document.collection %>
+  <%= link_to 'Back', @document.collection, class: "btn" %>

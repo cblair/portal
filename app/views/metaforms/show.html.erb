@@ -1,41 +1,41 @@
-<p id="notice"><%= notice %></p>
-
-<h2>Metaform</h2>
-<p>
-  <b>Name:</b>
-  <%= @metaform.name %>
-</p>
-
-<p>
-  <b>Mddesc:</b>
-  <%= @metaform.mddesc %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @metaform.user_id %>
-</p>
-
-<hr>
-<ol>
-<% for mrow in @metaform.metarows %>
-  <li>
-  <p>
-    <b>Key:</b>
-    <%= mrow.key %>&emsp;
+<div class="hero-unit">
   
-    <b>Value:</b>
-    <%= mrow.value %>&emsp;
+  <%- model_class = Metaform -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+  </div>
   
-    <!--<b>Autofill:</b>
-    <%#= mrow.autofill %> -->
-  </p>
-  </li>
-  
-<% end %>
-</ol>
+  <dl class="dl-horizontal">
+    <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+    <dd><%= @metaform.name %></dd>
+    <dt><strong>Description:</strong></dt>
+    <!--<dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>-->
+    <dd><%= @metaform.mddesc %></dd>
+    <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+    <dd><%= @owner %></dd>
 
-<% if can? :manage, @metaform %>
-  <%= link_to 'Edit', edit_metaform_path(@metaform) %> |
-<% end %>
-<%= link_to 'Back', metaforms_path %>
+    <hr>
+    <ol>
+    <% for mrow in @metaform.metarows %>
+      <li>
+      <p>
+        <strong>Key:</strong>
+        <%= mrow.key %><br />
+      
+        <strong>Value:</strong>
+        <%= mrow.value %>
+      
+        <!--<b>Autofill:</b>
+        <%#= mrow.autofill %> -->
+        <hr>
+      </p>
+      </li>
+      
+    <% end %>
+    </ol>
+    <% if can? :manage, @metaform %>
+      <%= link_to 'Edit', edit_metaform_path(@metaform), class: "btn" %>
+    <% end %>
+    <%= link_to 'Back', metaforms_path, class: "btn" %>
+  </div>
+</div>

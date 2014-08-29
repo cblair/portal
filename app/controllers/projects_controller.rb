@@ -8,10 +8,9 @@ class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   def index
-    #@projects = Project.order("name").all.paginate(:per_page => 5, :page => params[:page])
     #@projects = Project.order("name").all
-    @projects = Project.where("user_id = ?", current_user.id).order(:name)
-    @projects_other = Project.where("user_id != ?", current_user.id).order(:name)
+    @projects = Project.where("user_id = ?", current_user.id).order(:name).paginate(:page => params[:page], :per_page => 10)
+    @projects_other = Project.where("user_id != ?", current_user.id).order(:name).paginate(:page => params[:page], :per_page => 10)
     
     respond_to do |format|
       format.html # index.html.erb

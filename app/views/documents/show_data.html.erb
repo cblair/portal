@@ -4,15 +4,8 @@
   <%= render "doc_menu" %>
 
   <hr/>
-
-  <!-- Document Metadata -->
-  <%#= render "doc_metadata" %>
-  <!--<hr/>-->
   
-  <%#= render "doc_notes" %>
-  <!--<hr />-->
-  
-  <%= link_to "Hide Data", document_path %>
+  <p><%= link_to "Hide Data", document_path, class: "btn btn-primary" %></p>
 
   <!-- Document Data -->
     <% 
@@ -25,13 +18,18 @@
       @colnames = get_data_colnames(@paged_sdata) 
     %>
 
-      <h2>Data</h2>
+    <p id="items_per_page">Show
+      <%= select_tag :per_page, options_for_select([5,10,25,50,100,500,1000], params[:per_page].to_i),
+       {:onchange => "if(this.value){window.location='?per_page='+this.value;}", :prompt => "(select number)"} %>
+       items
+    </p>
+
+    <h2>Data</h2>
     <!--Display data-->
-    <% default_search = params[:default_search] or "" %>
+    
     <% if @document.stuffing_data != nil %>
-        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="documents"
-          data-source="<%= document_path(:id => @document.id, :format => :json) %>" data-default-search="<%= default_search %>">
-         <thead>
+      <table class="table table-striped table-bordered table-condensed">
+        <thead>
           <tr>
             <% row_keys = [] %>
             <% if !@row.empty? %>
@@ -43,10 +41,23 @@
               </th>
             <% end %>
           </tr>
-         </thead>
-         <tbody>
-       </tbody>
+        </thead>
+        <tbody>
+          <% @paged_sdata.each do |row| %>
+            <tr>
+            <% row_keys.each do |field| %>
+              <td><%= row[field] %></td>
+            <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+        
       </table>
+      
+      <div class="digg_pagination">
+        <%= will_paginate @paged_sdata %>
+      </div>
+        
     <% elsif (@document.stuffing_text != nil and !@document.stuffing_text.empty?) %>
       <p>Raw unvalidated text: </p>
 

@@ -1,6 +1,8 @@
-include MetaformsHelper
+#include MetaformsHelper
 
 class MetaformsController < ApplicationController
+  include MetaformsHelper
+  require 'will_paginate/array'
   
   before_filter :authenticate_user!
   load_and_authorize_resource
@@ -51,8 +53,8 @@ class MetaformsController < ApplicationController
   # GET /metaforms.json
   def index
     #@metaforms = Metaform.all
-    @metaforms = Metaform.where("user_id = ?", current_user).order(:name)
-    @metaforms_other = Metaform.where("user_id != ?", current_user).order(:name)
+    @metaforms = Metaform.where("user_id = ?", current_user).order(:name).paginate(:page => params[:page], :per_page => 10)
+    @metaforms_other = Metaform.where("user_id != ?", current_user).order(:name).paginate(:page => params[:page], :per_page => 10)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -64,6 +66,7 @@ class MetaformsController < ApplicationController
   # GET /metaforms/1.json
   def show
     @metaform = Metaform.find(params[:id])
+    @owner = User.find(@metaform.user_id).email #gets email/ID of project owner
 
     respond_to do |format|
       format.html # show.html.erb
@@ -109,7 +112,6 @@ class MetaformsController < ApplicationController
   # PUT /metaforms/1.json
   def update
     @metaform = Metaform.find(params[:id])
-
     #param_new = sort_metarows(params[:metaform][:metarows_attributes])
     #params[:metaform][:metarows_attributes] = param_new
 

@@ -10,7 +10,7 @@
         <div>
           <p>What kind of data is this?</p>
           <%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
-          <%= link_to "Filters...", ifilters_path %>
+          <%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
         </div>
 
         <p>Add metadata from a metaform?</p>

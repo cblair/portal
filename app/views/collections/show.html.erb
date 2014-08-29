@@ -17,9 +17,9 @@
 				:locals => {:collection => @collection} %>
 
 	<% if can? :manage, @collection %>
-	  <%= link_to 'Edit', edit_collection_path(@collection) %> |
+	  <%= link_to 'Edit', edit_collection_path(@collection), class: "btn" %>
 	<% end %>
-	<%= link_to 'Back', collections_path %>
+	<%= link_to 'Back', collections_path, class: "btn" %>
 
   <hr />
 

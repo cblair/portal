@@ -1,32 +1,28 @@
-<h1>Metadata Input</h1>
-
-<p>
-  <b>Document:</b>
-  <%= @document.name %>
-</p>
-
-<p>
-  <b>Metaform:</b>
-  <%= @metaform.name %>
-</p>
-
-<p>
-  <!--<b>Mddesc:</b>-->
-  <b>Description:</b>
-  <%= @metaform.mddesc %>
-</p>
-
-<hr>
-
-<% if can? :add_md, @document %>
-<%= form_for @metaform, :url => mdf_save_path do |f| %>
-  <%= f.fields_for :metarows do |mrow| %>
-    <%= render "mdr_fields", :f => mrow %><br />
+<div class="hero-unit">
+  <h2>Metadata Input</h2>
+  
+  <dl class="dl-horizontal">
+    <dt><strong>Document:</strong></dt>
+    <dd><%= @document.name %></dd>
+    <dt><strong>Metaform:</strong></dt>
+    <dd><%= @metaform.name %></dd>
+    <dt><strong>Description:</strong></dt>
+    <dd><%= @metaform.mddesc %></dd>
+  </dl>
+  
+  <hr>
+  
+  <% if can? :add_md, @document %>
+  <%= form_for @metaform, :url => mdf_save_path do |f| %>
+    <%= f.fields_for :metarows do |mrow| %>
+      <%= render "mdr_fields", :f => mrow %><br />
+    <% end %>
+    <%= hidden_field_tag "metaf", @metaform.id %>
+    <%= hidden_field_tag "doc_id", @document.id %>
+    <%= f.submit %>
   <% end %>
-  <%= hidden_field_tag "metaf", @metaform.id %>
-  <%= hidden_field_tag "doc_id", @document.id %>
-  <%= f.submit %>
-<% end %>
-<% end %> <!-- CanCan -->
-
-<hr>
+  <% end %> <!-- CanCan -->
+  <%= link_to 'Back', @document, class: "btn btn-small" %>
+  
+  <hr>
+</div>
