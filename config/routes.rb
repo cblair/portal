@@ -54,7 +54,7 @@ Portal::Application.routes.draw do
   match '/search/save_doc_from_merge_search' => "searches#save_doc_from_merge_search", :as => :save_doc_from_merge_search
   match '/search/search_recommendations' => "searches#search_recommendations", :as => :search_recommendations
 
-  match '/metaforms/:id/mdf_copy' => "metaforms#mdf_copy", :as => :mdf_copy
+  match '/metaforms/mdf_copy' => "metaforms#mdf_copy", :as => :mdf_copy
   match '/metaforms/mdf_input' => "metaforms#mdf_input", :as => :mdf_input
   match '/metaforms/mdf_save' => "metaforms#mdf_save", :as => :mdf_save
   resources :metaforms

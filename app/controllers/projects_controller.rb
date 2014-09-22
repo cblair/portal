@@ -116,12 +116,15 @@ class ProjectsController < ApplicationController
     end
     
     if (@project != nil and editor_user_ids != nil and not editor_user_ids.blank?)
-      editor_remove_project(editor_user_ids) #removes collaborators from a project
+      editor_access = editor_remove_project(editor_user_ids) #removes collaborators from a project
     end
 
     #TODO: add new error message, use different error flag?
     respond_to do |format|
-      if @project.update_attributes(params[:project])
+      if editor_access == false
+        flash[:error] = "ERROR: You don't have permission for that action."
+        format.html { redirect_to project_path(@project) }
+      elsif @project.update_attributes(params[:project])
         #TODO: add message if selected user is blank?
         format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
         format.json { head :ok }
