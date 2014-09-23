@@ -36,6 +36,10 @@
     <% if can? :manage, @metaform %>
       <%= link_to 'Edit', edit_metaform_path(@metaform), class: "btn" %>
     <% end %>
+    <% if can? :read, @metaform %>
+      <%= link_to 'Copy', mdf_copy_path(:mf_id => @metaform.id), class: "btn" %>
+    <% end %>
     <%= link_to 'Back', metaforms_path, class: "btn" %>
+    
   </div>
 </div>

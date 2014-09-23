@@ -34,11 +34,11 @@ class Ability
     #can :manage, :all #FOR TESTING ONLY, GRANTS "ROOT" ACCESS!!!
     
     #Admin access permissions
-    can :manage, User if is_admin(user) #see Ability helper
-    can :manage, Role if is_admin(user)
-    can :manage, Project if is_admin(user)
-    can :manage, Collection if is_admin(user)
-    can :manage, Document if is_admin(user)
+    #can :manage, User if is_admin(user) #see Ability helper
+    #can :manage, Role if is_admin(user)
+    #can :manage, Project if is_admin(user)
+    #can :manage, Collection if is_admin(user)
+    #can :manage, Document if is_admin(user)
     #can :manage, Job if is_admin(user)
     
     #Owner access permissions
@@ -59,7 +59,6 @@ class Ability
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
     can :read, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
     can :show_data, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}} #not sure why "read doc" dose not cover this.
-    can :read, Metaform  #Lets everyone read metaforms
     
     #SAS: This rule version should be depricated but keep it for now
     #can :read, Document do |doc|
@@ -69,10 +68,14 @@ class Ability
     #  end
     #end
     
-    #Public access permissions
+    #Public project access permissions
     can :read, Project, :public => true
     can :read, Collection, :projects => { :public => true }
     can :read, Document, :collection => { :projects => { :public => true }}
     can :show_data, Document, :collection => { :projects => { :public => true }}
+    
+    #Metaform special case permissions
+    can :read, Metaform
+    
   end
 end

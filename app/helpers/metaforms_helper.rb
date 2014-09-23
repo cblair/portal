@@ -43,6 +43,7 @@ module MetaformsHelper
     return true
   end
 =end
+
 #-----------------------------------------------------------------------
 
   #Adds a metaform to an uploaded document (not from metadata table)
@@ -67,7 +68,6 @@ module MetaformsHelper
     document.save
     
     return true
-
   end
 #-----------------------------------------------------------------------
 
@@ -81,6 +81,19 @@ module MetaformsHelper
     
     collection.documents.each do |doc|
       add_document_metaform(doc.id, mf_id)
+    end
+    
+    return true
+  end
+#-----------------------------------------------------------------------
+
+  #Copies each row of metadata in a metaform to a new metaform.
+  def metarows_copy(metaform_new)
+    
+    @metaform.metarows.each do |row|
+      metarow_new = Metarow.new
+      metarow_new.update_attributes(row.attributes) #copies attributes
+      metarow_new.update_attribute(:metaform_id, metaform_new.id)
     end
     
     return true
