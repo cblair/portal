@@ -9,5 +9,4 @@ module AbilityHelper
       return false
     end
   end
-  
 end

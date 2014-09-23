@@ -7,18 +7,19 @@ class MetaformsController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
   
-  # GET /metaforms/mdf_copy
+  # GET /metaforms/1/mdf_copy
   def mdf_copy
-  @metaform = Metaform.find(params[:id])
-  
-  metaform_new = Metaform.new
-  metaform_new.update_attributes( @metaform.attributes ) #generates warning (bad?)
-  mf_name = metaform_new.name
-  metaform_new.update_attribute(:name, mf_name + " (copy)")
-  
-  copy_success = metarows_copy(metaform_new) #copies each row of metadata in a metaform
+    @metaform = Metaform.find(params[:mf_id]) #params[:id] causes cancan to block access
 
-  respond_to do |format|
+    metaform_new = Metaform.new
+    metaform_new.update_attributes( @metaform.attributes ) #generates warning (bad?)
+    metaform_new.update_attribute(:user_id, current_user.id) #all users can copy a metaform
+    mf_name = metaform_new.name
+    metaform_new.update_attribute(:name, mf_name + " (copy)")
+  
+    copy_success = metarows_copy(metaform_new) #copies each row of metadata in a metaform
+
+    respond_to do |format|
       #if @metaform.update_attributes(params[:metaform])
       if copy_success == true
         format.html { redirect_to metaforms_path, notice: 'Metaform was successfully copied.' }
@@ -29,7 +30,7 @@ class MetaformsController < ApplicationController
       end
     end
   end
-  
+
   # GET /metaforms/mdf_input
   def mdf_input
     @document = Document.find(params[:doc_id])
