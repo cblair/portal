@@ -1,0 +1,23 @@
+<div data-toggle="popover">
+  <p>
+     <b>Name:</b>
+     <%= @document.name %>
+  </p>
+  
+  <p>Collections:
+    <% @collection.path.each do |collection| %>
+      <%= link_to collection.name, collection_path(collection) %> >
+    <% end %>
+   </p>
+    
+  <p>Projects:
+    <% @project_list.each do |project| %>
+      <%= link_to project.name, project_path(project) %> |
+    <% end %>
+  </p>
+  
+  <hr>
+  <p>Created: <%= @document.created_at %> </p>
+  <p>Modified: <%= @document.updated_at %> </p>
+
+</div>

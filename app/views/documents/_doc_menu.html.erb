@@ -1,8 +1,10 @@
 <p>
    <b>Name:</b>
    <%= @document.name %>
+   <%= link_to 'Properties', "#", :title => "Document Properties",
+     "data-content" => "#{ render "doc_info" }", :id => "doc_info", :class => "btn btn-mini" %>
  </p>
- 
+
  <p>
    <b>Collection:</b>
    <%= @doc_collection.name || "(none)" %>

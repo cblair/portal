@@ -118,8 +118,7 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     authorize! :show_data, @document if params[:id]
     get_menu()
-    #get_metadata()
-    #@notes = @document.stuffing_notes
+    get_doc_info()
     get_show_data()
 
     #For non datatables view
@@ -143,6 +142,7 @@ class DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     #@md_sort = params[:sort] #TEMP
     get_menu()
+    get_doc_info()
     get_metadata()
     @notes = @document.stuffing_notes
     
