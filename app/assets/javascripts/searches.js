@@ -356,7 +356,8 @@ jQuery(function($) {
 	// Other Search decoration stuff
 	////////////////////////////////////////////////////////////////////////////
 	function decorateDocPopovers() {
-		$('.doc-popover').popover({html : true, trigger : 'hover'});
+	  $('.doc-popover').popover({html : true, placement : 'left', trigger : 'hover'});
+          $('.doc-info').popover({html : true, placement : 'left', trigger : 'click'});
 	}
 
 	////////////////////////////////////////////////////////////////////////////
