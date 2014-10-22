@@ -15,24 +15,19 @@
     <dd><%= @owner %></dd>
 
     <hr>
-    <ol>
-    <% for mrow in @metaform.metarows %>
-      <li>
-      <p>
-        <strong>Key:</strong>
-        <%= mrow.key %><br />
-      
-        <strong>Value:</strong>
-        <%= mrow.value %>
-      
-        <!--<b>Autofill:</b>
-        <%#= mrow.autofill %> -->
+    <ol id="mf_sortable" data-update-url="<%= mdf_sort_path%>" >
+    <% @metaform.metarows.each do |mrow| %>
+        <%= content_tag_for :li, mrow do %>
+          <strong>Key:</strong>
+          <%= mrow.key %><br />
+        
+          <strong>Value:</strong>
+          <%= mrow.value %><br />
         <hr>
-      </p>
-      </li>
-      
+      <% end %>
     <% end %>
     </ol>
+
     <% if can? :manage, @metaform %>
       <%= link_to 'Edit', edit_metaform_path(@metaform), class: "btn" %>
     <% end %>
