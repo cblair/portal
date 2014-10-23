@@ -6,7 +6,20 @@ function del_mrow(link) {
 }
 
 $(document).ready(function() {
-  //$(".mdrows").sortable();
+
+  //Help/info popup in show view
+  $('#mf_show_help').popover({html : true, placement : 'right', trigger : 'click',
+    content: function () {
+      return $('#mf_popup').html();
+    }
+  });
+  
+  //Help/info popup in edit view
+  $('#mf_edit_help').popover({html : true, placement : 'right', trigger : 'click',
+    content: function () {
+      return $('#mf_popup').html();
+    }
+  });
 
   // Adds metarow (uses link to)
   $('.add_fields').click(function(event) {

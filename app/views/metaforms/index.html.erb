@@ -2,6 +2,15 @@
   <%- model_class = Metaform -%>
   <div class="page-header">
     <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+    
+    <div id="hidden_group">
+      <a class="btn btn-info" href="#">See Metaform Info</a>
+      <a class="btn btn-inverse" href="#">Hide Metaform Info</a>
+  
+      <div class="hidden_section">
+        <%= render :partial => "metaforms/demo" %>
+      </div>
+    </div>
   </div>
   
   <table class="table table-striped">
