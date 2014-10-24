@@ -86,12 +86,29 @@ class MetaformsController < ApplicationController
     end
   end
 
+  # POST /metaforms/mdf_sort
+  def mdf_sort
+    metarows = params[:metarow]
+    
+    metarows.each_with_index do |id, idx|
+      Metarow.update_all( {index: idx}, {:id => id} )
+    end
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.js { render js: "metarow update success"}
+    end
+  end
+
   # GET /metaforms/1
   # GET /metaforms/1.json
   def show
     @metaform = Metaform.find(params[:id])
-    @owner = User.find(@metaform.user_id).email #gets email/ID of project owner
-
+    @owner = User.find(@metaform.user_id).email  #gets email/ID of project owner
+    check_index()  #Makes sure metadata rows have an index, sets if missing
+    
+    @metaform.metarows.sort_by! {|row| row.index}  #sort metarows by index
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @metaform }

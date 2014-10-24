@@ -27,8 +27,8 @@
     <h3>Sub Collections</h3>
   <% end %>
   <ul>
-  <% @collection.children.each do |col_child| %>
-    <li> <%= link_to col_child.name,  col_child%> </li>
-  <% end %>
-  </ul>
+    <% @collection.children.each do |col_child| %>
+      <li> <%= link_to col_child.name,  col_child%> </li>
+    <% end %>
+    </ul>
 </div>

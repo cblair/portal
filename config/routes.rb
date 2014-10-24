@@ -57,6 +57,7 @@ Portal::Application.routes.draw do
   match '/metaforms/mdf_copy' => "metaforms#mdf_copy", :as => :mdf_copy
   match '/metaforms/mdf_input' => "metaforms#mdf_input", :as => :mdf_input
   match '/metaforms/mdf_save' => "metaforms#mdf_save", :as => :mdf_save
+  match '/metaforms/mdf_sort' => "metaforms#mdf_sort", :as => :mdf_sort
   resources :metaforms
 
   resources :projects

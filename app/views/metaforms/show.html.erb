@@ -2,7 +2,14 @@
   
   <%- model_class = Metaform -%>
   <div class="page-header">
-    <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+    <h1> <%=t '.title', :default => model_class.model_name.human %> </h1>
+    
+    <button id="mf_show_help" class="btn btn-info btn-small" title="Help">Help</button>
+    <div id="mf_popup" hidden>
+      <ul>
+        <li>Drag and drop metadata rows to sort.</li>
+      </ul>
+    </div>
   </div>
   
   <dl class="dl-horizontal">
@@ -15,24 +22,19 @@
     <dd><%= @owner %></dd>
 
     <hr>
-    <ol>
-    <% for mrow in @metaform.metarows %>
-      <li>
-      <p>
-        <strong>Key:</strong>
-        <%= mrow.key %><br />
-      
-        <strong>Value:</strong>
-        <%= mrow.value %>
-      
-        <!--<b>Autofill:</b>
-        <%#= mrow.autofill %> -->
+    <ol id="mf_sortable" data-update-url="<%= mdf_sort_path%>" >
+    <% @metaform.metarows.each do |mrow| %>
+        <%= content_tag_for :li, mrow do %>
+          <strong>Label:</strong>
+          <%= mrow.key %><br />
+        
+          <strong>Value:</strong>
+          <%= mrow.value %><br />
         <hr>
-      </p>
-      </li>
-      
+      <% end %>
     <% end %>
     </ol>
+
     <% if can? :manage, @metaform %>
       <%= link_to 'Edit', edit_metaform_path(@metaform), class: "btn" %>
     <% end %>

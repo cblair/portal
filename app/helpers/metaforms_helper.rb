@@ -2,47 +2,22 @@
 
 module MetaformsHelper
 
-  #TODO: Sorts metarows
-=begin
-  def sort_metarows(param_metarows)
-    puts "metaform ****************************************************"
-    @metaform.metarows.each do |row|
-      p row
+  #Checks for existance of metarow index, sets if missing
+  def check_index()
+    if (@metaform == nil or @metaform.id == "")
+      return false
     end
-    puts "param_metarows *******************************************"
-    #puts param_metarows
-    param_metarows.each do |row_num, row|
-      puts row_num, row
-    end
-    puts "",""
-    
-    mr_index = []
-    j = 0
-    @metaform.metarows.each do |row|
-      mr_index[j] = row.id
-      j = j + 1
-    end
-    #mr_index.sort!
-    puts "mr_index ****************************************************"
-    p mr_index
-    
-    param_new = Hash.new
+  
     i = 0
-    param_metarows.each do |row_num, row|
-      param_new[i] = row
-      param_new[i][:id] = mr_index[i]
-      i = i + 1
+    @metaform.metarows.each do |mdrow|
+      if (mdrow.index == nil)
+        mdrow.update_attribute(:index, i)
+      end
+      i += 1
     end
-    puts "param_new ***************************************************"
-    #puts param_new
-    param_new.each do |row_num, row|
-      puts row_num, row
-    end
-    puts "",""
     
     return true
   end
-=end
 
 #-----------------------------------------------------------------------
 

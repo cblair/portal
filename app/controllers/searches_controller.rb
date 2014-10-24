@@ -128,7 +128,7 @@ class SearchesController < ApplicationController
     #Setup colnames for merge search if results have colnames in common.
     colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
-      colnames = ["Documents", "More Information"]
+      colnames = ["Documents", "Metadata", "Information"]
     end
 
     unviewable_doc_links = unviewable_doc_list[0..10].collect do |doc|

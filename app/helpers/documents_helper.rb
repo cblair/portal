@@ -95,16 +95,6 @@ module DocumentsHelper
   end
 =end
 #-----------------------------------------------------------------------
-  #Gets metadata and sorts it for display
-  def get_metadata
-    if (@document == nil)
-      return false
-    end
-    
-    @msdata = get_document_metadata(@document)
-    #md_index = get_md_index() #Gets metadata index for (ace/dec) sorting 
-    #sort_metadata(md_index) #Sorts metadata (ace/dec)
-  end
 
   #Gets menu data for display.
   def get_menu
@@ -124,6 +114,31 @@ module DocumentsHelper
       end
     end
     return true
+  end
+  
+  #Gets info about doc for popup including:
+  #1. List of projects this document is in.
+  def get_doc_info
+    if (@document == nil)
+      return false
+    end
+    
+    @collection = Collection.find(@document.collection)
+    @project_list = []
+    @collection.projects.each do |project|
+      @project_list << project
+    end
+  end
+  
+  #Gets metadata and sorts it for display
+  def get_metadata
+    if (@document == nil)
+      return false
+    end
+    
+    @msdata = get_document_metadata(@document)
+    #md_index = get_md_index() #Gets metadata index for (ace/dec) sorting 
+    #sort_metadata(md_index) #Sorts metadata (ace/dec)
   end
   
   #Gets document data from Couch for display.

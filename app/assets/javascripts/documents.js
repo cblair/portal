@@ -284,6 +284,9 @@ function sort_editor() {
       
       $("#notes").hide();
       $("#show_notes_link").on('click', show_notesJS);
+      
+      //enable tooltip
+      $('#doc_info').popover({html : true, placement : 'bottom', trigger : 'click'});
     });
   } //end runDocumentsControllerJS
 

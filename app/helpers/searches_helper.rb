@@ -10,6 +10,35 @@ module SearchesHelper
     #logger.info str
     puts str
   end
+  
+  #Gets info about doc for search popup including:
+  #1. List of projects this document is in.
+  #2. List of parent collections (path)
+  def get_doc_info_search(document)
+    if (document == nil)
+      return false
+    end
+
+    doc_info_pop = '<p>Name: ' << document.name << '</p>'
+    collection = Collection.find(document.collection)
+    
+    doc_info_pop << '<p>Collections: '
+    collection.path.each do |col|
+      doc_info_pop << link_to(col.name, col) << " >"
+    end
+    doc_info_pop << '</p>'
+    
+    doc_info_pop << '<p>Projects: '
+    collection.projects.each do |project|
+      doc_info_pop << link_to(project.name, project) << " |"
+    end
+    doc_info_pop << '</p> <hr>'
+    
+    doc_info_pop << '<p>Created: ' << document.created_at.to_s << '</p>'
+    doc_info_pop << '<p>Modified: ' << document.updated_at.to_s << '</p>'
+
+    return doc_info_pop
+  end
 
   def couch_dispatcher(design_doc_name, view_name, options = {})
     data = []
