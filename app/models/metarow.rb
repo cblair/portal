@@ -1,5 +1,5 @@
 class Metarow < ActiveRecord::Base
-  attr_accessible :autofill, :key, :metaform_id, :user_id, :value
+  attr_accessible :autofill, :key, :metaform_id, :user_id, :value, :index
   
   validates :key, :presence => true, :length => { :minimum => 1 }
   

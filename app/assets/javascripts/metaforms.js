@@ -5,14 +5,37 @@ function del_mrow(link) {
   $(link).closest('fieldset').hide("fast");
 }
 
-// Adds metarow (uses link to)
 $(document).ready(function() {
-  //$(".mdrows").sortable();
 
+  //Help/info popup in show view
+  $('#mf_show_help').popover({html : true, placement : 'right', trigger : 'click',
+    content: function () {
+      return $('#mf_popup').html();
+    }
+  });
+  
+  //Help/info popup in edit view
+  $('#mf_edit_help').popover({html : true, placement : 'right', trigger : 'click',
+    content: function () {
+      return $('#mf_popup').html();
+    }
+  });
+
+  // Adds metarow (uses link to)
   $('.add_fields').click(function(event) {
     time = new Date().getTime()
     regexp = new RegExp($(this).data('id'), 'g')
     $(this).before($(this).data('metarows').replace(regexp, time));
     event.preventDefault();
   });
+  
+  //Makes metadata rows in metaform show view sortable
+  $( "#mf_sortable" ).sortable({ 
+    placeholder: "ui-state-highlight",
+    axis: "y",
+    update: function(e, ui) {
+      $.post( $(this).data("update-url"), $(this).sortable("serialize") )
+    }
+  });
+  $( "#mf_sortable" ).disableSelection();
 });

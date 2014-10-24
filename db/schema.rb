@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130922233636) do
+ActiveRecord::Schema.define(:version => 20141020215608) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(:version => 20130922233636) do
   create_table "metarows", :force => true do |t|
     t.string   "key"
     t.string   "value"
+    t.integer  "index"
     t.boolean  "autofill"
     t.integer  "metaform_id"
     t.integer  "user_id"
