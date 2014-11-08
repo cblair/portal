@@ -205,6 +205,7 @@ class CollectionsController < ApplicationController
     
     #destroy all child documents
     @collection.documents.each do |d|
+      upload_remove(d)  #Removes upload record if file is deleted
       d.destroy
     end
     

@@ -100,14 +100,14 @@ class DataIoController < ApplicationController
       if stype == "Document"
         document = Document.find(params[:id])
         doc_list = {document => nil}
-        zip_doc_list([], zipfile, doc_list)
+        zip_doc_list([], zipfile, doc_list)  #See doc helper
       elsif stype == "Collection"
         collection = Collection.find(params[:id])
         doc_list = {}
         collection.documents.each do |key|
           doc_list[key] = nil
         end
-        recursive_collection_zip([], zipfile, collection)
+        recursive_collection_zip([], zipfile, collection)  #See doc helper
         
       #TODO: else error  
       end

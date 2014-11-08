@@ -9,91 +9,13 @@ module DocumentsHelper
   include IfiltersHelper
   include CouchdbHelper
   include HrtHelper
+  include UploadsHelper
 
   #helpers for testing devise
   #if Rails.env.test?
   #  include Devise::TestHelpers
   #end
-=begin
-  #The following code is for asc/dec sorting, but is not currently
-  # being used.
-  
-  #Sorts metadata (by means of an index list) before display.
-  def sort_metadata(md_index)
-    if (@document == nil || md_index == nil)
-      return false
-    end
-  
-    md_sorted = md_index.map do |n|
-      @msdata[n]
-    end
 
-    @msdata = md_sorted
-    return true
-  end
-
-  #Gets the metadata sort index from CouchDB
-  def get_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    md_index = [] #Contains the metadata sort index
-    if (@document.stuffing_metadata_index == nil)
-      puts "###########################################################"
-      puts "Document has no metadata sort index. Attempting to create..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata == nil)
-      create_md_index()
-      return (md_index = nil)
-    elsif (@document.stuffing_metadata.length != @document.stuffing_metadata_index.length)
-      puts "###########################################################"
-      puts "Metadata has changed, rebuilding sort index..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata_index.kind_of?(Array) )
-      puts "###########################################################"
-      puts "Getting metadata sort index..."
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    else
-      puts "###########################################################"
-      puts "Unknown error"
-    end
-    
-    return false  #Unknown error
-  end
-  
-  #Creates metadata sort index if it was not created during doc import
-  def create_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    if (@document.stuffing_metadata == nil)
-      puts "###########################################################"
-      puts "No metadata or error, index not created"
-      @document.stuffing_metadata_index = nil  #No metadata
-      @document.save
-      return false
-    else
-      puts "###########################################################"
-      puts "Building metadata sort index..."
-      md_index = []
-      metadata = @document.stuffing_metadata
-      (0..metadata.length - 1).each do |i|
-        md_index[i] = i
-      end
-      @document.stuffing_metadata_index = md_index
-      @document.save
-    end
-    
-    return true
-  end
-=end
 #-----------------------------------------------------------------------
 
   #Gets menu data for display.
@@ -284,7 +206,7 @@ module DocumentsHelper
 
     return status
   end
-   
+#-----------------------------------------------------------------------
    
   #save a file from a web upload to an db doc
   # 

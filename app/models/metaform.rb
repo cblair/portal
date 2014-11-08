@@ -8,4 +8,6 @@ class Metaform < ActiveRecord::Base
   has_many :metarows, :dependent => :destroy
   accepts_nested_attributes_for :metarows, :allow_destroy => true,
     :reject_if => proc { |row| row['key'].blank? }
+  
+  default_scope :order => 'metaforms.name ASC'  #Always sorts by name?
 end
