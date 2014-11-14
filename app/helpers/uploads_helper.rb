@@ -67,7 +67,7 @@ module UploadsHelper
     status = false
     file = @upload.upfile.path  #Not needed for raw file?
 
-    puts "### Saving Non-Filterable file ###"
+    puts "### Saving Non-Filterable file... ###"
 
     if (fname == nil or file == nil)
       log_and_print "WARN: file name or object was nil, can't save to document"
@@ -79,6 +79,7 @@ module UploadsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
+    @document.stuffing_metadata = [ { "HatchFilter" => "No-filter (pre-defined))" } ]
     @document.stuffing_raw_file_url = @upload.upfile.url
 
     @document.user = user

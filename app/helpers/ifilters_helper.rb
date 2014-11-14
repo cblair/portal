@@ -55,7 +55,7 @@ module IfiltersHelper
     
     #No filter
     f = Ifilter.new( #new but don't save
-                    :name => "Non-Filter (pre-defined)",
+                    :name => "No-filter (pre-defined)",
                     :regex=> nil
                   )
     f.id = -4 #we don't want to stomp on an valid id

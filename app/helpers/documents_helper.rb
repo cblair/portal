@@ -25,6 +25,7 @@ module DocumentsHelper
     end
     
     @doc_collection = Collection.find(@document.collection_id)
+    @raw_file = @document.stuffing_raw_file_url
     
     @job = nil
     if @document.job_id != nil
@@ -882,7 +883,8 @@ module DocumentsHelper
   def add_project_doc(project, document)
     document.project_id = project.id
   end
-  
+#-----------------------------------------------------------------------
+
   #Populate doc list hash with temp doc objects
   # returns a hash of {doc_name => temp_doc Tempfile}
   def pop_temp_docs_list(doc_list)
@@ -920,24 +922,48 @@ module DocumentsHelper
         csv_data = document.stuffing_text
       end
 
-      temp_doc = Tempfile.new(document.name)
-      temp_doc.write(csv_data)
-      temp_doc.rewind #rewind data for zip reading?
+        temp_doc = Tempfile.new(document.name)
+        temp_doc.write(csv_data)
+        temp_doc.rewind #rewind data for zip reading?
       
       doc_list[key] = temp_doc
-    end #end for i in doc_list
+    end #end doc_list.each loop
   
     return doc_list
   end
-  
-  
+
+  def zip_doc_list_raw(parent_dirs, zipfile, doc_list_raw)
+    if (parent_dirs == nil or zipfile == nil or doc_list_raw == nil)
+      return false
+    end
+
+    #docs for current dir
+    doc_list_raw.each do |doc, val|
+      upload = Upload.find(doc.stuffing_upload_id)
+      rfile = File.open(upload.upfile.path, 'r')
+      
+      temp_doc = Tempfile.new(doc.name)
+      temp_doc.write(rfile.read)
+      temp_doc.rewind #rewind data for zip reading?
+      doc_list_raw[doc] = temp_doc
+    end
+
+    doc_list_raw.each do |doc, temp_doc|
+      zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
+      zipfile.print IO.read(temp_doc.path)
+      temp_doc.close
+    end
+    
+    return true
+  end
+
   def zip_doc_list(parent_dirs, zipfile, doc_list)
     if (parent_dirs == nil or zipfile == nil or doc_list == nil)
       return false
     end
 
     doc_list = pop_temp_docs_list(doc_list)
-      
+    
     #docs for current dir
     doc_list.each do |doc, temp_doc|
       zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
@@ -948,7 +974,6 @@ module DocumentsHelper
     return true
   end
 
-  
   def recursive_collection_zip(parent_dirs, zipfile, collection)
     retval = true #true until a false happens
 
@@ -957,17 +982,24 @@ module DocumentsHelper
     end
 
     doc_list = {}
+    doc_list_raw = {}
     collection.documents.each do |key|
-      doc_list[key] = nil
+      if (key.stuffing_raw_file_url != nil)
+        #Raw file, ignor for now, handel later.
+        doc_list_raw[key] = nil
+      else
+        doc_list[key] = nil
+      end
     end
-    
+
     collection_name = collection.name
     #if collection name is blank, we need some other name
     if collection_name == ""
       collection_name = "(blank)"
     end
-    
+
     retval = ( retval and zip_doc_list(parent_dirs << collection_name, zipfile, doc_list) )
+    retval2 = ( retval and zip_doc_list_raw(parent_dirs << collection_name, zipfile, doc_list_raw) )
     
     collection.children.each do |sub_collection|
       retval =  ( retval and recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 

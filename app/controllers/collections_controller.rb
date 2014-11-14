@@ -26,7 +26,6 @@ class CollectionsController < ApplicationController
   # GET /collections.json
   def index
     #@collections = Collection.all
-    
     @root_collections = []
     
     #filter by parent collection id if requested
