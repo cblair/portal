@@ -43,14 +43,14 @@ class CollectionsController < ApplicationController
     @all_collections.each do |c|
       c.validated = collection_is_validated(c)
     end
-#=begin
+
     #filter for permission
     @all_collections.each do |c|
       if collection_is_viewable(c, current_user)
         @root_collections << c
       end
     end
-#=end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @root_collections }
@@ -110,8 +110,10 @@ class CollectionsController < ApplicationController
 
     respond_to do |format|
       if @collection.save
-        format.html { redirect_to @collection, notice: 'Collection was successfully created.' }
-        format.json { render json: @collection, status: :created, location: @collection }
+        #format.html { redirect_to @collection, notice: 'Collection was successfully created.' }
+        format.html { redirect_to collections_path, notice: 'Collection was successfully created.' }
+        #format.json { render json: @collection, status: :created, location: @collection }
+        format.json { render json: collections_path, status: :created, location: collections_path }
       else
         format.html { render action: "new" }
         format.json { render json: @collection.errors, status: :unprocessable_entity }

@@ -294,41 +294,4 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # GET /projects/owner/1
-  def owner_OLD
-  # this version of owner uses an input text field
-=begin
-    # finds the project with the matching passed id
-    @project = Project.find(params[:proj_id])
-	# returns an array of users that match the given email
-    @user_list = User.where("email = ?", params[:user_email])
-    
-    respond_to do |format|
-	  if (@user_list.length == 0)
-	    format.html { redirect_to groups_path(@project), notice: 'Email not found, please try again.'}
-	    # *** this code needs to be changed? ***
-	    format.json { render json: @project.errors, status: :unprocessable_entity }
-	  else
-	    # assuming first user found is the correct user
-	    @target_user = @user_list[0]
-	    # gets an array of documents with the given project ID
-        @docs = Document.where("project_id = ?", @project.id)
-	    # changes user ID of documents to target user    
-        @docs.each do |d|
-          d.update_attributes(:user_id => @target_user.id)
-        end
-        # TODO: collections code here?
-        # changes current project's user ID to target user's ID    	    
-	    if @project.update_attributes(:user_id => @target_user.id)
-          format.html { redirect_to projects_path, notice: 'Project ownership successfully changed.' }
-          format.json { head :ok }
-        else
-          # *** this code needs to be changed? ***
-          format.html { render action: "edit" }
-          format.json { render json: @project.errors, status: :unprocessable_entity }
-        end
-	  end
-    end
-=end
-  end
 end

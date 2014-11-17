@@ -8,6 +8,8 @@
     <div id="mf_popup" hidden>
       <ul>
         <li>Drag and drop metadata rows to sort.</li>
+        <li>For more help go to: <%= link_to "Metaforms", metaforms_path %> and click
+            "See Metaform Info". </li>
       </ul>
     </div>
   </div>
@@ -22,7 +24,12 @@
     <dd><%= @owner %></dd>
 
     <hr>
-    <ol id="mf_sortable" data-update-url="<%= mdf_sort_path%>" >
+    <% if can? :manage, @metaform %>
+      <ol id="mf_sortable" data-update-url="<%= mdf_sort_path%>" >
+    <% else %>
+      <ol>
+    <% end %> <!-- CanCan -->
+    
     <% @metaform.metarows.each do |mrow| %>
         <%= content_tag_for :li, mrow do %>
           <strong>Label:</strong>

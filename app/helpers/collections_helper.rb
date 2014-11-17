@@ -25,8 +25,10 @@ module CollectionsHelper
     #just build up jobs for now
     collection.documents.each do |document|
       #Let's only submit jobs for documents that haven't already
-      # been validated...
-      if !document.validated
+      # been validated AND are filterable...
+      if (document.stuffing_raw_file_url != nil)
+        puts "INFO: File is raw, not submitting job. ###"  #Skip file, do nothing.
+      elsif !document.validated
         job = Job.new(
           :description => "Document #{document.name} " + 
           "validation from collection #{collection.name}"
