@@ -32,15 +32,21 @@
   	<%= f.select(:parent_id, get_all_collection_select_options, 
 			{:include_blank => '(none)'} ) %>
   </div>
-  
+
   <div>
   	<p>Add to project:</p>
   	<%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
     <%= link_to "Projects...", projects_path, class: "btn btn-info" %>
-    <p>Remove from project:</p>
+<!--
+  <div>
+    <p>Add to other project (as editor):</p>
+    <%#= select("ed_proj", "pro_id", @proj_ids, {:prompt => '(select a filter)'}) %>
+  </div>
+-->
+  <p>Remove from project:</p>
     <% if @collection.projects.empty? %>
       <p>(none)</p>
-    <% end %>
+  <% end %>
 
     <% @collection.projects.each do |p| %>
       <p><%= check_box "remove_project", p.id %> <%= p.name %></p>

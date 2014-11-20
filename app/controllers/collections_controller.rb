@@ -92,6 +92,9 @@ class CollectionsController < ApplicationController
   # GET /collections/1/edit
   def edit
     @collection = Collection.find(params[:id])
+    #Gets projects where the user is an editor
+    #projs = Project.find( Collaborator.where(user_id: current_user.id).pluck(:project_id) )
+    #@proj_ids = projs.collect{|proj| [ proj.name, proj.id ]}
   end
 
   # POST /collections
@@ -150,25 +153,29 @@ class CollectionsController < ApplicationController
     end
 
     #Validation
-    if params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != ""
-      f = get_ifilter(params[:post][:ifilter_id].to_i)
+    if (params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
+      f = get_ifilter( params[:post][:ifilter_id].to_i )
 
       validate_collection_helper(@collection, f)
     end
     
     #Add metadata from a metaform
-    if params.include?("post") and params[:post].include?("metaform_id") and params[:post][:metaform_id] != ""
-      #f = get_ifilter(params[:post][:ifilter_id].to_i)
+    if (params.include?("post") and params[:post].include?("metaform_id") and params[:post][:metaform_id] != "" )
       add_collection_metaform(@collection, params[:post][:metaform_id].to_i)
     end
 
-    #Add to project
-    if params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != ""
-      project = Project.find(params[:proj][:id])
-      
+    #Add to my project
+    if (params.include?("proj") and params[:proj].include?("id") and params[:proj][:id] != "" )
+      project = Project.find( params[:proj][:id] )
       add_project_col(project, @collection) #call to collection helper, adds collection to project
     end
-
+=begin
+    #Add to other project (as editor)
+    if (params.include?("ed_proj") and params[:ed_proj].include?("pro_id") and params[:ed_proj][:pro_id] != "" )
+      project = Project.find( params[:ed_proj][:pro_id] )
+      add_project_col(project, @collection) #from collection helper
+    end
+=end
     #Recursive remove from project
     if params.include?("remove_project")
       params["remove_project"].each do |k,v|

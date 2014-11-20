@@ -43,11 +43,27 @@ module CollectionsHelper
     end
   end
   
+=begin
+  #Adds owner of a project as a collaborator
+  #NOTE: Not finished
+  def add_owner(project, collection)
+    if (project == nil or collection == nil)
+      return false
+    end
+    
+    if (collection.user_id != project.user_id)
+      puts "user is not the project owner, updating... ****************"
+      
+    end
+  end
+=end
+
   #Adds collection to selected project (from collections -> edit -> _form)
   def add_project_col(project, collection)
     #Add this collection to the project
     if !project.collections.collect {|pc| pc.id}.include?(collection.id)
       project.collections << collection
+      #add_owner(project, collection) #not finished
     end
 
     #Add this collection's descendants to the project
