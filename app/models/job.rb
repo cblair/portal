@@ -18,7 +18,6 @@ class Job < ActiveRecord::Base
     self.waiting = true
 
     job_type = Portal::Application.config.job_type
-    #job_type = "threads" #SAS
 
     if job_type == "threads"
       self.submit_job_threads(ar_module, options)
@@ -85,10 +84,8 @@ class Job < ActiveRecord::Base
     s = self[key]
 
     if s != nil
-      #drop <> chars 
-      s = s.gsub(/[<>]/, '')
-      #turn newlines into breaks
-      s = s.gsub(/\n/, '<br />')
+      s = s.gsub(/[<>]/, '')  #drop <> chars
+      s = s.gsub(/\n/, '<br />')  #turn newlines into breaks
     else
       s = ""
     end

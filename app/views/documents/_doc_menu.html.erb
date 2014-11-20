@@ -1,8 +1,6 @@
 <p>
    <b>Name:</b>
    <%= @document.name %>
-   <%= link_to 'Properties', "#", :title => "Document Properties",
-     "data-content" => "#{ render "doc_info" }", :id => "doc_info", :class => "btn btn-mini" %>
  </p>
 
  <p>
@@ -35,7 +33,9 @@
   <%= render 'doc_job_status' %>
  </div>
 
- <% if @document.validated %>
+ <%= link_to 'Properties', "#", :title => "Document Properties",
+     "data-content" => "#{ render "doc_info" }", :id => "doc_info", :class => "btn" %>
+ <% if @document.validated or @raw_file != nil%>
    <% if can? :manage, @document %>
      <%= link_to 'Edit', edit_document_path(@document), class: "btn" %>
    <% end %> <!-- can can -->

@@ -130,6 +130,12 @@ class DocumentsController < ApplicationController
       @paged_sdata = @sdata.paginate({:page => current_page, :per_page => per_page})
     end
     
+    #Displays a download link for raw unfilterable files.
+    @raw_file_link = nil
+    if (@document.stuffing_raw_file_url != nil)
+      @raw_file_link = @document.stuffing_raw_file_url
+    end
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @paged_sdata }
@@ -140,7 +146,6 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @document = Document.find(params[:id])
-    #@md_sort = params[:sort] #TEMP
     get_menu()
     get_doc_info()
     get_metadata()
@@ -345,6 +350,7 @@ class DocumentsController < ApplicationController
   # DELETE /documents/1.json
   def destroy
     @document = Document.find(params[:id])
+    upload_remove(@document)  #Removes upload record if file is deleted
     @document.destroy
 
     respond_to do |format|

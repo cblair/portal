@@ -4,6 +4,7 @@ class UploadsController < ApplicationController
   include CollectionsHelper
   include IfiltersHelper
   include MetaformsHelper
+  include UploadsHelper
   before_filter :require_permissions
   
   
@@ -94,11 +95,11 @@ class UploadsController < ApplicationController
 
       return
     end
-
-    @upload.user = current_user
     
-    #filter
-    f=nil
+    @upload.user = current_user  #not working? No user field?
+    #@upload.user_id = current_user.id
+    
+    f=nil  #filter
 
     #start recording run time
     stime = Time.now() #start time
@@ -134,23 +135,31 @@ class UploadsController < ApplicationController
 
     status = nil
     document_id = nil
+    filter_id = params[:post]["ifilter_id"].to_i  #Gets filter id for non-filter
 
     #Parse file into db - these ignore the f filter
     if @upload.upfile.content_type == "application/zip"
       save_zip_to_documents(fname, @upload, c, f)
+    elsif (filter_id != nil and filter_id == -4)  #Non-filterable file, doesn't' save in couch
+      status, document_id = save_file_no_filter(fname, c, f)
+      upload_id_save(document_id)
     else #hopefully is something like a "text/plain"
        status, document_id = save_file_to_document(fname, @upload.upfile.path, c, f)
+       upload_id_save(document_id)
     end
 
     #Filter - now, if we got a filter, start validation jobs
     if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i != 0))
-      f = get_ifilter(params[:post]["ifilter_id"].to_i)
-
-      validate_collection_helper(c, ifilter=f)
+      
+      f = get_ifilter(params[:post]["ifilter_id"].to_i)  #Gets list of filters
+      if (f.id == -4)
+        puts "Don't filter this file.'"  #Do nothing.
+      else
+        validate_collection_helper(c, ifilter=f)
+      end
     end
 
-    #Metaform processing
-    #TODO: make this a job?
+    #Metaform processing  #TODO: make this a job?
     if ( params.include?("post") and params[:post].include?("metaform_id") and params[:post]["metaform_id"] != "" ) 
       mf_id = params[:post]["metaform_id"].to_i
       add_document_metaform(document_id, mf_id)

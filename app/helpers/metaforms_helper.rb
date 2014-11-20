@@ -99,36 +99,8 @@ module MetaformsHelper
     document.save
     return true
   end
-  
-  #Deletes metaform metadata added to a Couch document.
-  #Dose not delete filter but deletes all other metadata.
-  #SATUS: Inactive.
-=begin
-  def metarows_delete(document)
-    if (document == nil)
-      return false
-    end
-    
-    #Test for nil FIRST or error?
-    if (document.stuffing_metadata == nil or document.stuffing_metadata.empty?)
-      #Do nothing
-    else
-      curr_md = document.stuffing_metadata #Gets current metadata
-      new_md = nil
-      
-      #Looks for filter type, if found copies to new metadata
-      curr_md.each do |metad|
-        if metad.has_key?("HatchFilter")
-          new_md = [metad]
-        end
-      end
-      document.stuffing_metadata = new_md
-      document.save
-    end
-    
-    return true
-  end
-=end
+
+
   #Sets up the metarows for the metaform creation page.
   #TODO: improve.
   def setup_mrows()

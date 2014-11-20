@@ -17,7 +17,7 @@ class DataIoController < ApplicationController
       format.js
     end
   end
-  
+
   #Note - this method is no longer used; the jQuery upload form uses the 
   #       new upload controller  
   def csv_import
@@ -84,7 +84,7 @@ class DataIoController < ApplicationController
     #redirect_to :controller => "documents", :action => "show", :id => @document[:id]
   end
   
-
+#-----------------------------------------------------------------------
   def csv_export
     #Export scaffold type - Collection or Document
     stype = params[:stype]
@@ -100,14 +100,15 @@ class DataIoController < ApplicationController
       if stype == "Document"
         document = Document.find(params[:id])
         doc_list = {document => nil}
-        zip_doc_list([], zipfile, doc_list)
+        zip_doc_list([], zipfile, doc_list)  #See doc helper
       elsif stype == "Collection"
         collection = Collection.find(params[:id])
         doc_list = {}
         collection.documents.each do |key|
           doc_list[key] = nil
         end
-        recursive_collection_zip([], zipfile, collection)
+
+        recursive_collection_zip([], zipfile, collection)  #See doc helper
         
       #TODO: else error  
       end

@@ -172,8 +172,7 @@ class Document < ActiveRecord::Base
           validation_finished = true
           self.stuffing_data = stuffing_data
           self.validated = true
-          #clear out data_text
-          self.stuffing_text = nil
+          self.stuffing_text = nil  #clear out data_text
 
           #Add HatchFilter key => val to metadata
           filter_name = f.name or "none"
@@ -188,11 +187,12 @@ class Document < ActiveRecord::Base
           self.stuffing_metadata = stuffing_metadata + curr_md
           suc_valid = self.save
           
-          if suc_valid 
-            puts "Document #{self.name} fitering success!"
+          if suc_valid
+            puts "### Document #{self.name} fitering success! ###"
+            upload_remove_on_validate(self)  #Deletes upload after successful validation.
           end
         end
-      #end
+
       elsif stuffing_data == nil
         puts "#### Error: there was a problem filtering ####"
         validation_finished = true
@@ -228,20 +228,7 @@ class Document < ActiveRecord::Base
     #Hack for now - add all column keys to primary keys for search
     self.stuffing_primary_keys = get_data_colnames(self.stuffing_data)
     self.save
-=begin
-    #Creates metadata index list in a document for (ace/dec) sorting
-    if (self.stuffing_metadata == nil)
-      self.stuffing_metadata_index = nil  #No metadata
-    else
-      md_index = []
-      metadata = self.stuffing_metadata
-      (0..metadata.length - 1).each do |i|
-        md_index[i] = i
-      end
-      self.stuffing_metadata_index = md_index
-      self.save
-    end
-=end
+
     return suc_valid
   end
 

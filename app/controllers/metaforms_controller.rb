@@ -77,8 +77,8 @@ class MetaformsController < ApplicationController
   # GET /metaforms.json
   def index
     #@metaforms = Metaform.all
-    @metaforms = Metaform.where("user_id = ?", current_user).order(:name).paginate(:page => params[:page], :per_page => 10)
-    @metaforms_other = Metaform.where("user_id != ?", current_user).order(:name).paginate(:page => params[:page], :per_page => 10)
+    @metaforms = Metaform.where("user_id = ?", current_user).paginate(:page => params[:page], :per_page => 10)
+    @metaforms_other = Metaform.where("user_id != ?", current_user).paginate(:page => params[:page], :per_page => 10)
 
     respond_to do |format|
       format.html # index.html.erb
