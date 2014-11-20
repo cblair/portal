@@ -10,5 +10,7 @@ class Project < ActiveRecord::Base
   belongs_to :project
   has_many :documents
   has_and_belongs_to_many :collections
+  
+  default_scope :order => ' projects.name ASC'  #Always sorts by name?
 
 end

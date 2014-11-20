@@ -69,6 +69,9 @@
       <% if can? :manage, @document %>
         <p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
       <% end %> <!-- CanCan -->
+    <% elsif (@raw_file_link != nil) %>
+      <p>Raw file (encoded or unfilerable) click the link below to download.</p>
+      <p> <%= link_to @document.name, @raw_file_link %> </p>
     <% else %>
       <p>(none)</p>
     <% end %>

@@ -286,7 +286,7 @@ function sort_editor() {
       $("#show_notes_link").on('click', show_notesJS);
       
       //enable tooltip
-      $('#doc_info').popover({html : true, placement : 'bottom', trigger : 'click'});
+      $('#doc_info').popover({html : true, placement : 'right', trigger : 'click'});
     });
   } //end runDocumentsControllerJS
 

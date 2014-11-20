@@ -31,30 +31,7 @@ module ProjectsHelper
     #colab_list.uniq! #removes extra users from list (so they only appear once)
     return colab_list
   end
-=begin  
-  #this function may no longer be needed because of new collaboratar table
-  #creates a list of collaborators for a project from documents
-  def colab_list_get_from_doc(project)
-    if project == nil or project == ""
-      return false
-    end
-    
-    docs = Document.where("project_id = ?", project.id) #gets all documentss for the project
-    user_list = User.all #gets a list of all users
-    colab_list = [] #creates empty list of current collaborators
-    
-    #creates a list of collaborators with access to this project (TODO: better code?)
-	docs.each do |doc|
-      user_list.each do |user|
-        if user.documents.include?(doc)
-          colab_list << user
-        end
-      end
-    end
-    colab_list.uniq! #removes extra users from list (so they only appear once)
-    return colab_list
-  end
-=end
+
   # Collaborator helpers -----------------------------------------------
   #adds a collaborator to documents (via user documents)
   #def colab_add_to_docs(project, user)
@@ -315,29 +292,7 @@ module ProjectsHelper
       collection.update_attributes(:user_id => target_user.id) #changes user ID of collections to target user
     end
     @project.update_attributes(:user_id => target_user.id) #changes current project's user ID to target user's ID
-=begin
-    if is_project_colab(target_user) #if target user is a collaborator
-      user_ids = Array.new(1, target_user.id)
-      colab_remove_project(user_ids)
-    end
-=end
-=begin
-    collections = Collection.where("project_id = ?", @project.id) #gets an array of collections with the given project ID
-    collections.each do |c|
-      c.update_attributes(:user_id => target_user.id) #changes user ID of collections to target user    
-    end
-    
-    docs = Document.where("project_id = ?", @project.id) #gets an array of documents with the given project ID
-    docs.each do |d|
-      d.update_attributes(:user_id => target_user.id) #changes user ID of documents to target user    
-    end
-    @project.update_attributes(:user_id => target_user.id) #changes current project's user ID to target user's ID
-      
-    if is_project_colab(target_user) #if target user is a collaborator
-      user_ids = Array.new(1, target_user.id)
-      colab_remove_project(user_ids)
-    end
-=end
+
     @user_id_err = false
     return true
   end

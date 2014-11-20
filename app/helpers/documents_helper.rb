@@ -9,91 +9,13 @@ module DocumentsHelper
   include IfiltersHelper
   include CouchdbHelper
   include HrtHelper
+  include UploadsHelper
 
   #helpers for testing devise
   #if Rails.env.test?
   #  include Devise::TestHelpers
   #end
-=begin
-  #The following code is for asc/dec sorting, but is not currently
-  # being used.
-  
-  #Sorts metadata (by means of an index list) before display.
-  def sort_metadata(md_index)
-    if (@document == nil || md_index == nil)
-      return false
-    end
-  
-    md_sorted = md_index.map do |n|
-      @msdata[n]
-    end
 
-    @msdata = md_sorted
-    return true
-  end
-
-  #Gets the metadata sort index from CouchDB
-  def get_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    md_index = [] #Contains the metadata sort index
-    if (@document.stuffing_metadata_index == nil)
-      puts "###########################################################"
-      puts "Document has no metadata sort index. Attempting to create..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata == nil)
-      create_md_index()
-      return (md_index = nil)
-    elsif (@document.stuffing_metadata.length != @document.stuffing_metadata_index.length)
-      puts "###########################################################"
-      puts "Metadata has changed, rebuilding sort index..."
-      create_md_index()
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    elsif (@document.stuffing_metadata_index.kind_of?(Array) )
-      puts "###########################################################"
-      puts "Getting metadata sort index..."
-      md_index = @document.stuffing_metadata_index
-      return md_index
-    else
-      puts "###########################################################"
-      puts "Unknown error"
-    end
-    
-    return false  #Unknown error
-  end
-  
-  #Creates metadata sort index if it was not created during doc import
-  def create_md_index
-    if (@document == nil)
-      return false
-    end
-    
-    if (@document.stuffing_metadata == nil)
-      puts "###########################################################"
-      puts "No metadata or error, index not created"
-      @document.stuffing_metadata_index = nil  #No metadata
-      @document.save
-      return false
-    else
-      puts "###########################################################"
-      puts "Building metadata sort index..."
-      md_index = []
-      metadata = @document.stuffing_metadata
-      (0..metadata.length - 1).each do |i|
-        md_index[i] = i
-      end
-      @document.stuffing_metadata_index = md_index
-      @document.save
-    end
-    
-    return true
-  end
-=end
 #-----------------------------------------------------------------------
 
   #Gets menu data for display.
@@ -103,6 +25,7 @@ module DocumentsHelper
     end
     
     @doc_collection = Collection.find(@document.collection_id)
+    @raw_file = @document.stuffing_raw_file_url
     
     @job = nil
     if @document.job_id != nil
@@ -284,7 +207,7 @@ module DocumentsHelper
 
     return status
   end
-   
+#-----------------------------------------------------------------------
    
   #save a file from a web upload to an db doc
   # 
@@ -960,7 +883,8 @@ module DocumentsHelper
   def add_project_doc(project, document)
     document.project_id = project.id
   end
-  
+#-----------------------------------------------------------------------
+
   #Populate doc list hash with temp doc objects
   # returns a hash of {doc_name => temp_doc Tempfile}
   def pop_temp_docs_list(doc_list)
@@ -998,24 +922,48 @@ module DocumentsHelper
         csv_data = document.stuffing_text
       end
 
-      temp_doc = Tempfile.new(document.name)
-      temp_doc.write(csv_data)
-      temp_doc.rewind #rewind data for zip reading?
+        temp_doc = Tempfile.new(document.name)
+        temp_doc.write(csv_data)
+        temp_doc.rewind #rewind data for zip reading?
       
       doc_list[key] = temp_doc
-    end #end for i in doc_list
+    end #end doc_list.each loop
   
     return doc_list
   end
-  
-  
+
+  def zip_doc_list_raw(parent_dirs, zipfile, doc_list_raw)
+    if (parent_dirs == nil or zipfile == nil or doc_list_raw == nil)
+      return false
+    end
+
+    #docs for current dir
+    doc_list_raw.each do |doc, val|
+      upload = Upload.find(doc.stuffing_upload_id)
+      rfile = File.open(upload.upfile.path, 'r')
+      
+      temp_doc = Tempfile.new(doc.name)
+      temp_doc.write(rfile.read)
+      temp_doc.rewind #rewind data for zip reading?
+      doc_list_raw[doc] = temp_doc
+    end
+
+    doc_list_raw.each do |doc, temp_doc|
+      zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
+      zipfile.print IO.read(temp_doc.path)
+      temp_doc.close
+    end
+    
+    return true
+  end
+
   def zip_doc_list(parent_dirs, zipfile, doc_list)
     if (parent_dirs == nil or zipfile == nil or doc_list == nil)
       return false
     end
 
     doc_list = pop_temp_docs_list(doc_list)
-      
+    
     #docs for current dir
     doc_list.each do |doc, temp_doc|
       zipfile.put_next_entry(File.join(parent_dirs | [doc.name]))
@@ -1026,7 +974,6 @@ module DocumentsHelper
     return true
   end
 
-  
   def recursive_collection_zip(parent_dirs, zipfile, collection)
     retval = true #true until a false happens
 
@@ -1035,17 +982,24 @@ module DocumentsHelper
     end
 
     doc_list = {}
+    doc_list_raw = {}
     collection.documents.each do |key|
-      doc_list[key] = nil
+      if (key.stuffing_raw_file_url != nil)
+        #Raw file, ignor for now, handel later.
+        doc_list_raw[key] = nil
+      else
+        doc_list[key] = nil
+      end
     end
-    
+
     collection_name = collection.name
     #if collection name is blank, we need some other name
     if collection_name == ""
       collection_name = "(blank)"
     end
-    
+
     retval = ( retval and zip_doc_list(parent_dirs << collection_name, zipfile, doc_list) )
+    retval2 = ( retval and zip_doc_list_raw(parent_dirs << collection_name, zipfile, doc_list_raw) )
     
     collection.children.each do |sub_collection|
       retval =  ( retval and recursive_collection_zip(parent_dirs | [sub_collection.name], zipfile, 
