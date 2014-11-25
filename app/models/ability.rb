@@ -47,35 +47,32 @@ class Ability
     can :manage, Document, :user_id => user.id
     can :manage, Metaform, :user_id => user.id #For main scaffold
     can :add_md, Document, :user_id => user.id #Custom action, adding metadata to document
+    can :export_csv, Collection, :user_id => user.id
+    can :download_raw, Document, :user_id => user.id
     #can :manage, Job, :user_id => user.id #user/currrent ID is owner ID
     
     #Editor access permissions
     can :manage, Project, :collaborators => { :user_id => user.id, :editor => true }
     can :manage, Collection, :projects => { :collaborators => { :user_id => user.id, :editor => true }}
     can :manage, Document, :collection => { :projects => { :collaborators => { :user_id => user.id, :editor => true }}}
+    #can :export_csv, Collection  #Not needed, just a reminder
     
     #Collaborator access permissions
     can :read, Project, :collaborators => { :user_id => user.id }
     can :read, Collection, :projects => { :collaborators => { :user_id => user.id } }
     can :read, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
     can :show_data, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}} #not sure why "read doc" dose not cover this.
-    
-    #SAS: This rule version should be depricated but keep it for now
-    #can :read, Document do |doc|
-    ## if (doc) && (doc.collection) && (doc.collection.projects)
-    #  doc.collection.projects.each do |proj|
-    #    doc.collection.projects.include?(proj) && proj.users.include?(user)
-    #  end
-    #end
-    
+    can :export_csv, Collection, :projects => { :collaborators => { :user_id => user.id } }
+    can :download_raw, Document, :collection => { :projects => { :collaborators => { :user_id => user.id }}}
+
     #Public project access permissions
     can :read, Project, :public => true
     can :read, Collection, :projects => { :public => true }
     can :read, Document, :collection => { :projects => { :public => true }}
     can :show_data, Document, :collection => { :projects => { :public => true }}
     
-    #Metaform special case permissions
+    #Metaform special case permissions (all can read)
     can :read, Metaform
-    
+  
   end
 end
