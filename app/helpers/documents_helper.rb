@@ -903,13 +903,14 @@ module DocumentsHelper
         csv_data = CSV.generate do |csv|
             #Metadata
             document.stuffing_metadata.each do |row|
-              csv << row.values
+              row.each {|k,v| csv << [k + ": " + v] }  #csv << row.values
             end
             
             #Data headings
             # if there is only one column named "1", its the default column for
             # a unfiltered document. Ignore the column.
             if !(@headings.length == 1 and @headings[0] == "1")
+              csv << []  #blank row, seperates metadata and data
               csv << @headings
             end
             
