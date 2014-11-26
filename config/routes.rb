@@ -42,6 +42,7 @@ Portal::Application.routes.draw do
   match '/documents/:id/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data' => "documents#show_data", :as => :show_data
+  match '/documents/download_raw/:id' => "documents#download_raw", :as => :download_raw
   resources :documents
 
   resources :collections

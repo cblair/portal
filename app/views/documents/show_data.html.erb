@@ -67,11 +67,13 @@
         <p><%= simple_format @document.stuffing_text[0..100000] %>...</p>
       <% end %>
       <% if can? :manage, @document %>
-        <p><%= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>
+        <!--<p><%#= link_to "Validate", validate_doc_path(@document), class: "label label-info" %></p>-->
       <% end %> <!-- CanCan -->
     <% elsif (@raw_file_link != nil) %>
-      <p>Raw file (encoded or unfilerable) click the link below to download.</p>
-      <p> <%= link_to @document.name, @raw_file_link %> </p>
+      <% if can? :download_raw, @document %>
+        <p>Raw file (encoded or unfilerable) click the link below to download.</p>
+        <p> <%= link_to @document.name, download_raw_path(@document) %> </p>
+      <% end %>
     <% else %>
       <p>(none)</p>
     <% end %>

@@ -86,6 +86,9 @@ class DataIoController < ApplicationController
   
 #-----------------------------------------------------------------------
   def csv_export
+    col_src = Collection.find(params[:id])
+    authorize! :export_csv, col_src
+
     #Export scaffold type - Collection or Document
     stype = params[:stype]
 

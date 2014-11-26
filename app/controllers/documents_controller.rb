@@ -380,9 +380,21 @@ class DocumentsController < ApplicationController
     
     render "show"
   end
+  
+  #Downloads a single raw/unfilterable file
+  # GET /documents/download_raw/1
+  def download_raw
+    document = Document.find(params[:id])
+    authorize! :download_raw, document
+    upload = Upload.find( document.stuffing_upload_id )
+    
+    send_file upload.upfile.path, 
+     :filename => upload.upfile_file_name, 
+     :type => 'application/octet-stream'
+  end
 
   def download
-      redirect_to csv_export_path(params[:id], :format => :csv)
+    redirect_to csv_export_path(params[:id], :format => :csv)
   end
   
   
