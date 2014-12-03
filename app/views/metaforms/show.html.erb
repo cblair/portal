@@ -4,8 +4,9 @@
   <div class="page-header">
     <h1> <%=t '.title', :default => model_class.model_name.human %> </h1>
     
-    <button id="mf_show_help" class="btn btn-info btn-small" title="Help">Help</button>
-    <div id="mf_popup" hidden>
+    <button id="mf_show_help" class="btn btn-info btn-small"
+      data-toggle="collapse" data-target="#mf_popup">Help</button>
+    <div id="mf_popup" class="collapse out" title="Help">
       <ul>
         <li>Drag and drop metadata rows to sort.</li>
         <li>For more help go to: <%= link_to "Metaforms", metaforms_path %> and click
@@ -13,7 +14,7 @@
       </ul>
     </div>
   </div>
-  
+
   <dl class="dl-horizontal">
     <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
     <dd><%= @metaform.name %></dd>

@@ -154,15 +154,27 @@ function endEdit() {
 //Add input form when cell is double clicked
 function inputForm2() {
   var orignalText = $(this).text();
-  $(this).html("<input type='text' class='edit_area' value='" + orignalText + "' />");
+  //$(this).html("<input type='text' class='edit_area' value='" + orignalText + "' />");
+  $(this).html("<textarea class='edit_area'>" + orignalText + "</textarea>");
+  
   $(this).children().first().focus();
 
-  $(this).children().first().keypress(function (e) {
+  //End edit when "enter" is pressed
+  /*$(this).children().first().keypress(function (e) {
     if (e.which == 13) {
       var newContent = $(this).val();
       $(this).parent().text(newContent);
     }
+  });*/
+
+  //End edit when "Esc" is pressed (keyCode 27 = Esc key)
+  $(this).children().first().keydown(function (e) {
+    if (e.keyCode == 27) {
+      var newContent = $(this).val();
+      $(this).parent().text(newContent);
+    }
   });
+
   $(this).children().first().blur(function(){
     $(this).parent().text(orignalText);
   });

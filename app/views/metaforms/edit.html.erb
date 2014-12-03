@@ -2,15 +2,17 @@
   
   <h1>Edit metaform</h1>
   
-  <button id="mf_edit_help" class="btn btn-info btn-small" title="Help">Help</button>
-    <div id="mf_popup" hidden>
+  <button id="mf_edit_help" class="btn btn-info btn-small"
+    data-toggle="collapse" data-target="#mf_popup">Help</button>
+    <div id="mf_popup" class="collapse out">
       <ul>
         <li>Click and drag the arrow in the bottom right of a form to expand.</li>
+        <li>To sort, save the metaform by clicking "update metaform", then sort from the metaform view page.</li>
         <li>For more help go to: <%= link_to "Metaforms", metaforms_path %> and click
             "See Metaform Info". </li>
       </ul>
     </div>
-
+  <hr>
   <%= render 'form' %>
 
   <%= link_to 'Show', @metaform, class: "btn" %>

@@ -16,6 +16,12 @@
     %>
     <%= link_to "×", @return_from_upload_link %>
     <h3 id="myModalLabel">Data Import</h3>
+    <button id="data_import_help" class="btn btn-info btn-small" title="Help">Help</button>
+    <div id="data_import_popup" hidden>
+      <ul>
+        <li>Drag and drop files below to quickly add multiple files.</li>
+      </ul>
+    </div>
   </div>
   <div class="modal-body">
 	<%= render "js_upload", :controller => "data_io" %>

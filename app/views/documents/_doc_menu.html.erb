@@ -1,7 +1,7 @@
 <p>
    <b>Name:</b>
    <%= @document.name %>
- </p>
+</p>
 
  <p>
    <b>Collection:</b>
@@ -35,6 +35,7 @@
   <%= render 'doc_job_status' %>
  </div>
 
+
  <%= link_to 'Properties', "#", :title => "Document Properties",
      "data-content" => "#{ render "doc_info" }", :id => "doc_info", :class => "btn" %>
  <% if @document.validated or @raw_file != nil%>
@@ -55,3 +56,14 @@
  <% end %> <!-- can can -->
   <%#= link_to 'Back', documents_path %>
   <%= link_to 'Back', @document.collection, class: "btn" %>
+
+  <button id="doc_show_help" class="btn btn-info" data-toggle="collapse" data-target="#doc_popup">Help</button>
+    <div id="doc_popup" class="collapse out">
+      <ul>
+        <li>Click the download link above to download all files in this collection.</li>
+        <li>To edit metadata click the "Edit Metadata" button.  Once in edit mode double click a cell to edit its contents.  Press "Esc" on your keyboard to ready the changes for saving.  Click the "save" button to commit changes.</li>
+        <li>When editing a cell you can expand the cell by dragging the arrow in the bottom right corner.</li>
+        <li>To sort metadata click the "Sort Metadata" button, then drag and drop metadata rows.  To commit sorting changes click the "Save Sorting" button.</li>
+      </ul>
+    </div>
+
