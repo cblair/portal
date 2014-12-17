@@ -1,15 +1,35 @@
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Name:</b>
-  <%= @upload.name %>
-</p>
-
-<p>
-  <% fq_fname = @upload.upfile.url(:original, false) %>
-  <%= link_to "View file", @upload.upfile.url(:original, false) %>
-</p>
-
-
-<%= link_to 'Edit', edit_upload_path(@upload) %> |
-<%= link_to 'Back', uploads_path %>
+<div class="hero-unit">
+  <p id="notice"><%= notice %></p>
+  
+  <dl class="dl-horizontal">
+    <dt> <strong>Name:</strong> </dt>
+    <dd> <%= @upload.upfile_file_name %> </dd>
+    
+    <dt> <strong>File Size:</strong></dt>
+    <dd> <%= number_to_human_size( @upload.upfile_file_size ) %> </dd>
+    
+    <dt> <strong>Upload Type:</strong> </dt>
+    <% if @upload.upload_type == nil %>
+      <dd> N/A </dd>
+    <% else %>
+      <dd> <%= @upload.upload_type %> </dd>
+    <% end %>
+    
+    <dt> <strong>Content Type:</strong> </dt>
+    <dd> <%= @upload.upfile_content_type %> </dd>
+    
+    <dt> <strong>Record Created:</strong> </dt>
+    <dd> <%= @upload.created_at %> </dd>
+    
+    <dt> <strong>Record Updated:</strong> </dt>
+    <dd> <%= @upload.updated_at %> </dd>
+    
+    <dt> <strong>Upfile Updated:</strong> </dt>
+    <dd> <%= @upload.upfile_updated_at %> </dd>
+  </dl>
+  
+  <p> <%= link_to "View file", download_upload_path(@upload), class: "btn btn-primary" %> </p>
+  
+  <!-- <%#= link_to 'Edit', edit_upload_path(@upload) %> -->
+  <%= link_to 'Back', uploads_path, class: "btn" %>
+</div>

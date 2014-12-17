@@ -9,6 +9,7 @@ Portal::Application.routes.draw do
   resources :notifications
   match '/notifications/send_notification/:id' => "notifications#send_notification", :as => :send_notification
 
+  match '/uploads/:id/download_upload' => "uploads#download_upload", :as => :download_upload
   resources :uploads
 
   resources :charts
@@ -43,8 +44,10 @@ Portal::Application.routes.draw do
   match '/documents/:id/show_data/doc_md_edit' => "documents#doc_md_edit", :as => :doc_md_edit
   match '/documents/:id/show_data' => "documents#show_data", :as => :show_data
   match '/documents/download_raw/:id' => "documents#download_raw", :as => :download_raw
+  match '/documents/download_note/:id' => "documents#download_note", :as => :download_note
   resources :documents
 
+  match '/collections/download_note_collection/:id' => "collections#download_note_collection", :as => :download_note_collection
   resources :collections
   
   resources :searches

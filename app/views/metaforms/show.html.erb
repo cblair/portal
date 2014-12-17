@@ -23,7 +23,7 @@
     <dd><%= @metaform.mddesc %></dd>
     <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
     <dd><%= @owner %></dd>
-
+  </dl>
     <hr>
     <% if can? :manage, @metaform %>
       <ol id="mf_sortable" data-update-url="<%= mdf_sort_path%>" >

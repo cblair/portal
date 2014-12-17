@@ -127,6 +127,13 @@ jQuery(function($) {
 
 	$(document).ready(function () {
 		$.initCollectionTree($);
+    
+    //Help/info popup in show view
+    $('#data_import_help').popover({html : true, placement : 'right', trigger : 'click',
+      content: function () {
+      return $('#data_import_popup').html();
+      }
+    });
 
 		//Bind upload button
 		$("a#new-collection-upload").click(function(e) {

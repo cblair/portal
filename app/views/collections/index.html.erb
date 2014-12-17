@@ -76,6 +76,15 @@
 
 	<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
 	<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>
+  <%= link_to "Uploads", uploads_path, :class => "btn" %>
+  <button id="col_show_help" class="btn btn-info" data-toggle="collapse" data-target="#col_popup">Help</button>
+    <div id="col_popup" class="collapse out">
+      <ul>
+        <li>Click the "+" symbol to expand the collection view, show sub-collection(s), or see available actions.</li>
+        <li>Click a collection name to view a specific collection and see more information (owner, notes, etc.)</li>
+        <li>Use the "search" field above the document table to filter documents by name (case sensitive).
+      </ul>
+    </div>
 
 	<hr />
 	<%= render :partial => "collections/rec_collection_documents_render", 

@@ -214,8 +214,8 @@ class DocumentsController < ApplicationController
   # GET /documents/1/edit
   def edit    
     @document = Document.find(params[:id])
-
     @colnames = get_data_colnames(@document.stuffing_data)
+    @remove_notes_ids = remove_note_list()
     
     @colab_users = []
     User.all.each do |user|
@@ -258,9 +258,8 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @document = Document.find(params[:id])
-
     suc_msg = 'Document was successfully updated. '
-      
+
     #if we're in document text edit mode, or notes edit mode
     if (params.include?("document")) and (params["document"].include?("post")) and (params["document"]["post"] == "edit_text")
       @document.stuffing_text = params["document"]["stuffing_text"]
@@ -275,6 +274,16 @@ class DocumentsController < ApplicationController
         if (project != nil)
           add_project_doc(project, @document) #call to document helper, adds doc to project
         end
+      end
+      
+      #Add selected upload as a note to the document
+      if (params.include?("note") and params["note"].include?("upload_id") and (!params["note"]["upload_id"].blank?) )
+        add_note(params["note"]["upload_id"])
+      end
+      
+      #Removed selected notes from a documet
+      if (params.include?("remove_ids") and (!params["remove_ids"].blank?) )
+        remove_notes(params["remove_ids"]) #Remove notes
       end
 
       user = User.where(:id => params[:new_user_id]).first
@@ -307,23 +316,16 @@ class DocumentsController < ApplicationController
 
       #Filter / Validate
       if ( params.include?("post") and params[:post].include?("ifilter_id") and params[:post][:ifilter_id] != "" )
-        #f = Ifilter.find(params[:post][:ifilter_id])
+        
         f = get_ifilter(params[:post][:ifilter_id].to_i)
-
-        #don't let validate auto-filter
-        if f != nil
-          suc_msg += 'Validation filter started; refresh your browser to check for completion. '
-
-          job = Job.new(:description => "Document #{@document.name} validation")
-          job.save
-          job.submit_job(current_user, @document, {:ifilter_id => f.id})
-        end
+        status, msg = validate_document(@document, f)
+        suc_msg += msg
       end
     end #end if in text edit mode, else...
 
     respond_to do |format|
       if update_suc
-        format.html { redirect_to @document, notice: suc_msg }
+        format.html { redirect_to edit_document_path(@document), notice: suc_msg }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -386,7 +388,33 @@ class DocumentsController < ApplicationController
   def download_raw
     document = Document.find(params[:id])
     authorize! :download_raw, document
-    upload = Upload.find( document.stuffing_upload_id )
+    
+    begin
+      upload = Upload.find( document.stuffing_upload_id )
+    rescue ActiveRecord::RecordNotFound => e
+      puts "### ERROR: " + e.message
+      redirect_to show_data_path(document), notice: "ERROR: file (upload) ID not found. Upload may have been deleted"
+      return
+    end
+    
+    send_file upload.upfile.path, 
+     :filename => upload.upfile_file_name, 
+     :type => 'application/octet-stream'
+  end
+
+  #Downloads a single "note" file linked to a document.
+  # GET /documents/download_note/1
+  def download_note
+    document = Document.find(params[:id])
+    authorize! :download_note, document
+    
+    begin
+      upload = Upload.find(params[:upload_id])
+    rescue
+      puts "### ERROR: " + e.message
+      redirect_to show_path(document), notice: "ERROR: file (upload) ID not found. Upload may have been deleted"
+      return
+    end
     
     send_file upload.upfile.path, 
      :filename => upload.upfile_file_name, 

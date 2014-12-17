@@ -54,7 +54,7 @@
                 :method => 'delete',
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) } %>
  <% end %> <!-- can can -->
-  <%#= link_to 'Back', documents_path %>
+
   <%= link_to 'Back', @document.collection, class: "btn" %>
 
   <button id="doc_show_help" class="btn btn-info" data-toggle="collapse" data-target="#doc_popup">Help</button>

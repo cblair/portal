@@ -18,6 +18,43 @@ module DocumentsHelper
 
 #-----------------------------------------------------------------------
 
+  #Makes a list of user's note uploads
+  def upload_note_select_for_doc
+    retval = Upload.where("user_id = ? AND upload_type = ?",
+      @document.user_id, "note").order("upfile_file_name").collect { |u| [u.upfile_file_name, u.id] }
+  end
+
+  #Adds (links) the current document to the given note file (upload)
+  def add_note(upload_id)
+    upload = Upload.find(upload_id.to_i)
+    
+    if not @document.uploads.include?(upload)
+      @document.uploads << upload
+    end
+  end
+
+  #Creates a list of checkboxes for removing notes.
+  def remove_note_list()
+    remove_upload_ids = []
+    @document.uploads.each do |upload|
+      remove_upload_ids << upload
+    end
+    
+    return remove_upload_ids
+  end
+  
+  #Removes the link(s) to notes from this document (just the link(s)).
+  def remove_notes(remove_list)
+    
+    remove_list.each do |upload_id|
+      upload = Upload.find(upload_id)
+      if ( @document.uploads.include?(upload) )
+        @document.uploads.delete(upload)
+      end
+    end
+  end
+
+#------------------------------------------------------
   #Gets menu data for display.
   def get_menu
     if (@document == nil)
@@ -135,6 +172,23 @@ module DocumentsHelper
     #logger.info str
     puts str
   end
+#-----------------------------------------------------------------------
+
+  #Submit a single document validation job
+  #Args:  document: document object,  f: filter id,
+  def validate_document(document, f)
+    #don't let validate auto-filter
+    if f != nil
+      msg = 'Validation filter started; refresh your browser to check for completion. '
+
+      job = Job.new(:description => "Document #{document.name} validation")
+      job.save
+      job.submit_job(current_user, document, {:ifilter_id => f.id})
+    end
+    
+    return status, msg
+  end
+#-----------------------------------------------------------------------
 
   # @param zip_fname A string of the zip file name
   # @param zip_file_object A file object for the zip file
@@ -984,7 +1038,9 @@ module DocumentsHelper
 
     doc_list = {}
     doc_list_raw = {}
+    #key is a document
     collection.documents.each do |key|
+    
       if (key.stuffing_raw_file_url != nil)
         #Raw file, ignor for now, handel later.
         doc_list_raw[key] = nil

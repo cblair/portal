@@ -7,6 +7,7 @@ class UploadsController < ApplicationController
   include UploadsHelper
   before_filter :require_permissions
   
+  load_and_authorize_resource
   
   def require_permissions
     if params.include?("id")
@@ -19,11 +20,12 @@ class UploadsController < ApplicationController
     end
   end
 
-  
   # GET /uploads
   # GET /uploads.json
   def index
-    @uploads = Upload.where(:user_id => current_user.id)
+    current_page = params[:page]
+    per_page = params[:per_page] || 10 # could be configurable or fixed in your app
+    @uploads = Upload.where(:user_id => current_user.id).order(:upfile_file_name).paginate({:page => current_page, :per_page => per_page})
 
     respond_to do |format|
       format.html # index.html.erb
@@ -135,14 +137,22 @@ class UploadsController < ApplicationController
 
     status = nil
     document_id = nil
-    filter_id = params[:post]["ifilter_id"].to_i  #Gets filter id for non-filter
+    filter_id = nil
+
+    if (params.include?("post") and params[:post]["ifilter_id"] )
+      filter_id = params[:post]["ifilter_id"].to_i  #Gets filter id for non-filterable file
+    end
 
     #Parse file into db - these ignore the f filter
     if @upload.upfile.content_type == "application/zip"
       save_zip_to_documents(fname, @upload, c, f)
-    elsif (filter_id != nil and filter_id == -4)  #Non-filterable file, doesn't' save in couch
-      status, document_id = save_file_no_filter(fname, c, f)
+    elsif (filter_id != nil and filter_id == -4)  #Non-filterable data file, doesn't' save in couch
+      @upload.upload_type = "binary"
+      status, document_id = save_file_no_filter(fname, c, filter_id)
       upload_id_save(document_id)
+    elsif (filter_id != nil and filter_id == -5)  #Non-filterable note file, doesn't' save in couch
+      @upload.upload_type = "note"  #Do nothing extra because its a note
+      status = true
     else #hopefully is something like a "text/plain"
        status, document_id = save_file_to_document(fname, @upload.upfile.path, c, f)
        upload_id_save(document_id)
@@ -150,12 +160,10 @@ class UploadsController < ApplicationController
 
     #Filter - now, if we got a filter, start validation jobs
     if ( params.include?("post") and params[:post].include?("ifilter_id") and (params[:post]["ifilter_id"].to_i != 0))
-      
-      f = get_ifilter(params[:post]["ifilter_id"].to_i)  #Gets list of filters
-      if (f.id == -4)
-        puts "Don't filter this file.'"  #Do nothing.
-      else
-        validate_collection_helper(c, ifilter=f)
+
+      if (status == true)
+        f = get_ifilter(params[:post]["ifilter_id"].to_i)  #Gets list of filters
+        filter_upload(document_id, f)
       end
     end
 
@@ -221,5 +229,15 @@ class UploadsController < ApplicationController
       format.html { redirect_to uploads_url }
       format.json { head :ok }
     end
+  end
+  
+  #Downloads a non-document uploaded file.
+  # GET /documents/download_note/1
+  def download_upload
+    upload = Upload.find(params[:id])
+    
+    send_file upload.upfile.path,
+     :filename => upload.upfile_file_name, 
+     :type => 'application/octet-stream'
   end
 end

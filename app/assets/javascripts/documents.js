@@ -109,10 +109,10 @@ jQuery(function($) {
       if(data_source == undefined) {
         data_source = $('#documents').data('source');
       }
-/*
-      //dataTables
+
+      //dataTables, filters documents in a collection
       DOCUMENTS_SEARCH_TABLE = $('#documents').dataTable({
-        "sPaginationType"  : "full_numbers", //"sPaginationType"  : "bootstrap",
+        //"sPaginationType"  : "bootstrap",
         "bJQueryUI"      : true,
         "bProcessing"    : true,
         "bServerSide"    : true,
@@ -141,7 +141,7 @@ jQuery(function($) {
               DOCUMENTS_SEARCH_TABLE.fnFilter($(this).val());
           }
         );
-*/
+
     }; //end initDocumentDatatable
 
 //----------------------------------------------------------------------
