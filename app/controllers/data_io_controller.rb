@@ -93,7 +93,7 @@ class DataIoController < ApplicationController
     stype = params[:stype]
 
     #Create zip
-    zip_fname = "hatch_data_io"
+    zip_fname = "hatch_data_io.zip"
     temp_zip = Tempfile.new(zip_fname)
     
     Zip::ZipOutputStream.open(temp_zip.path) do |zipfile|

@@ -2,6 +2,17 @@
   <%- model_class = Upload -%>
   <div class="page-header">
     <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+    
+    <button id="upload_show_help" class="btn btn-info" data-toggle="collapse" data-target="#upload_popup">Help</button>
+    <div id="upload_popup" class="collapse out">
+      <ul>
+        <li>Click the upload name to see file details.</li>
+        <li>All non-validated files will appear in the upload list. Once the associated document (if there is one) has been validated it will be removed from the upload list and permanetly stored in the database.</li>
+        <li>If an upload has an associated document (e.g. Non-filterable data file) deleting the upload will not delete the associated document, which may contain metadata, documents must be deleted from the main data menus. However deleting a document will delete its associated upload and the document's database record.</li>
+        <li>Delete uploads by clicking the "destroy" button. This will permanetly remove the upload from Hatch.</li>
+        <li>Deleting a "note" upload will automatically remove links to all documents and collections.</li>
+      </ul>
+    </div>
   </div>
   
   <script>
@@ -33,7 +44,7 @@
           <td><%= upload.upload_type %></td>
           <!--<td><%#= link_to 'Show', upload_path(upload) %></td>-->
           <!--<td><%#= link_to 'Edit', edit_upload_path(upload) %></td>-->
-          <td><%= link_to 'Destroy', upload, confirm: 'Are you sure?',
+          <td><%= link_to 'Destroy', upload, confirm: 'Are you sure?  Note: deleting an upload does not delete the associated document (if it exists).  See "help"',
                     method: :delete, :class => 'btn btn-mini btn-danger' %></td>
         </tr>
       <% end %>

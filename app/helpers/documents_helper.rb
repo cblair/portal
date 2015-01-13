@@ -386,7 +386,7 @@ module DocumentsHelper
         #If row is length of two, then we want to make a key => val pair out 
         # of the row. Else, the user has matches an unknown amout of values,
         # and we can only number the keys.
-        if row.count == 2
+        if row.count == 2  #Only one metadata pair per line?
           metadata_columns << {row[0] => row[1]}
         else
           colnames = IfiltersHelper::get_ifiltered_colnames(row)
@@ -953,13 +953,13 @@ module DocumentsHelper
 
       if (document.stuffing_metadata != nil and document.stuffing_data)
         @headings = document.stuffing_data.first.keys
-    
-        csv_data = CSV.generate do |csv|
+
+         csv_data = CSV.generate do |csv|
             #Metadata
             document.stuffing_metadata.each do |row|
               row.each {|k,v| csv << [k + ": " + v] }  #csv << row.values
             end
-            
+
             #Data headings
             # if there is only one column named "1", its the default column for
             # a unfiltered document. Ignore the column.
@@ -997,10 +997,29 @@ module DocumentsHelper
       upload = Upload.find(doc.stuffing_upload_id)
       rfile = File.open(upload.upfile.path, 'r')
       
-      temp_doc = Tempfile.new(doc.name)
+      temp_doc = Tempfile.new(doc.name)  #Temperary file with document data
       temp_doc.write(rfile.read)
       temp_doc.rewind #rewind data for zip reading?
       doc_list_raw[doc] = temp_doc
+
+      #If raw document has metadata, create a metadata txt file.
+      if (doc.stuffing_metadata. != nil)
+        csv_metadata = []
+        csv_metadata = CSV.generate do |csv|
+          #Metadata
+          doc.stuffing_metadata.each do |row|
+            row.each {|k,v| csv << [k + ": " + v] }  #csv << row.values
+          end
+        end
+        
+        file_name = doc.name + " [metadata].txt"
+        temp_file = Tempfile.new(file_name)
+        temp_file.write(csv_metadata)
+        temp_file.rewind #rewind data for zip reading?
+        
+        zipfile.put_next_entry( File.join(parent_dirs | [file_name]) )
+        zipfile.print IO.read(temp_file)
+      end
     end
 
     doc_list_raw.each do |doc, temp_doc|
@@ -1042,8 +1061,7 @@ module DocumentsHelper
     collection.documents.each do |key|
     
       if (key.stuffing_raw_file_url != nil)
-        #Raw file, ignor for now, handel later.
-        doc_list_raw[key] = nil
+        doc_list_raw[key] = nil  #Raw file, ignor for now, handel later.
       else
         doc_list[key] = nil
       end

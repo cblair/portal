@@ -21,6 +21,7 @@ Portal::Application.routes.draw do
   match '/home/analyze' => "home#analyze", :as => :home_analyze
 
   match '/demo' => "home#demo", :as => :demo
+  match '/more_info' => "home#more_info", :as => :more_info
 
   #Devise / Users
   devise_for :users

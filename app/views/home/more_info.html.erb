@@ -1,0 +1,239 @@
+<%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" 
+%>
+
+<% 
+	#javascript_include_tag :highcharts  
+%>
+<%
+	#javascript_include_tag :exporting 
+%>
+<%= 
+	#javascript_include_tag "dataTables/jquery.dataTables" 
+%>
+
+<%= 
+	#javascript_include_tag "dataTables/jquery.dataTables.bootstrap" 
+%>
+
+<%= 
+	#javascript_include_tag "home_datatable_example" 
+%>
+
+<div class="hero-unit">
+  <h1>Hatch</h1>
+  <p>The EcoData Hatch project gives scientific data management a simple web-based interface and simplifies data analysis.</p>
+
+	<h2>Problem Statement</h2>
+	<p>Modern science generates large amounts of data.  This data needs to be explored and visualized to find relationships.  It must then be
+	filtered and manipulated, all while being stored in a way that is fast, searchable, reliable, and remotely accessible.</p>
+
+	 <h3>Today’s scientific computation is too complicated</h3>
+	 <ul>
+	 	<li>the gap between data and analysis is broad</li>
+	 	<li>data assets become management liabilities</li>
+	 	<li>unnecessary computation and data redundancy is common</li>
+	 	<li>the research workspace is more fractured than it is unified</li>
+	 </ul>
+	 
+	 <h3>An interactive solution is needed</h3>
+	 <ul>
+	 	<li>requires no new training</li>
+	 	<li>maximizes use of existing standards and libraries</li>
+	 	<li>takes advantage of the existing use cases</li>
+	 	<li>answers the current administrative questions</li>
+	 	<li>doesn’t create new problems</li>
+	 </ul>
+
+	<hr>
+
+	  <div id="hidden_group">
+	    <a class="btn btn-info" href="#">See Muted Presentation</a>
+	    <a class="btn btn-inverse" href="#">Hide Muted Presentation</a>
+
+	    <div class="hidden_section">
+	    	<iframe width="420" height="315" src="//www.youtube.com/embed/v1B99dgL2G4" frameborder="0" allowfullscreen></iframe>
+
+	    	<hr />
+
+		  	<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				Download <span class="caret"></span>
+				</button>
+
+				<ul class="dropdown-menu" role="menu">
+					<li><%= link_to "Download Powerpoint", "/data/overview.ppt" %></li>
+					<li><%= link_to "Download PDF", "/data/overview.pdf" %></li>
+				</ul>
+			</div>
+	    </div>
+  	</div>
+</div>
+
+<div class="hero-unit">
+	<h2>Import</h2>
+	<hr />
+
+	<p>The first step to using Hatch with you're own data is importing it. We've done a lot of work to keep importing pretty simple. All you need to know is what <b>type</b> (i.e. CSV, Excel, or a custom type) your data is. You then select the Hatch <b>Filter</b> for that data type. Hatch <b>Projects</b> can have custom types/filters, so if you know which project you're adding data for, finding the project's filter is pretty simple.</p>
+
+  	<div id="hidden_group">
+	    <a class="btn btn-info" href="#">See Import Demo</a>
+	    <a class="btn btn-inverse" href="#">Hide Demo</a>
+
+		<!-- Modal -->
+		<!--
+		<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="min-width: 800px;">
+		  <div class="modal-header">
+		    <%
+		    	#link_to "×", "/demo"
+		    %>
+		    <h3 id="myModalLabel">Data Import</h3>
+		  </div>
+		  <div class="modal-body">
+			<%
+			 #render :partial => "collections/js_upload"
+			 %>
+		  </div>
+		</div>
+		-->
+
+		<div class="hidden_section">
+			<p>So you've just come to work to start another day of data analysis. Someone sends you an email with a link to files:</p>
+
+			<div class="hero-unit" style="background-color: #99CCFF">
+				<i class="icon-envelope icon-4x">New Mail</i>
+				<p>Per our conversation yesterday, could you look at the following datasets? We're curious about the relationships between the environmental data. We'll need to present on this really soon, so it would be great if we could get started.</p>
+
+				<%= link_to "sonde_1_4-24-13--2.csv", "/data/demo/sonde_1_4-24-13--2.csv" %>
+
+				<!--TODO: another file with similar data-->
+
+				<p>Thanks!</p>
+
+				<p>Devon</p>
+			</div>
+
+			<p>Click on the files in the above email, and save them to your desktop.</p>
+
+			<p>Now to add the files to Hatch, do the following steps:</p>
+
+			<ol>
+				<li>Click on the 
+					<!--<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>--><b>Upload button</b> button <!--above or--> on the <%= link_to "Data", collections_path %> page <!--(there the same button)-->.</li>
+				<li>Select the collection <b>Demo Collection</b> for the <b>Add to Collection</b> field.</li>
+				<li>Select <b>CSV (pre-defined)</b> for the <b>What kind of data is this?</b> field.</li>
+				<li>Either drag and drop, or click <b>Add Files</b>, to add those desktop CSV files from the demo email above.</li>
+				<li>Click the <b>Start Upload</b> button. It may take a minute or so for all files to upload and filter.</li>
+				<li>Click the <i class="icon-plus icon-white"></i> button next to the <b>Demo Collection</b> in the Collection list.</li>
+				<ul>
+					<li>When the files finish uploading and filtering, the document labels will change from <i class="label label-important">Unvalidated</i> -> <i class="label label-info"`>Validated</i>. You can click the <i class="icon-plus icon-white"></i> and <i class="icon-minus icon-white"></i> buttons next to the <b>Demo Collection</b> to refresh.</li>
+				</ul>
+			</ol>
+		</div>
+	</div>
+
+	<hr />
+
+  	<div id="hidden_group">
+	    <p>IFilters are what turn semi-structured data into structured data in Hatch.</p>
+	    <a class="btn btn-info" href="#">See Filter/Type Demo</a>
+	    <a class="btn btn-inverse" href="#">Hide Filter/Type Demo</a>
+
+	    <div class="hidden_section">
+	      <%= render :partial => "ifilters/ifilters_demo" %>
+	    </div>
+  	</div>
+</div>
+
+<div class="hero-unit">
+	<h2>Share</h2>
+
+	<hr />
+
+	<p>Hatch allows users to add data to <b>Projects</b> to share data with people with that project. Projects usually only allow other project members access to see data within the project, but some projects are public. So data that everyone should have access to can be added to public projects.</p>
+
+  	<div id="hidden_group">
+	    <a class="btn btn-info" href="#">See Project Info</a>
+	    <a class="btn btn-inverse" href="#">Hide Project Info</a>
+
+	    <div class="hidden_section">
+	      <%= render :partial => "projects/demo" %>
+	    </div>
+  	</div>
+</div>
+
+<div class="hero-unit">
+	<h2>Search</h2>
+
+	<hr />
+
+	<p>Search is what ties all the data in Hatch together. In these days of data deluges, data management makes data more of a liability than an asset. With the Hatch Search tool, filtering and breaking down vast swaths of data into only the information you care about is easier than ever. You'll soon be back in the mindset of more data being better.</p>
+
+  	<div id="hidden_group">
+	    <a class="btn btn-info" href="#">See Search Info</a>
+	    <a class="btn btn-inverse" href="#">Hide Search Info</a>
+
+	    <div class="hidden_section">
+	      	<%= render "search_demo" %>
+	    </div>
+  	</div>
+</div>
+
+<!--TODO
+<div class="hero-unit">
+	<h2>Security</h2>
+
+	<h3>Sharing policies</h3>
+</div>
+
+<div class="hero-unit">
+	<h2>Metadata</h2>
+</div>
+-->
+
+<div class="hero-unit">
+	<h2>Analysis</h2>
+
+	<hr />
+
+	<p>The Hatch <b>Analysis</b> pipeline allows users to take their data directly from Hatch, and run heavy processing in the cloud. Currently Hatch uses the Analysis pipeline to process document filtering, but Hatch will use the pipeline in the future to plug into services like Amazon's EC2, or other cluster services.</p>
+
+ 	<div id="hidden_group">
+	    <a class="btn btn-info" href="#">See Analysis Info</a>
+	    <a class="btn btn-inverse" href="#">Hide Analysis Info</a>
+
+	    <div class="hidden_section">
+			<%= render :partial => "analysis_demo" %>
+		</div>
+	</div>
+</div>
+
+<div class="hero-unit">
+	<h2>Where do I start?</h2>
+	<p>For a quick tutorial, see our live <%= link_to "demo", demo_path %>.</p>
+</div>
+
+<div class="hero-unit">
+	<h2>Hatch specific requirements</h2>
+	<p>The solution must:</p>
+	<ul>
+	<li>Provide:
+	<ul>
+	 <li>Reliable data storage</li>
+	 <li>Basic data manipulations</li>
+	 <li>Simple visualizations</li>
+	</ul>
+	<li>Have a gentle learning curve</li>
+	<li>Allow remote access</li>
+	<li>Allow local access</li>
+	<li>Support many data sets (i.e.,  not just PTAGIS data)</li>
+	</ul>
+</div>
+
+<div class="hero-unit">
+   <p><small><strong>Sponsored by</strong> Alex Fremier, College of Natural Resources, University of Idaho.
+    <br>
+    <strong>Developed by</strong> Shane Smith, Colby Blair, and Mike Solomon.</small></p>
+
+    <p> More information about Hatch is available at the <a href="http://seniordesign.engr.uidaho.edu/2011-2012/EcoData/">project website</a>.
+    </p>
+</div>

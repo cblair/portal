@@ -2,6 +2,7 @@ include DocumentsHelper
 
 module IfiltersHelper
   def self.get_ifiltered_header(h, row)
+    #Uses regex to match metadata
     retval = []
     
     if row.is_a? Array
