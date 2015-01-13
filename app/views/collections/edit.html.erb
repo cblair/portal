@@ -1,13 +1,13 @@
 <h1>Editing collection</h1>
 
-<%= render 'form' %>
-
 <p>
-	<b>Owner:</b>
-	<% if @collection.user %>
-		<%= @collection.user.email %> 
-	<% end %>
+  <b>Owner:</b>
+  <% if @collection.user %>
+    <%= @collection.user.email %> 
+  <% end %>
 </p>
+
+<%= render 'form' %>
 
 <%= link_to 'Show', @collection, class: "btn" %>
 <%= link_to 'Back', collections_path, class: "btn" %>

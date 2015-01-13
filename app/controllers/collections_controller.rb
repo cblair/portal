@@ -92,6 +92,7 @@ class CollectionsController < ApplicationController
   # GET /collections/1/edit
   def edit
     @collection = Collection.find(params[:id])
+    @remove_notes_ids = remove_note_list()
     #Gets projects where the user is an editor
     #projs = Project.find( Collaborator.where(user_id: current_user.id).pluck(:project_id) )
     #@proj_ids = projs.collect{|proj| [ proj.name, proj.id ]}
@@ -169,6 +170,16 @@ class CollectionsController < ApplicationController
       project = Project.find( params[:proj][:id] )
       add_project_col(project, @collection) #call to collection helper, adds collection to project
     end
+    
+    #Add selected upload as a note to the collection
+    if (params.include?("note") and params["note"].include?("upload_id") and (!params["note"]["upload_id"].blank?) )
+       add_note_collection( params["note"]["upload_id"] )
+    end
+
+    if (params.include?("remove_ids") and (!params["remove_ids"].blank?) )
+      remove_notes_collection( params["remove_ids"] ) #Remove notes
+    end
+
 =begin
     #Add to other project (as editor)
     if (params.include?("ed_proj") and params[:ed_proj].include?("pro_id") and params[:ed_proj][:pro_id] != "" )
@@ -197,7 +208,7 @@ class CollectionsController < ApplicationController
         @collection.errors.add(:base, "Cannot set parent collection to a child.")
         format.html { render action: "edit" }
       elsif update_collection_attrs_suc
-        format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
+        format.html { redirect_to edit_collection_path(@collection), notice: 'Collection was successfully updated.' }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
@@ -230,6 +241,17 @@ class CollectionsController < ApplicationController
     end
   end
   
+  #Downloads a single "note" file linked to a collection.
+  # GET /collections/download_note_collection/1
+  def download_note_collection
+    collection = Collection.find(params[:id])
+    authorize! :download_note_collection, collection
+    upload = Upload.find(params[:upload_id])
+    
+    send_file upload.upfile.path, 
+     :filename => upload.upfile_file_name, 
+     :type => 'application/octet-stream'
+  end
   
   # 
   def validate_collection

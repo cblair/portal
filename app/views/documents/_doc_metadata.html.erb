@@ -18,8 +18,8 @@
      <!-- tr id="<%#= @row_id += 1 %>" -->
      <tr class="md_row">
       <% msdata_row.each do |key, val| %>
-       <td class="editable"><%= key %></td>
-       <td class="editable"><%= auto_link(val) %></td>
+       <td class="editable"><%= simple_format( auto_link(key) ) %></td>
+       <td class="editable"><%= simple_format( auto_link(val) ) %></td>
       <% end %>
      </tr>
     <% end %>
@@ -45,5 +45,3 @@
   <% if can? :add_md, @document %>
     <%= render :partial => 'doc_metaform_form' %>
   <% end %>  <!-- CanCan -->
-
-</div>

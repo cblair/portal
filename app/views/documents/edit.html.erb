@@ -13,8 +13,7 @@
       <%= render 'form' %>
 
       <%= link_to 'Show', @document, class: "btn" %>
-      <%= link_to 'Back', @document, class: "btn" %>
-      <%#= link_to 'Back', documents_path %>
+      <%= link_to 'Back', @document.collection, class: "btn" %>
     </div>
   </div>
 </div>

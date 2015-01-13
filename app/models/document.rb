@@ -19,6 +19,7 @@ class Document < ActiveRecord::Base
   belongs_to :project
   has_many :charts, :dependent => :destroy
   belongs_to :job
+  has_and_belongs_to_many :uploads
   
   stuffing  :host     => Portal::Application.config.couchdb['COUCHDB_HOST'], 
             :port     => Portal::Application.config.couchdb['COUCHDB_PORT'],

@@ -1,13 +1,23 @@
 <p>Projects assist with document/collection management and access control.  Users can create, name, and describe a project as they wish.  Owners can add collections (sets of documents) relevant to the project from the collection’s edit menu.  Owners can share or hide their data, making it public or keeping it private, at the click of a button.</p>
-<%= image_tag("ProjImg.jpg") %>
 
-<p>Project owners can give specific Hatch users, called collaborators, the ability to view their data by adding them from the project edit menu.  Collaborators can look at a project and its data but can’t change anything.</p>
+<p><strong>Note: any user who can view data can copy and download that data.</strong></p>
+<hr>
+<%= image_tag("ProjImg.jpg") %>
+<hr>
+
+<p>Project owners can give specific Hatch users the ability to view their data by adding them from the project edit menu.  Collaborators can look at a project and its data but can’t change anything.  Editors are trusted users who have nearly the same level of access as the project owner.  This includes full access to any collection or document menus that are a part of the project.  This allows editors to perform actions like filtering a document, adding metadata, and giving other users access to the project.  Editors cannot add documents or collections to a project.</p>
+
+<p><strong>Note: editors can add other editors, so be careful!</strong></p>
 
 <p>Current access control settings include;</p>
 <ul>
   <li>Private: only the owner can access data.</li>
-  <li>Public: all data in a project is viewable (but only viewable) by any user of Hatch.</li>
-  <li>Collaborators: determine specific users who have view only access.</li>
-  <li>Editors: has nearly full control over a project.  Can do nearly anything an owner can except add files.</li>
+  <li>Public: all data in a project is viewable (read only) by any user of Hatch.</li>
+  <li>Collaborators: specific users who have read only access.</li>
+  <li>Editors: trusted users, have  nearly full control over a project.  Can't add files.</li>
 </ul>
+
+<p>Projects also allow the owner (or an editor) to transfer the ownership of the project and all of its collections and documents to another user.  Once this occurs the previous owner may no longer have any access to the project, depending on how access control was set up.</p>
+
+<hr>
 <%= image_tag("ProjEdit.jpg") %>

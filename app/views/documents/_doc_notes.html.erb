@@ -1,11 +1,26 @@
 <h2>Notes</h2>
 
-  <% if can? :read, @document %>
-    <%= content_tag("a", "Show Notes", :id => "show_notes_link", :class => "btn btn-small") %>
-  <% end %> <!-- can can -->
-  
-  <% if can? :manage, @document %>
-    <%= link_to 'Edit Notes', edit_notes_text_path(@document), class: "btn btn-small" %>
-  <% end %> <!-- can can -->
-  
-  <div id="notes"> <%= simple_format( auto_link(@notes) ) %> </div>
+<% if can? :read, @document %>
+  <%= content_tag("a", "Show Notes", :id => "show_notes_link", :class => "btn btn-small") %>
+<% end %> <!-- can can -->
+
+<% if can? :manage, @document %>
+  <%= link_to 'Edit Notes', edit_notes_text_path(@document), class: "btn btn-small" %>
+<% end %> <!-- can can -->
+
+<div id="notes"> <%= simple_format( auto_link(@notes) ) %> </div>
+
+<div>
+  <h4>Additional Notes</h4>
+    <% if @document.uploads.blank? %>
+      <p>(none)</p>
+    <% else %>
+      <ul>
+        <% @document.uploads.each do |upload| %>
+          <li>
+            <%= link_to upload.upfile_file_name, download_note_path(@document, upload_id: upload.id) %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+</div>

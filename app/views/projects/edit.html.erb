@@ -1,11 +1,27 @@
 <div class="hero-unit">
-  
-	<%- model_class = Project -%>
-	<div class="page-header">
-	  <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
-	                                   :default => "Edit #{model_class.model_name.human}") %></h1>
-	</div>
-	<%= render :partial => 'form' %>
+
+  <%- model_class = Project -%>
+
+  <div class="page-header">
+    <h1><%=t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
+                                     :default => "Edit #{model_class.model_name.human}") %></h1>
+
+    <button id="proj_edit_help" class="btn btn-info"
+      data-toggle="collapse" data-target="#proj_edit_popup">Help</button>
+    <div id="proj_edit_popup" class="collapse out">
+      <ul>
+        <li>Click and drag the arrow in the bottom right of a form to expand.</li>
+        <li>Use this menu to give specific users access to this project.</li>
+        <li>Collaborators have read only access.</li>
+        <li>Editors have nearly full access to a project, except they can't add files.</li>
+        <li>To make a project public go to the <%= link_to "project", project_path(@project) %> and click "public".
+        <li>For more help go to: <%= link_to "Projects", projects_path %> and click
+            "See Project Info". </li>
+      </ul>
+    </div>
+  </div>
+
+  <%= render :partial => 'form' %>
   
   <hr />
   <% if can? :manage, @project %>

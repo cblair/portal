@@ -32,6 +32,15 @@
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                 :class => 'btn btn-danger' %>
     <% end %> <!-- can-can -->
+    <button id="col_show_help" class="btn btn-info" data-toggle="collapse" data-target="#col_popup">Help</button>
+    <div id="col_popup" class="collapse out">
+      <ul>
+        <li>Click the "+" symbol to expand the collection view, show sub-collection(s), or see available actions.</li>
+        <li>Click a collection name to view a specific collection and see more information (owner, notes, etc.)</li>
+        <li>Use the "search" field above the document table to filter documents by name (case sensitive).
+      </ul>
+    </div>
+
   </div>
 
   <hr />

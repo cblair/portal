@@ -109,7 +109,7 @@ module CollectionsHelper
     return suc_valid
   end
 
-  
+#-----------------------------------------------------------------------
   #Get all category options, with indentation  
   def get_all_collection_select_options()
     o = []
@@ -129,7 +129,43 @@ module CollectionsHelper
     return o
   end
 
-  
+  #Makes a list of user's note uploads
+  def upload_note_select_for_collection
+    retval = Upload.where("user_id = ? AND upload_type = ?",
+      @collection.user_id, "note").order("upfile_file_name").collect { |u| [u.upfile_file_name, u.id] }
+  end
+
+  #Adds (links) the current collection to the given note file (upload)
+  def add_note_collection(upload_id)
+    upload = Upload.find(upload_id.to_i)
+    
+    if not @collection.uploads.include?(upload)
+      @collection.uploads << upload
+    end
+  end
+
+  #Creates a list of checkboxes for removing notes.
+  def remove_note_list()
+    remove_upload_ids = []
+    @collection.uploads.each do |upload|
+      remove_upload_ids << upload
+    end
+    
+    return remove_upload_ids
+  end
+
+  #Removes the link(s) to notes from this document (just the link(s)).
+  def remove_notes_collection(remove_list)
+    
+    remove_list.each do |upload_id|
+      upload = Upload.find(upload_id)
+      if ( @collection.uploads.include?(upload) )
+        @collection.uploads.delete(upload)
+      end
+    end
+  end
+
+
   #Makes form select_options, indenting the children
   def get_collection_select_options(c, level=0)
     retval = []
@@ -148,8 +184,8 @@ module CollectionsHelper
     
     return retval
   end
-
   
+#----------------------------------------------------------------------
   #checks to see if 
   def collection_is_parent(potential_parent_collection, collection)
     retval = false
