@@ -60,12 +60,29 @@ module UploadsHelper
   end
 #-----------------------------------------------------------------------
 
+  #Submit job for filtering, upload must have an associated existing document.
+  #Args: doc_id: document id, f: filter id
+  def filter_upload(doc_id, f)
+  
+    if (f.id == -4 or f.id == -5)
+      puts "Don't filter this file.'"  #Do nothing.
+      return 
+    end
+
+    if (doc_id != nil)
+      document = Document.find(doc_id)
+      validate_document(document, f)
+    end
+  end
+#-----------------------------------------------------------------------
+
   #Saves raw file, no filtering, no data saved to couch.
   #Args fname: file name [string], file: path [string] (deleted),
   # c: collection, f: filter (should be nil)
   def save_file_no_filter(fname, c, f, user=current_user)
     status = false
     file = @upload.upfile.path  #Not needed for raw file?
+    filter = get_ifilter(f.to_i)
 
     puts "### Saving Non-Filterable file... ###"
 
@@ -79,7 +96,8 @@ module UploadsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
-    @document.stuffing_metadata = [ { "HatchFilter" => "No-filter (pre-defined))" } ]
+    #@document.stuffing_metadata = [ { "HatchFilter" => "No-filter (pre-defined))" } ]
+    @document.stuffing_metadata = [ { "HatchFilter" => filter.name } ]
     @document.stuffing_raw_file_url = @upload.upfile.url
 
     @document.user = user

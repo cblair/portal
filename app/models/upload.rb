@@ -2,6 +2,8 @@ class Upload < ActiveRecord::Base
   attr_accessible :name, :upfile
   has_attached_file :upfile
   belongs_to :user
+  has_and_belongs_to_many :documents
+  has_and_belongs_to_many :collections
   
   include Rails.application.routes.url_helpers
 

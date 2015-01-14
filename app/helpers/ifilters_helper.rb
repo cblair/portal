@@ -2,6 +2,7 @@ include DocumentsHelper
 
 module IfiltersHelper
   def self.get_ifiltered_header(h, row)
+    #Uses regex to match metadata
     retval = []
     
     if row.is_a? Array
@@ -53,12 +54,20 @@ module IfiltersHelper
     f.id = -3 #we don't want to stomp on an valid id    
     retval.prepend(f)
     
-    #No filter
+    #No filter for encodecd, unfilterable files
     f = Ifilter.new( #new but don't save
-                    :name => "No-filter (pre-defined)",
+                    :name => "No-filter Data (pre-defined)",
                     :regex=> nil
                   )
     f.id = -4 #we don't want to stomp on an valid id
+    retval.prepend(f)
+
+    #No filter for unfilterable files like PDF
+    f = Ifilter.new( #new but don't save
+                    :name => "No-filter Notes (pre-defined)",
+                    :regex=> nil
+                  )
+    f.id = -5 #we don't want to stomp on an valid id
     retval.prepend(f)
 
     retval

@@ -1,4 +1,4 @@
-<%= form_for(@document, :html => { :class => 'form-horizontal' }) do |f| %>
+<%= form_for(@document, :html => { :class => 'row-fluid' }) do |f| %>
   <% if @document.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@document.errors.count, "error") %> prohibited this document from being saved:</h2>
@@ -26,15 +26,41 @@
     </div>
   </div>
 
-<!-- <div>
+  <div class="control-group">
+    <%= f.label :validate %>
+    <%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
+    <%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
+  </div>
+
+  <div class="control-group">
+    <div class="field">
+      <%= f.label :add_file_as_a_note %>
+      <%= select("note", "upload_id", upload_note_select_for_doc, {:prompt => '(select a note)'}) %>
+      <%= link_to "Uploads...", uploads_path, class: "btn btn-info" %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <% if (!@remove_notes_ids.blank?) %>
+      <%= f.label :remove_notes, :class => "control-label" %>
+      <% @remove_notes_ids.each do |upload| %>
+        <div class="field">
+          <%= check_box_tag("remove_ids[]", upload.id)%>
+          <%= upload.upfile_file_name %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- <div>
   <div class="field">
     <%= f.label :project_id %><br />
     <%= select("proj", "id", Project.find(:all, :conditions => ["user_id = ?", current_user.id]).collect {|p| [ p.name, p.id ] }, {:prompt => '(select a project)'}) %>
- 	<%= link_to "Projects...", projects_path %>
+    <%= link_to "Projects...", projects_path %>
   </div>
-</div> -->
+  </div> -->
 
-<!-- <div>
+  <!-- <div>
   <p>Add new collaborator</p>
   <div class="field">
   	<%= 
@@ -57,13 +83,7 @@
   <% end %>
   </div>
   <br />
-</div> -->
-
-  <div>
-  	<p>Validate...</p>
-  	<%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
- 	<%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
-  </div>
+  </div> -->
 
   <!--Hide for now - we're adding all columns to primary keys for search
   <div>

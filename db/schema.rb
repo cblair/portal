@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141020215608) do
+ActiveRecord::Schema.define(:version => 20141212222538) do
 
   create_table "charts", :force => true do |t|
     t.string   "title"
@@ -59,6 +59,11 @@ ActiveRecord::Schema.define(:version => 20141020215608) do
     t.integer "project_id"
   end
 
+  create_table "collections_uploads", :id => false, :force => true do |t|
+    t.integer "collection_id"
+    t.integer "upload_id"
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -86,6 +91,11 @@ ActiveRecord::Schema.define(:version => 20141020215608) do
     t.boolean  "public"
     t.integer  "project_id"
     t.integer  "job_id"
+  end
+
+  create_table "documents_uploads", :id => false, :force => true do |t|
+    t.integer "document_id"
+    t.integer "upload_id"
   end
 
   create_table "documents_users", :id => false, :force => true do |t|
@@ -201,6 +211,7 @@ ActiveRecord::Schema.define(:version => 20141020215608) do
     t.integer  "upfile_file_size"
     t.datetime "upfile_updated_at"
     t.integer  "user_id"
+    t.string   "upload_type"
   end
 
   create_table "users", :force => true do |t|

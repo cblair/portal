@@ -16,6 +16,12 @@
     %>
     <%= link_to "×", @return_from_upload_link %>
     <h3 id="myModalLabel">Data Import</h3>
+    <button id="data_import_help" class="btn btn-info btn-small" title="Help">Help</button>
+    <div id="data_import_popup" hidden>
+      <ul>
+        <li>Drag and drop files below to quickly add multiple files.</li>
+      </ul>
+    </div>
   </div>
   <div class="modal-body">
 	<%= render "js_upload", :controller => "data_io" %>
@@ -70,6 +76,18 @@
 
 	<%= link_to "New Collection", new_collection_path, :class => "btn btn-success" %>
 	<a href="#myModal" role="button" class="btn btn-info" data-toggle="modal">Upload files</a>
+  <%= link_to "Uploads", uploads_path, :class => "btn" %>
+  <%= link_to "Jobs", jobs_path, :class => "btn" %>
+  <button id="col_show_help" class="btn btn-info" data-toggle="collapse" data-target="#col_popup">Help</button>
+    <div id="col_popup" class="collapse out">
+      <ul>
+        <li>Click the "+" symbol to expand the collection view, show sub-collection(s), or see available actions.</li>
+        <li>Manage non-data, non-validated files by clicking the "Uploads" button.</li>
+        <li>Uploaded note files (pdf, etc.) can be linked to a collection by going to the "Edit" menu.</li>
+        <li>Click a collection name to view a specific collection and see more information (owner, notes, etc.)</li>
+        <li>Use the "search" field above the document table to filter documents by name (case sensitive).</li>
+      </ul>
+    </div>
 
 	<hr />
 	<%= render :partial => "collections/rec_collection_documents_render", 

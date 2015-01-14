@@ -18,6 +18,43 @@ module DocumentsHelper
 
 #-----------------------------------------------------------------------
 
+  #Makes a list of user's note uploads
+  def upload_note_select_for_doc
+    retval = Upload.where("user_id = ? AND upload_type = ?",
+      @document.user_id, "note").order("upfile_file_name").collect { |u| [u.upfile_file_name, u.id] }
+  end
+
+  #Adds (links) the current document to the given note file (upload)
+  def add_note(upload_id)
+    upload = Upload.find(upload_id.to_i)
+    
+    if not @document.uploads.include?(upload)
+      @document.uploads << upload
+    end
+  end
+
+  #Creates a list of checkboxes for removing notes.
+  def remove_note_list()
+    remove_upload_ids = []
+    @document.uploads.each do |upload|
+      remove_upload_ids << upload
+    end
+    
+    return remove_upload_ids
+  end
+  
+  #Removes the link(s) to notes from this document (just the link(s)).
+  def remove_notes(remove_list)
+    
+    remove_list.each do |upload_id|
+      upload = Upload.find(upload_id)
+      if ( @document.uploads.include?(upload) )
+        @document.uploads.delete(upload)
+      end
+    end
+  end
+
+#------------------------------------------------------
   #Gets menu data for display.
   def get_menu
     if (@document == nil)
@@ -135,6 +172,23 @@ module DocumentsHelper
     #logger.info str
     puts str
   end
+#-----------------------------------------------------------------------
+
+  #Submit a single document validation job
+  #Args:  document: document object,  f: filter id,
+  def validate_document(document, f)
+    #don't let validate auto-filter
+    if f != nil
+      msg = 'Validation filter started; refresh your browser to check for completion. '
+
+      job = Job.new(:description => "Document #{document.name} validation")
+      job.save
+      job.submit_job(current_user, document, {:ifilter_id => f.id})
+    end
+    
+    return status, msg
+  end
+#-----------------------------------------------------------------------
 
   # @param zip_fname A string of the zip file name
   # @param zip_file_object A file object for the zip file
@@ -332,7 +386,7 @@ module DocumentsHelper
         #If row is length of two, then we want to make a key => val pair out 
         # of the row. Else, the user has matches an unknown amout of values,
         # and we can only number the keys.
-        if row.count == 2
+        if row.count == 2  #Only one metadata pair per line?
           metadata_columns << {row[0] => row[1]}
         else
           colnames = IfiltersHelper::get_ifiltered_colnames(row)
@@ -899,13 +953,13 @@ module DocumentsHelper
 
       if (document.stuffing_metadata != nil and document.stuffing_data)
         @headings = document.stuffing_data.first.keys
-    
-        csv_data = CSV.generate do |csv|
+
+         csv_data = CSV.generate do |csv|
             #Metadata
             document.stuffing_metadata.each do |row|
               row.each {|k,v| csv << [k + ": " + v] }  #csv << row.values
             end
-            
+
             #Data headings
             # if there is only one column named "1", its the default column for
             # a unfiltered document. Ignore the column.
@@ -943,10 +997,29 @@ module DocumentsHelper
       upload = Upload.find(doc.stuffing_upload_id)
       rfile = File.open(upload.upfile.path, 'r')
       
-      temp_doc = Tempfile.new(doc.name)
+      temp_doc = Tempfile.new(doc.name)  #Temperary file with document data
       temp_doc.write(rfile.read)
       temp_doc.rewind #rewind data for zip reading?
       doc_list_raw[doc] = temp_doc
+
+      #If raw document has metadata, create a metadata txt file.
+      if (doc.stuffing_metadata. != nil)
+        csv_metadata = []
+        csv_metadata = CSV.generate do |csv|
+          #Metadata
+          doc.stuffing_metadata.each do |row|
+            row.each {|k,v| csv << [k + ": " + v] }  #csv << row.values
+          end
+        end
+        
+        file_name = doc.name + " [metadata].txt"
+        temp_file = Tempfile.new(file_name)
+        temp_file.write(csv_metadata)
+        temp_file.rewind #rewind data for zip reading?
+        
+        zipfile.put_next_entry( File.join(parent_dirs | [file_name]) )
+        zipfile.print IO.read(temp_file)
+      end
     end
 
     doc_list_raw.each do |doc, temp_doc|
@@ -984,10 +1057,11 @@ module DocumentsHelper
 
     doc_list = {}
     doc_list_raw = {}
+    #key is a document
     collection.documents.each do |key|
+    
       if (key.stuffing_raw_file_url != nil)
-        #Raw file, ignor for now, handel later.
-        doc_list_raw[key] = nil
+        doc_list_raw[key] = nil  #Raw file, ignor for now, handel later.
       else
         doc_list[key] = nil
       end

@@ -52,6 +52,26 @@
       <p><%= check_box "remove_project", p.id %> <%= p.name %></p>
     <% end %>
   </div>
+  
+  <div class="control-group">
+    <div class="field">
+      <%= f.label :add_file_as_a_note %>
+      <%= select("note", "upload_id", upload_note_select_for_collection, {:prompt => '(select a note)'}) %>
+      <%= link_to "Uploads...", uploads_path, class: "btn btn-info" %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <% if (!@remove_notes_ids.blank?) %>
+      <%= f.label :remove_notes, :class => "control-label" %>
+      <% @remove_notes_ids.each do |upload| %>
+        <div class="field">
+          <%= check_box_tag("remove_ids[]", upload.id)%>
+          <%= upload.upfile_file_name %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
    
   <div class="actions">
     <%= f.submit %>
