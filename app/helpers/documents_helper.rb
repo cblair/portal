@@ -278,7 +278,6 @@ module DocumentsHelper
       return false
     end
     
-    #@opened_file = File.open file
     @opened_file = File.open(file, "r:iso-8859-1")
     stime = Time.now()
     
@@ -286,8 +285,32 @@ module DocumentsHelper
     @document=Document.new
     @document.name=fname
     @document.collection=c
+    @document.stuffing_text = []
+    
+    if (File.extname(fname) == ".xlsx")
+      @opened_file = Roo::Excelx.new(file, csv_options: {encoding: Encoding::ISO_8859_1})
+      
+      @opened_file.each_with_pagename do |name, page|
+        @document.stuffing_text << page.to_csv
+      end
+    elsif (File.extname(fname) == ".xls")
+      @opened_file = Roo::Excel.new(file, csv_options: {encoding: Encoding::ISO_8859_1})
+      
+      @opened_file.each_with_pagename do |name, page|
+        @document.stuffing_text << page.to_csv
+      end
+    else
+      @opened_file = File.open(file, "r:iso-8859-1")
+      file_text = @opened_file.read()
+      #Make sure we have valid UTF-8 encoding
+      file_text = file_text.encode('UTF-8', :invalid => :replace, :undef => :replace)
 
-    fm = FileMagic.new
+      @opened_file.close
+      @document.stuffing_text = file_text
+    end
+=begin
+    #File magic incorrectly detects ".xlsx"
+    #fm = FileMagic.new  #Checks for excel formats?
     if (\
       (file.kind_of? String) \
       && \
@@ -296,15 +319,15 @@ module DocumentsHelper
         || (fm.file(file).include?("Composite Document"))\
         )\
       )
+
       @document.stuffing_text = []
-      @opened_file = Roo::Excel.new(file, nil, :ignore)
+      
       #There's a lot of ways to get all the sheets, but this
       # way so far is the quickest
-      @opened_file.workbook.worksheets.each do |worksheet|
-        @document.stuffing_text << worksheet
-      end
+      #@opened_file.workbook.worksheets.each do |worksheet|
+      #  @document.stuffing_text << worksheet
+      #end
     else
-      #@opened_file = File.open file
       @opened_file = File.open(file, "r:iso-8859-1")
       file_text = @opened_file.read()
       #Make sure we have valid UTF-8 encoding
@@ -314,8 +337,7 @@ module DocumentsHelper
 
       @document.stuffing_text = file_text
     end
-
-    #@document.project=p		#links document to project
+=end
     @document.user = user
     document_id = nil
 
@@ -445,19 +467,7 @@ module DocumentsHelper
         #If row is length of two, then we want to make a key => val pair out 
         # of the row. Else, the user has matches an unknown amout of values,
         # and we can only number the keys.
-=begin
-        if row.count == 2
-          #metadata_columns << {row[0] => row[1]}
-        else
-          #colnames = IfiltersHelper::get_ifiltered_colnames(row)
-          for j in (0..row.count-1)
-            #metadata_col_hash[ colnames[j] ] = row[j]
-            if not metadata_col_hash.empty?
-              #metadata_columns << metadata_col_hash
-            end
-          end
-        end
-=end
+
         i = i + 1 
       end
     else
@@ -504,14 +514,17 @@ module DocumentsHelper
 
     #Excel
     if (f != nil and f['id'] == -3)
-      if filter_data_columns_excel(iterator, options)
+      message, retval = filter_data_columns_excel(iterator, options)
+      if (retval == true)
         doc = options[:document]
         #Delete this document, we saved the data in sheet docs
+        upload_remove(doc) #Validation finished, delete upload
         doc.destroy
       end
 
       #We don't want our callee to do anything
-      return true
+      #return true
+      return message, retval
     end
 
     #Header metadata + CSV
@@ -596,17 +609,7 @@ module DocumentsHelper
     if iterator == nil
       return []
     end
-=begin
-    #rows = CSV.parse(iterator)
-    rows = CSV.parse(iterator, :skip_blanks => true)
 
-    colnames = rows.first
-
-    (1..rows.length - 1).each do |i|
-      row = Hash[[colnames, rows[i]].transpose]
-      retval << row
-    end
-=end
     csv = CSV.parse(iterator, :headers => true, :skip_blanks => true)
     
     headers = csv.headers() 
@@ -633,7 +636,7 @@ module DocumentsHelper
       row_hash = (row.to_hash)
       retval << row_hash
     end
-    
+
     return [message, retval]
   end
 #-----------------------------------------------------------------------
@@ -661,9 +664,46 @@ module DocumentsHelper
 
     data
   end
+#-----------------------------------------------------------------------
 
-
+  #Takes text from excel and CSV filters it. Creates one document for each sheet.
   def filter_data_columns_excel(iterator, options = {})
+    retval = false
+
+    if iterator == nil
+      return []
+    end
+
+    if !options.include?(:document)
+      puts "WARN: filter_data_columns_excel() needs a document in the option param."
+      return []
+    end
+
+    document = options[:document]
+    i = 1
+    iterator.each do |sheet|
+      message, data = filter_data_columns_csv(sheet)
+
+      if (data != nil and !data.empty?)  #create a document for each sheet
+        new_doc = Document.new(:name => "#{document.name}_sheet_#{i.to_s}")
+        new_doc.collection = document.collection
+        new_doc.user = user
+        new_doc.stuffing_data = data  #save data to couch
+        new_doc.validated = true
+        new_doc.save
+        retval = true  #We parsed a sheet successfully.
+      end
+
+      i += 1
+    end
+    message = "Excel validation finished."
+
+    return [message, retval]
+  end
+#-----------------------------------------------------------------------
+=begin
+  #Old version; does not parse dates correctly
+  def filter_data_columns_excel_old(iterator, options = {})
     retval = false
 
     if iterator == nil
@@ -717,6 +757,8 @@ module DocumentsHelper
 
     return retval
   end
+=end
+#-----------------------------------------------------------------------
 
   # Gets index columns from the corresponding .xsd file.
   def get_foreign_keys(doc, f)
@@ -749,7 +791,7 @@ module DocumentsHelper
 
     foreign_keys
   end
-  
+
 
   #Returns an Array of Hashes with only the key => value pairs where key == colname
   #

@@ -152,10 +152,7 @@ class Document < ActiveRecord::Base
 
       #Attempt filter
       stuffing_metadata = filter_metadata_columns(f, self.stuffing_text)
-      #stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
-      retval_arr = filter_data_columns(f, self.stuffing_text, {:document => self})
-      stuffing_data = retval_arr[1]
-      message = retval_arr[0]
+      message, stuffing_data = filter_data_columns(f, self.stuffing_text, {:document => self})
 
       #If stuffing_data equals true, then everything is ok, but we don't want to do
       # anything more.
