@@ -12,8 +12,14 @@ class DocumentsController < ApplicationController
   
   def require_permissions
     if params.include?("id")
-      document = Document.find(params[:id])
-#=begin
+      begin
+        document = Document.find(params[:id])
+      rescue
+        puts "### WARNING: Document ID not found. Document may have been deleted."
+        redirect_to collections_path, notice: "WARNING: Document ID not found. Document may have been deleted."
+        return
+      end
+
       if not doc_is_viewable(document, current_user)
 
         flash[:error] = "Document not found, or you do not have permissions for this action. ".html_safe
@@ -22,9 +28,8 @@ class DocumentsController < ApplicationController
         end
 
         redirect_to collections_path
-      end
-#=end
-    end
+      end  # if not doc_is_viewable(document, current_user)
+    end  # if params.include?("id")
   end
 
   # GET /documents
@@ -287,22 +292,6 @@ class DocumentsController < ApplicationController
       end
 
       user = User.where(:id => params[:new_user_id]).first
-=begin
-      #Add collaborator
-      if user != nil
-        if not user.documents.include?(@document)
-          user.documents << @document
-          user.save
-        end
-      end
-      
-      #Remove collaborators
-      if params[:colab_user_ids]
-        User.find(params[:colab_user_ids]).each do |user|
-          user.documents.delete(@document)
-        end
-      end
-=end
 
       #Update other attributes
       if (@document.user_id == current_user.id)
