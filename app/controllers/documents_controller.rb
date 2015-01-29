@@ -352,11 +352,13 @@ class DocumentsController < ApplicationController
   # DELETE /documents/1.json
   def destroy
     @document = Document.find(params[:id])
+    collection = Collection.find(@document.collection_id)
     upload_remove(@document)  #Removes upload record if file is deleted
     @document.destroy
 
     respond_to do |format|
-      format.html { redirect_to collections_path }
+      #format.html { redirect_to collections_path }
+      format.html { redirect_to collection }
       format.json { head :ok }
     end
   end

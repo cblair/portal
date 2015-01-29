@@ -21,7 +21,7 @@ jQuery(function($) {
 
 		$(document).ready(function () {	
 			SEARCH_TABLE = $('.documents_datatable').dataTable({
-				"sPaginationType"	: "bootstrap",
+				"sPaginationType"	: "full_numbers",
 				"bJQueryUI"			: true,
 				"bProcessing"		: true,
 				"bServerSide"		: true,

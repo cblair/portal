@@ -154,15 +154,17 @@ private
                     :size => per_page
                   }
 
-      #options[:flag] = 'm'
-      options[:flag] = 'f'
+      options[:flag] = 'm'
+      options[:get_full_data] = false
+      #options[:flag] = 'f'
 
       start_time = Time.new
       results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      
       run_time_seconds = Time.new - start_time
       puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
 
-      doc_list = get_docs_from_raw_es_data(results, @current_user)
+      #doc_list = get_docs_from_raw_es_data(results, @current_user) #not used at present
       colnames = []
 
       #Don't let unvalidated docs screw up the search results
@@ -211,9 +213,13 @@ private
         @document_count = ElasticsearchHelper.get_document_count
 
         raw_data.collect do |row|
-          doc_name = row["_source"]["_id"]
-          score = row["_score"]
+          #doc_name = row["_source"]["_id"]  #old KEEP
+          #score = row["_score"]  #old KEEP
+          #doc_id = doc_name.sub("Document-", "").to_i  #old KEEP
+          
+          doc_name = row["_id"]
           doc_id = doc_name.sub("Document-", "").to_i
+          score = row["_score"]
 
           begin
             doc = Document.find(doc_id)
@@ -233,9 +239,9 @@ private
             if true
               @document_results = true
 
-              #Make Popover content
-              # Metadata
+              #Make Popover content, Metadata
               popover_content = "(no metadata)"
+=begin
               if doc.stuffing_metadata
                 key_values_list = doc.stuffing_metadata.collect do |md|
                   "<tr><td>" + md.keys.first + "</td><td>" + md.values.first + "</td></tr>"
@@ -245,7 +251,7 @@ private
                 popover_content += "</table>"
               end
 
-              #Colnames
+              #Make Popover content, Colnames
               doc_colnames = get_data_colnames(doc.stuffing_data)
               if doc_colnames
                 popover_content += "<b>Column names:</b>"
@@ -253,20 +259,23 @@ private
                 popover_content += doc_colnames.collect {|doc_colname| "<tr><td>" + doc_colname + "</td></tr>" }.join
                 popover_content += "</table>"
               end
-
+=end
+=begin
               popover_html = '<a href="' + document_path(doc) + '" class="btn btn-lg btn-info doc-popover" data-toggle="popover" title="" data-content="' + popover_content + '" data-original-title="Metadata">Metadata</a>'
               popover_html = '<div style="font-size:x-small">' + popover_html.html_safe + '</div>'
-
-              ### Generates document info
-              doc_info = get_doc_info_search(doc)
+=end
+                ### Generates document info (properties)
+                doc_info = get_doc_info_search(doc)
+                
+                # Creates button/link for document info popover
+                doc_info_link = link_to('Properties', "#/", :title => "Document Properties",
+                "data-content" => doc_info, :id => "", :class => "btn doc-info")
+                
+                doc_info_html = '<div>' + doc_info_link.html_safe + '</div>'
               
-              # Creates button/link for document info popover
-              doc_info_link = link_to('Properties', "#", :title => "Document Properties",
-              "data-content" => doc_info, :id => "", :class => "btn doc-info")
-              
-              doc_info_html = '<div>' + doc_info_link.html_safe + '</div>'
-
-              @retval << [link_to(doc.name, doc), popover_html, doc_info_html]
+              #[doc name/link, metadata, properties]
+              #@retval << [link_to(doc.name, doc), popover_html, doc_info_html]
+              @retval << [link_to(doc.name, doc), doc_info_html]
             end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect

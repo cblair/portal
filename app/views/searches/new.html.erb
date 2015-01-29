@@ -1,84 +1,86 @@
 <% content_for :head do %>
 
-	<style type="text/css">
-		input#main-search {
-			width: 250px;
-		}
-	</style>
+  <style type="text/css">
+    input#main-search {
+      width: 250px;
+    }
+  </style>
 
-	<script type="text/template" id="searchTableTemplate">
-		<div class="datatable-container">
-		    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="search"
-		    	data-source="{0}" data-default-search="{1}">
-		     <thead>
-		      <tr>
-		      	{2}
-		      </tr>
-		     </thead>
-		     <tbody>
-			 </tbody>
-			</table>
-		</div>
-	</script>
+  <script type="text/template" id="searchTableTemplate">
+    <div class="datatable-container">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="search"
+          data-source="{0}" data-default-search="{1}">
+         <thead>
+          <tr>
+            {2}
+          </tr>
+         </thead>
+         <tbody>
+       </tbody>
+      </table>
+    </div>
+  </script>
 
 <% end %>
 
 <div id="notice" class="alert alert-info document-name-results-only" style="display: none;">
-	<a class="close" data-dismiss="alert" href="#">×</a>
-	<!--Our search JS will put text here.-->
-	<span></span>
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <!--Our search JS will put text here.-->
+  <span></span>
 </div>
 
 
 
 <div id="notice" class="alert alert-info search-alert-other">
-	<a class="close" data-dismiss="alert" href="#">×</a>
-	<h4>Search results:</h4>
-	<p id="search-alert-other-msg"></p>
-
-	  <button class="btn btn-success save-doc-from-search-button" 
-	  	data-enabled="false" data-source-url="<%= save_doc_from_search_path %>">
-  		<i class="icon-save"></i> Save as...
-	  </button>	
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <h4>Search results:</h4>
+  <p id="search-alert-other-msg"></p>
+<!-- #Save merge button
+    <button class="btn btn-success save-doc-from-search-button" 
+      data-enabled="false" data-source-url="<%#= save_doc_from_search_path %>">
+      <i class="icon-save"></i> Save as...
+    </button>
+ -->
 </div>
 
 <div id="notice" class="alert alert-info search-alert-pending" data-search-completed="false" style="display: none;">
-	<a class="close" data-dismiss="alert" href="#">×</a>
-	<p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i></p>
-	<span></span>
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <p id="search-alert-pending-msg"><i class="icon-refresh icon-spin"></i></p>
+  <span></span>
 </div>
 
 <div class="hero-unit">
 
-	<form id="main-search" class="navbar-form pull-left">
-	  <input type="text" id="main-search" class="span2" placeholder="Search..." data-recommendation-source="<%= search_recommendations_path %>">
-	  <button type="submit" class="btn">
-	  	<i class="icon-search search-button"></i>
-	  </button>
+  <form id="main-search" class="navbar-form pull-left">
+    <!--<input type="text" id="main-search" class="span2" placeholder="Search..." data-recommendation-source="<%#= search_recommendations_path %>">-->
+    <input type="text" id="main-search" class="span2" placeholder="Search...">
+    <button type="submit" class="btn">
+      <i class="icon-search search-button"></i>
+    </button>
+<!-- #Merge button
+    <button class="btn btn-info merge-button" data-enabled="false">
+      Merge! <i class="icon-filter"></i>
+    </button>
+-->
+      <%
+        search_help_text = "Click for search syntax information."
+      %>
+      <a href="http://lucene.apache.org/core/3_4_0/queryparsersyntax.html" data-toggle="tooltip" title="<%= search_help_text %>" id="search-help" data-placement="right">
+        <i class="icon-question-sign"></i>
+      </a>
+  </form>
 
-	  <button class="btn btn-info merge-button" data-enabled="false">
-	  	Merge! <i class="icon-filter"></i>
-	  </button>
-
-	  	<%
-	  		search_help_text = "Click for search syntax information."
-	  	%>
-	  	<a href="http://lucene.apache.org/core/3_4_0/queryparsersyntax.html" data-toggle="tooltip" title="<%= search_help_text %>" id="search-help" data-placement="right">
-		  	<i class="icon-question-sign"></i>
-	  	</a>
-	</form>
-
-	<br />
-	<hr />
+  <br />
+  <hr />
 
 <!--Display data-->
-	<% default_search = params[:default_search] or "" %>
-	<div class="container-fluid" id="main-search-results" style="display: none;" 
-		data-init-source="<%= search_init_path(:format => :json) %>" 
-		data-source="<%= search_all_path(:format => :json) %>" 
-		data-default-search="<%= default_search %>" 
-		data-merge-job-source="<%= save_doc_from_merge_search_path(:format => :json) %>"
-		>
-		<!--Our Datatable template will get inserted here by JS-->
-	</div>
+  <% default_search = params[:default_search] or "" %>
+  <div class="container-fluid" id="main-search-results" style="display: none;" 
+    data-init-source="<%= search_init_path(:format => :json) %>"
+    data-source="<%= search_all_path(:format => :json) %>"
+    data-default-search="<%= default_search %>" 
+    data-merge-job-source="<%= save_doc_from_merge_search_path(:format => :json) %>"
+    >
+    <!--Our Datatable template will get inserted here by JS-->
+  </div>
 </div>

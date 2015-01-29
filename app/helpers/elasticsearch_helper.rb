@@ -45,8 +45,9 @@ module ElasticsearchHelper
       if get_full_data
         data = full_data
       else
-        hits = full_data["hits"]["hits"]
-        data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} }
+        #hits = full_data["hits"]["hits"]  #KEEP
+        #data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} } #KEEP
+        data = full_data["hits"]["hits"]
       end
     rescue NoMethodError
       puts "WARN: ES query missing data in reponse."
@@ -86,7 +87,7 @@ module ElasticsearchHelper
 
     return data
   end
-  
+#-----------------------------------------------------------------------
   #SAS new version, needed for more advanced ES queries
   def self.get_es_http_search_result2(conn_hash, conn_str, qbody)
     #Last formatting needed for multiline JSON.
@@ -373,8 +374,10 @@ module ElasticsearchHelper
 
     return data
   end
-  
 
+
+  #Usually the first function called (for now).
+  #Determines which search type to use. 
   def self.es_search_dispatcher(type, qstr, options)
     #Get required options.
     get_full_data = options[:get_full_data] || false
@@ -427,7 +430,7 @@ module ElasticsearchHelper
   #Query String: uses a query parser in order to parse its content
   #Input: query string
   def self.es_query_string_search(qstr, options)
-    flag = options[:flag] || 'm'
+    flag = options[:flag] || 'm' #see search_type for available flags
     from = options[:from] || nil
     size = options[:size] || nil
 

@@ -13,7 +13,7 @@ jQuery(function($) {
 		$(document).ready(function () {	
 
 			$('#documents').dataTable({
-				"sPaginationType"	: "bootstrap",
+				"sPaginationType"	: "full_numbers",
 				"bJQueryUI"			: true,
 				"bProcessing"		: true,
 				//"bServerSide"		: true,
@@ -31,7 +31,7 @@ jQuery(function($) {
 		$(document).ready(function () {	
 
 			$('#search_demo_documents').dataTable({
-				"sPaginationType"	: "bootstrap",
+				"sPaginationType"	: "full_numbers",
 				"bJQueryUI"			: true,
 				"bProcessing"		: true,
 				//"bServerSide"		: true,

@@ -125,6 +125,7 @@ module CollectionsHelper
         o << c_option
       end
     end
+    o.sort!
     
     return o
   end

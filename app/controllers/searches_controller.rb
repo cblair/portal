@@ -104,7 +104,8 @@ class SearchesController < ApplicationController
     
     if search != ""
       options =  {
-                  :flag => 'f',
+                  :flag => 'm',  #:flag => 'f',
+                  :get_full_data => false,
                   :from => page,
                   :size => per_page
                 }
@@ -128,9 +129,10 @@ class SearchesController < ApplicationController
     #Setup colnames for merge search if results have colnames in common.
     colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
-      colnames = ["Documents", "Metadata", "Information"]
+      #colnames = ["Documents", "Metadata", "Information"]
+      colnames = ["Documents", "Information"]
     end
-
+    
     unviewable_doc_links = unviewable_doc_list[0..10].collect do |doc|
       if doc.user
         view_context.mail_to doc.user.email, "#{doc.name} - request access via email.", subject: "Requesting access to #{doc.name}"
@@ -146,6 +148,15 @@ class SearchesController < ApplicationController
       "unviewable_doc_links" => unviewable_doc_links
     }
 
+=begin
+    search_data = {  #For performance testing
+      "documents" => [], 
+      "colnames" => ["Documents", "Metadata", "Information"],
+      "doc_links" => [],
+      #Show some unviewable doc links, but only the first 10 in case there's a lot.
+      "unviewable_doc_links" => []
+    }
+=end
     respond_to do |format|
       #  format.html # index.html.erb
       #  format.json { render json: @documents }
@@ -177,7 +188,9 @@ class SearchesController < ApplicationController
 
     search = params[:searchval]
     
-    @document.create_merge_search_document(search, @current_user)
+    #TODO: Both of the below lines cause an error, needs fixing.
+    #@document.create_merge_search_document(search, @current_user)
+    @document.create_merge_search_document(search, view_context, @current_user)
 
     respond_to do |format|
       if @document.save
@@ -247,6 +260,7 @@ class SearchesController < ApplicationController
           #Format for JQuery UI - Autocomplete, with key=>value in suggestion
           { "label" => "#{search_key}:#{row["term"]} (#{row["count"]} occurances)", "value" => "#{search_key}:#{row["term"]}" }
         end
+
       #Else, suggest a key
       else
         #Gets us the data keys, in order of occurance

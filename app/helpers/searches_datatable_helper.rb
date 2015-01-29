@@ -1,4 +1,6 @@
 module SearchesDatatableHelper
+  #This helper contains settings for displaying search results.
+
   def page
     #params[:iDisplayStart].to_i/per_page + 1
     params[:iDisplayStart].to_i
