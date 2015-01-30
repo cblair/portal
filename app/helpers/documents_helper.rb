@@ -367,6 +367,7 @@ module DocumentsHelper
   end
   
 
+  #Adds fields as an array of values in couchDB so they can be searched.
   def get_data_colnames(d)
     if d == nil or d.empty?
       return []
@@ -683,12 +684,15 @@ module DocumentsHelper
     i = 1
     iterator.each do |sheet|
       message, data = filter_data_columns_csv(sheet)
+      primary_keys = get_data_colnames(data) #For search
 
       if (data != nil and !data.empty?)  #create a document for each sheet
         new_doc = Document.new(:name => "#{document.name}_sheet_#{i.to_s}")
         new_doc.collection = document.collection
         new_doc.user = user
         new_doc.stuffing_data = data  #save data to couch
+        new_doc.stuffing_primary_keys = primary_keys
+        new_doc.stuffing_metadata = [{"HatchFilter" => "Excel (pre-defined)"}]
         new_doc.validated = true
         new_doc.save
         retval = true  #We parsed a sheet successfully.
