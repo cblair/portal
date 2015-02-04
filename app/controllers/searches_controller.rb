@@ -4,6 +4,7 @@ class SearchesController < ApplicationController
   #include MergeSearchDatatable
   #include SearchAllDatatable
   include ElasticsearchHelper
+  require 'will_paginate/array'
 
   delegate :link_to, to: :view_context
 
@@ -89,8 +90,29 @@ class SearchesController < ApplicationController
     end
   end
 
+  # GET /searches/search_ids
+  # GET /searches/search_ids.json
+  def search_ids
+    #puts "search_ids **************************************************"
+
+    @documents = []
+    if (params.include?("searchIDs") )
+      search_data, total = search_ids_es()
+      #puts "search_data ***********************************************"
+      #p search_data
+      @documents = search_data["documents"]
+      @pages = (1..total).to_a
+      @pages = @pages.paginate(:page => params[:page], :per_page => per_page)
+    end
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   #Does an initial search, and returns the common columns names for all matching documents
   def search_init
+    puts "search_init *************************************************"
     search = ""
     doc_results = []
     viewable_doc_list = []
@@ -111,7 +133,8 @@ class SearchesController < ApplicationController
                 }
       start_time = Time.new
 
-      results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      results, total = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      
       run_time_seconds = Time.new - start_time
       puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
 
@@ -147,7 +170,6 @@ class SearchesController < ApplicationController
       #Show some unviewable doc links, but only the first 10 in case there's a lot.
       "unviewable_doc_links" => unviewable_doc_links
     }
-
 =begin
     search_data = {  #For performance testing
       "documents" => [], 

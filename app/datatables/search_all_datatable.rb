@@ -160,6 +160,8 @@ private
 
       start_time = Time.new
       results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      puts "results ***************************************************"
+      puts results
       
       run_time_seconds = Time.new - start_time
       puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."

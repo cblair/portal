@@ -27,7 +27,35 @@ module ElasticsearchHelper
     
     return data
   end
-  
+=begin
+  def self.es_connect_ids(conn_str, qbody, get_full_data = false)
+    conn_hash = get_http_connection_hash
+    #override with elasticsearch's port
+    conn_hash[:port] = 9200
+    
+    full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
+    data = []
+    total = "" #total hits
+
+    begin
+      #Get the document count
+      @@document_count = full_data["hits"]["total"]
+      
+      if get_full_data
+        data = full_data
+      else
+        data = full_data["hits"]["hits"]
+        total = full_data["hits"]["total"]
+      end
+    rescue NoMethodError
+      puts "WARN: ES query missing data in reponse."
+      #Leaving this reporting data out, as its too slow.
+      #puts full_data.to_s
+    end
+    
+    return data, total
+  end
+=end
   #Takes ES connection string, calls http, performs some post processing,
   # returns document metadata, not the full doc.
   def self.es_connect_md(conn_str, qbody, get_full_data = false)
@@ -37,6 +65,7 @@ module ElasticsearchHelper
     
     full_data = get_es_http_search_result2(conn_hash, conn_str, qbody)
     data = []
+    total = "" #total hits
 
     begin
       #Get the document count
@@ -48,14 +77,15 @@ module ElasticsearchHelper
         #hits = full_data["hits"]["hits"]  #KEEP
         #data = hits.collect {|row| {:doc_name => row["_id"], :score => row["_score"]} } #KEEP
         data = full_data["hits"]["hits"]
+        total = full_data["hits"]["total"]
       end
     rescue NoMethodError
       puts "WARN: ES query missing data in reponse."
       #Leaving this reporting data out, as its too slow.
       #puts full_data.to_s
     end
-
-    return data
+    
+     return data, total
   end
 
   #Takes ES connection string, calls http, performs some post processing,
@@ -136,6 +166,95 @@ module ElasticsearchHelper
     return str
   end
 
+  #############################################################################
+  ##  Pre-processing
+  ##  These functions process options and flags.
+  #############################################################################
+
+  #Usually the first function called (for now).
+  #Determines which search type to use. 
+  def self.es_search_dispatcher(type, qstr, options)
+    #Get required options.
+    get_full_data = options[:get_full_data] || false
+    flag = options[:flag] || 'm'
+    flag_str = search_type(flag)
+
+    #Strip off beginning and end url escape single quotes from the query string,
+    # if they exist
+    if (qstr[0] == "'") && (qstr[-1] == "'")
+      qstr[0] = ""
+      qstr[-1] = ""
+    end
+
+    #TODO: we need to escape some chars, but URI escape is too much and will fail
+    #qstr = URI.escape(qstr)
+
+    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true "
+    
+    #Get the string from the respective search.
+    if type == "es_query_string_search"
+      search_str = es_query_string_search(qstr, options)
+    elsif type == "es_terms_facet"
+      search_str = es_terms_facet(qstr, options)
+    end
+    
+    data = []
+    total = nil
+    case flag
+      when "m"
+        data, total = es_connect_md(conn_str, search_str, get_full_data) #metadata
+      when "f"
+        data = es_connect(conn_str, search_str, get_full_data) #full document
+    end
+    
+    return data, total
+  end
+#-----------------------------------------------------------------------
+  #Get string for ES pagination
+  def self.es_from_and_size_str(from, size)
+    retval = ""
+    #puts "es_from_and_size_str ****************************************"
+    #p from, size
+
+    if from.to_i && size.to_i
+      retval = "
+        \"from\" : #{from.to_i}, \"size\" : #{size.to_i}
+      "
+    end
+
+    retval
+  end
+
+  #Query String: uses a query parser in order to parse its content
+  #Input: query string
+  def self.es_query_string_search(qstr, options)
+    flag = options[:flag] || 'm' #see search_type for available flags
+    from = options[:from] || nil
+    size = options[:size] || nil
+
+    flag_str = search_type(flag)
+    
+    from_and_size_str = es_from_and_size_str(from, size)
+
+    #add a delim if necessary
+    if flag_str != ""
+      flag_str += ","
+    end
+    if from_and_size_str != ""
+      from_and_size_str += ","
+    end
+
+    return "
+    {
+      #{from_and_size_str}
+      #{flag_str}
+      \"query\" : {
+         \"query_string\" : {
+           \"query\" : \"#{qstr}\"
+          }
+        }
+    }"
+  end
 
   #############################################################################
   ##  Facet searches
@@ -264,7 +383,10 @@ module ElasticsearchHelper
     return data
   end
   
-  #Basic Searches ------------------------------------------------------
+  #############################################################################
+  ##  Basic Searches
+  #############################################################################
+  
   #Match: accept text/numerics/dates, analyzes it, and constructs a query
   #Input: query string, field
   def self.es_match_search(qstr, sfield, flag)
@@ -375,89 +497,6 @@ module ElasticsearchHelper
     return data
   end
 
-
-  #Usually the first function called (for now).
-  #Determines which search type to use. 
-  def self.es_search_dispatcher(type, qstr, options)
-    #Get required options.
-    get_full_data = options[:get_full_data] || false
-    flag = options[:flag] || 'm'
-    flag_str = search_type(flag)
-
-    #Strip off beginning and end url escape single quotes from the query string,
-    # if they exist
-    if (qstr[0] == "'") && (qstr[-1] == "'")
-      qstr[0] = ""
-      qstr[-1] = ""
-    end
-
-    #TODO: we need to escape some chars, but URI escape is too much and will fail
-    #qstr = URI.escape(qstr)
-
-    conn_str = "/#{get_database_name}/#{get_database_name}/_search?pretty=true "
-    
-    #Get the string from the respective search.
-    if type == "es_query_string_search"
-      search_str = es_query_string_search(qstr, options)
-    elsif type == "es_terms_facet"
-      search_str = es_terms_facet(qstr, options)
-    end
-    
-    data = []
-    case flag
-      when "m"
-        data = es_connect_md(conn_str, search_str, get_full_data) #metadata
-      when "f"
-        data = es_connect(conn_str, search_str, get_full_data) #full document
-    end
-    
-    return data
-  end
-
-  #Get string for ES pagination
-  def self.es_from_and_size_str(from, size)
-    retval = ""
-
-    if from.to_i && size.to_i
-      retval = "
-        \"from\" : #{from.to_i}, \"size\" : #{size.to_i}
-      "
-    end
-
-    retval
-  end
-
-  #Query String: uses a query parser in order to parse its content
-  #Input: query string
-  def self.es_query_string_search(qstr, options)
-    flag = options[:flag] || 'm' #see search_type for available flags
-    from = options[:from] || nil
-    size = options[:size] || nil
-
-    flag_str = search_type(flag)
-    
-    from_and_size_str = es_from_and_size_str(from, size)
-
-    #add a delim if necessary
-    if flag_str != ""
-      flag_str += ","
-    end
-    if from_and_size_str != ""
-      from_and_size_str += ","
-    end
-
-    return "
-    {
-      #{from_and_size_str}
-      #{flag_str}
-      \"query\" : {
-         \"query_string\" : {
-           \"query\" : \"#{qstr}\"
-          }
-        }
-    }"
-  end
-  
   #Range: Matches documents with fields that have terms within a certain range
   #Input: field string, starting and ending value
   def self.es_range_search(sfield, qfrom, qto, flag)
@@ -533,6 +572,11 @@ module ElasticsearchHelper
     
     return data
   end
+  
+  #############################################################################
+  ##  Utility Testing Methods
+  ##  Methods for testing only.
+  #############################################################################
   
   #SAS for testing and debuging ONLY!
   def self.es_test(qstr, sfield, flag)

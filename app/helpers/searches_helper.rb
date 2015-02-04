@@ -311,6 +311,8 @@ module SearchesHelper
       data = hits["hits"]["hits"]
       if mode == "doc_names"
         data = data.collect {|row| {:doc_name => row["_source"]["_id"], :score => row["_score"]} }
+      elsif mode == "doc_list"
+        data = hits["hits"]["hits"]
       end
     end
 
@@ -390,7 +392,6 @@ module SearchesHelper
     return data
   end
 
-
   def get_colnames_in_common(doc_list)
     #Colnames is all the column names they have in common
     colnames = get_data_colnames(doc_list[0].stuffing_data)
@@ -436,4 +437,76 @@ module SearchesHelper
     
     retval
   end
+  
+#-----------------------------------------------------------------------
+  #Gets only document ids from ES (fast).
+  def search_ids_es()
+    puts "search_ids help**********************************************"
+
+    search = ""
+    doc_results = []
+    viewable_doc_list = []
+    unviewable_doc_list = []
+    colnames = []
+    result_rows = []
+
+    if params.include?("searchIDs")
+      search = params["searchIDs"]
+    end
+
+    if search != ""
+      page_new = ( params["page"].to_i )
+      page_new = (page_new <= 0? 0 : page_new - 1) #page 0 and 1 are the same
+      page_curr = page_new * per_page
+      
+      options =  {
+                  :flag => 'ids', #ids only, get total hits
+                  :get_full_data => false, #dont return full documents
+                  :from => page_curr ||= page,
+                  :size => per_page
+                }
+
+      start_time = Time.new
+      results, total = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
+      run_time_seconds = Time.new - start_time
+      puts "INFO: Elasticsearch query completed in #{run_time_seconds.inspect} seconds."
+      puts "results2 ***************************************************"
+      p results
+      
+      doc_results = get_viewable_and_nonviewable_docs_from_raw_es_data(results, current_user)
+      viewable_doc_list = doc_results[:viewable_docs]
+      unviewable_doc_list = doc_results[:unviewable_docs]
+
+      #Don't let unvalidated docs screw up the search results
+      validated_doc_list = viewable_doc_list.reject {|doc| !doc.validated }
+      if !validated_doc_list.empty?
+        colnames = get_colnames_in_common(validated_doc_list)
+      end
+    end # if search != ""
+=begin
+    #Setup colnames for merge search if results have colnames in common.
+    colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
+    if !colnames_in_common_and_merge_search
+      #colnames = ["Documents", "Metadata", "Information"]
+      colnames = ["Documents", "Information"]
+    end
+
+    unviewable_doc_links = unviewable_doc_list[0..10].collect do |doc|
+      if doc.user
+        view_context.mail_to doc.user.email, "#{doc.name} - request access via email.", subject: "Requesting access to #{doc.name}"
+      end
+    end
+    unviewable_doc_links.reject! {|l| !l}
+=end
+    search_data = {
+      "documents" => viewable_doc_list,
+      "colnames" => ["Documents", "Metadata", "Information"],
+      "doc_links" => [],
+      #Show some unviewable doc links, but only the first 10 in case there's a lot.
+      "unviewable_doc_links" => []
+    }
+
+    return search_data, total
+  end
+#-----------------------------------------------------------------------
 end

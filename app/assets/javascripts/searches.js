@@ -1,5 +1,4 @@
 jQuery(function($) {
-
   var IS_MERGE_SEARCH = false;
 
   //Add a format function to String
@@ -419,5 +418,6 @@ jQuery(function($) {
     ) {
       runSearchesControllerJS();
     }
+    //------------------------------------------------------------------
   }); 
 });
