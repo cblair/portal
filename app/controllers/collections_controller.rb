@@ -132,24 +132,30 @@ class CollectionsController < ApplicationController
     
     #Parent collection stuff
     parent_child_violation = false
+    access_violation = false
     if params.include?("collection") and params[:collection].include?("parent_id") and params[:collection]["parent_id"] != ""
       parent_collection = Collection.find(params[:collection]["parent_id"])
-
-      #if !collection_is_parent(@collection, parent_collection)
-      if !parent_collection.ancestors.include?(@collection)
-        @collection.parent_id = parent_collection.id
+      
+      if (parent_collection.user_id != @collection.user_id)
+        access_violation = true
         
-        #inherits project (and permissions) of parent by default
-        inherit_collection(parent_collection)
       else
-        parent_child_violation = true
-      end
-    end
+        #if !collection_is_parent(@collection, parent_collection)
+        if !parent_collection.ancestors.include?(@collection)
+          @collection.parent_id = parent_collection.id
+          
+          #inherits project (and permissions) of parent by default
+          inherit_collection(parent_collection)
+        else
+          parent_child_violation = true
+        end
+      end #if parent
+    end #if params
     
     #Update
     #do this now, so the spawn doesn't PG:Error b/c spawned code has locked @colllection
     update_collection_attrs_suc = false
-    if not parent_child_violation
+    if (not parent_child_violation and not access_violation)
       update_collection_attrs_suc = @collection.update_attributes(params[:collection])
     end
 
@@ -203,7 +209,10 @@ class CollectionsController < ApplicationController
     end
 
     respond_to do |format|
-      if parent_child_violation 
+      if access_violation
+        @collection.errors.add(:base, "You are not authorized to do that.")
+        format.html { render action: "edit" }
+      elsif parent_child_violation 
         #flash[:error] =  "Warning: cannot set parent collection to a child."
         @collection.errors.add(:base, "Cannot set parent collection to a child.")
         format.html { render action: "edit" }
