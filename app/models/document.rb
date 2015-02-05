@@ -230,7 +230,7 @@ class Document < ActiveRecord::Base
     return suc_valid
   end
 
-
+=begin
   def create_merge_search_document(search, view, current_user)
     #Set up our view context so we can delegate merge search stuff.
     @view = view
@@ -246,14 +246,13 @@ class Document < ActiveRecord::Base
 
     options[:flag] = 'f'
     results = ElasticsearchHelper::es_search_dispatcher("es_query_string_search", search, options)
-
     doc_list = get_docs_from_raw_es_data(results, current_user)
     colnames = []
 
     #Don't let unvalidated docs screw up the search results
     validated_doc_list = doc_list.reject {|doc| !doc.validated }
     if !validated_doc_list.empty?
-      colnames = get_colnames_in_common(validated_doc_list)
+      #colnames = get_colnames_in_common(validated_doc_list)
     end
 
     raw_data = results
@@ -299,7 +298,7 @@ class Document < ActiveRecord::Base
     self.stuffing_data = doc_data
     self.user_id = current_user.id
   end
-
+=end
 
   def validate_document_with_job(job, options)
     puts "########################################################"
