@@ -264,6 +264,10 @@ private
               popover_html = '<a href="' + document_path(doc) + '" class="btn btn-lg btn-info doc-popover" data-toggle="popover" title="" data-content="' + popover_content + '" data-original-title="Metadata">Metadata</a>'
               popover_html = '<div style="font-size:x-small">' + popover_html.html_safe + '</div>'
 =end
+              popover_link = link_to('Metadata', "#/", :title => "Metadata", :id => "#{doc_id}",
+                :class => "btn btn-info doc-md")
+              popover_html = '<div>' + popover_link.html_safe + '</div>'
+              
                 ### Generates document info (properties)
                 doc_info = get_doc_info_search(doc)
                 
@@ -274,8 +278,8 @@ private
                 doc_info_html = '<div>' + doc_info_link.html_safe + '</div>'
               
               #[doc name/link, metadata, properties]
-              #@retval << [link_to(doc.name, doc), popover_html, doc_info_html]
-              @retval << [link_to(doc.name, doc), doc_info_html]
+              @retval << [link_to(doc.name, doc), popover_html, doc_info_html]
+              #@retval << [link_to(doc.name, doc), doc_info_html]
             end #end if doc.validated
           end #end if doc_is_viewable
         end #end raw_data.collect

@@ -129,8 +129,8 @@ class SearchesController < ApplicationController
     #Setup colnames for merge search if results have colnames in common.
     colnames_in_common_and_merge_search = (!colnames.empty?) && (merge_search)
     if !colnames_in_common_and_merge_search
-      #colnames = ["Documents", "Metadata", "Information"]
-      colnames = ["Documents", "Information"]
+      colnames = ["Documents", "Metadata", "Information"]
+      #colnames = ["Documents", "Information"]
     end
     
     unviewable_doc_links = unviewable_doc_list[0..10].collect do |doc|
@@ -176,6 +176,18 @@ class SearchesController < ApplicationController
         format.json { render json: SearchAllDatatable.new(view_context, current_user)}
       end
     end
+  end
+  
+  #Gets metadata from couch and returns results to search JS
+  def metadata_popover
+    document = nil
+    md_arr = []
+    if ( params.include?("doc_id") )
+      document = Document.find(params["doc_id"].to_i)
+      md_arr = document.stuffing_metadata
+    end
+    
+    render :json => md_arr
   end
 
   def save_doc_from_search

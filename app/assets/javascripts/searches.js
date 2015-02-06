@@ -310,6 +310,49 @@ jQuery(function($) {
       timeout: 30000
     });
   }
+  
+  //Gets metadata only when button is clicked.
+  function metadataPopover () {
+    var doc_id = $(this).attr('id'); //gets document id
+    
+    $.ajax({
+      url: "/search/metadata_popover/",
+      type: "GET",
+      dataType: "json",
+      data: { "doc_id": doc_id },  //send document id
+      success: function(data){  //results
+        console.log("data", data);
+        var md_table = "";
+        if (data == null) {
+          var md_table = "(none)";  //no metadata (data = null)
+        }
+        else {  //parse metadata, place in a table
+          $.each(data, function() {
+            $.each(this, function(k, v) {
+              md_table += "<tr>";
+              md_table += "<th>" + k + "</th>";
+              md_table += "<td>" + v + "</td>";
+              md_table += "</tr>";
+            });
+          });
+        }
+        //Dialog settings
+        var winHight = $(window).height();
+        var dHight = winHight * 0.8;
+        var winWidth = $(window).width();
+        var dWidth = winWidth * 0.4;
+        $("#metadata_tbl").html(md_table);  //add results to DOM
+        $("#md_dialog").dialog({
+          maxHeight: dHight,
+          minWidth: dWidth
+        });  //display dialog
+      },
+      error: function(){
+        console.log("error");
+        alert("ERROR: Problem getting metadata.");
+      }
+    });
+  }
 
   function populateInitialSearch(initSearchResults, searchVal) {
     //Get the current value of the "Show" select, so we can reset it in the
@@ -330,8 +373,8 @@ jQuery(function($) {
     //Get the data columns that match
     var dataColumnHtml = "";
     //var dataColumnNames = initSearchResults["colnames"];
-    //dataColumnNames = ["Documents", "Metadata", "Information"]
-    dataColumnNames = ["Documents", "Information"]
+    dataColumnNames = ["Documents", "Metadata", "Information"]
+    //dataColumnNames = ["Documents", "Information"]
     for(i in dataColumnNames) {
       dataColumnName = dataColumnNames[i];
       dataColumnHtml += "<td>" + dataColumnName + "</td>\n";
@@ -352,6 +395,9 @@ jQuery(function($) {
     mainSearchResults.append(searchTableTemplateString);
     //TODO: if search criteria empty, hide
     mainSearchResults.fadeIn();
+    
+    //Adds metadata popopver click event
+    $("#search tbody").on("click", ".doc-md", metadataPopover);
 
     updateSearchDatatables(searchVal, prevShowSelectVal);
 
@@ -364,7 +410,7 @@ jQuery(function($) {
   ////////////////////////////////////////////////////////////////////////////
   function decorateDocPopovers() {
     $('.doc-popover').popover({html : true, placement : 'left', trigger : 'hover'});
-          $('.doc-info').popover({html : true, placement : 'left', trigger : 'click'});
+    $('.doc-info').popover({html : true, placement : 'left', trigger : 'click'});
   }
 
   ////////////////////////////////////////////////////////////////////////////
