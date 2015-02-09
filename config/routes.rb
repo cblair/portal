@@ -52,6 +52,7 @@ Portal::Application.routes.draw do
   resources :collections
   
   resources :searches
+  match '/search/metadata_popover' => "searches#metadata_popover", :as => :metadata_popover
   match '/search/search_init' => "searches#search_init", :as => :search_init
   match '/search/search_all' => "searches#search_all", :as => :search_all
   match '/search/new' => "searches#new", :as => :new_search
