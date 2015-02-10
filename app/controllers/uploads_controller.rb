@@ -20,12 +20,23 @@ class UploadsController < ApplicationController
     end
   end
 
+  # GET /uploads/uploads_list
+  # GET /uploads/uploads_list.json
+  def uploads_list
+    #Action for viewing uploads with datatables
+
+    respond_to do |format|
+      format.html
+      format.json { render json: UploadsDatatable.new(view_context,current_user) }
+    end
+  end
+
   # GET /uploads
   # GET /uploads.json
   def index
     current_page = params[:page]
     per_page = params[:per_page] || 10 # could be configurable or fixed in your app
-    @uploads = Upload.where(:user_id => current_user.id).order(:upfile_file_name).paginate({:page => current_page, :per_page => per_page})
+    @uploads = Upload.where(:user_id => current_user.id).order(:upload_type, :upfile_file_name).paginate({:page => current_page, :per_page => per_page})
 
     respond_to do |format|
       format.html # index.html.erb
@@ -226,7 +237,8 @@ class UploadsController < ApplicationController
     @upload.destroy
 
     respond_to do |format|
-      format.html { redirect_to uploads_url }
+      #format.html { redirect_to uploads_url }
+      format.html { redirect_to uploads_list_url }
       format.json { head :ok }
     end
   end

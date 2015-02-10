@@ -1,0 +1,36 @@
+<div class="hero-unit">
+  <%- model_class = Upload -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human.pluralize %></h1>
+    
+    <button id="upload_show_help" class="btn btn-info" data-toggle="collapse" data-target="#upload_popup">Help</button>
+    <div id="upload_popup" class="collapse out">
+      <ul>
+        <li>Click the upload name to see file details.</li>
+        <li>Click a column name to sort by name, size, or upload type.</li>
+        <li>To filter uploads by name type the file name in "search" (case sensitive).</li>
+        <li>All non-validated files will appear in the upload list. Once the associated document (if there is one) has been validated it will be removed from the upload list and permanetly stored in the database.</li>
+        <li>If an upload has an associated document (e.g. Non-filterable data file) deleting the upload will not delete the associated document, which may contain metadata, documents must be deleted from the main data menus. However deleting a document will delete its associated upload and the document's database record.</li>
+        <li>Delete uploads by clicking the "destroy" button. This will permanetly remove the upload from Hatch.</li>
+        <li>Deleting a "note" upload will automatically remove links to all documents and collections.</li>
+      </ul>
+    </div>
+  </div>
+  
+
+  <table id="uploads_tbl" class="table table-striped display" data-source="<%= uploads_list_path(format: "json") %>">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Upload Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
+  
+  <br />
+</div>
