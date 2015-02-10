@@ -182,13 +182,13 @@ module ProjectsHelper
     if @project == nil or editor_user_ids == nil or editor_user_ids.blank?
       return false
     end
-
+=begin
     #Permission check (editors can't remove themselves from a project)
     if ( editor_user_ids.include?(current_user.id.to_s) )
       puts "### Permission Error: curernt user is an editor."
       return false
     end
-    
+=end
     Collaborator.where(:user_id => editor_user_ids, :project_id => @project.id).destroy_all
     return true
   end

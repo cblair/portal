@@ -9,6 +9,7 @@ Portal::Application.routes.draw do
   resources :notifications
   match '/notifications/send_notification/:id' => "notifications#send_notification", :as => :send_notification
 
+  match '/uploads/uploads_list' => "uploads#uploads_list", :as => :uploads_list
   match '/uploads/:id/download_upload' => "uploads#download_upload", :as => :download_upload
   resources :uploads
 
