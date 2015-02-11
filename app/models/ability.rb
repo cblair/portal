@@ -77,6 +77,7 @@ class Ability
     can :show_data, Document, :collection => { :projects => { :public => true }}
     can :download_raw, Document, :collection => { :projects => { :public => true }}
     can :download_note, Document, :collection => { :projects => { :public => true }}
+    can :download_note_collection, Collection, :projects => { :public => true }
     
     #Metaform special case permissions (all can read)
     can :read, Metaform

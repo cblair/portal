@@ -36,7 +36,7 @@ class UploadsDatatable
 
   #Get upload records
   def fetch_uploads
-    uploads = Upload.order("#{sort_column} #{sort_direction}")
+    uploads = Upload.where(:user_id => @current_user.id).order("#{sort_column} #{sort_direction}")
     uploads = uploads.page(page).per_page(per_page)
     
     if params[:sSearch].present?
