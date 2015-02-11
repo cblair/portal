@@ -30,7 +30,9 @@
       <ul>
         <% @collection.uploads.each do |upload| %>
           <li>
-            <%= link_to upload.upfile_file_name, download_note_collection_path(@collection, upload_id: upload.id) %>
+            <% if can? :read, @collection %>
+              <%= link_to upload.upfile_file_name, download_note_collection_path(@collection, upload_id: upload.id) %>
+            <% end %>
           </li>
         <% end %>
       </ul>
