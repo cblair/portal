@@ -23,6 +23,15 @@ all values that match. This would make search impractically slow. Luckily, Couch
 Elasticsearch allows us to implement a practical solution to this problem.
 
 \subsubsection{CouchDB Views}
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=80mm]{images/demo_search_01}
+	\caption{Searching for data in documents, internally using CouchDB Views} 
+	\label{demo_search_01}
+	\end{center}
+\end{figure}
+
 CouchDB uses precompiled queries called views. Views help identify that content
 exists in a document or documents. When a user searches, all the matching documents
 are returned.
@@ -69,6 +78,15 @@ the child node staring with `3D9.1', and the entire `3D9.0' group is never searc
 through, which makes searches complete in a short time frame.
 
 \subsubsection{Elasticsearch}
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=120mm]{images/demo_search_02}
+	\caption{Searching for data in a document, internally using Elasticsearch} 
+	\label{demo_search_02}
+	\end{center}
+\end{figure}
+
 From CouchDB views, Hatch now has a collection of documents that match a user's search
 query. Elasticsearch then extends the search functionality by searching for actual data
 within those matching documents. Users can do deep searches on all data in the narrowed
