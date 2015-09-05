@@ -1,10 +1,22 @@
 Visit http://seniordesign.engr.uidaho.edu/2011-2012/EcoData for information.
 
-Requirements:
-CouchDB >= 1.2
-Ruby >= 1.9.2
-Ruby on Rails >= 3.1.2
-bundler gem
+## Requirements:
+* CouchDB >= 1.2
+* Ruby >= 1.9.2
+* Ruby on Rails >= 3.1.2
+* bundler gem
+
+### Setup - OS specific
+
+#### OSX Setup
+
+* Install Rails via RVM - [https://rvm.io/rvm/install](https://rvm.io/rvm/install).
+* Install homebrew - [http://brew.sh/](http://brew.sh/)
+* Install postgres - [https://www.codefellows.org/blog/three-battle-tested-ways-to-install-postgresql#macosx](https://www.codefellows.org/blog/three-battle-tested-ways-to-install-postgresql#macosx).
+* Install libmagic - `brew install libmagic`.
+* Install libv8 - `brew install libv8`
+
+### Install - all OS's
 
 To install and run: git clone and cd into a directory, then run from the command line:
     bundle install
