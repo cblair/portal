@@ -16,8 +16,6 @@ gem 'json'
 group :assets do
   #don't put twitter-bootstrap-rails here - breaks on Heroku
 
-  gem 'sass-rails'#,   '~> 3.1.5'
-  gem 'coffee-rails'#, '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
 
   gem 'jquery-rails'
@@ -25,12 +23,22 @@ group :assets do
   gem 'jquery-fileupload-rails', '0.4.0'
   gem 'jquery-modal-rails'
 
-  gem 'therubyracer', '0.9.9'
-  gem 'libv8', '~> 3.3.10'
+  # No longer work for installs
+  #gem 'libv8', '3.16.14.0'
+  #gem 'therubyracer', '0.12.2'
 
   gem 'lazy_high_charts'
 
   gem 'd3_rails'
+
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', :platforms => :ruby
+
+  gem 'uglifier', '>= 1.0.3'
+  gem 'zurb-foundation'
 end
 
 gem 'jquery-rails'
@@ -40,19 +48,6 @@ gem 'd3_rails'
 gem 'lazy_high_charts'
 
 gem 'jquery-datatables-rails', github: 'rweng/jquery-datatables-rails'
-
-
-gem 'less'
-
-gem "less-rails", "2.3.3"
-#Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
-#this requires the command:
-# rails g bootstrap:install
-gem 'twitter-bootstrap-rails', '2.2.0'
-
-#this requires the command:
-# rails g bootstrap:install
-#gem 'twitter-bootstrap-rails'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -84,7 +79,7 @@ group :development do
 
   gem "ruby-prof"
   gem 'simplecov', :require => false, :group => :test
-  gem 'rack-mini-profiler'
+  #gem 'rack-mini-profiler'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'

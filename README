@@ -14,13 +14,15 @@ Visit http://seniordesign.engr.uidaho.edu/2011-2012/EcoData for information.
 * Install homebrew - [http://brew.sh/](http://brew.sh/)
 * Install postgres - [https://www.codefellows.org/blog/three-battle-tested-ways-to-install-postgresql#macosx](https://www.codefellows.org/blog/three-battle-tested-ways-to-install-postgresql#macosx).
 * Install libmagic - `brew install libmagic`.
-* Install libv8 - `brew install libv8`
 
 ### Install - all OS's
 
 To install and run: git clone and cd into a directory, then run from the command line:
-    bundle install
-    rake db:setup
-    rails server
+    * bundle install
+    * postgres:
+    	* createuser portal_std
+    	* createdb portal_development
+    * rake db:setup
+    * rails server
 
 Then visit at http://localhost:3000/ (by default).

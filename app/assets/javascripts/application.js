@@ -13,8 +13,6 @@
 // require jquery-fileupload/vendor/tmpl
 //= require jquery-fileupload
 
-//= require highcharts
-//= require twitter/bootstrap
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/jquery.dataTables.api.fnReloadAjax
@@ -48,6 +46,11 @@
 //= require metaforms
 //= require jquery.tabletojson
 
+//= require foundation
+
 jQuery.ajaxSetup({ 
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 
-})
+});
+
+$(function(){ $(document).foundation(); });
+$(function(){ $(document).foundation(); });
