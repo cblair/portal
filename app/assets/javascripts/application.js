@@ -14,7 +14,7 @@
 //= require jquery-fileupload
 
 //= require dataTables/jquery.dataTables
-//= require dataTables/jquery.dataTables.bootstrap
+/// require dataTables/jquery.dataTables.bootstrap
 //= require dataTables/jquery.dataTables.api.fnReloadAjax
 
 //= require d3
@@ -31,7 +31,6 @@
 //= require collections
 //= require data_io
 
-//= require exporting
 //= require feeds
 //= require ifilters
 //= require live_scaffolds

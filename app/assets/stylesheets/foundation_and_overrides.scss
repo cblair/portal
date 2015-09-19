@@ -1324,4 +1324,17 @@ $default-float: left;
 // $topbar-sticky-class: ".sticky";
 // $topbar-arrows: true; //Set false to remove the triangle icon from the menu item
 
+// Top bar styles for login and search fields.
+.top-bar input#email,
+.top-bar input#password {
+  float: left;
+  width: 200px;
+}
+.top-bar input#signin,
+.top-bar a#register,  {
+  float: left;
+  width: 100px;
+}
+
+
 @import 'foundation';

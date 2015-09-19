@@ -28,8 +28,8 @@
     	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
   	</ul>
   	<section class="top-bar-section">
-    	<!-- Right Nav Section -->
-	    <ul class="right">
+    	<!-- Nav Section -->
+	    <ul class="">
 		    <li><%= link_to "Data", collections_path %></li>
 		    <li><%= link_to "Projects", projects_path %></li>
 		    <!--<li><%= link_to "Roles", roles_path %></li> -->
@@ -38,13 +38,12 @@
 		    <li><%= link_to "Search", new_search_path %></li>
 		    <li><%= link_to "Analyze", home_analyze_path %></li>
 		    <li><%= link_to "Metaforms", metaforms_path %></li>
+        </ul>
+        <!-- Right Nav Section -->
+        <ul class="right">
 		    <li class="has-form">
 				<div class="row collapse">
-					<div class="large-8 small-9 columns">
-					  	<!--
-						  	<input type="text" placeholder="Search">
-							<a href="#" class="alert button expand">Search</a>
-					  	-->
+					<div class="large-12 columns">
 			    		<%= render 'layouts/login_items' %>
 					</div>
 				</div>
