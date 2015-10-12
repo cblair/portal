@@ -53,6 +53,7 @@ GEM
       multi_json (~> 1.0)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
+    angularjs-rails (1.4.7)
     arel (3.0.3)
     bcrypt (3.1.10)
     better_errors (2.1.1)
@@ -241,6 +242,7 @@ PLATFORMS
 
 DEPENDENCIES
   ancestry
+  angularjs-rails
   better_errors
   binding_of_caller
   byebug

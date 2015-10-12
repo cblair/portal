@@ -39,6 +39,8 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   gem 'zurb-foundation'
+
+  gem 'angularjs-rails'
 end
 
 gem 'jquery-rails'

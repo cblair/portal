@@ -21,6 +21,8 @@
 //  require d3.layout
 //  require d3.v3.min.js // or, alternatively-named, d3.min.js
 
+//= require angular
+
 //Include only specific js files individually.
 // To see what is being loaded, use this parameter:
 // ?debug_assets=1
@@ -51,5 +53,4 @@ jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")} 
 });
 
-$(function(){ $(document).foundation(); });
 $(function(){ $(document).foundation(); });

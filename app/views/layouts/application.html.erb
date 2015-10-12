@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 <head>
-  <title>Hatch</title>
+  <title>Hatch {{with angular}}</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
 
@@ -85,19 +85,19 @@
 	<div class="small-12 columns">
 		<!--These flash notices are probably the old style, and neeed updated-->
 		<% if flash[:error] %>
-		    <div id="alert" class="alert alert-error" data-alert>
+		    <div id="alert" class="alert-box alert" data-alert>
 		        <a class="close" href="#">&times;</a>
 		        <%= flash[:error] %>
 		    </div>
 		<% end %>
 		<% if flash[:alert] %>
-		    <div id="alert" class="alert" data-alert>
+		    <div id="alert" class="alert-box" data-alert>
 		        <a class="close" href="#">&times;</a>
 		        <%= flash[:alert] %>
 		    </div>
 		<% end %>
 		<% if notice %>
-		    <div id="notice" class="alert alert-info" data-alert>
+		    <div id="notice" class="alert-box info" data-alert>
 		        <a class="close" href="#">&times;</a>
 		        <%= notice %>
 		    </div>
