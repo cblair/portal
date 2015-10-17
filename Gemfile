@@ -114,3 +114,5 @@ gem 'ruby-filemagic'
 
 #Turns all URLs and e-mail addresses into clickable links (depricated in rails 3.0.9))
 gem 'rails_autolink'
+
+gem "font-awesome-rails"

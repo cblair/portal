@@ -10,7 +10,7 @@
         <div>
           <p>What kind of data is this?</p>
           <%= select("post", "ifilter_id", ifilters_get_select_options, {:prompt => '(select a filter)'}) %>
-          <%= link_to "Filters...", ifilters_path, class: "btn btn-info" %>
+          <%= link_to "Filters...", ifilters_path, class: "button info" %>
         </div>
 
         <p>Add metadata from a metaform?</p>
@@ -20,40 +20,37 @@
 
         <!--
         <div id="hidden_group">
-          <a class="btn btn-info" href="#">Add Metadata</a>
-          <a class="btn btn-inverse" href="#">Hide Metadata</a>
+          <a class="button info" href="#">Add Metadata</a>
+          <a class="button inverse" href="#">Hide Metadata</a>
 
           <hr />
 
           <div class="hidden_section">
 
             <ul>
-              <li><input size="30" type="text" /> <a href="#" class="btn btn-primary remove-ifilter-header">- Remove</a></li>
+              <li><input size="30" type="text" /> <a href="#" class="button remove-ifilter-header">- Remove</a></li>
             </ul>
           </div>
         </div>
         -->
 
         <!-- The fileinput-button span is used to style the file input field as button -->
-        <span class="btn btn-success fileinput-button">
-          <i class="icon-plus icon-white"></i>
-          <span>Add files...</span>
+        <span class="button success fileinput-button">
+          <span><i class="fa fa-plus"></i> Add files...</span>
           <%= f.file_field :upfile %>
         </span>
-        <button type="submit" class="btn btn-primary start">
-          <i class="icon-upload icon-white"></i>
-          <span>Start upload</span>
+        <button type="submit" class="button start">
+          <span><i class="fa fa-play"></i> Start upload</span>
         </button>
-        <button type="reset" class="btn btn-warning cancel">
-          <i class="icon-ban-circle icon-white"></i>
-          <span>Cancel upload</span>
+        <button type="reset" class="button alert cancel">
+          <span><i class="fa fa-stop"></i> Cancel upload</span>
         </button>
-        <button type="button" class="btn btn-danger delete">
-          <i class="icon-trash icon-white"></i>
-          <span>Delete</span>
+        <button type="button" class="button alert delete">
+          <span><i class="fa fa-eject"></i> Delete</span>
         </button>
         <input type="checkbox" class="toggle">	
       </div>
+      <p>Drag and drop files below to quickly add multiple files...</p>
       <div class="span5">
         <!-- The global progress bar -->
         <div class="progress progress-success progress-striped active fade">
@@ -94,7 +91,7 @@
       <div class="progress progress-success progress-striped active"><div class="bar" style="width:0%;"></div></div>
     </td>
     <td class="start">{% if (!o.options.autoUpload) { %}
-      <button class="btn btn-primary">
+      <button class="button">
         <i class="icon-upload icon-white"></i>
         <span>{%=locale.fileupload.start%}</span>
       </button>
@@ -103,7 +100,7 @@
     <td colspan="2"></td>
     {% } %}
     <td class="cancel">{% if (!i) { %}
-      <button class="btn btn-warning">
+      <button class="button alert">
         <i class="icon-ban-circle icon-white"></i>
         <span>{%=locale.fileupload.cancel%}</span>
       </button>
@@ -132,7 +129,7 @@
         <td colspan="2"><span class="label label-success">Success</span></td>
         {% } %}
       <td class="delete">
-        <button class="btn btn-danger" data-type="{%=file.delete_type%}" >
+        <button class="button alert" data-type="{%=file.delete_type%}" >
           <i class="icon-trash icon-white"></i>
           <span>{%=locale.fileupload.destroy%}</span>
         </button>

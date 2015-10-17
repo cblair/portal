@@ -110,6 +110,8 @@ GEM
     docile (1.1.5)
     erubis (2.7.0)
     execjs (2.6.0)
+    font-awesome-rails (4.0.3.2)
+      railties (>= 3.2, < 5.0)
     git-version-bump (0.15.1)
     hash-deep-merge (0.1.1)
     hike (1.2.3)
@@ -255,6 +257,7 @@ DEPENDENCIES
   delayed_job_active_record
   delayed_job_web
   devise
+  font-awesome-rails
   jquery-datatables-rails!
   jquery-fileupload-rails (= 0.4.0)
   jquery-modal-rails
