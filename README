@@ -27,6 +27,9 @@ To install and run: git clone and cd into a directory, then run from the command
     
     # Do this only for production as well.
     rake assets:precompile
+
+    # Start the job server (handles filtering of documents, usually just needed for production).
+    ./scripts/delayed_jobs_production.sh start
     
     rails server
 
