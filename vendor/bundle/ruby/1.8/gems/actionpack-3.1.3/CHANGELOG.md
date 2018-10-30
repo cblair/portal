@@ -1533,7 +1533,7 @@
 
 *   Update to Prototype 1.5.1.  *Sam Stephenson*
 
-*   Allow routes to be decalred under namespaces [Tobias Lütke]:
+*   Allow routes to be declared under namespaces [Tobias Lütke]:
 
     map.namespace :admin do |admin|
         admin.root :controller => "products"
